@@ -47,6 +47,12 @@ Favorite drink
         str == '''<h1>Profile for Guybrush Threepwood</h1>
 <dl>
 <dt>Age</dt>
-<dd>42</dd>'''
+<dd>42</dd>
+<dt>Height</dt>
+<dd>5'8&quot;</dd>
+<dt>Favorite drink</dt>
+<dd>Rum</dd>
+</dl>
+'''
     }
 }
