@@ -44,15 +44,9 @@ Favorite drink
             it.toString()
         }
         then:
-        str == '''# Profile for Guybrush Threepwood
-
-Age
-: 42
-
-Height
-: 5'8"
-
-Favorite drink
-: Rum'''
+        str == '''<h1>Profile for Guybrush Threepwood</h1>
+<dl>
+<dt>Age</dt>
+<dd>42</dd>'''
     }
 }
