@@ -1,5 +1,7 @@
 package org.veo.templating
 
+import org.apache.pdfbox.pdmodel.PDDocument
+
 import spock.lang.Specification
 
 class ReportEngineSpec extends Specification {
@@ -54,5 +56,24 @@ Favorite drink
 <dd>Rum</dd>
 </dl>
 '''
+    }
+
+
+    def "Render a simple PDF report"(){
+        given:
+        def reportEngine = new ReportEngine()
+        def data = [givenName: 'Guybrush',
+            familyName: 'Threepwood',
+            age: 42,
+            height: '''5'8"''',
+            favorites: [drink:'Rum']]
+        when:
+        PDDocument doc = new ByteArrayOutputStream().withCloseable {
+            reportEngine.generateReport('profile.md', data, 'application/pdf', it )
+            new File('/tmp/profile.pdf').bytes = it.toByteArray()
+            PDDocument.load(it.toByteArray())
+        }
+        then:
+        doc.documentCatalog.documentOutline != null
     }
 }
