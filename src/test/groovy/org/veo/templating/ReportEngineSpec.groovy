@@ -22,14 +22,28 @@ class ReportEngineSpec extends Specification {
         then:
         str == '''# Profile for Guybrush Threepwood
 
+## Basic attributes
 Age
 : 42
 
 Height
 : 5'8"
 
+
+## Work life
+Profession
+: Pirate
+
+## Private life
 Favorite drink
-: Rum'''
+: Rum
+
+
+<bookmarks>
+  <bookmark name="Basic attributes" href="#basic-attributes" />
+  <bookmark name="Work life" href="#work-life" />
+  <bookmark name="Private life" href="#private-life" />
+</bookmarks>'''
     }
 
     def "Render a simple HTML report"(){
@@ -46,15 +60,29 @@ Favorite drink
             it.toString()
         }
         then:
-        str == '''<h1>Profile for Guybrush Threepwood</h1>
+        str == '''<h1><a href="#profile-for-guybrush-threepwood" id="profile-for-guybrush-threepwood"></a>Profile for Guybrush Threepwood</h1>
+<h2><a href="#basic-attributes" id="basic-attributes"></a>Basic attributes</h2>
 <dl>
 <dt>Age</dt>
 <dd>42</dd>
 <dt>Height</dt>
 <dd>5'8&quot;</dd>
+</dl>
+<h2><a href="#work-life" id="work-life"></a>Work life</h2>
+<dl>
+<dt>Profession</dt>
+<dd>Pirate</dd>
+</dl>
+<h2><a href="#private-life" id="private-life"></a>Private life</h2>
+<dl>
 <dt>Favorite drink</dt>
 <dd>Rum</dd>
 </dl>
+<bookmarks>
+  <bookmark name="Basic attributes" href="#basic-attributes" />
+  <bookmark name="Work life" href="#work-life" />
+  <bookmark name="Private life" href="#private-life" />
+</bookmarks>
 '''
     }
 
@@ -70,10 +98,15 @@ Favorite drink
         when:
         PDDocument doc = new ByteArrayOutputStream().withCloseable {
             reportEngine.generateReport('profile.md', data, 'application/pdf', it )
-            new File('/tmp/profile.pdf').bytes = it.toByteArray()
             PDDocument.load(it.toByteArray())
         }
         then:
         doc.documentCatalog.documentOutline != null
+        doc.documentCatalog.documentOutline.children().size() == 3
+        doc.documentCatalog.documentOutline.children()*.title == [
+            'Basic attributes',
+            'Work life',
+            'Private life'
+        ]
     }
 }

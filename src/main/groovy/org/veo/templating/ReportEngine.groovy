@@ -2,8 +2,8 @@ package org.veo.templating
 
 import java.nio.file.Files
 
+import org.veo.templating.converters.HtmlPDFConverter
 import org.veo.templating.converters.MarkdownHtmlConverter
-import org.veo.templating.converters.MarkdownPDFConverter
 
 public class ReportEngine {
 
@@ -11,7 +11,7 @@ public class ReportEngine {
 
 
     public ReportEngine(){
-        addConverters(MarkdownHtmlConverter, MarkdownPDFConverter)
+        addConverters(MarkdownHtmlConverter, HtmlPDFConverter)
     }
 
     private void addConverters(Class[] converterClasses) {
@@ -19,7 +19,6 @@ public class ReportEngine {
             addConverter(it)
         }
     }
-
 
     private void addConverter(Class<FileConverter> converterClass) {
         addConverter(converterClass.getDeclaredConstructor().newInstance())
@@ -51,8 +50,8 @@ public class ReportEngine {
         def type = Files.probeContentType(tempFile)
         if (type == outputType) {
             output << tempFile.bytes
-        }else {
-            FileConverter converter = converterRegistry.getOrDefault(type, [:]).get(outputType)
+        } else {
+            FileConverter converter = getConverter(type, outputType)
             if (!converter) {
                 throw new IllegalArgumentException("Cannot convert $type to $outputType")
             }
@@ -61,5 +60,49 @@ public class ReportEngine {
             }
         }
         Files.delete(tempFile)
+    }
+
+    FileConverter getConverter(String inputType, String outputType) {
+        Map<String, FileConverter> convertersFromInputType = converterRegistry.getOrDefault(inputType, [:])
+        FileConverter converter = convertersFromInputType.get(outputType)
+        if (converter) {
+            return converter
+        }
+        // try a two-step conversion
+        // TODO: add recursion?
+        for (def entry:convertersFromInputType.entrySet() ) {
+            String targetType = entry.key
+            FileConverter intermediateConverter = entry.value
+            FileConverter targetConverter = converterRegistry.getOrDefault(intermediateConverter.getOutputType(), [:]).get(outputType)
+            if (targetConverter) {
+                FileConverter combinedConverter = new FileConverter() {
+
+                            @Override
+                            public String getInputType() {
+                                return inputType
+                            }
+
+                            @Override
+                            public String getOutputType() {
+                                return outputType
+                            }
+
+                            @Override
+                            public void convert(InputStream input, OutputStream output)
+                            throws IOException {
+                                def bytes = new ByteArrayOutputStream().withCloseable {
+                                    intermediateConverter.convert(input, it)
+                                    it.toByteArray()
+                                }
+                                ByteArrayInputStream bais = new ByteArrayInputStream(bytes)
+                                targetConverter.convert(bais, output)
+                            }
+                        }
+                convertersFromInputType.put(outputType, combinedConverter)
+                return combinedConverter
+            }
+        }
+
+
     }
 }

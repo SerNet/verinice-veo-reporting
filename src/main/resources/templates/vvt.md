@@ -4,6 +4,9 @@
     border-collapse: collapse;
     margin-bottom: 3mm;
   }
+  table th:first-child, table td:first-child {
+    width: 6cm;
+  }
   table, th, td {
     border: 1pt solid black;
   }
@@ -19,12 +22,22 @@
   }
 </style>
 
+<bookmarks>
+  <bookmark name="Hauptplatt" href="#main"> </bookmark>
+  <bookmark name="Übersicht der Verarbeitungstätigkeiten" href="#overview">
+  <#list data as process>
+    <bookmark name="${process.name}" href="#process_${process?counter}" />
+  </#list>
+  </bookmark>
+</bookmarks>
+
 # Verzeichnis von Verarbeitungstätigkeiten
 
 TODO:
 
  * page numbers
- * PDF navigation (outline) 
+
+<a id="main"/>
 
 ## Hauptblatt
 
@@ -146,6 +159,8 @@ TODO:
 
 ## Übersicht der Verarbeitungstätigkeiten
 
+<a id="overview"/>
+
 <#list data as process>
 <span style="display:inline-block; width: 4cm;">Anlage Nr ${process?counter}:</span> ${process.name}  
 </#list>
@@ -153,6 +168,8 @@ TODO:
 <div class="pagebreak"></div>
 
 <#list data as process>
+<a id="process_${process?counter}"/>
+
 ### ${process.name}
 
 Abkürzung
@@ -169,4 +186,5 @@ Beschreibung
 </#if>
 </#list>
 
-
+</body>
+</html>
