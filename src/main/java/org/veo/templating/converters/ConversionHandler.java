@@ -1,10 +1,10 @@
-package org.veo.templating;
+package org.veo.templating.converters;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public interface FileConverter {
+public interface ConversionHandler {
 
     String getInputType();
 

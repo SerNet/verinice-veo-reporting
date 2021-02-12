@@ -7,7 +7,7 @@ import org.veo.templating.converters.HtmlPDFConverter
 import groovy.xml.MarkupBuilder
 import spock.lang.Specification
 
-class FileConverterSpec extends Specification {
+class HtmlPDFConverterSpec extends Specification {
 
     def "Convert HTML with bookmarks to PDF"(){
         given:

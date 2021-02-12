@@ -13,9 +13,7 @@ import org.w3c.dom.Document;
 import com.openhtmltopdf.pdfboxout.PdfBoxRenderer;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 
-import org.veo.templating.FileConverter;
-
-public class HtmlPDFConverter implements FileConverter {
+public class HtmlPDFConverter implements ConversionHandler {
 
     @Override
     public String getInputType() {

@@ -11,10 +11,9 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
-import org.veo.templating.FileConverter;
 import org.veo.templating.MarkdownRenderer;
 
-public class MarkdownHtmlConverter implements FileConverter {
+public class MarkdownHtmlConverter implements ConversionHandler {
 
     @Override
     public String getInputType() {

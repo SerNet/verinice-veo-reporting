@@ -1,8 +1,11 @@
 package org.veo.templating
 
+import groovy.transform.CompileStatic
+
 import freemarker.template.Configuration
 import freemarker.template.TemplateExceptionHandler
 
+@CompileStatic
 class TemplateEvaluator {
 
     final Configuration cfg
