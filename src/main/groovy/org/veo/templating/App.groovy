@@ -20,16 +20,14 @@ class App {
         println JsonOutput.prettyPrint(JsonOutput.toJson(processes))
 
         def templateEvaluator = new TemplateEvaluator()
-        new File('/tmp/test.md').withOutputStream {
+        new File('/tmp/vvt.md').withOutputStream {
             templateEvaluator.executeTemplate("vvt.md", [data:processes], it)
         }
-
-
         ReportEngine reportEngine = new ReportEngine()
-        new File('/tmp/test.html').withOutputStream {
+        new File('/tmp/vvt.html').withOutputStream {
             reportEngine.generateReport("vvt.md", [data:processes], "text/html", it)
         }
-        new File('/tmp/test.pdf').withOutputStream {
+        new File('/tmp/vvt.pdf').withOutputStream {
             reportEngine.generateReport("vvt.md", [data:processes], "application/pdf", it)
         }
     }
