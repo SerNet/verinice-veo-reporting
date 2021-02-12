@@ -23,8 +23,8 @@
 </style>
 
 <bookmarks>
-  <bookmark name="Hauptplatt" href="#main"> </bookmark>
-  <bookmark name="Übersicht der Verarbeitungstätigkeiten" href="#overview">
+  <bookmark name="Hauptplatt" href="#hauptblatt"> </bookmark>
+  <bookmark name="Übersicht der Verarbeitungstätigkeiten" href="#übersicht-der-verarbeitungstätigkeiten">
   <#list data as process>
     <bookmark name="${process.name}" href="#process_${process?counter}" />
   </#list>
@@ -36,8 +36,6 @@
 TODO:
 
  * page numbers
-
-<a id="main"/>
 
 ## Hauptblatt
 
@@ -159,8 +157,6 @@ TODO:
 
 ## Übersicht der Verarbeitungstätigkeiten
 
-<a id="overview"/>
-
 <#list data as process>
 <span style="display:inline-block; width: 4cm;">Anlage Nr ${process?counter}:</span> ${process.name}  
 </#list>
@@ -177,6 +173,33 @@ Abkürzung
 
 Beschreibung
 : ${process.description!"&nbsp;"}
+
+<#if (process.customAspects!?size > 0)>
+
+#### Custom aspects
+
+<ul>
+
+<#list process.customAspects as id, customAspect>
+
+<li>${id}
+
+<#list customAspect.attributes as k, v>
+
+${k}
+: ${v!"&nbsp;"}
+
+</#list>
+
+
+</li>
+
+</#list>
+
+
+</ul>
+
+</#if>
 
 
 <#if process?has_next>
