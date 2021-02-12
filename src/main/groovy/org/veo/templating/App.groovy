@@ -8,6 +8,7 @@ import org.apache.http.impl.client.HttpClientBuilder
 import org.keycloak.authorization.client.AuthzClient
 import org.keycloak.authorization.client.Configuration
 
+import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
 
@@ -16,10 +17,9 @@ class App {
     static void main(String[] args) {
 
         def processes = fetchData('/api/processes')
-        //println JsonOutput.prettyPrint(JsonOutput.toJson(processes))
-
-
         def vts = processes.findAll{it.subType.find{it.value == 'VT'}}
+
+        println JsonOutput.prettyPrint(JsonOutput.toJson(vts))
 
         def templateInput = [data: vts]
 
