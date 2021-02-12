@@ -36,7 +36,7 @@ class App {
 
         def oidcUrl = 'https://keycloak.staging.verinice.com'
         def realm = 'verinice-veo'
-        def veoUrl = 'https://veo-web.staging.verinice.com'
+        def veoUrl = 'https://veo-web.develop.verinice.com'
         def clientId = 'veo-development-client'
 
         // read keycloak user and password from ~/.config/veo-templating.json
