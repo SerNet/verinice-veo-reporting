@@ -5,7 +5,7 @@
     margin-bottom: 3mm;
   }
   table th:first-child, table td:first-child {
-    width: 6cm;
+    width: 7cm;
   }
   table, th, td {
     border: 1pt solid black;
@@ -44,119 +44,41 @@
 
 ## Hauptblatt
 
-<table>
-  <thead>
-    <tr>
-      <th colspan="2">Angaben zum Verantwortlichen</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Name/Bezeichnung des Verantwortlichen</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>Straße, PLZ/Ort</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>Telefon/Telefax</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>E-Mail-Adresse</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>Internet-Adresse/URL</td>
-      <td>?</td>
-    </tr>
-  </tbody>
-</table>
+| Angaben zum Verantwortlichen  ||
+|:---|:---|
+| Name/Bezeichnung des Verantwortlichen | ? |
+| Straße, PLZ/Ort | ? |
+| Telefon/Telefax | ? |
+| E-Mail-Adresse | ? |
+| Internet-Adresse/URL | ? |
 
-<table>
-  <thead>
-    <tr>
-      <th colspan="2">Vertretung</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Leitung der verantwortlichen Stelle<br/>(einschließlich Vertreter)</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>Leitung der Datenverarbeitung</td>
-      <td>?</td>
-    </tr>
-  </tbody>
-</table>
 
-<table>
-  <thead>
-    <tr>
-      <th colspan="2">Datenschutzbeauftragte</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Name</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>Straße<br/>PLZ/Ort</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>Telefon/Telefax</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>E-Mail-Adresse</td>
-      <td>?</td>
-    </tr>
-  </tbody>
-</table>
+| Vertretung  ||
+|:---|:---|
+| Leitung der verantwortlichen Stelle<br/>(einschließlich Vertreter) | ? |
+| Leitung der Datenverarbeitung | ? |
 
-<table>
-  <thead>
-    <tr>
-      <th colspan="2">Angaben zur Vertretung innerhalb der EU</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Sitz des Verantwortlichen<br/>außerhalb der EU</td>
-      <td>?</td>
-    </tr>
-  </tbody>
-</table>
 
-<table>
-  <thead>
-    <tr>
-      <th colspan="2">Zuständige Aufsichtbehörde</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Zuständige Behörde</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>Straße<br/>PLZ/Ort</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>Telefon/Telefax</td>
-      <td>?</td>
-    </tr>
-    <tr>
-      <td>E-Mail-Adresse</td>
-      <td>?</td>
-    </tr>
-  </tbody>
-</table>
+| Datenschutzbeauftragte  ||
+|:---|:---|
+| Name | ? |
+| Straße<br/>PLZ/Ort | ? |
+| Telefon/Telefax | ? |
+| E-Mail-Adresse | ? |
+
+
+| Angaben zur Vertretung innerhalb der EU  ||
+|:------------|:-----|
+| Sitz des Verantwortlichen<br/>außerhalb der EU | ? |
+
+
+| Zuständige Aufsichtbehörde  ||
+|:---|:---|
+| Zuständige Behörde | ? |
+| Straße<br/>PLZ/Ort | ? |
+| Telefon/Telefax | ? |
+| E-Mail-Adresse | ? |
+
 
 <div class="pagebreak"></div>
 
