@@ -44,16 +44,11 @@ public class HtmlPDFConverter implements ConversionHandler {
             Document dom = new W3CDom().fromJsoup(doc);
             builder.withW3cDocument(dom, "");
 
-            System.err.println(doc.outerHtml());
-
             builder.toStream(output);
             PdfBoxRenderer renderer = builder.buildPdfRenderer();
 
             renderer.layout();
             renderer.createPDF();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
     }
 
