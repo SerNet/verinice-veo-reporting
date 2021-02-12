@@ -20,6 +20,14 @@
   div.pagebreak {
     page-break-after: always;
   }
+  @page {
+	@top-center {
+	  content: 'Verzeichnis von Verarbeitungstätigkeiten';	
+	}
+	@bottom-center {
+	  content: 'Seite ' counter(page) ' von ' counter(pages);;	
+	}
+  }
 </style>
 
 <bookmarks>
@@ -33,9 +41,6 @@
 
 # Verzeichnis von Verarbeitungstätigkeiten
 
-TODO:
-
- * page numbers
 
 ## Hauptblatt
 
