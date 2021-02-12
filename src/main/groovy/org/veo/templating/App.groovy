@@ -8,7 +8,6 @@ import org.apache.http.impl.client.HttpClientBuilder
 import org.keycloak.authorization.client.AuthzClient
 import org.keycloak.authorization.client.Configuration
 
-import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
 
@@ -17,18 +16,23 @@ class App {
     static void main(String[] args) {
 
         def processes = fetchData('/api/processes')
-        println JsonOutput.prettyPrint(JsonOutput.toJson(processes))
+        //println JsonOutput.prettyPrint(JsonOutput.toJson(processes))
+
+
+        def vts = processes.findAll{it.subType.find{it.value == 'VT'}}
+
+        def templateInput = [data: vts]
 
         def templateEvaluator = new TemplateEvaluator()
         new File('/tmp/vvt.md').withOutputStream {
-            templateEvaluator.executeTemplate("vvt.md", [data:processes], it)
+            templateEvaluator.executeTemplate("vvt.md",templateInput, it)
         }
         ReportEngine reportEngine = new ReportEngine()
         new File('/tmp/vvt.html').withOutputStream {
-            reportEngine.generateReport("vvt.md", [data:processes], "text/html", it)
+            reportEngine.generateReport("vvt.md", templateInput, "text/html", it)
         }
         new File('/tmp/vvt.pdf').withOutputStream {
-            reportEngine.generateReport("vvt.md", [data:processes], "application/pdf", it)
+            reportEngine.generateReport("vvt.md", templateInput, "application/pdf", it)
         }
     }
 
