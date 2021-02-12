@@ -33,6 +33,15 @@ dependencies {
     testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
 }
 
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'com.openhtmltopdf' && details.requested.version == '1.0.0' && details.requested.name != 'openhtmltopdf-jsoup-dom-converter') {
+            details.useVersion '1.0.1'
+            details.because 'fixes bookmark handling (https://github.com/danfickle/openhtmltopdf/issues/408)'
+        }
+    }
+}
+
 application {
     // Define the main class for the application.
     mainClassName = 'org.veo.templating.App'
