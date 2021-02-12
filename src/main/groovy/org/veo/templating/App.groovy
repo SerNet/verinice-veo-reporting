@@ -20,11 +20,10 @@ class App {
 
         def templateInput = [data: vts]
 
-        def templateEvaluator = new TemplateEvaluator()
-        new File('/tmp/vvt.md').withOutputStream {
-            templateEvaluator.executeTemplate("vvt.md",templateInput, it)
-        }
         ReportEngine reportEngine = new ReportEngine()
+        new File('/tmp/vvt.md').withOutputStream {
+            reportEngine.generateReport("vvt.md", templateInput, "text/markdown", it)
+        }
         new File('/tmp/vvt.html').withOutputStream {
             reportEngine.generateReport("vvt.md", templateInput, "text/html", it)
         }

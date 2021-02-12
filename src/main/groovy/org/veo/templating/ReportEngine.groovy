@@ -7,11 +7,12 @@ import java.nio.file.Files
 @CompileStatic
 public class ReportEngine {
 
+    TemplateEvaluator templateEvaluator = new TemplateEvaluator()
+    FileConverter converter = new FileConverter()
 
     public void generateReport(String reportName, Object data, String outputType,
             OutputStream output) {
 
-        def templateEvaluator = new TemplateEvaluator()
 
         String extension = ''
         if (reportName.contains('.')) {
@@ -25,7 +26,6 @@ public class ReportEngine {
         if (type == outputType) {
             output << tempFile.bytes
         } else {
-            FileConverter converter = new FileConverter()
             tempFile.withInputStream {
                 converter.convert(it, type, output, outputType)
             }

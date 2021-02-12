@@ -33,9 +33,9 @@
 <bookmarks>
   <bookmark name="Hauptplatt" href="#hauptblatt"> </bookmark>
   <bookmark name="Übersicht der Verarbeitungstätigkeiten" href="#übersicht-der-verarbeitungstätigkeiten">
-  <#list data as process>
+<#list data as process>
     <bookmark name="${process.name}" href="#process_${process?counter}" />
-  </#list>
+</#list>
   </bookmark>
 </bookmarks>
 
@@ -169,9 +169,8 @@
 <div class="pagebreak"></div>
 
 <#list data as process>
-<a id="process_${process?counter}"/>
 
-### ${process.name}
+### <a id="process_${process?counter}"/> ${process.name}
 
 Abkürzung
 : ${process.abbreviation!"&nbsp;"}
