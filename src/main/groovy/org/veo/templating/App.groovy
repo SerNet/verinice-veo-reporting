@@ -15,7 +15,7 @@ class App {
 
     static void main(String[] args) {
 
-        def processes = fetchData('/api/processes')
+        def processes = fetchData('/processes')
         def vts = processes.findAll{it.subType.find{it.value == 'VT'}}
 
         println JsonOutput.prettyPrint(JsonOutput.toJson(vts))
@@ -41,7 +41,7 @@ class App {
 
         def oidcUrl = 'https://keycloak.staging.verinice.com'
         def realm = 'verinice-veo'
-        def veoUrl = 'https://veo-web.develop.verinice.com'
+        def veoUrl = 'https://veo.develop.verinice.com'
         def clientId = 'veo-development-client'
 
         // read keycloak user and password from ~/.config/veo-templating.json
@@ -63,7 +63,7 @@ class App {
             accessTokenResponse.token
         }
 
-        RESTClient client = new RESTClient("$veoUrl/api")
+        RESTClient client = new RESTClient("$veoUrl")
         client.setProxy(proxy.hostName, proxy.port, 'http')
         client.headers = [Authorization:"Bearer ${accessToken}"]
         def response =  client.get path: path
