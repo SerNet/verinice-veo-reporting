@@ -1,5 +1,7 @@
 package org.veo.templating
 
+import groovy.transform.Memoized
+
 import org.apache.http.HttpHost
 import org.apache.http.impl.client.HttpClientBuilder
 import org.keycloak.authorization.client.AuthzClient
@@ -24,6 +26,7 @@ class App {
     static void main(String[] args) {
 
         def vts = fetchData('/processes', [subType: 'VT'])
+        // vts.each { resolve(it, 'owner') }
 
         println JsonOutput.prettyPrint(JsonOutput.toJson(vts))
 
@@ -44,7 +47,8 @@ class App {
         }
     }
 
-    static def fetchData(String path, Map query) {
+    @Memoized
+    static def fetchData(String path, Map query=null) {
         RESTClient client = new RESTClient("$veoUrl")
         client.setProxy(proxy.hostName, proxy.port, 'http')
         client.headers = [Authorization:"Bearer ${accessToken}"]
@@ -68,6 +72,14 @@ class App {
             AuthzClient authzClient = AuthzClient.create(configuration)
             def accessTokenResponse =  authzClient.obtainAccessToken(user, pass)
             accessTokenResponse.token
+        }
+    }
+
+    static def resolve(def object, String key) {
+        def value = object[key]
+        if (value && value.targetUri) {
+            def uri = value.targetUri
+            object[key] = fetchData(uri)
         }
     }
 }
