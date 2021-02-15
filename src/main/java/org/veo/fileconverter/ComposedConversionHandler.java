@@ -1,4 +1,4 @@
-package org.veo.templating.converters;
+package org.veo.fileconverter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public final class ComposedConversionHandler implements ConversionHandler {
+public class ComposedConversionHandler implements ConversionHandler {
 
     private final ConversionHandler firstHandler;
     private final ConversionHandler secondHandler;
@@ -33,7 +33,6 @@ public final class ComposedConversionHandler implements ConversionHandler {
 
     @Override
     public void convert(InputStream input, OutputStream output) throws IOException {
-
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             firstHandler.convert(input, baos);
             var bytes = baos.toByteArray();

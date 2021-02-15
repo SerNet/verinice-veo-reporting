@@ -8,7 +8,7 @@ public class TemplateEvaluatorSpec extends Specification {
         given:
         ByteArrayOutputStream os = new ByteArrayOutputStream()
         when:
-        new TemplateEvaluator().executeTemplate('helloworld.txt', [name: "John"], os)
+        new TemplateEvaluatorImpl().executeTemplate('helloworld.txt', [name: "John"], os)
         def text = os.toString()
         then:
         text == 'Hello John.'

@@ -2,7 +2,7 @@ package org.veo.templating
 
 import org.apache.pdfbox.pdmodel.PDDocument
 
-import org.veo.templating.converters.HtmlPDFConverter
+import org.veo.fileconverter.handlers.HtmlPDFConverter
 
 import groovy.xml.MarkupBuilder
 import spock.lang.Specification

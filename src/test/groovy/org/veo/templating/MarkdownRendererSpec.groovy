@@ -6,7 +6,7 @@ class MarkdownRendererSpec extends Specification {
 
     def "Render simple HTML"(){
         given:
-        MarkdownRenderer renderer = new MarkdownRenderer()
+        MarkdownRendererImpl renderer = new MarkdownRendererImpl()
         String markdown = '''\
 # CommonMark
 ## A strongly defined, highly compatible specification of Markdown

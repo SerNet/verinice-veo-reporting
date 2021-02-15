@@ -1,4 +1,4 @@
-package org.veo.templating;
+package org.veo.fileconverter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,16 +6,14 @@ import java.io.OutputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.veo.templating.converters.ComposedConversionHandler;
-import org.veo.templating.converters.ConversionHandler;
-import org.veo.templating.converters.HtmlPDFConverter;
-import org.veo.templating.converters.MarkdownHtmlConverter;
+import org.veo.fileconverter.handlers.HtmlPDFConverter;
+import org.veo.fileconverter.handlers.MarkdownHtmlConverter;
 
-public class FileConverter {
+public class FileConverterImpl implements FileConverter {
 
     private final Map<String, Map<String, ConversionHandler>> handlerRegistry = new ConcurrentHashMap<>();
 
-    public FileConverter() {
+    public FileConverterImpl() {
         addHandler(new MarkdownHtmlConverter());
         addHandler(new HtmlPDFConverter());
     }
@@ -33,6 +31,10 @@ public class FileConverter {
         }
     }
 
+    /*
+     * @see org.veo.fileconverter.FileConverter#convert(java.io.InputStream, java.lang.String, java.io.OutputStream, java.lang.String)
+     */
+    @Override
     public void convert(InputStream input, String inputType, OutputStream output, String outputType)
             throws IOException {
         if (inputType.equals(outputType)) {

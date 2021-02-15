@@ -2,13 +2,18 @@ package org.veo.templating
 
 import org.apache.pdfbox.pdmodel.PDDocument
 
+import org.veo.fileconverter.FileConverterImpl
+
 import spock.lang.Specification
 
 class ReportEngineSpec extends Specification {
 
+    def templateEvaluator = new TemplateEvaluatorImpl()
+    def fileConverter = new FileConverterImpl()
+    def reportEngine = new ReportEngineImpl(templateEvaluator, fileConverter)
+
     def "Render a simple Markdown report"(){
         given:
-        def reportEngine = new ReportEngine()
         def data = [givenName: 'Guybrush',
             familyName: 'Threepwood',
             age: 42,
@@ -48,7 +53,6 @@ Favorite drink
 
     def "Render a simple HTML report"(){
         given:
-        def reportEngine = new ReportEngine()
         def data = [givenName: 'Guybrush',
             familyName: 'Threepwood',
             age: 42,
@@ -89,7 +93,6 @@ Favorite drink
 
     def "Render a simple PDF report"(){
         given:
-        def reportEngine = new ReportEngine()
         def data = [givenName: 'Guybrush',
             familyName: 'Threepwood',
             age: 42,

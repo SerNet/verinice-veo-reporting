@@ -1,4 +1,4 @@
-package org.veo.templating.converters;
+package org.veo.fileconverter;
 
 import java.io.IOException;
 import java.io.InputStream;

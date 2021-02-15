@@ -1,4 +1,4 @@
-package org.veo.templating.converters;
+package org.veo.fileconverter.handlers;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,7 +11,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
-import org.veo.templating.MarkdownRenderer;
+import org.veo.fileconverter.ConversionHandler;
+import org.veo.templating.MarkdownRendererImpl;
 
 public class MarkdownHtmlConverter implements ConversionHandler {
 
@@ -31,7 +32,7 @@ public class MarkdownHtmlConverter implements ConversionHandler {
                 new InputStreamReader(input, StandardCharsets.UTF_8));
                 Writer writer = new BufferedWriter(
                         new OutputStreamWriter(output, StandardCharsets.UTF_8))) {
-            new MarkdownRenderer().renderToHTML(reader, writer);
+            new MarkdownRendererImpl().renderToHTML(reader, writer);
         }
     }
 

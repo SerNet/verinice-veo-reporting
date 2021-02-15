@@ -5,6 +5,8 @@ import org.apache.http.impl.client.HttpClientBuilder
 import org.keycloak.authorization.client.AuthzClient
 import org.keycloak.authorization.client.Configuration
 
+import org.veo.fileconverter.FileConverterImpl
+
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
 import groovyx.net.http.RESTClient
@@ -20,7 +22,10 @@ class App {
 
         def templateInput = [data: vts]
 
-        ReportEngine reportEngine = new ReportEngine()
+        def templateEvaluator = new TemplateEvaluatorImpl()
+        def fileConverter = new FileConverterImpl()
+        def reportEngine = new ReportEngineImpl(templateEvaluator, fileConverter)
+
         new File('/tmp/vvt.md').withOutputStream {
             reportEngine.generateReport("vvt.md", templateInput, "text/markdown", it)
         }

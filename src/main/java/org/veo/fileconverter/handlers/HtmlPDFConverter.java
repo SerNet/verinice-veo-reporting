@@ -1,4 +1,4 @@
-package org.veo.templating.converters;
+package org.veo.fileconverter.handlers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +12,8 @@ import org.w3c.dom.Document;
 
 import com.openhtmltopdf.pdfboxout.PdfBoxRenderer;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+
+import org.veo.fileconverter.ConversionHandler;
 
 public class HtmlPDFConverter implements ConversionHandler {
 
