@@ -9,6 +9,7 @@ import org.veo.fileconverter.FileConverterImpl
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
+import groovyx.net.http.ContentType
 import groovyx.net.http.RESTClient
 
 class App {
@@ -22,8 +23,7 @@ class App {
 
     static void main(String[] args) {
 
-        def processes = fetchData('/processes')
-        def vts = processes.findAll{it.subType.find{it.value == 'VT'}}
+        def vts = fetchData('/processes', [subType: 'VT'])
 
         println JsonOutput.prettyPrint(JsonOutput.toJson(vts))
 
@@ -44,11 +44,11 @@ class App {
         }
     }
 
-    static def fetchData(String path) {
+    static def fetchData(String path, Map query) {
         RESTClient client = new RESTClient("$veoUrl")
         client.setProxy(proxy.hostName, proxy.port, 'http')
         client.headers = [Authorization:"Bearer ${accessToken}"]
-        def response =  client.get path: path
+        def response =  client.get path: path, query: query, contentType : ContentType.JSON
         response.data
     }
 
