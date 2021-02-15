@@ -13,6 +13,13 @@ import groovyx.net.http.RESTClient
 
 class App {
 
+    final static def oidcUrl = 'https://keycloak.staging.verinice.com'
+    final static def realm = 'verinice-veo'
+    final static def veoUrl = 'https://veo.develop.verinice.com'
+    final static def clientId = 'veo-development-client'
+
+    final static HttpHost proxy = new HttpHost("cache.sernet.private",3128)
+
     static void main(String[] args) {
 
         def processes = fetchData('/processes')
@@ -38,12 +45,14 @@ class App {
     }
 
     static def fetchData(String path) {
+        RESTClient client = new RESTClient("$veoUrl")
+        client.setProxy(proxy.hostName, proxy.port, 'http')
+        client.headers = [Authorization:"Bearer ${accessToken}"]
+        def response =  client.get path: path
+        response.data
+    }
 
-        def oidcUrl = 'https://keycloak.staging.verinice.com'
-        def realm = 'verinice-veo'
-        def veoUrl = 'https://veo.develop.verinice.com'
-        def clientId = 'veo-development-client'
-
+    static def getAccessToken() {
         // read keycloak user and password from ~/.config/veo-templating.json
         File configFile = new File("${System.getProperty('user.home')}/.config/veo-templating.json")
         def config = new JsonSlurper().parse(configFile)
@@ -51,9 +60,7 @@ class App {
         def user = config.user
         def pass = config.pass
 
-        HttpHost proxy = new HttpHost("cache.sernet.private",3128)
-
-        def accessToken = HttpClientBuilder.create().with {
+        HttpClientBuilder.create().with {
             it.proxy = proxy
             build()
         }.withCloseable {
@@ -62,11 +69,5 @@ class App {
             def accessTokenResponse =  authzClient.obtainAccessToken(user, pass)
             accessTokenResponse.token
         }
-
-        RESTClient client = new RESTClient("$veoUrl")
-        client.setProxy(proxy.hostName, proxy.port, 'http')
-        client.headers = [Authorization:"Bearer ${accessToken}"]
-        def response =  client.get path: path
-        response.data
     }
 }
