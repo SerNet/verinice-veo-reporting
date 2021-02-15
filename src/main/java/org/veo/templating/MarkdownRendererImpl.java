@@ -31,7 +31,6 @@ public class MarkdownRendererImpl implements MarkdownRenderer {
 
         // You can re-use parser and renderer instances
         Node document = parser.parseReader(reader);
-        String html = renderer.render(document);
-        writer.append(html);
+        renderer.render(document, writer);
     }
 }

@@ -53,15 +53,15 @@ class App {
 
         HttpHost proxy = new HttpHost("cache.sernet.private",3128)
 
-        def httpClient =  HttpClientBuilder.create().with {
+        def accessToken = HttpClientBuilder.create().with {
             it.proxy = proxy
             build()
+        }.withCloseable {
+            Configuration configuration = new Configuration("$oidcUrl/auth", realm, clientId, ['secret':''], it)
+            AuthzClient authzClient = AuthzClient.create(configuration)
+            def accessTokenResponse =  authzClient.obtainAccessToken(user, pass)
+            accessTokenResponse.token
         }
-
-        Configuration configuration = new Configuration("$oidcUrl/auth", realm, clientId, ['secret':''], httpClient)
-        AuthzClient authzClient = AuthzClient.create(configuration)
-        def accessTokenResponse =  authzClient.obtainAccessToken(user, pass)
-        def accessToken = accessTokenResponse.token
 
         RESTClient client = new RESTClient("$veoUrl/api")
         client.setProxy(proxy.hostName, proxy.port, 'http')
