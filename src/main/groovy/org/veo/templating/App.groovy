@@ -23,6 +23,11 @@ class App {
 
     final static HttpHost proxy = new HttpHost("cache.sernet.private",3128)
 
+
+    static def templateEvaluator = new TemplateEvaluatorImpl()
+    static def fileConverter = new FileConverterImpl()
+    static def reportEngine = new ReportEngineImpl(templateEvaluator, fileConverter)
+
     static void main(String[] args) {
 
         def vts = fetchData('/processes', [subType: 'VT'])
@@ -32,18 +37,15 @@ class App {
 
         def templateInput = [data: vts]
 
-        def templateEvaluator = new TemplateEvaluatorImpl()
-        def fileConverter = new FileConverterImpl()
-        def reportEngine = new ReportEngineImpl(templateEvaluator, fileConverter)
 
-        new File('/tmp/vvt.md').withOutputStream {
-            reportEngine.generateReport("vvt.md", templateInput, "text/markdown", it)
-        }
-        new File('/tmp/vvt.html').withOutputStream {
-            reportEngine.generateReport("vvt.md", templateInput, "text/html", it)
-        }
-        new File('/tmp/vvt.pdf').withOutputStream {
-            reportEngine.generateReport("vvt.md", templateInput, "application/pdf", it)
+        createReport('/tmp/vvt.md',"vvt.md", templateInput, "text/markdown")
+        createReport('/tmp/vvt.html',"vvt.md", templateInput, "text/html")
+        createReport('/tmp/vvt.pdf',"vvt.md", templateInput, "application/pdf")
+    }
+
+    static def createReport(String fileName, String templateName, Object templateInput, String outputType) {
+        new File(fileName).withOutputStream {
+            reportEngine.generateReport(templateName, templateInput, outputType, it)
         }
     }
 
