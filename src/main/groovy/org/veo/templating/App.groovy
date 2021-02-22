@@ -41,6 +41,8 @@ class App {
         createReport('/tmp/vvt.md',"vvt.md", templateInput, "text/markdown")
         createReport('/tmp/vvt.html',"vvt.md", templateInput, "text/html")
         createReport('/tmp/vvt.pdf',"vvt.md", templateInput, "application/pdf")
+
+        createReport('/tmp/processes.csv',"processes.csv", templateInput, "text/csv")
     }
 
     static def createReport(String fileName, String templateName, Object templateInput, String outputType) {
