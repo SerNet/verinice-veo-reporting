@@ -14,7 +14,7 @@ def versions = [
 dependencies {
     implementation "org.codehaus.groovy:groovy-json:$versions.groovy"
     implementation "org.codehaus.groovy:groovy-xml:$versions.groovy"
-    implementation 'org.freemarker:freemarker:2.3.30'
+    implementation 'org.freemarker:freemarker:2.3.31'
     implementation 'com.vladsch.flexmark:flexmark-all:0.62.2'
     implementation 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.2'
     implementation 'org.keycloak:keycloak-authz-client:11.0.3'
