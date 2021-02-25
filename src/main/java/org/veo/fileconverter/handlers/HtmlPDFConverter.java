@@ -47,10 +47,10 @@ public class HtmlPDFConverter implements ConversionHandler {
             builder.withW3cDocument(dom, "");
 
             builder.toStream(output);
-            PdfBoxRenderer renderer = builder.buildPdfRenderer();
-
-            renderer.layout();
-            renderer.createPDF();
+            try (PdfBoxRenderer renderer = builder.buildPdfRenderer()) {
+                renderer.layout();
+                renderer.createPDF();
+            }
         }
     }
 
