@@ -32,7 +32,8 @@ public class FileConverterImpl implements FileConverter {
     }
 
     /*
-     * @see org.veo.fileconverter.FileConverter#convert(java.io.InputStream, java.lang.String, java.io.OutputStream, java.lang.String)
+     * @see org.veo.fileconverter.FileConverter#convert(java.io.InputStream,
+     * java.lang.String, java.io.OutputStream, java.lang.String)
      */
     @Override
     public void convert(InputStream input, String inputType, OutputStream output, String outputType)
@@ -43,7 +44,7 @@ public class FileConverterImpl implements FileConverter {
             ConversionHandler converter = getHandler(inputType, outputType);
             if (converter == null) {
                 throw new IllegalArgumentException(
-                        "Cannot convert " + inputType + " to $outputType");
+                        "Cannot convert " + inputType + " to " + outputType);
             }
             converter.convert(input, output);
         }
