@@ -1,0 +1,7 @@
+{
+	"template": "processes.csv",
+	"output": "text/csv",
+	"data": {
+		"processes": "/processes"
+	}
+}
