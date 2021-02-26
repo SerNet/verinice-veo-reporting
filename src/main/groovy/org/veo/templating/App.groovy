@@ -21,10 +21,10 @@ class App {
     static void main(String[] args) {
         def token = KeycloakHelper.getAccessToken()
 
-        def dataFetcher = new DataFetcher(proxy: proxy, accessToken: token)
-        def vts = dataFetcher.fetchData(URI.create("$veoUrl/processes?subType=VT"))
-        def units = dataFetcher.fetchData(URI.create("$veoUrl/units"))
-        def scopes = dataFetcher.fetchData(URI.create("$veoUrl/scopes"))
+        def dataFetcher = new DataFetcher(veoUrl, proxy, token)
+        def vts = dataFetcher.fetchData('/processes?subType=VT')
+        def units = dataFetcher.fetchData('/units')
+        def scopes = dataFetcher.fetchData('/scopes')
         // vts.each { resolve(it, 'owner') }
 
         println JsonOutput.prettyPrint(JsonOutput.toJson(vts))

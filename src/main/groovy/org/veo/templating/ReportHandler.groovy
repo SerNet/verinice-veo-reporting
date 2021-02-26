@@ -62,14 +62,12 @@ class ReportHandler implements HttpHandler {
                 }
             }
 
-            def dataFetcher = new DataFetcher(proxy: proxy, accessToken: accessToken)
+            def dataFetcher = new DataFetcher(veoUrl:veoUrl,proxy: proxy, accessToken: accessToken)
 
             reportEngine.generateReport(reportName, outputType, outputStream, {dataKey, dataUrl->
                 def engine = new groovy.text.SimpleTemplateEngine()
                 def template = engine.createTemplate(dataUrl).make(parameters)
-                def uri = new URI("${veoUrl}${template}")
-                println "Fetching $dataKey from $dataUrl"
-                dataFetcher.fetchData(uri)
+                dataFetcher.fetchData(template.toString())
             })
         }
     }

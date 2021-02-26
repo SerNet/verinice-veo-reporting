@@ -16,8 +16,13 @@ import groovy.json.JsonSlurper
 @TupleConstructor
 class DataFetcher {
 
-    String accessToken
+    String veoUrl
     HttpHost proxy
+    String accessToken
+
+    def fetchData(String path) {
+        fetchData(URI.create("$veoUrl/$path"))
+    }
 
     @Memoized
     def fetchData(URI uri) {
