@@ -51,17 +51,18 @@ class ReportHandler implements HttpHandler {
             Map config = (Map) new JsonSlurper().parse(it)
             def data = [:]
             Map<String, Map> parametersFromConfig = (Map) config.get('parameters')
-            def requiredParameterNames = parametersFromConfig.findAll{
-                it.value.required
-            }*.key
-            println "requiredParameterNames for $reportName: $requiredParameterNames"
-            println "given parameters: $parameters"
-            requiredParameterNames.forEach{
-                if (!parameters.containsKey(it)) {
-                    throw new IllegalArgumentException("Missing required parameter: $it")
+            if (parametersFromConfig!=null) {
+                def requiredParameterNames = parametersFromConfig.findAll{
+                    it.value.required
+                }*.key
+                println "requiredParameterNames for $reportName: $requiredParameterNames"
+                println "given parameters: $parameters"
+                requiredParameterNames.forEach{
+                    if (!parameters.containsKey(it)) {
+                        throw new IllegalArgumentException("Missing required parameter: $it")
+                    }
                 }
             }
-
             def dataFetcher = new DataFetcher(veoUrl:veoUrl,proxy: proxy, accessToken: accessToken)
 
             reportEngine.generateReport(reportName, outputType, outputStream, {dataKey, dataUrl->
