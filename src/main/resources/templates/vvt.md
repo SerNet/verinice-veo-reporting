@@ -33,7 +33,7 @@
 <bookmarks>
   <bookmark name="Hauptplatt" href="#hauptblatt"> </bookmark>
   <bookmark name="Übersicht der Verarbeitungstätigkeiten" href="#übersicht-der-verarbeitungstätigkeiten">
-<#list data as process>
+<#list processes as process>
     <bookmark name="${process.name}" href="#process_${process?counter}" />
 </#list>
   </bookmark>
@@ -84,13 +84,13 @@
 
 ## Übersicht der Verarbeitungstätigkeiten
 
-<#list data as process>
+<#list processes as process>
 <span style="display:inline-block; width: 4cm;">Anlage Nr ${process?counter}:</span> ${process.name}  
 </#list>
 
 <div class="pagebreak"></div>
 
-<#list data as process>
+<#list processes as process>
 
 ### <a id="process_${process?counter}"/> ${process.name}
 

@@ -1,0 +1,15 @@
+{
+	"template": "vvt.md",
+	"output": "text/markdown",
+	"parameters": {
+		"scopeId": {
+			"required": "true",
+			"format": "uuid",
+			"description": "The ID of the scope that the report should run on"
+		}
+	},
+	"data": {
+		"processes": "/processes?subType=VT&scopeId=$scopeId",
+		"units": "/units/"
+	}
+}

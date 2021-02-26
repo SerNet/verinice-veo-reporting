@@ -1,4 +1,4 @@
 name;uuid;unit;abbreviation;custom aspects
-<#list data as process>
+<#list processes as process>
 ${process.name};${process.id};${process.owner.displayName};${process.abbreviation!"NO ABBREVIATION DEFINED"};${process.customAspects?keys?join(", ")}
 </#list>

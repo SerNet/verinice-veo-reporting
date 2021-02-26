@@ -23,11 +23,15 @@ class App {
 
         def dataFetcher = new DataFetcher(proxy: proxy, accessToken: token)
         def vts = dataFetcher.fetchData(URI.create("$veoUrl/processes?subType=VT"))
+        def units = dataFetcher.fetchData(URI.create("$veoUrl/units"))
+        def scopes = dataFetcher.fetchData(URI.create("$veoUrl/scopes"))
         // vts.each { resolve(it, 'owner') }
 
         println JsonOutput.prettyPrint(JsonOutput.toJson(vts))
+        println JsonOutput.prettyPrint(JsonOutput.toJson(units))
+        println JsonOutput.prettyPrint(JsonOutput.toJson(scopes))
 
-        def templateInput = [data: vts]
+        def templateInput = [processes: vts, units: units]
 
         createReport('/tmp/vvt.md',"vvt.md", templateInput, "text/markdown")
         createReport('/tmp/vvt.html',"vvt.md", templateInput, "text/html")
