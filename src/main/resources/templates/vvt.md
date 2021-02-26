@@ -127,6 +127,32 @@ ${k}
 
 </#if>
 
+<#if (process.links!?size > 0)>
+
+#### Links
+
+<ul>
+
+<#list process.links as type, links>
+
+<li>${type}
+<ul>
+<#list links as link>
+
+<li>${link.target.displayName}</li>
+
+</#list>
+</ul>
+
+</li>
+
+</#list>
+
+
+</ul>
+
+</#if>
+
 
 <#if process?has_next>
 
