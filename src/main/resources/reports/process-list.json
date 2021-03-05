@@ -1,6 +1,9 @@
 {
-	"template": "processes.csv",
-	"output": "text/csv",
+	"description": "A simple list of all processes",
+	"templateFile": "processes.csv",
+	"templateType": "text/csv",
+	"outputTypes": ["text/csv"],
+	"targetTypes": ["client"],
 	"data": {
 		"processes": "/processes"
 	}

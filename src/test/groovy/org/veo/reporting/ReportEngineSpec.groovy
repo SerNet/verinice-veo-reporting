@@ -1,16 +1,16 @@
-package org.veo.templating
+package org.veo.reporting
 
 import org.apache.pdfbox.pdmodel.PDDocument
-
-import org.veo.fileconverter.FileConverterImpl
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 
 import spock.lang.Specification
 
+@SpringBootTest
 class ReportEngineSpec extends Specification {
 
-    def templateEvaluator = new TemplateEvaluatorImpl()
-    def fileConverter = new FileConverterImpl()
-    def reportEngine = new ReportEngineImpl(templateEvaluator, fileConverter)
+    @Autowired
+    ReportEngine reportEngine
 
     def "Render a simple Markdown report"(){
         given:
@@ -21,7 +21,7 @@ class ReportEngineSpec extends Specification {
             favorites: [drink:'Rum']]
         when:
         def str = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('profile.md', data, 'text/markdown', it )
+            reportEngine.generateReport('profile.md', data, 'text/markdown', 'text/markdown', it )
             it.toString()
         }
         then:
@@ -60,7 +60,7 @@ Favorite drink
             favorites: [drink:'Rum']]
         when:
         def str = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('profile.md', data, 'text/html', it )
+            reportEngine.generateReport('profile.md', data, 'text/markdown', 'text/html', it )
             it.toString()
         }
         then:
@@ -100,7 +100,7 @@ Favorite drink
             favorites: [drink:'Rum']]
         when:
         PDDocument doc = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('profile.md', data, 'application/pdf', it )
+            reportEngine.generateReport('profile.md', data, 'text/markdown', 'application/pdf', it )
             PDDocument.load(it.toByteArray())
         }
         then:
@@ -110,6 +110,17 @@ Favorite drink
             'Basic attributes',
             'Work life',
             'Private life'
+        ]
+    }
+
+    def "List of reports can be retrieved"(){
+        when:
+        def configs = reportEngine.getReports()
+        then:
+        configs.size() == 2
+        configs.keySet().sort() == [
+            'process-list',
+            'processing-activities'
         ]
     }
 }

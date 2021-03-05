@@ -1,15 +1,11 @@
 {
-	"template": "vvt.md",
-	"output": "text/markdown",
-	"parameters": {
-		"scopeId": {
-			"required": "true",
-			"format": "uuid",
-			"description": "The ID of the scope that the report should run on"
-		}
-	},
+    "description": "Processing activities",
+	"templateFile": "vvt.md",
+	"templateType": "text/markdown",
+	"outputTypes": ["application/pdf"],
+	"targetTypes": ["scope"],
 	"data": {
-		"processes": "/processes?subType=VT&scopeId=$scopeId",
+		"processes": "/processes?subType=VT&scopeId=${targetId}",
 		"units": "/units/"
 	}
 }
