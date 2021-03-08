@@ -4,6 +4,7 @@ plugins {
     id 'groovy'
     id 'jacoco'
     id "com.github.spotbugs" version '4.7.0'
+    id "com.github.hierynomus.license" version "0.15.0"
 }
 
 repositories {
@@ -40,4 +41,13 @@ configurations.all {
             details.because 'fixes bookmark handling (https://github.com/danfickle/openhtmltopdf/issues/408)'
         }
     }
+}
+
+license {
+    header = file("templates/licenseHeader.txt")
+    exclude "reports/**"
+    exclude "templates/*"
+    skipExistingHeaders = true
+    ext["year"] = java.util.Calendar.getInstance().get(Calendar.YEAR)
+    ext["author"] = "git config user.name".execute().text.trim() ?: "<name>"
 }
