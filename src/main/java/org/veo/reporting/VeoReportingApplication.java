@@ -16,12 +16,19 @@
  */
 package org.veo.reporting;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -32,16 +39,40 @@ import org.veo.fileconverter.FileConverterImpl;
 import org.veo.templating.TemplateEvaluator;
 import org.veo.templating.TemplateEvaluatorImpl;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.TemplateLoader;
+
 @SpringBootApplication
 public class VeoReportingApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(VeoReportingApplication.class, args);
+    private static final Logger logger = LoggerFactory.getLogger(VeoReportingApplication.class);
+
+    public static void main(String[] args) throws IOException {
+        ConfigurableApplicationContext ctx = SpringApplication.run(VeoReportingApplication.class,
+                args);
+        if (Stream.of(ctx.getEnvironment().getActiveProfiles()).anyMatch("demo"::equals)) {
+            Demo.runDemo(ctx);
+        }
     }
 
     @Bean
-    public TemplateEvaluator createTemplateEvaluator() {
-        return new TemplateEvaluatorImpl();
+    public TemplateLoader createTemplateLoader(
+            @Value("${veo.reporting.use_filebased_template_loading:false}") boolean useFilebasedTemplateLoading)
+            throws IOException {
+        if (useFilebasedTemplateLoading) {
+            Path template = Paths.get("src/main/resources/templates");
+            return new FileTemplateLoader(template.toFile());
+        } else {
+            return new ClassTemplateLoader(TemplateEvaluatorImpl.class, "/templates");
+        }
+    }
+
+    @Bean
+    public TemplateEvaluator createTemplateEvaluator(TemplateLoader templateLoader,
+            @Value("${veo.reporting.use_template_cache:true}") boolean useCache) {
+        logger.info("Using template loader {}", templateLoader);
+        return new TemplateEvaluatorImpl(templateLoader, useCache);
     }
 
     @Bean

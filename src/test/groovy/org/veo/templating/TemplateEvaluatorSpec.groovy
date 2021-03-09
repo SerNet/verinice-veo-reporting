@@ -16,15 +16,17 @@
  */
 package org.veo.templating
 
+import freemarker.cache.ClassTemplateLoader
 import spock.lang.Specification
 
 public class TemplateEvaluatorSpec extends Specification {
 
     def "Test hello world template"(){
         given:
+        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
         ByteArrayOutputStream os = new ByteArrayOutputStream()
         when:
-        new TemplateEvaluatorImpl().executeTemplate('helloworld.txt', [name: "John"], os)
+        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('helloworld.txt', [name: "John"], os)
         def text = os.toString()
         then:
         text == 'Hello John.'

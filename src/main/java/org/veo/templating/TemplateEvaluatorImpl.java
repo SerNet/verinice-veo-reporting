@@ -22,6 +22,11 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import freemarker.cache.NullCacheStorage;
+import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -29,22 +34,30 @@ import freemarker.template.TemplateExceptionHandler;
 
 public class TemplateEvaluatorImpl implements TemplateEvaluator {
 
+    private static final Logger logger = LoggerFactory.getLogger(TemplateEvaluatorImpl.class);
+
     private final Configuration cfg;
 
-    public TemplateEvaluatorImpl() {
+    public TemplateEvaluatorImpl(TemplateLoader templateLoader, boolean useCache) {
         cfg = new Configuration(Configuration.VERSION_2_3_29);
-        cfg.setClassForTemplateLoading(TemplateEvaluatorImpl.class, "/templates");
+        cfg.setTemplateLoader(templateLoader);
         // Recommended settings for new projects:
         cfg.setDefaultEncoding("UTF-8");
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         cfg.setLogTemplateExceptions(false);
         cfg.setWrapUncheckedExceptions(true);
         cfg.setFallbackOnNullLoopVariable(false);
+        if (!useCache) {
+            logger.info("Caching disabled");
+            cfg.setCacheStorage(NullCacheStorage.INSTANCE);
+        }
     }
 
     public void executeTemplate(String templateName, Object data, OutputStream out)
             throws TemplateException, IOException {
         Template template = cfg.getTemplate(templateName);
+        logger.info("Evaluating template {}", templateName);
+
         try (Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
             template.process(data, writer);
         }
