@@ -45,12 +45,14 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.PropertyPlaceholderHelper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -83,8 +85,13 @@ public class ReportController {
 
     @PostMapping("/{id}")
     public void generateReport(@PathVariable String id,
-            @Valid @RequestBody CreateReport createReport, HttpServletResponse response)
+            @Valid @RequestBody CreateReport createReport, HttpServletResponse response,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader)
             throws IOException, TemplateException {
+        if (authorizationHeader == null) {
+            response.sendError(HttpStatus.UNAUTHORIZED.value());
+            return;
+        }
         logger.info("Create report {}, outputType {}", id, createReport.getOutputType());
         Optional<ReportConfiguration> configuration = reportEngine.getReport(id);
         if (!configuration.isPresent()) {
@@ -115,7 +122,7 @@ public class ReportController {
                             }
                         });
                         try {
-                            return veoClient.fetchData(expandedUrl, createReport.getToken());
+                            return veoClient.fetchData(expandedUrl, authorizationHeader);
                         } catch (IOException e) {
                             throw new RuntimeException("Failed to fetch report data from " + url,
                                     e);

@@ -43,10 +43,11 @@ public class Demo {
         var reportEngine = ctx.getBean(ReportEngine.class);
         var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
         var veoClient = ctx.getBean(VeoClient.class);
-        var vts = veoClient.fetchData("/processes?subType=VT", token);
+        var authHeader = "Bearer " + token;
+        var vts = veoClient.fetchData("/processes?subType=VT", authHeader);
 
-        var units = veoClient.fetchData("/units", token);
-        var scopes = veoClient.fetchData("/scopes", token);
+        var units = veoClient.fetchData("/units", authHeader);
+        var scopes = veoClient.fetchData("/scopes", authHeader);
 
         var objectMapper = new ObjectMapper();
 

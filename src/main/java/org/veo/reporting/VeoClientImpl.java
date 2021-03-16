@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.HttpHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
@@ -46,14 +47,14 @@ public class VeoClientImpl implements VeoClient {
     }
 
     @Override
-    public Object fetchData(String path, String accessToken) throws IOException {
-        return fetchData(URI.create(veoUrl + path), accessToken);
+    public Object fetchData(String path, String authorizationHeader) throws IOException {
+        return fetchData(URI.create(veoUrl + path), authorizationHeader);
     }
 
-    private Object fetchData(URI uri, String accessToken) throws IOException {
+    private Object fetchData(URI uri, String authorizationHeader) throws IOException {
         logger.info("Requesting data from {}", uri);
         ClientHttpRequest request = httpRequestFactory.createRequest(uri, HttpMethod.GET);
-        request.getHeaders().setBearerAuth(accessToken);
+        request.getHeaders().add(HttpHeaders.AUTHORIZATION, authorizationHeader);
         request.getHeaders().setAccept(List.of(MediaType.APPLICATION_JSON));
         try (ClientHttpResponse response = request.execute()) {
             if (!response.getStatusCode().is2xxSuccessful()) {

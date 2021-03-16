@@ -15,6 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.veo.reporting.controllers
+import org.apache.http.HttpHeaders
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -63,8 +64,7 @@ public class ReportControllerSpec extends Specification {
 
     def "try to create an unknown report"(){
         when:
-        def response = POST("/reports/invalid", [
-            token: 'abc',
+        def response = POST("/reports/invalid", 'abc', [
             outputType:'text/plain',
             targets: [
                 [
@@ -78,18 +78,19 @@ public class ReportControllerSpec extends Specification {
 
     def "try to create a report with missing targets parameter"(){
         when:
-        def response = POST("/reports/processing-activities",[
-            token: 'abc',
+        def response = POST("/reports/processing-activities", 'abc', [
             outputType:'application/pdf'
         ])
         then:
         response.status == 400
     }
 
+
+
+
     def "try to create a report with empty targets parameter"(){
         when:
-        def response = POST("/reports/processing-activities",[
-            token: 'abc',
+        def response = POST("/reports/processing-activities",'abc', [
             outputType:'application/pdf',
             targets: []])
         then:
@@ -98,8 +99,7 @@ public class ReportControllerSpec extends Specification {
 
     def "try to create a report with invalid target type"(){
         when:
-        def response = POST("/reports/processing-activities",[
-            token: 'abc',
+        def response = POST("/reports/processing-activities",'abc',[
             outputType:'application/pdf',
             targets: [
                 [
@@ -113,8 +113,7 @@ public class ReportControllerSpec extends Specification {
 
     def "try to create a report with unsupported target type"(){
         when:
-        def response = POST("/reports/processing-activities",[
-            token: 'abc',
+        def response = POST("/reports/processing-activities", 'abc',[
             outputType:'application/pdf',
             targets: [
                 [
@@ -128,8 +127,7 @@ public class ReportControllerSpec extends Specification {
 
     def "try to create a report with multiple targets"(){
         when:
-        def response = POST("/reports/processing-activities",[
-            token: 'abc',
+        def response = POST("/reports/processing-activities",'abc', [
             outputType:'application/pdf',
             targets: [
                 [
@@ -146,13 +144,31 @@ public class ReportControllerSpec extends Specification {
         response.status == 400
     }
 
+    def "try to create a report with missing authentication header"(){
+        when:
+        def response = POST("/reports/processing-activities", [
+            outputType:'application/pdf',
+            targets: [
+                [
+                    type: 'scope',
+                    id: '1'
+                ]
+            ]
+        ])
+        then:
+        response.status == 401
+    }
 
     MockHttpServletResponse GET(url) {
         mvc.perform(MockMvcRequestBuilders.get(url)).andReturn().response
     }
 
-    MockHttpServletResponse POST(url, body) {
-        mvc.perform(MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON).content(JsonOutput.toJson(body))).andReturn()
-                .response
+    MockHttpServletResponse POST(url, token = null, body) {
+        MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON).content(JsonOutput.toJson(body)).with {
+            if (token) {
+                header(HttpHeaders.AUTHORIZATION, "Bearer: $token")
+            }
+            mvc.perform(it).andReturn().response
+        }
     }
 }

@@ -23,9 +23,6 @@ import javax.validation.constraints.Size;
 
 public class CreateReport {
 
-    @NotNull(message = "Access token not specified.")
-    private String token;
-
     @NotNull(message = "Output type not specified.")
     private String outputType;
 
@@ -33,14 +30,6 @@ public class CreateReport {
     @Size(min = 1, max = 1)
     // multiple targets are not supported yet
     private List<TargetSpecification> targets;
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public String getOutputType() {
         return outputType;

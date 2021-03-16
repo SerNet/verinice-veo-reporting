@@ -20,6 +20,6 @@ import java.io.IOException;
 
 public interface VeoClient {
 
-    Object fetchData(String path, String accessToken) throws IOException;
+    Object fetchData(String path, String authorizationHeader) throws IOException;
 
 }
