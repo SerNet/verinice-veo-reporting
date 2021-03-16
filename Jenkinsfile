@@ -86,7 +86,7 @@ pipeline {
                     // Pushing multiple tags is cheap, as all the layers are reused.
                     withDockerRegistry(credentialsId: 'gcr:verinice-projekt@gcr', url: 'https://eu.gcr.io') {
                         dockerImage.push("git-${env.GIT_COMMIT}")
-                        if (env.GIT_BRANCH == 'master') {
+                        if (env.GIT_BRANCH == 'main') {
                             dockerImage.push("latest")
                             dockerImage.push(env.BUILD_NUMBER)
                         } else if (env.GIT_BRANCH ==~ /PR-\d+/) { // we only want to build pull requests
