@@ -25,6 +25,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 
 import org.veo.reporting.VeoClient
@@ -180,6 +181,7 @@ public class ReportControllerSpec extends Specification {
         ])
         then:
         response.status == 200
+
         1 * veoClient.fetchData('/processes?subType=VT&scopeId=0815', 'Bearer: abc') >> [
             [
                 name: 'Verarbeitungstätigkeit 1'
@@ -200,11 +202,15 @@ public class ReportControllerSpec extends Specification {
     }
 
     MockHttpServletResponse POST(url, token = null, body) {
-        MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON).content(JsonOutput.toJson(body)).with {
+        MvcResult result = MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON).content(JsonOutput.toJson(body)).with {
             if (token) {
                 header(HttpHeaders.AUTHORIZATION, "Bearer: $token")
             }
-            mvc.perform(it).andReturn().response
+            mvc.perform(it).andReturn()
         }
+        if (result.request.asyncStarted) {
+            result = mvc.perform(MockMvcRequestBuilders.asyncDispatch(result)).andReturn()
+        }
+        result.response
     }
 }

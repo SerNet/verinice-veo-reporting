@@ -16,20 +16,19 @@
  */
 package org.veo.reporting.controllers;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.PropertyPlaceholderHelper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +37,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.ServerErrorException;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import org.veo.reporting.CreateReport;
 import org.veo.reporting.CreateReport.TargetSpecification;
@@ -67,55 +69,51 @@ public class ReportController {
     }
 
     @PostMapping("/{id}")
-    public void generateReport(@PathVariable String id,
-            @Valid @RequestBody CreateReport createReport, HttpServletResponse response,
-            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader)
-            throws IOException, TemplateException {
+    public ResponseEntity<StreamingResponseBody> generateReport(@PathVariable String id,
+            @Valid @RequestBody CreateReport createReport,
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader) {
         if (authorizationHeader == null) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value());
-            return;
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         logger.info("Create report {}, outputType {}", id, createReport.getOutputType());
         Optional<ReportConfiguration> configuration = reportEngine.getReport(id);
         if (!configuration.isPresent()) {
-            response.sendError(HttpStatus.NOT_FOUND.value());
-            return;
+            return ResponseEntity.notFound().build();
         }
 
         // exactly one target entity is supported at the moment
         TargetSpecification target = createReport.getTargets().get(0);
         List<EntityType> supportedTargetTypes = configuration.get().getTargetTypes();
         if (!supportedTargetTypes.contains(target.type)) {
-            response.sendError(HttpStatus.BAD_REQUEST.value(),
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Target type " + target.type + " not supported by report " + id);
-            return;
         }
 
-        // TODO try to get rid of additional byte[]
-        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-            reportEngine.generateReport(id, createReport.getOutputType(), byteArrayOutputStream,
-                    (key, url) -> {
-                        PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${", "}");
-                        String expandedUrl = helper.replacePlaceholders(url, placeholderName -> {
-                            if ("targetId".equals(placeholderName)) {
-                                return target.id;
-                            } else {
-                                throw new IllegalArgumentException("Unsupported placeholder in url "
-                                        + key + ": " + placeholderName);
-                            }
-                        });
-                        try {
-                            return veoClient.fetchData(expandedUrl, authorizationHeader);
-                        } catch (IOException e) {
-                            throw new RuntimeException("Failed to fetch report data from " + url,
-                                    e);
+        StreamingResponseBody stream = out -> {
+            try {
+                reportEngine.generateReport(id, createReport.getOutputType(), out, (key, url) -> {
+                    PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${", "}");
+                    String expandedUrl = helper.replacePlaceholders(url, placeholderName -> {
+                        if ("targetId".equals(placeholderName)) {
+                            return target.id;
+                        } else {
+                            throw new IllegalArgumentException("Unsupported placeholder in url "
+                                    + key + ": " + placeholderName);
                         }
                     });
-            response.setContentType(createReport.getOutputType());
-            try (OutputStream os = response.getOutputStream()) {
-                os.write(byteArrayOutputStream.toByteArray());
+                    try {
+                        return veoClient.fetchData(expandedUrl, authorizationHeader);
+                    } catch (IOException e) {
+                        throw new ServerErrorException("Failed to fetch report data from " + url,
+                                e);
+                    }
+                });
+            } catch (TemplateException e) {
+                throw new ServerErrorException("Error creating report", e);
             }
-        }
+        };
+        return ResponseEntity.ok().contentType(MediaType.valueOf(createReport.getOutputType()))
+                .body(stream);
     }
 
 }
