@@ -18,12 +18,13 @@ package org.veo.reporting;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class CreateReport {
 
-    @NotNull(message = "Output type not specified.")
+    @NotEmpty(message = "Output type not specified.")
     private String outputType;
 
     @NotNull(message = "Targets not specified.")
