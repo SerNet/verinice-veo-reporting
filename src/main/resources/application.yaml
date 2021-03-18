@@ -15,6 +15,14 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #
 
+veo:
+  reporting:
+    veo_url: https://veo.develop.verinice.com
+    http_proxy_host: null
+    http_proxy_port: 3128
+    use_filebased_template_loading: false
+    use_template_cache: true
+
 management:
   health:
     livenessstate:
