@@ -1,3 +1,6 @@
+<#-- Print all booleans as true/false. This should be removed once we have proper custom aspect handling. -->
+<#setting boolean_format="c">
+
 <style>
   table {
     width: 100%;
