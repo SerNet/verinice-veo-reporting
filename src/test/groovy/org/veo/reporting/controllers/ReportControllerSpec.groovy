@@ -15,6 +15,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.veo.reporting.controllers
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.text.PDFTextStripper
+import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -23,6 +26,8 @@ import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+
+import org.veo.reporting.VeoClient
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
@@ -34,6 +39,9 @@ public class ReportControllerSpec extends Specification {
 
     @Autowired
     private MockMvc mvc
+
+    @SpringBean
+    private VeoClient veoClient = Mock()
 
     def "retrieve a list of reports"(){
         when:
@@ -157,6 +165,34 @@ public class ReportControllerSpec extends Specification {
         ])
         then:
         response.status == 401
+    }
+
+    def "create a PDF report"(){
+        when:
+        def response = POST("/reports/processing-activities", 'abc', [
+            outputType:'application/pdf',
+            targets: [
+                [
+                    type: 'scope',
+                    id: '0815'
+                ]
+            ]
+        ])
+        then:
+        response.status == 200
+        1 * veoClient.fetchData('/processes?subType=VT&scopeId=0815', 'Bearer: abc') >> [
+            [
+                name: 'Verarbeitungstätigkeit 1'
+            ]
+        ]
+        when:
+        PDDocument doc = PDDocument.load(response.contentAsByteArray)
+        then:
+        doc.numberOfPages == 8
+        when:
+        def text = new PDFTextStripper().getText(doc)
+        then:
+        text.startsWith('Verzeichnis von Verarbeitungstätigkeiten')
     }
 
     MockHttpServletResponse GET(url) {
