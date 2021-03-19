@@ -5,6 +5,7 @@ plugins {
     id 'jacoco'
     id "com.github.spotbugs" version '4.7.0'
     id "com.github.hierynomus.license" version "0.15.0"
+    id "com.gorylenko.gradle-git-properties" version "2.2.4"
 }
 
 repositories {
@@ -45,4 +46,17 @@ license {
     skipExistingHeaders = true
     ext["year"] = java.util.Calendar.getInstance().get(Calendar.YEAR)
     ext["author"] = "git config user.name".execute().text.trim() ?: "<name>"
+}
+
+springBoot {
+    buildInfo {
+        properties {
+            if (rootProject.hasProperty('ciBuildNumer')) {
+                additional = [
+                    'ci.buildnumber': rootProject.getProperty('ciBuildNumer'),
+                    'ci.jobname': rootProject.getProperty('ciJobName')
+                ]
+            }
+        }
+    }
 }
