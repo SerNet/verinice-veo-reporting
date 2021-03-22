@@ -20,6 +20,7 @@ dependencies {
     implementation 'com.vladsch.flexmark:flexmark-all:0.62.2'
     implementation 'com.openhtmltopdf:openhtmltopdf-core:1.0.8'
     implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.8'
+    implementation 'com.openhtmltopdf:openhtmltopdf-slf4j:1.0.8'
 
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
 

@@ -34,6 +34,9 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
+import com.openhtmltopdf.slf4j.Slf4jLogger;
+import com.openhtmltopdf.util.XRLog;
+
 import org.veo.fileconverter.FileConverter;
 import org.veo.fileconverter.FileConverterImpl;
 import org.veo.templating.TemplateEvaluator;
@@ -49,6 +52,7 @@ public class VeoReportingApplication {
     private static final Logger logger = LoggerFactory.getLogger(VeoReportingApplication.class);
 
     public static void main(String[] args) throws IOException {
+        XRLog.setLoggerImpl(new Slf4jLogger());
         ConfigurableApplicationContext ctx = SpringApplication.run(VeoReportingApplication.class,
                 args);
         if (Stream.of(ctx.getEnvironment().getActiveProfiles()).anyMatch("demo"::equals)) {
