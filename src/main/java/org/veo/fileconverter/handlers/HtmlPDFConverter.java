@@ -29,9 +29,12 @@ import org.w3c.dom.Document;
 
 import com.helger.font.api.FontResourceManager;
 import com.helger.font.api.IFontStyle;
+import com.openhtmltopdf.objects.jfreechart.JFreeChartBarDiagramObjectDrawer;
+import com.openhtmltopdf.objects.jfreechart.JFreeChartPieDiagramObjectDrawer;
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder.FontStyle;
 import com.openhtmltopdf.pdfboxout.PdfBoxRenderer;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+import com.openhtmltopdf.render.DefaultObjectDrawerFactory;
 
 import org.veo.fileconverter.ConversionHandler;
 
@@ -64,6 +67,10 @@ public class HtmlPDFConverter implements ConversionHandler {
             PdfRendererBuilder builder = new PdfRendererBuilder();
 
             addFonts(builder);
+            DefaultObjectDrawerFactory factory = new DefaultObjectDrawerFactory();
+            factory.registerDrawer("jfreechart/pie", new JFreeChartPieDiagramObjectDrawer());
+            factory.registerDrawer("jfreechart/bar", new JFreeChartBarDiagramObjectDrawer());
+            builder.useObjectDrawerFactory(factory);
 
             org.jsoup.nodes.Document doc;
             doc = Jsoup.parse(html);
