@@ -18,6 +18,8 @@ dependencies {
     implementation 'javax.validation:validation-api'
     implementation 'org.freemarker:freemarker:2.3.31'
     implementation 'com.vladsch.flexmark:flexmark-all:0.62.2'
+    implementation 'com.openhtmltopdf:openhtmltopdf-core:1.0.8'
+    implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.8'
 
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
 
@@ -33,15 +35,6 @@ spotbugsMain.reports {
     // Jenkins needs xml reports to detect and display bugs.
     xml.enabled = continuousIntegrationBuild
     html.enabled = !continuousIntegrationBuild
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.group == 'com.openhtmltopdf' && details.requested.version == '1.0.0' && details.requested.name != 'openhtmltopdf-jsoup-dom-converter') {
-            details.useVersion '1.0.1'
-            details.because 'fixes bookmark handling (https://github.com/danfickle/openhtmltopdf/issues/408)'
-        }
-    }
 }
 
 license {
