@@ -12,43 +12,7 @@
 </#function>
 
 <style>
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 3mm;
-    page-break-inside:avoid;
-  }
-  table th:first-child, table td:first-child {
-    width: 7cm;
-  }
-  table, th, td {
-    border: 1pt solid black;
-  }
-  th, td {
-    padding: 1mm;
-  }
-  th {
-    background-color: #eee;
-  }
-  tr.tableheading td {
-    text-decoration: underline;
-    font-weight: bold;
-  }
-  tr.tomsection {
-    background-color: #eee;
-  }
-  
-  div.pagebreak {
-    page-break-after: always;
-  }
-  @page {
-	@top-center {
-	  content: 'Verzeichnis von Verarbeitungstätigkeiten';	
-	}
-	@bottom-center {
-	  content: 'Seite ' counter(page) ' von ' counter(pages);;	
-	}
-  }
+<#include "styles/default.css">
 </style>
 
 <bookmarks>
@@ -59,6 +23,13 @@
 </#list>
   </bookmark>
 </bookmarks>
+
+
+<div class="cover">
+<h1>Verzeichnis der Verarbeitungstätigkeiten</h1>
+<p>powered by verinice</p>
+
+</div>
 
 # Hauptblatt
 

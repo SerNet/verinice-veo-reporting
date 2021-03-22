@@ -293,7 +293,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
         when:
         def text = new PDFTextStripper().getText(doc)
         then:
-        text.startsWith('Verzeichnis von Verarbeitungstätigkeiten')
+        text.startsWith('Verzeichnis der\nVerarbeitungstätigkeiten')
     }
 
     MockHttpServletResponse GET(url) {
