@@ -63,10 +63,13 @@ public class Demo {
                 authHeader);
 
         var objectMapper = new ObjectMapper();
-
-        System.out.println(objectMapper.writeValueAsString(vts));
-        System.out.println(objectMapper.writeValueAsString(units));
-        System.out.println(objectMapper.writeValueAsString(scopes));
+        var writer = objectMapper.writerWithDefaultPrettyPrinter();
+        System.out.println("VTs:");
+        System.out.println(writer.writeValueAsString(vts));
+        System.out.println("\nUnits:");
+        System.out.println(writer.writeValueAsString(units));
+        System.out.println("\nScopes:");
+        System.out.println(writer.writeValueAsString(scopes));
 
         var templateInput = Map.of("processes", vts, "units", units);
         createReports(reportEngine, templateInput, entriesForLanguage);
