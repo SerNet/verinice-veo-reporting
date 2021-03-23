@@ -56,26 +56,33 @@ public class Demo {
         var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
         var veoClient = ctx.getBean(VeoClient.class);
         var authHeader = "Bearer " + token;
-        var vts = veoClient.fetchData("/processes?subType=PRO_DataProcessing&size=2147483647",
-                authHeader);
-
-        var units = veoClient.fetchData("/units?size=2147483647", authHeader);
+        var processes = veoClient.fetchData("/processes?size=2147483647", authHeader);
+        var scope = veoClient.fetchData("/scopes/c7186469-4514-4e11-af5a-c2839457b1b9", authHeader);
         var scopes = veoClient.fetchData("/scopes?size=2147483647", authHeader);
+        var persons = veoClient.fetchData("/persons?size=2147483647", authHeader);
+        var controls = veoClient.fetchData("/controls?size=2147483647", authHeader);
+        var assets = veoClient.fetchData("/assets?size=2147483647", authHeader);
         Map<String, Object> entriesForLanguage = veoClient.fetchTranslations(Locale.GERMANY,
                 authHeader);
 
         var objectMapper = new ObjectMapper();
         var writer = objectMapper.writerWithDefaultPrettyPrinter();
-        System.out.println("VTs:");
-        System.out.println(writer.writeValueAsString(vts));
-        System.out.println("\nUnits:");
-        System.out.println(writer.writeValueAsString(units));
+        System.out.println("Scope:");
+        System.out.println(writer.writeValueAsString(scope));
         System.out.println("\nScopes:");
         System.out.println(writer.writeValueAsString(scopes));
+        System.out.println("\nProcesses:");
+        System.out.println(writer.writeValueAsString(processes));
+        System.out.println("\nPersons:");
+        System.out.println(writer.writeValueAsString(persons));
+        System.out.println("\nControls:");
+        System.out.println(writer.writeValueAsString(controls));
+        System.out.println("\nAssets:");
+        System.out.println(writer.writeValueAsString(assets));
 
-        var templateInput = Map.of("processes", vts, "units", units);
+        var templateInput = Map.of("scope", scope, "scopes", scopes, "processes", processes,
+                "persons", persons, "controls", controls, "assets", assets);
         createReports(reportEngine, templateInput, entriesForLanguage);
-
         Path template = Paths.get("src/main/resources/templates");
         WatchService watchService = FileSystems.getDefault().newWatchService();
         template.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
