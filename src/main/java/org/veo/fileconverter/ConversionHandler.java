@@ -20,12 +20,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * A handler that can convert data from one format to another one, e.g.
+ * text/markdown to text/html. This is not meant to be used directly. See
+ * {@link FileConverter}.
+ */
 public interface ConversionHandler {
 
+    /**
+     * @return the handler's input type. Must be a valid MIME type, such as
+     *         <code>text/html</code>.
+     */
     String getInputType();
 
+    /**
+     * @return the handler's output type. Must be a valid MIME type, such as
+     *         <code>text/html</code>.
+     */
     String getOutputType();
 
+    /**
+     * performs the actual conversion
+     */
     void convert(InputStream input, OutputStream output) throws IOException;
 
 }

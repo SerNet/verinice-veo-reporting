@@ -31,4 +31,28 @@ public class TemplateEvaluatorSpec extends Specification {
         then:
         text == 'Hello John.'
     }
+
+    def "Test invitation template"(){
+        given:
+        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
+        def templateEvaluator = new TemplateEvaluatorImpl(templateLoader, true)
+        ByteArrayOutputStream os = new ByteArrayOutputStream()
+        def bundleDe = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_de.properties'))
+        def bundleEn = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_en.properties'))
+        when:
+        templateEvaluator.executeTemplate('invitation.txt', [person:[name: "Johannes"], bundle: bundleDe], os)
+        def text = os.toString()
+        then:
+        text == '''Hallo Johannes,
+
+Hiermit lade ich Dich zu meinem Geburtstag ein.'''
+        when:
+        os = new ByteArrayOutputStream()
+        templateEvaluator.executeTemplate('invitation.txt',  [person:[name: "John"], bundle: bundleEn], os)
+        text = os.toString()
+        then:
+        text == '''Hi John,
+
+I'd like to invite you to my birthday party.'''
+    }
 }

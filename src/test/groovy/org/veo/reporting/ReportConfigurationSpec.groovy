@@ -43,7 +43,8 @@ class ReportConfigurationSpec extends Specification {
         def reportConfiguration = objectMapper.readValue(new File('src/main/resources/reports/processing-activities.json'), ReportConfiguration)
         then:
         with(reportConfiguration){
-            description == 'Processing activities'
+            name.de == 'Verzeichnis der Verarbeitungstätigkeiten'
+            description.de == 'Eine detaillierte Übersicht über die in einem Scope durchgeführten Verarbeitungstätigkeiten'
             targetTypes == [EntityType.scope]
             outputTypes == ['application/pdf']
         }

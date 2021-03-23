@@ -23,11 +23,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
@@ -39,6 +43,8 @@ import org.veo.templating.TemplateEvaluator;
 import freemarker.template.TemplateException;
 
 public class ReportEngineImpl implements ReportEngine {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReportEngineImpl.class);
 
     private final TemplateEvaluator templateEvaluator;
     private final FileConverter converter;
@@ -53,8 +59,9 @@ public class ReportEngineImpl implements ReportEngine {
     }
 
     @Override
-    public void generateReport(String reportName, String outputType, OutputStream outputStream,
-            BiFunction<String, String, Object> dataProvider) throws IOException, TemplateException {
+    public void generateReport(String reportName, String outputType, Locale locale,
+            OutputStream outputStream, DataProvider dataProvider,
+            Map<String, Object> dynamicBundleEntries) throws IOException, TemplateException {
 
         ReportConfiguration config = getReport(reportName)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown report " + reportName));
@@ -63,9 +70,21 @@ public class ReportEngineImpl implements ReportEngine {
 
         String templateName = config.getTemplateFile();
 
-        Map<String, String> dataFromConfig = config.getData();
+        config.getData().forEach((key, value) -> data.put(key, dataProvider.resolve(key, value)));
 
-        dataFromConfig.forEach((key, value) -> data.put(key, dataProvider.apply(key, value)));
+        String templateBaseName = templateName.split("\\.")[0];
+        String bundleName = "templates." + templateBaseName;
+        logger.info("Loading resourceBundle for template {}, locale {} from {}", templateName,
+                locale, bundleName);
+        try {
+            ResourceBundle reportBundle = ResourceBundle.getBundle(bundleName, locale);
+            logger.info("Bundle loaded, locale: {}", reportBundle.getLocale());
+            data.put("bundle",
+                    MapResourceBundle.createMergedBundle(reportBundle, dynamicBundleEntries));
+        } catch (MissingResourceException e) {
+            logger.warn("No resource bundle found for template {}", templateName);
+            data.put("bundle", new MapResourceBundle(dynamicBundleEntries));
+        }
         generateReport(templateName, data, config.getTemplateType(), outputType, outputStream);
 
     }
@@ -89,7 +108,7 @@ public class ReportEngineImpl implements ReportEngine {
     public Map<String, ReportConfiguration> getReports() {
         try {
             Resource[] resources = resourcePatternResolver
-                    .getResources("classpath:/reports/*.json");
+                    .getResources("classpath*:/reports/*.json");
             return Arrays.stream(resources).collect(Collectors.toMap(resource -> {
                 String fileName = resource.getFilename();
                 if (fileName == null) {
@@ -98,15 +117,16 @@ public class ReportEngineImpl implements ReportEngine {
                 return fileName.substring(0, fileName.length() - 5);
             }, resource -> {
                 try (var is = resource.getInputStream()) {
-                    return objectMapper.readValue(is, ReportConfiguration.class);
+                    ReportConfiguration reportConfiguration = objectMapper.readValue(is,
+                            ReportConfiguration.class);
+                    logger.info("Read report {} from {}", reportConfiguration.getName(), resource);
+                    return reportConfiguration;
                 } catch (IOException e) {
                     throw new RuntimeException("Error loading report configurations", e);
                 }
             }));
 
-        } catch (
-
-        IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Error loading report configurations", e);
         }
 

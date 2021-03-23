@@ -129,12 +129,35 @@ Favorite drink
         ]
     }
 
+    def "Render report with different locales"(){
+        when:
+        String text = new ByteArrayOutputStream().withCloseable {
+            reportEngine.generateReport('invitation', 'text/plain',Locale.GERMANY, it,{key, url->[name: 'Max']}, [:])
+            it.toString()
+        }
+        then:
+        text == '''Hallo Max,
+
+Hiermit lade ich Dich zu meinem Geburtstag ein.'''
+        when:
+
+        text = new ByteArrayOutputStream().withCloseable {
+            reportEngine.generateReport('invitation', 'text/plain',Locale.US, it,{key, url->[name: 'Jack']}, [:])
+            it.toString()
+        }
+        then:
+        text == '''Hi Jack,
+
+I'd like to invite you to my birthday party.'''
+    }
+
     def "List of reports can be retrieved"(){
         when:
         def configs = reportEngine.getReports()
         then:
-        configs.size() == 2
+        configs.size() == 3
         configs.keySet().sort() == [
+            'invitation',
             'process-list',
             'processing-activities'
         ]

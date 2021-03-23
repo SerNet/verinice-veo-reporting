@@ -31,6 +31,9 @@ import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 
 import org.veo.fileconverter.ConversionHandler;
 
+/**
+ * Converts HTML to PDF
+ */
 public class HtmlPDFConverter implements ConversionHandler {
 
     @Override

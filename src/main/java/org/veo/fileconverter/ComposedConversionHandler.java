@@ -22,6 +22,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * A conversion handler that delegates to a pair of conversion handlers A and B
+ * to support direct conversion from A's input format to B's output format by
+ * applying them one after another.
+ */
 public class ComposedConversionHandler implements ConversionHandler {
 
     private final ConversionHandler firstHandler;

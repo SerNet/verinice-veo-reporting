@@ -1,0 +1,13 @@
+{
+  "name": {
+  },
+  "description": {
+  },
+  "templateFile": "invitation.txt",
+  "templateType":"text/plain",
+  "outputTypes": ["text/plain"],
+  "targetTypes": ["person"],
+  "data": {
+	"person" : "/persons/${targetId}" 
+  }
+}

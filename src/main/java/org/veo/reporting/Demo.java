@@ -17,6 +17,7 @@
 package org.veo.reporting;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +25,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +39,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import freemarker.template.TemplateException;
 
+/**
+ * Runs a demo and a template editing environment that can be used to develop
+ * new reports. This is only meant to be used by developers and is nowhere near
+ * production quality, that's why it must be enabled via the <code>demo</code>
+ * Spring Boot profile.
+ */
 public class Demo {
 
     private static final Logger logger = LoggerFactory.getLogger(Demo.class);
@@ -48,6 +59,8 @@ public class Demo {
 
         var units = veoClient.fetchData("/units", authHeader);
         var scopes = veoClient.fetchData("/scopes", authHeader);
+        Map<String, Object> entriesForLanguage = veoClient.fetchTranslations(Locale.GERMANY,
+                authHeader);
 
         var objectMapper = new ObjectMapper();
 
@@ -56,7 +69,8 @@ public class Demo {
         System.out.println(objectMapper.writeValueAsString(scopes));
 
         var templateInput = Map.of("processes", vts, "units", units);
-        createReports(reportEngine, templateInput);
+        createReports(reportEngine, templateInput, entriesForLanguage);
+
         Path template = Paths.get("src/main/resources/templates");
         WatchService watchService = FileSystems.getDefault().newWatchService();
         template.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
@@ -64,7 +78,7 @@ public class Demo {
         try {
             while ((key = watchService.take()) != null) {
                 if (!key.pollEvents().isEmpty()) {
-                    createReports(reportEngine, templateInput);
+                    createReports(reportEngine, templateInput, entriesForLanguage);
                 }
                 key.reset();
             }
@@ -74,13 +88,24 @@ public class Demo {
         ctx.stop();
     }
 
-    static void createReports(ReportEngine reportEngine, Map<String, Object> templateInput) {
+    static void createReports(ReportEngine reportEngine, Map<String, Object> templateInput,
+            Map<String, Object> entriesForLanguage) throws IOException {
+        ResourceBundle bundle;
+        try (InputStream is = Files
+                .newInputStream(Paths.get("src/main/resources/templates/vvt_de.properties"))) {
+            bundle = new PropertyResourceBundle(is);
+        }
+
+        HashMap<String, Object> workingCopy = new HashMap<>(templateInput);
+        MapResourceBundle mergedBundle = MapResourceBundle.createMergedBundle(bundle,
+                entriesForLanguage);
+        workingCopy.put("bundle", mergedBundle);
         try {
-            createReport(reportEngine, "/tmp/vvt.md", "vvt.md", templateInput, "text/markdown",
+            createReport(reportEngine, "/tmp/vvt.md", "vvt.md", workingCopy, "text/markdown",
                     "text/markdown");
-            createReport(reportEngine, "/tmp/vvt.html", "vvt.md", templateInput, "text/markdown",
+            createReport(reportEngine, "/tmp/vvt.html", "vvt.md", workingCopy, "text/markdown",
                     "text/html");
-            createReport(reportEngine, "/tmp/vvt.pdf", "vvt.md", templateInput, "text/markdown",
+            createReport(reportEngine, "/tmp/vvt.pdf", "vvt.md", workingCopy, "text/markdown",
                     "application/pdf");
 
             createReport(reportEngine, "/tmp/processes.csv", "processes.csv", templateInput,

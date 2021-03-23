@@ -19,8 +19,14 @@ package org.veo.templating;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import freemarker.cache.TemplateLoader;
 import freemarker.template.TemplateException;
 
+/**
+ * Evaluates a template with given data
+ * 
+ * @see TemplateLoader
+ */
 public interface TemplateEvaluator {
     void executeTemplate(String templateName, Object data, OutputStream out)
             throws TemplateException, IOException;

@@ -23,17 +23,27 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * The specification of a single report. This is used to define the basic
+ * properties such as name and description as well as specify the URLS that are
+ * queried to supply the dynamic content. <br>
+ * The entities are read from JSON serializations that reside in the
+ * <code>/reports</code> directory on the classpath.
+ */
+
 public class ReportConfiguration {
 
     @JsonCreator
     public ReportConfiguration(
-            @JsonProperty(value = "description", required = true) String description,
+            @JsonProperty(value = "name", required = true) Map<String, String> name,
+            @JsonProperty(value = "description", required = true) Map<String, String> description,
             @JsonProperty(value = "templateFile", required = true) String templateFile,
             @JsonProperty(value = "templateType", required = true) String templateType,
             @JsonProperty(value = "outputTypes", required = true) List<String> outputTypes,
             @JsonProperty(value = "multipleTargetsSupported", defaultValue = "false") boolean multipleTargetsSupported,
             @JsonProperty(value = "targetTypes", required = true) List<EntityType> targetTypes,
             @JsonProperty(value = "data", required = true) Map<String, String> data) {
+        this.name = name;
         this.description = description;
         this.templateFile = templateFile;
         this.templateType = templateType;
@@ -43,7 +53,9 @@ public class ReportConfiguration {
         this.data = data;
     }
 
-    private String description;
+    private final Map<String, String> name;
+
+    private Map<String, String> description;
 
     private final String templateFile;
 
@@ -57,7 +69,11 @@ public class ReportConfiguration {
 
     private final Map<String, String> data;
 
-    public String getDescription() {
+    public Map<String, String> getName() {
+        return name;
+    }
+
+    public Map<String, String> getDescription() {
         return description;
     }
 

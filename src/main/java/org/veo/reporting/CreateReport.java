@@ -22,6 +22,17 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.veo.fileconverter.FileConverter;
+import org.veo.reporting.controllers.ReportController;
+
+/**
+ * The DTO for a report creation. It specifies the entities that the report is
+ * run upon and the desired output format.
+ * 
+ * @see {@link FileConverter}
+ * @see {@link ReportEngine}
+ * @see {@link ReportController}
+ */
 public class CreateReport {
 
     @NotEmpty(message = "Output type not specified.")

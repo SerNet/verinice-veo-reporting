@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
+/**
+ * Renders Markdown to HTML
+ */
 public interface MarkdownRenderer {
     void renderToHTML(Reader reader, Writer writer) throws IOException;
 }

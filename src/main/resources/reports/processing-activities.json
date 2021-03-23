@@ -1,5 +1,10 @@
 {
-    "description": "Processing activities",
+    "name": {
+      "de": "Verzeichnis der Verarbeitungstätigkeiten"
+    },
+    "description": {
+      "de": "Eine detaillierte Übersicht über die in einem Scope durchgeführten Verarbeitungstätigkeiten"
+    },
 	"templateFile": "vvt.md",
 	"templateType": "text/markdown",
 	"outputTypes": ["application/pdf"],

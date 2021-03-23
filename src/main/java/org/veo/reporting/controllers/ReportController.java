@@ -18,9 +18,11 @@ package org.veo.reporting.controllers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -39,10 +41,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerErrorException;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import org.veo.reporting.CreateReport;
 import org.veo.reporting.CreateReport.TargetSpecification;
+import org.veo.reporting.DataProvider;
 import org.veo.reporting.EntityType;
 import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportEngine;
@@ -50,28 +54,57 @@ import org.veo.reporting.VeoClient;
 
 import freemarker.template.TemplateException;
 
+/**
+ * The REST controller that serves as the API. Can be used to retrieve the
+ * available reports and execute them.
+ * 
+ * @see ReportConfiguration
+ * @see CreateReport
+ */
 @RestController
 @RequestMapping("/reports")
 public class ReportController {
 
-    private final ReportEngine reportEngine;
-    private final VeoClient veoClient;
+    private static final String TARGET_ID = "targetId";
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
 
-    public ReportController(ReportEngine reportEngine, VeoClient veoClient) {
+    private final ReportEngine reportEngine;
+    private final VeoClient veoClient;
+    private final LocaleResolver localeResolver;
+
+    public ReportController(ReportEngine reportEngine, VeoClient veoClient,
+            LocaleResolver localeResolver) {
         this.reportEngine = reportEngine;
         this.veoClient = veoClient;
+        this.localeResolver = localeResolver;
     }
 
+    /**
+     * @return the available reports
+     */
     @GetMapping
     public Map<String, ReportConfiguration> getReports() {
         return reportEngine.getReports();
     }
 
+    /**
+     * Creates a report
+     *
+     * @param id
+     *            the report id
+     * @param createReport
+     *            the report creation parameters, see {@link CreateReport}
+     * @param authorizationHeader
+     *            the <code>Authorization</code> request header
+     * @param request
+     *            the servlet request
+     * @return the report
+     */
     @PostMapping("/{id}")
     public ResponseEntity<StreamingResponseBody> generateReport(@PathVariable String id,
             @Valid @RequestBody CreateReport createReport,
-            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader) {
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
+            HttpServletRequest request) {
         if (authorizationHeader == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -88,26 +121,28 @@ public class ReportController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Target type " + target.type + " not supported by report " + id);
         }
+        Locale locale = localeResolver.resolveLocale(request);
+        logger.info("Request locale = {}", locale);
+        Map<String, Object> entriesForLanguage;
+        try {
+            entriesForLanguage = veoClient.fetchTranslations(locale, authorizationHeader);
+        } catch (IOException e) {
+            throw new ServerErrorException("Failed to fetch translations for " + locale, e);
+        }
+        DataProvider dataProvider = (key, url) -> {
+            String expandedUrl = expandUrl(key, url, target);
+            try {
+                return veoClient.fetchData(expandedUrl, authorizationHeader);
+            } catch (IOException e) {
+                throw new ServerErrorException("Failed to fetch report data from " + expandedUrl,
+                        e);
+            }
+        };
 
         StreamingResponseBody stream = out -> {
             try {
-                reportEngine.generateReport(id, createReport.getOutputType(), out, (key, url) -> {
-                    PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${", "}");
-                    String expandedUrl = helper.replacePlaceholders(url, placeholderName -> {
-                        if ("targetId".equals(placeholderName)) {
-                            return target.id;
-                        } else {
-                            throw new IllegalArgumentException("Unsupported placeholder in url "
-                                    + key + ": " + placeholderName);
-                        }
-                    });
-                    try {
-                        return veoClient.fetchData(expandedUrl, authorizationHeader);
-                    } catch (IOException e) {
-                        throw new ServerErrorException(
-                                "Failed to fetch report data from " + expandedUrl, e);
-                    }
-                });
+                reportEngine.generateReport(id, createReport.getOutputType(), locale, out,
+                        dataProvider, entriesForLanguage);
                 logger.info("Report generated");
             } catch (TemplateException e) {
                 logger.error("Error creating report", e);
@@ -116,6 +151,18 @@ public class ReportController {
         };
         return ResponseEntity.ok().contentType(MediaType.valueOf(createReport.getOutputType()))
                 .body(stream);
+    }
+
+    private static String expandUrl(String key, String url, TargetSpecification target) {
+        PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${", "}");
+        return helper.replacePlaceholders(url, placeholderName -> {
+            if (TARGET_ID.equals(placeholderName)) {
+                return target.id;
+            } else {
+                throw new IllegalArgumentException(
+                        "Unsupported placeholder in url " + key + ": " + placeholderName);
+            }
+        });
     }
 
 }

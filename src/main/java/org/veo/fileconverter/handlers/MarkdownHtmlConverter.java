@@ -30,6 +30,9 @@ import java.nio.charset.StandardCharsets;
 import org.veo.fileconverter.ConversionHandler;
 import org.veo.templating.MarkdownRendererImpl;
 
+/**
+ * Converts Markdown to HTML
+ */
 public class MarkdownHtmlConverter implements ConversionHandler {
 
     @Override

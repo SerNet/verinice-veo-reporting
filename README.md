@@ -47,3 +47,11 @@ There is a single REST controller (`org.veo.reporting.controllers.ReportControll
 
 `/reports/{name}` (`POST`)
 : can be used to create a report. It accepts a JSON object that specifies the target entities and the desired output type. See `org.veo.reporting.CreateReport`.
+
+## Report developemt a.k.a. "demo mode"
+
+As there is no report editor yet, there is a demo mode that can be enabled via a command line switch. In that mode, the files in `src/main/resources/templates` are observed for modification, in which case the `processing-activities` and `process-list` reports are generated and written into the `/tmp` folder.
+
+Enable with `./gradlew bootRun --args="--spring.profiles.active=demo --veo.accesstoken=XXXX"` and use at your own risk.
+
+See `org.veo.reporting.Demo`.

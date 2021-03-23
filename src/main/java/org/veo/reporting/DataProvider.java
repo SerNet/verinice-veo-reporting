@@ -17,12 +17,9 @@
 package org.veo.reporting;
 
 /**
- * An entity type that can be used as the input for a report
- * 
- * @see {@link CreateReport}
+ * Resolves an entry from a {@link ReportConfiguration}'s <code>data</code>
+ * specification to the real value
  */
-public enum EntityType {
-
-    asset, client, control, document, incident, person, process, scenario, scope, unit
-
+public interface DataProvider {
+    Object resolve(String key, String value);
 }

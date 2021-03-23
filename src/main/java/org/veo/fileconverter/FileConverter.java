@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * A service that can convert a file from one format to another. It uses a set
+ * of handlers, each of which supports the conversion from a single format to a
+ * single other one. See {@link ConversionHandler}.
+ */
 public interface FileConverter {
 
     void convert(InputStream input, String inputType, OutputStream output, String outputType)

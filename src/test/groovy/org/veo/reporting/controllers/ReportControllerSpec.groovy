@@ -15,6 +15,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 package org.veo.reporting.controllers
+import java.nio.charset.StandardCharsets
+
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import org.spockframework.spring.SpringBean
@@ -52,8 +54,9 @@ public class ReportControllerSpec extends Specification {
         when:
         def reports = new JsonSlurper().parseText(response.contentAsString)
         then:
-        reports.size() == 2
+        reports.size() == 3
         reports.keySet().sort() == [
+            'invitation',
             'process-list',
             'processing-activities'
         ]
@@ -62,10 +65,15 @@ public class ReportControllerSpec extends Specification {
     def "Report configuration has the expected format"(){
         when:
         def response = GET("/reports")
-        def config = new JsonSlurper().parseText(response.contentAsString).'processing-activities'
+        def config = new JsonSlurper().parseText(response.getContentAsString(StandardCharsets.UTF_8)).'processing-activities'
         then:
         config == [
-            description:'Processing activities',
+            name:[
+                de: 'Verzeichnis der Verarbeitungstätigkeiten'
+            ],
+            description:[
+                de: 'Eine detaillierte Übersicht über die in einem Scope durchgeführten Verarbeitungstätigkeiten'
+            ],
             outputTypes:['application/pdf'],
             multipleTargetsSupported:false,
             targetTypes:  ['scope']]
@@ -168,6 +176,58 @@ public class ReportControllerSpec extends Specification {
         response.status == 401
     }
 
+    def "create a report with different locales"(){
+        when:
+        def response = POST("/reports/invitation",'abc','en', [
+            outputType:'text/plain',
+            targets: [
+                [
+                    type: 'person',
+                    id: '1'
+                ]
+            ]
+        ])
+        then:
+        response.status == 200
+
+        1 * veoClient.fetchData('/persons/1', 'Bearer: abc') >> [
+            name: 'Mary'
+        ]
+        1 * veoClient.fetchTranslations(Locale.ENGLISH, 'Bearer: abc') >> [
+            lang: [
+                en:[:]
+            ]
+        ]
+        response.contentAsString == '''Hi Mary,
+
+I'd like to invite you to my birthday party.'''
+        when:
+        response = POST("/reports/invitation",'abc','de', [
+            outputType:'text/plain',
+            targets: [
+                [
+                    type: 'person',
+                    id: '1'
+                ]
+            ]
+        ])
+        then:
+        response.status == 200
+
+        1 * veoClient.fetchData('/persons/1', 'Bearer: abc') >> [
+            name: 'Maria'
+        ]
+        1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
+            lang: [
+                de:[:]
+            ]
+        ]
+        response.contentAsString == '''Hallo Maria,
+
+Hiermit lade ich Dich zu meinem Geburtstag ein.'''
+    }
+
+
     def "create a PDF report"(){
         when:
         def response = POST("/reports/processing-activities", 'abc', [
@@ -187,6 +247,11 @@ public class ReportControllerSpec extends Specification {
                 name: 'Verarbeitungstätigkeit 1'
             ]
         ]
+        1 * veoClient.fetchTranslations(Locale.ENGLISH, 'Bearer: abc') >> [
+            lang: [
+                en:[:]
+            ]
+        ]
         when:
         PDDocument doc = PDDocument.load(response.contentAsByteArray)
         then:
@@ -201,10 +266,13 @@ public class ReportControllerSpec extends Specification {
         mvc.perform(MockMvcRequestBuilders.get(url)).andReturn().response
     }
 
-    MockHttpServletResponse POST(url, token = null, body) {
+    MockHttpServletResponse POST(url, token = null,language=null, body) {
         MvcResult result = MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON).content(JsonOutput.toJson(body)).with {
             if (token) {
                 header(HttpHeaders.AUTHORIZATION, "Bearer: $token")
+            }
+            if (language) {
+                header(HttpHeaders.ACCEPT_LANGUAGE, language)
             }
             mvc.perform(it).andReturn()
         }
