@@ -104,11 +104,13 @@ public class ReportController {
                     try {
                         return veoClient.fetchData(expandedUrl, authorizationHeader);
                     } catch (IOException e) {
-                        throw new ServerErrorException("Failed to fetch report data from " + url,
-                                e);
+                        throw new ServerErrorException(
+                                "Failed to fetch report data from " + expandedUrl, e);
                     }
                 });
+                logger.info("Report generated");
             } catch (TemplateException e) {
+                logger.error("Error creating report", e);
                 throw new ServerErrorException("Error creating report", e);
             }
         };

@@ -58,6 +58,8 @@ public class VeoClientImpl implements VeoClient {
         request.getHeaders().setAccept(List.of(MediaType.APPLICATION_JSON));
         try (ClientHttpResponse response = request.execute()) {
             if (!response.getStatusCode().is2xxSuccessful()) {
+                logger.error("HTTP error {} for {}, message: {}", response.getRawStatusCode(), uri,
+                        response.getStatusText());
                 throw new RuntimeException("Failed to retrieve data from " + uri + ", status code: "
                         + response.getRawStatusCode() + ", message: " + response.getStatusText());
             }
