@@ -101,8 +101,7 @@ public class VeoReportingApplication {
             @Value("${veo.reporting.http_proxy_host:#{null}}") String proxyHost,
             @Value("${veo.reporting.http_proxy_port:3128}") int proxyPort) {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-
-        if (proxyHost != null) {
+        if (proxyHost != null && !proxyHost.isEmpty()) {
             var proxy = new Proxy(Proxy.Type.HTTP,
                     InetSocketAddress.createUnresolved(proxyHost, proxyPort));
             logger.info("Using proxy {}", proxy);
