@@ -4,7 +4,7 @@ plugins {
     id 'groovy'
     id 'jacoco'
     id "com.github.spotbugs" version '4.7.0'
-    id "com.github.hierynomus.license" version "0.15.0"
+    id 'org.cadixdev.licenser' version '0.5.1'
     id "com.gorylenko.gradle-git-properties" version "2.2.4"
 }
 
@@ -41,11 +41,15 @@ spotbugsMain.reports {
 
 license {
     header = file("templates/licenseHeader.txt")
+    newLine = false
     exclude "reports/**"
     exclude "templates/*"
     skipExistingHeaders = true
     ext["year"] = java.util.Calendar.getInstance().get(Calendar.YEAR)
     ext["author"] = "git config user.name".execute().text.trim() ?: "<name>"
+    style {
+        java = 'JAVADOC'
+    }
 }
 
 springBoot {
