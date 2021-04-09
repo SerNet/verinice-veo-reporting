@@ -21,15 +21,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.veo.fileconverter.handlers.HtmlPDFConverter;
 import org.veo.fileconverter.handlers.MarkdownHtmlConverter;
 
 public class FileConverterImpl implements FileConverter {
 
+    private static final Logger logger = LoggerFactory.getLogger(FileConverterImpl.class);
     private final Map<String, Map<String, ConversionHandler>> handlerRegistry = new ConcurrentHashMap<>();
+    private final ExecutorService executorService;
 
-    public FileConverterImpl() {
+    public FileConverterImpl(ExecutorService executorService) {
+        this.executorService = executorService;
         addHandler(new MarkdownHtmlConverter());
         addHandler(new HtmlPDFConverter());
     }
@@ -57,6 +64,7 @@ public class FileConverterImpl implements FileConverter {
         if (inputType.equals(outputType)) {
             input.transferTo(output);
         } else {
+            logger.info("Converting from {} to {}", inputType, outputType);
             ConversionHandler converter = getHandler(inputType, outputType);
             if (converter == null) {
                 throw new IllegalArgumentException(
@@ -82,7 +90,7 @@ public class FileConverterImpl implements FileConverter {
                     .computeIfAbsent(targetType, key -> new ConcurrentHashMap<>()).get(outputType);
             if (targetHandler != null) {
                 ConversionHandler combinedHandler = new ComposedConversionHandler(
-                        intermediateHandler, targetHandler);
+                        intermediateHandler, targetHandler, executorService);
                 handlersFromInputType.put(outputType, combinedHandler);
                 return combinedHandler;
             }

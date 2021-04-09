@@ -16,11 +16,14 @@
  */
 package org.veo.fileconverter;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 /**
  * A conversion handler that delegates to a pair of conversion handlers A and B
@@ -33,11 +36,13 @@ public class ComposedConversionHandler implements ConversionHandler {
     private final ConversionHandler secondHandler;
     private final String inputType;
     private final String outputType;
+    private final ExecutorService executorService;
 
     public ComposedConversionHandler(ConversionHandler firstHandler,
-            ConversionHandler secondHandler) {
+            ConversionHandler secondHandler, ExecutorService executorService) {
         this.firstHandler = firstHandler;
         this.secondHandler = secondHandler;
+        this.executorService = executorService;
         this.inputType = firstHandler.getInputType();
         this.outputType = secondHandler.getOutputType();
     }
@@ -54,11 +59,26 @@ public class ComposedConversionHandler implements ConversionHandler {
 
     @Override
     public void convert(InputStream input, OutputStream output) throws IOException {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            firstHandler.convert(input, baos);
-            var bytes = baos.toByteArray();
-            try (ByteArrayInputStream bais = new ByteArrayInputStream(bytes)) {
-                secondHandler.convert(bais, output);
+        try (PipedInputStream pipedInputStream = new PipedInputStream();
+                PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
+            // start async conversion of the first
+            // handler's output with the second handler
+            Future<Void> future = executorService.submit(() -> {
+                secondHandler.convert(pipedInputStream, output);
+                return null;
+            });
+            try {
+                firstHandler.convert(input, pipedOutputStream);
+            } catch (IOException e) {
+                // first handler failed, cancel the second handler task
+                future.cancel(true);
+                throw e;
+            }
+            try {
+                // wait for the second handler to finish
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException("Error running conversion", e);
             }
         }
     }

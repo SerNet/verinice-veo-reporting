@@ -22,7 +22,8 @@ veo:
     http_proxy_port: 3128
     use_filebased_template_loading: false
     use_template_cache: true
-
+    conversion_handler_pool_size: 8
+    report_engine_pool_size: 4
 management:
   health:
     livenessstate:

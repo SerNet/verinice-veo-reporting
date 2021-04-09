@@ -16,11 +16,11 @@
  */
 package org.veo.reporting;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
@@ -28,6 +28,9 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -50,12 +53,14 @@ public class ReportEngineImpl implements ReportEngine {
     private final FileConverter converter;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ResourcePatternResolver resourcePatternResolver;
+    private final ExecutorService executorService;
 
     public ReportEngineImpl(TemplateEvaluator templateEvaluator, FileConverter converter,
-            ResourcePatternResolver resourcePatternResolver) {
+            ResourcePatternResolver resourcePatternResolver, ExecutorService executorService) {
         this.templateEvaluator = templateEvaluator;
         this.converter = converter;
         this.resourcePatternResolver = resourcePatternResolver;
+        this.executorService = executorService;
     }
 
     @Override
@@ -95,10 +100,25 @@ public class ReportEngineImpl implements ReportEngine {
         if (outputType.equals(templateType)) {
             templateEvaluator.executeTemplate(templateName, data, output);
         } else {
-            try (ByteArrayOutputStream tmp = new ByteArrayOutputStream()) {
-                templateEvaluator.executeTemplate(templateName, data, tmp);
-                try (InputStream is = new ByteArrayInputStream(tmp.toByteArray())) {
-                    converter.convert(is, templateType, output, outputType);
+            try (PipedInputStream pipedInputStream = new PipedInputStream();
+                    PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
+                // start async conversion of the template output
+                Future<Void> future = executorService.submit(() -> {
+                    converter.convert(pipedInputStream, templateType, output, outputType);
+                    return null;
+                });
+                try {
+                    templateEvaluator.executeTemplate(templateName, data, pipedOutputStream);
+                } catch (TemplateException | IOException e) {
+                    // template evaluation failed, cancel the conversion task
+                    future.cancel(true);
+                    throw e;
+                }
+                try {
+                    // wait for the conversion to finish
+                    future.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException("Error running conversion", e);
                 }
             }
         }

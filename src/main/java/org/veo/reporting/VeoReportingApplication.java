@@ -21,6 +21,8 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -33,6 +35,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
 import com.openhtmltopdf.slf4j.Slf4jLogger;
 import com.openhtmltopdf.util.XRLog;
@@ -80,8 +83,11 @@ public class VeoReportingApplication {
     }
 
     @Bean
-    public FileConverter createFileConverter() {
-        return new FileConverterImpl();
+    public FileConverter createFileConverter(
+            @Value("${veo.reporting.conversion_handler_pool_size:8}") int conversionHandlerPoolSize) {
+        ExecutorService pool = Executors.newFixedThreadPool(conversionHandlerPoolSize,
+                new CustomizableThreadFactory("conversion-handler-pool-thread-"));
+        return new FileConverterImpl(pool);
     }
 
     @Bean
@@ -92,8 +98,12 @@ public class VeoReportingApplication {
 
     @Bean
     public ReportEngine createReportEngine(TemplateEvaluator templateEvaluator,
-            FileConverter fileConverter, ResourcePatternResolver resourcePatternResolver) {
-        return new ReportEngineImpl(templateEvaluator, fileConverter, resourcePatternResolver);
+            FileConverter fileConverter, ResourcePatternResolver resourcePatternResolver,
+            @Value("${veo.reporting.report_engine_pool_size:4}") int reportEnginePoolSize) {
+        ExecutorService pool = Executors.newFixedThreadPool(reportEnginePoolSize,
+                new CustomizableThreadFactory("report-engine-pool-thread-"));
+        return new ReportEngineImpl(templateEvaluator, fileConverter, resourcePatternResolver,
+                pool);
     }
 
     @Bean
