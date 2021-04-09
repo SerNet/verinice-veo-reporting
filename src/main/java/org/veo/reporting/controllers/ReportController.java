@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -108,10 +109,17 @@ public class ReportController {
         if (authorizationHeader == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        logger.info("Create report {}, outputType {}", id, createReport.getOutputType());
+        String outputType = createReport.getOutputType();
+        logger.info("Create report {}, outputType {}", id, outputType);
         Optional<ReportConfiguration> configuration = reportEngine.getReport(id);
         if (!configuration.isPresent()) {
             return ResponseEntity.notFound().build();
+        }
+        List<String> supportedOutputTypes = configuration.get().getOutputTypes();
+        if (!supportedOutputTypes.contains(outputType)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Output type " + outputType + " not supported by report " + id
+                            + ", supported output types: " + supportedOutputTypes);
         }
 
         // exactly one target entity is supported at the moment
@@ -123,6 +131,15 @@ public class ReportController {
         }
         Locale locale = localeResolver.resolveLocale(request);
         logger.info("Request locale = {}", locale);
+
+        String desiredLanguage = locale.getLanguage();
+        Set<String> supportedLanguages = configuration.get().getName().keySet();
+        if (!supportedLanguages.contains(desiredLanguage)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Language " + desiredLanguage + " not supported by report " + id
+                            + ", supported languages: " + supportedLanguages);
+        }
+
         Map<String, Object> entriesForLanguage;
         try {
             entriesForLanguage = veoClient.fetchTranslations(locale, authorizationHeader);
@@ -141,16 +158,15 @@ public class ReportController {
 
         StreamingResponseBody stream = out -> {
             try {
-                reportEngine.generateReport(id, createReport.getOutputType(), locale, out,
-                        dataProvider, entriesForLanguage);
+                reportEngine.generateReport(id, outputType, locale, out, dataProvider,
+                        entriesForLanguage);
                 logger.info("Report generated");
             } catch (TemplateException e) {
                 logger.error("Error creating report", e);
                 throw new ServerErrorException("Error creating report", e);
             }
         };
-        return ResponseEntity.ok().contentType(MediaType.valueOf(createReport.getOutputType()))
-                .body(stream);
+        return ResponseEntity.ok().contentType(MediaType.valueOf(outputType)).body(stream);
     }
 
     private static String expandUrl(String key, String url, TargetSpecification target) {

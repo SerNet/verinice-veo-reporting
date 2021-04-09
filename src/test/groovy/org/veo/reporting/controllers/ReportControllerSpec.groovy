@@ -142,6 +142,9 @@ public class ReportControllerSpec extends Specification {
         response.status == 400
     }
 
+
+
+
     def "try to create a report with multiple targets"(){
         when:
         def response = POST("/reports/processing-activities",'abc', [
@@ -228,9 +231,39 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
     }
 
 
+    def "try to create a report with unsupported output type"(){
+        when:
+        def response =  POST("/reports/invitation",'abc', [
+            outputType:'animal/elephant',
+            targets: [
+                [
+                    type: 'person',
+                    id: '1'
+                ]
+            ]
+        ])
+        then:
+        response.status == 400
+    }
+
+    def "try to create a report with unsupported locale"(){
+        when:
+        def response =  POST("/reports/invitation",'abc', 'pt', [
+            outputType:'text/plain',
+            targets: [
+                [
+                    type: 'person',
+                    id: '1'
+                ]
+            ]
+        ])
+        then:
+        response.status == 400
+    }
+
     def "create a PDF report"(){
         when:
-        def response = POST("/reports/processing-activities", 'abc', [
+        def response = POST("/reports/processing-activities", 'abc', 'de',[
             outputType:'application/pdf',
             targets: [
                 [
@@ -247,7 +280,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                 name: 'Verarbeitungstätigkeit 1'
             ]
         ]
-        1 * veoClient.fetchTranslations(Locale.ENGLISH, 'Bearer: abc') >> [
+        1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
             lang: [
                 en:[:]
             ]
