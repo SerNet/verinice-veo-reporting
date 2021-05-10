@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.description="Backend of the verinice.veo-reportin
 LABEL org.opencontainers.image.ref.name=verinice.veo-reporting
 LABEL org.opencontainers.image.vendor="SerNet GmbH"
 LABEL org.opencontainers.image.authors=verinice@sernet.de
-LABEL org.opencontainers.image.licenses=LGPL-3.0
+LABEL org.opencontainers.image.licenses=AGPL-3.0
 LABEL org.opencontainers.image.source=https://github.com/verinice/verinice-veo-reporting
 
 RUN adduser --home /app --disabled-password --gecos '' veo
