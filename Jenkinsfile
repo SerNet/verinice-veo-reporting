@@ -120,7 +120,7 @@ pipeline {
                       highTags: 'FIXME',
                       ignoreCase: true,
                       normalTags: 'TODO',
-                      excludePattern: 'Jenkinsfile, gradle-home/**, .gradle/**, buildSrc/.gradle/**, */build/**, **/*.pdf, **/*.png, **/*.jpg, **/*.vna'
+                      excludePattern: 'Jenkinsfile, gradle-home/**, .gradle/**, build/**'
                     )
                   ]
                 )
