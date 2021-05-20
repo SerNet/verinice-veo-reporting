@@ -6,6 +6,7 @@ plugins {
     id "com.github.spotbugs" version '4.7.1'
     id 'org.cadixdev.licenser' version '0.6.0'
     id "com.gorylenko.gradle-git-properties" version "2.3.1"
+    id 'pmd'
 }
 
 repositories {
@@ -40,6 +41,14 @@ spotbugsMain.reports {
     xml.enabled = continuousIntegrationBuild
     html.enabled = !continuousIntegrationBuild
 }
+
+pmd {
+    toolVersion = '6.34.0'
+    rulesMinimumPriority = 2
+    consoleOutput = true
+}
+
+pmdTest.enabled = false
 
 license {
     header = file("templates/licenseHeader.txt")
