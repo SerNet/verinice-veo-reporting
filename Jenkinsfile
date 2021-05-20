@@ -115,6 +115,8 @@ pipeline {
         always {
            node('') {
                 recordIssues(enabledForFailure: true, tools: [java()])
+                recordIssues(enabledForFailure: true, tools: [spotBugs(pattern: 'build/reports/spotbugs/main.xml', useRankAsPriority: true, trendChartType: 'NONE')])
+                recordIssues(enabledForFailure: true, tools: [pmdParser(pattern: 'build/reports/pmd/main.xml', trendChartType: 'NONE')])
                 recordIssues(
                   enabledForFailure: true,
                   tools: [
