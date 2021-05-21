@@ -25,6 +25,10 @@ veo:
     conversion_handler_pool_size: 8
     report_engine_pool_size: 4
 management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
   health:
     livenessstate:
       enabled: true
