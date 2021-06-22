@@ -1,10 +1,10 @@
 plugins {
-    id 'org.springframework.boot' version '2.5.0'
+    id 'org.springframework.boot' version '2.5.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'groovy'
     id 'jacoco'
     id "com.github.spotbugs" version '4.7.1'
-    id 'org.cadixdev.licenser' version '0.6.0'
+    id 'org.cadixdev.licenser' version '0.6.1'
     id "com.gorylenko.gradle-git-properties" version "2.3.1"
     id 'pmd'
 }
@@ -13,6 +13,10 @@ repositories {
     mavenCentral()
 }
 
+def versions = [
+    openhtmltopdf: '1.0.9',
+]
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -20,9 +24,9 @@ dependencies {
     implementation 'javax.validation:validation-api'
     implementation 'org.freemarker:freemarker:2.3.31'
     implementation 'com.vladsch.flexmark:flexmark-all:0.62.2'
-    implementation 'com.openhtmltopdf:openhtmltopdf-core:1.0.8'
-    implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.8'
-    implementation 'com.openhtmltopdf:openhtmltopdf-slf4j:1.0.8'
+    implementation "com.openhtmltopdf:openhtmltopdf-core:$versions.openhtmltopdf"
+    implementation "com.openhtmltopdf:openhtmltopdf-pdfbox:$versions.openhtmltopdf"
+    implementation "com.openhtmltopdf:openhtmltopdf-slf4j:$versions.openhtmltopdf"
 
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
 
