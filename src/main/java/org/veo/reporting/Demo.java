@@ -56,10 +56,10 @@ public class Demo {
         var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
         var veoClient = ctx.getBean(VeoClient.class);
         var authHeader = "Bearer " + token;
-        var vts = veoClient.fetchData("/processes?subType=VT", authHeader);
+        var vts = veoClient.fetchData("/processes?subType=VT&size=2147483647", authHeader);
 
-        var units = veoClient.fetchData("/units", authHeader);
-        var scopes = veoClient.fetchData("/scopes", authHeader);
+        var units = veoClient.fetchData("/units?size=2147483647", authHeader);
+        var scopes = veoClient.fetchData("/scopes?size=2147483647", authHeader);
         Map<String, Object> entriesForLanguage = veoClient.fetchTranslations(Locale.GERMANY,
                 authHeader);
 

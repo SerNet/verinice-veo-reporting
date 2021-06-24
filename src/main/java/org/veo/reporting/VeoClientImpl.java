@@ -69,7 +69,12 @@ public class VeoClientImpl implements VeoClient {
                 if (tree.isArray()) {
                     return objectMapper.treeToValue(tree, List.class);
                 } else {
-                    return objectMapper.treeToValue(tree, Map.class);
+                    Map m = objectMapper.treeToValue(tree, Map.class);
+                    // add support for paged results
+                    if (m.containsKey("items")) {
+                        return m.get("items");
+                    }
+                    return m;
                 }
             }
         }

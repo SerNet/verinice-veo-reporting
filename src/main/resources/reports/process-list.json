@@ -12,6 +12,6 @@
 	"outputTypes": ["text/csv"],
 	"targetTypes": ["client"],
 	"data": {
-		"processes": "/processes"
+		"processes": "/processes?size=2147483647"
 	}
 }
