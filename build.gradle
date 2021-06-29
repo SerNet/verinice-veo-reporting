@@ -15,6 +15,7 @@ repositories {
 
 def versions = [
     openhtmltopdf: '1.0.9',
+    phfonts: '4.2.0',
 ]
 
 dependencies {
@@ -27,8 +28,10 @@ dependencies {
     implementation "com.openhtmltopdf:openhtmltopdf-core:$versions.openhtmltopdf"
     implementation "com.openhtmltopdf:openhtmltopdf-pdfbox:$versions.openhtmltopdf"
     implementation "com.openhtmltopdf:openhtmltopdf-slf4j:$versions.openhtmltopdf"
+    implementation "com.helger.font:ph-fonts-api:$versions.phfonts"
 
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly "com.helger.font:ph-fonts-open-sans:$versions.phfonts"
 
     testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

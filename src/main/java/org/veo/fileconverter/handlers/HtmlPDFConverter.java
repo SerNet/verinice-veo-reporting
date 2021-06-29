@@ -27,6 +27,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
 import org.w3c.dom.Document;
 
+import com.helger.font.api.FontResourceManager;
+import com.helger.font.api.IFontStyle;
+import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder.FontStyle;
 import com.openhtmltopdf.pdfboxout.PdfBoxRenderer;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 
@@ -60,6 +63,8 @@ public class HtmlPDFConverter implements ConversionHandler {
             // There are more options on the builder than shown below.
             PdfRendererBuilder builder = new PdfRendererBuilder();
 
+            addFonts(builder);
+
             org.jsoup.nodes.Document doc;
             doc = Jsoup.parse(html);
 
@@ -72,6 +77,20 @@ public class HtmlPDFConverter implements ConversionHandler {
                 renderer.createPDF();
             }
         }
+    }
+
+    protected static void addFonts(PdfRendererBuilder builder) {
+        FontResourceManager.getAllResourcesOfFontType("Open Sans").forEach(font -> {
+            builder.useFont(font::getBufferedInputStream, font.getFontName(),
+                    font.getFontWeight().getWeight(), convertFontStyle(font.getFontStyle()), true);
+        });
+    }
+
+    private static FontStyle convertFontStyle(IFontStyle fontStyle) {
+        if (fontStyle.isItalic()) {
+            return FontStyle.ITALIC;
+        }
+        return FontStyle.NORMAL;
     }
 
 }
