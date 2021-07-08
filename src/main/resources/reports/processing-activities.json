@@ -10,7 +10,7 @@
 	"outputTypes": ["application/pdf"],
 	"targetTypes": ["scope"],
 	"data": {
-		"processes": "/processes?subType=VT&scopeId=${targetId}&size=2147483647",
+		"processes": "/processes?subType=PRO_DataProcessing&scopeId=${targetId}&size=2147483647",
 		"units": "/units/"
 	}
 }

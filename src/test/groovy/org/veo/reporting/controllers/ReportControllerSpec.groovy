@@ -276,7 +276,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
         then:
         response.status == 200
 
-        1 * veoClient.fetchData('/processes?subType=VT&scopeId=0815&size=2147483647', 'Bearer: abc') >> [
+        1 * veoClient.fetchData('/processes?subType=PRO_DataProcessing&scopeId=0815&size=2147483647', 'Bearer: abc') >> [
             [
                 name: 'Verarbeitungstätigkeit 1'
             ]
