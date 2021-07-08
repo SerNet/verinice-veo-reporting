@@ -10,8 +10,8 @@
 	"templateFile": "processes.csv",
 	"templateType": "text/csv",
 	"outputTypes": ["text/csv"],
-	"targetTypes": ["client"],
+	"targetTypes": ["unit"],
 	"data": {
-		"processes": "/processes?size=2147483647"
+		"processes": "/processes?unit=${targetId}&size=2147483647"
 	}
 }
