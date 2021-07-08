@@ -1,6 +1,16 @@
 <#-- Print all booleans as true/false. This should be removed once we have proper custom aspect handling. -->
 <#setting boolean_format="c">
 
+<#function to_user_presentable val = bundle.unknown>
+  <#if val?is_boolean>
+    <#return val?then(bundle.yes, bundle.no)>
+  </#if>
+  <#if val?is_sequence>
+    <#return val?map(v -> to_user_presentable(v))?join(", ")>
+  </#if>
+  <#return val>
+</#function>
+
 <style>
   table {
     width: 100%;
@@ -289,7 +299,7 @@ Beschreibung
 <#list customAspect.attributes as k, v>
 
 ${k}
-: ${v!"&nbsp;"}
+: ${to_user_presentable(v)}
 
 </#list>
 
