@@ -52,6 +52,7 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
             logger.info("Caching disabled");
             cfg.setCacheStorage(NullCacheStorage.INSTANCE);
         }
+        cfg.setObjectWrapper(new VeoReportingObjectWrapper(cfg.getIncompatibleImprovements()));
     }
 
     public void executeTemplate(String templateName, Object data, OutputStream out)

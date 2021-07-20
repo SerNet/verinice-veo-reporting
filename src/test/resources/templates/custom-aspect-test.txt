@@ -1,0 +1,2 @@
+The foo is ${input.foo}.
+The other foo is ${input.links.uses?first.foo}.

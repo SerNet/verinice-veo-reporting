@@ -56,4 +56,39 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
 
 I'd like to invite you to my birthday party.'''
     }
+
+    def "Access custom attribute"(){
+        given:
+        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
+        ByteArrayOutputStream os = new ByteArrayOutputStream()
+        def objectData = [
+            name: 'Asset',
+            id: '0815',
+            type: 'Asset',
+            customAspects: [
+                basic : [
+                    attributes: [
+                        foo: 'bar'
+                    ]
+                ]
+            ],
+            links: [
+                uses : [
+                    [
+                        attributes: [
+                            foo: 'baz'
+                        ],
+                        target:[
+                            targetUri : 'http://example.org/4711'
+                        ]
+                    ]
+                ]
+            ]
+        ]
+        when:
+        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('custom-aspect-test.txt', [input: objectData], os)
+        def text = os.toString()
+        then:
+        text == 'The foo is bar.\nThe other foo is baz.'
+    }
 }
