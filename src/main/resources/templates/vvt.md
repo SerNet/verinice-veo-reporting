@@ -80,19 +80,19 @@
 <div class="pagebreak"></div>
 
 <#list processes as process>
-## <center>Anlage No. ${process?counter}</center>
-## <a id="process_${process?counter}"/> <span style="display:inline-block; width: 5cm;">Verarbeitung: </span>${process.name}
-## <center><ins>Prüfergebnis zur materiellen Rechtmäßigkeit</ins></center>
+## Anlage No. ${process?counter} { .text-center }
+## <span style="display:inline-block; width: 5cm;">Verarbeitung: </span>${process.name} {#process_${process?counter}}
+## Prüfergebnis zur materiellen Rechtmäßigkeit { .text-center .underline }
 
-### <ins>I. Rechtmäßigkeit der automatisierten Verarbeitung</ins>
+### I. Rechtmäßigkeit der automatisierten Verarbeitung{ .underline }
 ?
-#### <ins>1. Risiken und Feststellungen</ins>
+#### 1. Risiken und Feststellungen{ .underline }
 ? 
-#### <ins>2. Votum</ins>
+#### 2. Votum{ .underline }
 ?
 <div class="pagebreak"></div>
 
-### <ins>II. Rechtmäßigkeit der technischen und organisatorischen Maßnahmen</ins>
+### II. Rechtmäßigkeit der technischen und organisatorischen Maßnahmen{ .underline }
 #### Zertifizierung nach anerkannten Standard
 
 #### IT-Sicherheitskonzept
@@ -101,10 +101,10 @@
 
 <div class="pagebreak"></div>
 
-## <center><ins>Detailergebnisse</ins></center>
+## Detailergebnisse { .text-center .underline }
 
 |:---|:---|:---|
-| <ins>**Name des Unternehmens**</ins><br/>? |||
+| **Name des Unternehmens**{ .underline }<br/>? |||
 | Abteilung/Fachbereich<br/>? | Leiter Fachabteilung<br/>? | Mitarbeiterzahl<br/>? |
 | Datum der Befragung<br/> ? |||
 
@@ -125,9 +125,9 @@
 | 4. Rechtsgrundlage für die Datenverarbeitung |
 |:---|
 | ? |
-| <ins>**Vorrangige Rechtsvorschriften:**</ins> |
+| **Vorrangige Rechtsvorschriften:** { .underline } |
 | ? |
-| <ins>**Vorrangige Rechtsvorschriften:**</ins> |
+| **Vorrangige Rechtsvorschriften:** { .underline } |
 | ? |
 | **Erläuterungen:**<br/> ? |
 
@@ -135,12 +135,12 @@
 |:---|
 | **Kreis der betroffenen Personengruppen** | **Art der verarbeiteten Daten / Datenkategorien** | **Herkunft der Daten** |
 | ? | ? | ? |
-| <ins>**Bemerkungen:**</ins><br/> ? |||
+| **Bemerkungen:** { .underline }<br/> ? |||
 
 | 6. Benachrichtigung Betroffener |
 |:---|
 | ? |
-| <ins>**Grund für Nichtbenachrichtigung:**</ins><br/> |
+| **Grund für Nichtbenachrichtigung:**{ .underline }<br/> |
 | ? |
 
 | 7. Datenverarbeitung besonders sensitiver Daten? |
@@ -150,7 +150,7 @@
 | ? |
 | **Rechtsgrundlage für die Datenverarbeitung sensitiver Daten** |
 | ? |
-| <ins>**Bemerkungen**</ins><br/> |
+| **Bemerkungen**{ .underline }<br/> |
 | ? |
 | **Meldeverfahren nach Art. 33, 34 DS-GVO** |
 | ? |
@@ -162,30 +162,30 @@
 | **Interne Empfänger** |||
 | **Interne Stelle (Org.-Einheit)** | **Art der Daten** | **Zweck des Datentransfers** |
 | ? | ? | ? |
-| <ins>**Erläuterungen:**</ins><br/> ? |||
+| **Erläuterungen:**{ .underline }<br/> ? |||
 
 |:---|
 | **Externe Empfänger** |||
 | **Externe Stelle** | **Art der Daten** | **Zweck des Datentransfers** |
 | ? | ? | ? |
-| <ins>**Erläuterungen:**</ins><br/> ? |||
+| **Erläuterungen:**{ .underline }<br/> ? |||
 
 |:---|
 | **Auftragnehmer / Dienstleister** |||
 | **Auftragnehmer** | **Art der Daten** | **Zweck des Datentransfers** |
 | ? | ? | ? |
-| <ins>**Erläuterungen:**</ins><br/> ? |||
+| **Erläuterungen:**{ .underline }<br/> ? |||
 
 |:---|
 | **Datenübermittlung in Drittland** |||||
 | **Name des Staates** | **Art der Daten** | **Zweck der Übermittlung** | **Emfängerkategorie** | **Rechtsgrundlage** |
 | ? | ? | ? |? |? |
 | **Angabe geeigneter Garantien**|||||
-| <ins>**Erläuterungen:**</ins><br/> ? |||||
+| **Erläuterungen:**{ .underline }<br/> ? |||||
 
 | 9. Löschfristen |
 |:---|
-| **Fristabhängige Löschung**<br/>?<br/>**Löschverfahren**<br>?<br/><ins>**Erläuterung:**</ins><br>? |
+| **Fristabhängige Löschung**<br/>?<br/>**Löschverfahren**<br>?<br/>**Erläuterung:**{ .underline }<br>? |
 
 | 10. Zugriffsberechtigte Personengruppen (Berechtigungsgruppen) |
 |:---|
@@ -194,7 +194,7 @@
 
 | 11. Systeminformationen über Hard- und Software |||
 |:---|
-| <center><ins>**Name</center>**</center></ins> | <center><ins>**Typ**</center></ins> | <center><ins>**Beschreibungs**</center></ins> |
+| **Name** { .text-center .underline }| **Typ** { .text-center .underline }| **Beschreibungs** { .text-center .underline }|
 
 | 12. Ort der Datenverarbeitung (intern, extern ) |
 |:---|
