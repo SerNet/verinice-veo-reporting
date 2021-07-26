@@ -17,13 +17,16 @@
  */
 package org.veo.templating.adapters;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.veo.templating.VeoReportingObjectWrapper;
 
 import freemarker.template.AdapterTemplateModel;
+import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.WrappingTemplateModel;
@@ -49,6 +52,9 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
         if (val != null) {
             return wrap(val);
         }
+        if ("getLinks".equals(key)) {
+            return new GetLinks(m);
+        }
 
         @SuppressWarnings("unchecked")
         Map<String, ?> customAspects = (Map<String, ?>) m.get("customAspects");
@@ -72,6 +78,28 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     @Override
     public boolean isEmpty() throws TemplateModelException {
         return false;
+    }
+
+    private static final class GetLinks implements TemplateMethodModelEx {
+        private final Map<?, ?> m;
+
+        public GetLinks(Map<?, ?> m) {
+            this.m = m;
+        }
+
+        @Override
+        public Object exec(List arguments) throws TemplateModelException {
+            if (arguments.size() != 1) {
+                throw new TemplateModelException("Expecting exactly 1 arguments");
+            }
+            Object typeObj = arguments.get(0);
+            if (!(typeObj instanceof SimpleScalar)) {
+                throw new TemplateModelException(
+                        "Expecting a String argument but got " + typeObj.getClass());
+            }
+            Map<String, ?> links = (Map<String, ?>) m.get("links");
+            return links.get(((SimpleScalar) typeObj).getAsString());
+        }
     }
 
 }

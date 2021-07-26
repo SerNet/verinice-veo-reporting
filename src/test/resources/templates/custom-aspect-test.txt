@@ -1,2 +1,2 @@
 The foo is ${input.foo}.
-The other foo is ${input.links.uses?first.foo}.
+The other foo is ${input.getLinks('uses')?first.foo}.
