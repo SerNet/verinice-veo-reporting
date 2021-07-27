@@ -102,4 +102,15 @@ I'd like to invite you to my birthday party.'''
         then:
         text == 'HTML: &lt;h1&gt;Data&lt;/h1&gt;'
     }
+
+    def "HTML is escaped in HTML templates"(){
+        given:
+        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
+        ByteArrayOutputStream os = new ByteArrayOutputStream()
+        when:
+        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('escape-test.html', [data: "<h1>Data</h1>"], os)
+        def text = os.toString()
+        then:
+        text == 'HTML: &lt;h1&gt;Data&lt;/h1&gt;'
+    }
 }

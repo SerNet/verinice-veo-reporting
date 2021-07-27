@@ -28,9 +28,13 @@ import org.slf4j.LoggerFactory;
 
 import freemarker.cache.ConditionalTemplateConfigurationFactory;
 import freemarker.cache.FileExtensionMatcher;
+import freemarker.cache.MergingTemplateConfigurationFactory;
 import freemarker.cache.NullCacheStorage;
+import freemarker.cache.OrMatcher;
 import freemarker.cache.TemplateLoader;
+import freemarker.core.HTMLOutputFormat;
 import freemarker.core.TemplateConfiguration;
+import freemarker.core.XMLOutputFormat;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -59,9 +63,16 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
 
         TemplateConfiguration tcMD = new TemplateConfiguration();
         tcMD.setOutputFormat(MarkdownOutputFormat.INSTANCE);
+        TemplateConfiguration tcHTML = new TemplateConfiguration();
+        tcHTML.setOutputFormat(HTMLOutputFormat.INSTANCE);
+        TemplateConfiguration tcXML = new TemplateConfiguration();
+        tcXML.setOutputFormat(XMLOutputFormat.INSTANCE);
 
-        cfg.setTemplateConfigurations(
-                new ConditionalTemplateConfigurationFactory(new FileExtensionMatcher("md"), tcMD));
+        cfg.setTemplateConfigurations(new MergingTemplateConfigurationFactory(
+                new ConditionalTemplateConfigurationFactory(new FileExtensionMatcher("xml"), tcXML),
+                new ConditionalTemplateConfigurationFactory(new OrMatcher(
+                        new FileExtensionMatcher("html"), new FileExtensionMatcher("htm")), tcHTML),
+                new ConditionalTemplateConfigurationFactory(new FileExtensionMatcher("md"), tcMD)));
 
     }
 
