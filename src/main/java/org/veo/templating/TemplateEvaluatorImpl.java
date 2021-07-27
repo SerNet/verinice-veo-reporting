@@ -26,8 +26,11 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import freemarker.cache.ConditionalTemplateConfigurationFactory;
+import freemarker.cache.FileExtensionMatcher;
 import freemarker.cache.NullCacheStorage;
 import freemarker.cache.TemplateLoader;
+import freemarker.core.TemplateConfiguration;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -53,6 +56,13 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
             cfg.setCacheStorage(NullCacheStorage.INSTANCE);
         }
         cfg.setObjectWrapper(new VeoReportingObjectWrapper(cfg.getIncompatibleImprovements()));
+
+        TemplateConfiguration tcMD = new TemplateConfiguration();
+        tcMD.setOutputFormat(MarkdownOutputFormat.INSTANCE);
+
+        cfg.setTemplateConfigurations(
+                new ConditionalTemplateConfigurationFactory(new FileExtensionMatcher("md"), tcMD));
+
     }
 
     public void executeTemplate(String templateName, Object data, OutputStream out)
