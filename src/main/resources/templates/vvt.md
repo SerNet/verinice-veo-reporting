@@ -9,40 +9,21 @@
   <#local parts = uri?split("/")>
   <#local type = parts[parts?size-2]>
   <#local id = parts[parts?size-1]>
-  <#switch type>
-    <#case "assets">
-      <#local filteredAssets = assets?filter(s -> s.id == id)>
-      <#if (filteredAssets?size == 0)>
-        <#stop "Cannot resolve ${uri}, asset with id ${id} not found">
-      </#if>
-	  <#return filteredAssets?first>
-    <#case "controls">
-      <#local filteredControls = controls?filter(s -> s.id == id)>
-      <#if (filteredControls?size == 0)>
-        <#stop "Cannot resolve ${uri}, control with id ${id} not found">
-      </#if>
-	  <#return filteredControls?first>
-    <#case "persons">
-      <#local filteredPersons = persons?filter(p -> p.id == id)>
-      <#if (filteredPersons?size == 0)>
-        <#stop "Cannot resolve ${uri}, person with id ${id} not found">
-      </#if>
-	  <#return filteredPersons?first>
-    <#case "scopes">
-      <#local filteredScopes = scopes?filter(s -> s.id == id)>
-      <#if (filteredScopes?size == 0)>
-        <#stop "Cannot resolve ${uri}, scope with id ${id} not found">
-      </#if>
-	  <#return filteredScopes?first>
-    <#case "processes">
-      <#local filteredProcesses = processes?filter(s -> s.id == id)>
-      <#if (filteredProcesses?size == 0)>
-        <#stop "Cannot resolve ${uri}, process with id ${id} not found">
-      </#if>
-	  <#return filteredProcesses?first>
-    <#default>
-      <#stop "Cannot resolve ${uri}, unhandled type ${type}">
-  </#switch>
+
+  <#local lookup = {
+    "assets" : assets,
+    "controls" : controls,
+    "persons" : persons,
+    "processes" : processes,
+    "scopes" : scopes
+  }/>
+
+  <#local coll = lookup[type]! />
+  <#local filteredColl = coll?filter(s -> s.id == id)>
+  <#if (filteredColl?size == 0)>
+    <#stop "Cannot resolve ${uri}, ${type} with id ${id} not found">
+  </#if>
+  <#return filteredColl?first>
 </#function>
 
 <#function rels object name>
