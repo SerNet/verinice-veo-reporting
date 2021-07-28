@@ -376,10 +376,17 @@ ${scope.name}
 | **Beschreibung des Berechtigungsverfahrens:**<br/>${process.process_accessAuthorization_description!bundle.unknown} |
 </@section>
 
+<#assign relatedAssets=rels(process, 'process_requiredApplications')![] + rels(process, 'process_requiredITSystems')![] />
+<#if relatedAssets?has_content>
+
 <@section 'Systeminformationen über Hard- und Software'>
 |:---|
 | **Name** {.text-center .underline}| **Typ** {.text-center .underline}| **Beschreibung** {.text-center .underline}|
+<#list relatedAssets as asset>
+| ${(asset.name)!bundle.unknown} | ? | ${asset.description!bundle.unknown} |
+</#list>
 </@section>
+</#if>
 
 <@section 'Ort der Datenverarbeitung (intern, extern )'>
 |:---|
