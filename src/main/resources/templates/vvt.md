@@ -77,7 +77,9 @@
       <#if process.getLinks('process_dataTransmission')?has_content>
         <bookmark name="Art übermittelter Daten und deren Empfänger" href="#process_transmissions_${process?counter}"/>
       </#if>
-      <bookmark name="Technische und organisatorische Maßnahmen" href="#process_toms_${process?counter}"/>
+      <#if process.getLinks('process_tom')?has_content>
+        <bookmark name="Technische und organisatorische Maßnahmen" href="#process_toms_${process?counter}"/>
+      </#if>
     </bookmark>
   </bookmark>
 </#list>
@@ -432,49 +434,58 @@ ${scope.name}
 | ${(process.process_opinionDPO_privacyImpactAssessment?string(bundle.yes, bundle.no))!bundle.unknown} |
 </@section>
 
+
+<#assign toms=rels(process, 'process_tom')! />
+<#if toms?has_content>
 <@section 'Technische und organisatorische Maßnahmen{ #process_toms_${process?counter} }'  >
-<table>
+
+<#macro tomsection objective title>
+<#assign tomsinsection = toms?filter(t->t.control_dataProtection_objectives!?seq_contains(objective))!>
+<#if tomsinsection?has_content>
+<tr class="gray">
+  <td colspan="3">${title}</td>
+</tr>
+<#list tomsinsection as t>
+<#assign tom_status=t.control_implementation_status />
+<#assign className=t.control_implementation_status?switch(
+  'control_implementation_status_yes', 'green',
+  'control_implementation_status_no', 'red',
+  'control_implementation_status_partially', 'yellow',
+  'control_implementation_status_notApplicable', 'light-gray',
+  '') />
+<tr>
+  <td class="${className}">${bundle[tom_status]}</td>
+  <td>${t.name}</td>
+  <td>?</td>
+</tr>
+</#list>
+</#if>
+</#macro>
+
+<table class="table">
   <thead>
     <tr>
-      <th colspan="3">14. Technische und organisatorische Maßnahmen</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td colspan="3">?</td>
-    </tr>
-    <tr class="tableheading">
       <td>Ums.</td>
       <td>Maßnahme</ins></td>
       <td>Anmerkungen</ins></td>
     </tr>
-    <tr class="tomsection">
-      <td colspan="3">Pseudonymisierung</td>
+  </thead>
+  <tbody>
+    <@tomsection 'control_dataProtection_objectives_pseudonymization', 'Pseudonymisierung'/>
+    <@tomsection 'control_dataProtection_objectives_confidentiality', 'Gewährleistung der Vertraulichkeit'/>
+    <tr class="gray">
+      <td colspan="3">Verschlüsselung???</td>
     </tr>
-    <tr class="tomsection">
-      <td colspan="3">Verschlüsselung</td>
-    </tr>
-    <tr class="tomsection">
-      <td colspan="3">Gewährleistung der Vertraulichkeit</td>
-    </tr>
-    <tr class="tomsection">
-      <td colspan="3">Gewährleistung der Integrität</td>
-    </tr>
-    <tr class="tomsection">
-      <td colspan="3">Gewährleistung der Verfügbarkeit</td>
-    </tr>
-    <tr class="tomsection">
-      <td colspan="3">Gewährleistung der Belastbarkeit</td>
-    </tr>
-    <tr class="tomsection">
-      <td colspan="3">Wiederherstellbarkeit</td>
-    </tr>
-    <tr class="tomsection">
-      <td colspan="3">Wirksamkeit der TOMs</td>
-    </tr>
+    <@tomsection 'control_dataProtection_objectives_confidentiality', 'Gewährleistung der Vertraulichkeit'/>
+    <@tomsection 'control_dataProtection_objectives_integrity', 'Gewährleistung der Integrität'/>
+    <@tomsection 'control_dataProtection_objectives_availability', 'Gewährleistung der Verfügbarkeit'/>
+    <@tomsection 'control_dataProtection_objectives_resilience', 'Gewährleistung der Belastbarkeit'/>
+    <@tomsection 'control_dataProtection_objectives_recoverability', 'Wiederherstellbarkeit'/>
+    <@tomsection 'control_dataProtection_objectives_effectiveness', 'Wirksamkeit der TOMs'/>
   </tbody>
 </table> 
 </@section>
+</#if>
 
 <#--  DEBUG   -->
 <#assign DEBUG=false />
