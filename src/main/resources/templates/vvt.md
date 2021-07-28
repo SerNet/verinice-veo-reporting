@@ -239,7 +239,7 @@ ${scope.name}
 
 <@section 'Rechtsgrundlage für die Datenverarbeitung'>
 |:---|
-| ${(bundle[process.process_dataProcessing_legalBasis])!bundle.unknown} |
+| ${(process.process_dataProcessing_legalBasis?map(item->bundle[item])?join(', '))!bundle.unknown} |
 | **Sonstige Rechtsgrundlagen:**{.underline} |
 | ${process.process_dataProcessing_otherLegalBasis!bundle.unknown} |
 | **Erläuterungen:**<br/> ${process.process_dataProcessing_explanation!bundle.unknown} |
