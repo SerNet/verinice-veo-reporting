@@ -16,6 +16,12 @@
         <#stop "Cannot resolve ${uri}, asset with id ${id} not found">
       </#if>
 	  <#return filteredAssets?first>
+    <#case "controls">
+      <#local filteredControls = controls?filter(s -> s.id == id)>
+      <#if (filteredControls?size == 0)>
+        <#stop "Cannot resolve ${uri}, control with id ${id} not found">
+      </#if>
+	  <#return filteredControls?first>
     <#case "persons">
       <#local filteredPersons = persons?filter(p -> p.id == id)>
       <#if (filteredPersons?size == 0)>
