@@ -64,6 +64,14 @@
 .section table th:first-child {
   padding-left: 0;
 }
+.transmission {
+  margin-left: 5mm;
+}
+.transmission .section {
+  margin-left: 1cm;
+  margin-top: 5mm;
+  margin-bottom: 5mm;
+}
 </style>
 
 <bookmarks>
@@ -336,60 +344,65 @@ ${scope.name}
 </#if>
 </#if>
 
-#### Übertragung ${transmission.name} 
+<div class="transmission">
+
+#### Übertragung ${transmission.name}
+
+|:---|:---|
+| **Art der Daten** | **Rechtsgrundlage für Datenübertragung** |
+| ${transmissionDataTypes?map(t->t.name)?join(", ")} | ${effectiveDataTransferLegalBasis!bundle.unknown} |
+
+<#macro recipient_section link_to_recipient recipient_label>
+<div class="section">
+<#assign recipient=resolve(link_to_recipient.target.targetUri) />
+
+|:---|
+| **${recipient_label}**
+| ${(recipient.name)!bundle.unknown} |
+| **Datenübermittlung in Drittland** |
+| ${(link_to_recipient.process_internalRecipient_thirdCountryProcessing?string(bundle.yes, bundle.no))!bundle.unknown} |
+| **Name des Staates** |
+| ${(link_to_recipient.process_internalRecipient_thirdCountryName)!bundle.unknown} |
+| **Angabe geeigneter Garantien**|
+| ${link_to_recipient.process_internalRecipient_thirdCountryGuarantees!bundle.unknown} |
+| **Erläuterungen:**{.underline}<br/> ${link_to_recipient.process_internalRecipient_thirdCountryExplanation!bundle.unknown}  |
+</div>
+</#macro>
 
 <#switch recipientType>
-<#case "process_recipient_type_internal">
-<#assign internalRecipients=rels(transmission, 'process_internalRecipient')! />
 
+<#case "process_recipient_type_internal">
+<#assign internalRecipientLinks=transmission.getLinks('process_internalRecipient')! />
 #### Interne Empfänger
-|:---|
-| **Interne Stelle** | **Art der Daten** | **Rechtsgrundlage für Datenübertragung** |
-<#list internalRecipients as internalRecipient>
-| ${(internalRecipient.name)!bundle.unknown} | ${transmissionDataTypes?map(t->t.name)?join(", ")} | ${effectiveDataTransferLegalBasis!bundle.unknown} |
+<#list internalRecipientLinks as internalRecipientLink>
+<@recipient_section internalRecipientLink "Interne Stelle"/>
 </#list>
-| **Erläuterungen:**{.underline}<br/> ${transmission.process_dataTransfer_explanation!bundle.unknown} |||  
 <#break>
 
 <#case "process_recipient_type_external">
-<#assign externalRecipients=rels(transmission, 'process_externalRecipient')! />
-
+<#assign externalRecipientLinks=transmission.getLinks('process_externalRecipient')! />
 #### Externe Empfänger
-|:---|
-| **Externe Stelle** | **Art der Daten** | **Rechtsgrundlage für Datenübertragung** |
-<#list externalRecipients as externalRecipient>
-| ${(externalRecipient.name)!bundle.unknown} | ${transmissionDataTypes?map(t->t.name)?join(", ")} | ${effectiveDataTransferLegalBasis!bundle.unknown} |
+<#list externalRecipientLinks as externalRecipientLink>
+<@recipient_section externalRecipientLink "Externe Stelle"/>
 </#list>
-| **Erläuterungen:**{.underline}<br/> ${transmission.process_dataTransfer_explanation!bundle.unknown} |||
 <#break>
 
 <#case "process_recipient_type_processor">
 <#assign processorsLinks=transmission.getLinks('process_processor')! />
-
-
 #### Auftragnehmer / Dienstleister
-|:---|
-| **Auftragnehmer** | **Art der Daten** | **Rechtsgrundlage für Datenübertragung** |
 <#list processorsLinks as processorLink>
-<#assign processor=resolve(processorLink.target.targetUri) />
-| ${(processor.name)!bundle.unknown} | ${transmissionDataTypes?map(t->t.name)?join(", ")} | ${effectiveDataTransferLegalBasis!bundle.unknown} |
-| **Erläuterungen:**{.underline}<br/> ${transmission.process_dataTransfer_explanation!bundle.unknown} |||
-
-|:---|
-| **Datenübermittlung in Drittland** |
-| ${(process.process_processor_thirdCountryProcessing?string(bundle.yes, bundle.no))!bundle.unknown} |
-| **Name des Staates** |
-| ${process.process_processor_thirdCountryName!bundle.unknown} |
-| **Angabe geeigneter Garantien**|
-| ${process.process_processor_thirdCountryGuarantees!bundle.unknown} |
-| **Erläuterungen:**{.underline}<br/> ${process.process_processor_thirdCountryExplanation!bundle.unknown}  |
+<@recipient_section processorLink "Auftragnehmer"/>
 </#list>
-
 <#break>
+
 <#default>
 !!! UNBEKANNTER EMPFÄNGERTYP
 </#switch>
 
+|:---|
+| **Erläuterungen:**{.underline}|
+| ${transmission.process_dataTransfer_explanation!bundle.unknown}|
+</div>
 
 </#list>
 </@section>
