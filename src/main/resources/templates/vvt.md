@@ -189,8 +189,11 @@ ${process.process_opinionDPO_recommendations!bundle.unknown}
 ### Name des Unternehmens
 ${scope.name}
 
+<#assign responsiblePerson=rel(process, 'process_responsiblePerson')! />
+
+
 |:---|:---|
-| Abteilung/Fachbereich<br/>${process.process_processingDetails_responsibleDepartment!bundle.unknown} | Leiter Fachabteilung<br/>? | 
+| Abteilung/Fachbereich<br/>${process.process_processingDetails_responsibleDepartment!bundle.unknown} | Leiter Fachabteilung<br/>${responsiblePerson.name!bundle.unknown} |
 | Datum der Befragung<br/>${(process.process_processingDetails_surveyConductedOn?date.iso)!bundle.unknown} ||
 </div>
 
