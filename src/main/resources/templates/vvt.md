@@ -67,26 +67,52 @@
 </style>
 
 <bookmarks>
-  <bookmark name="${bundle.main_page}" href="#main_page"> </bookmark>
-  <bookmark name="${bundle.activities_overview}" href="#overview">
+  <bookmark name="${bundle.toc}" href="#toc"/>
+  <bookmark name="${bundle.main_page}" href="#main_page"/>
+  <bookmark name="${bundle.activities_overview}" href="#overview"/>
 <#list processesInScope as process>
-    <bookmark name="${process.name}" href="#process_${process?counter}">
-      <bookmark name="Prüfergebnis zur materiellen Rechtmäßigkeit" href="#process_FIXME_${process?counter}" />
-      <bookmark name="Detailergebnisse" href="#process_details_${process?counter}">
-         <#if process.getLinks('process_dataTransmission')?has_content>
-            <bookmark name="Art übermittelter Daten und deren Empfänger" href="#process_transmissions_${process?counter}"/>
-         </#if>
-        <bookmark name="Technische und organisatorische Maßnahmen" href="#process_toms_${process?counter}"/>
-      </bookmark>
+  <bookmark name="${process.name}" href="#process_${process?counter}">
+    <bookmark name="Prüfergebnis zur materiellen Rechtmäßigkeit" href="#process_FIXME_${process?counter}" />
+    <bookmark name="Detailergebnisse" href="#process_details_${process?counter}">
+      <#if process.getLinks('process_dataTransmission')?has_content>
+        <bookmark name="Art übermittelter Daten und deren Empfänger" href="#process_transmissions_${process?counter}"/>
+      </#if>
+      <bookmark name="Technische und organisatorische Maßnahmen" href="#process_toms_${process?counter}"/>
     </bookmark>
-</#list>
   </bookmark>
+</#list>
 </bookmarks>
 
 <div class="cover">
 <h1>${bundle.title}</h1>
 <p>powered by verinice</p>
 </div>
+
+
+# ${bundle.toc} {#toc}
+
+<ol class="toc">
+  <li><a href="#toc">${bundle.toc}</a> <span href="#toc"></span></li>
+  <li><a href="#main_page">${bundle.main_page}</a> <span href="#main_page"></span></li>
+  <li><a href="#overview">${bundle.activities_overview}</a> <span href="#overview"></span></li>
+<#list processesInScope as process>
+  <li><a href="#process_${process?counter}">${process.name}</a> <span href="#process_${process?counter}"></span>
+    <ol>
+      <li><a href="#process_FIXME_${process?counter}">Prüfergebnis zur materiellen Rechtmäßigkeit</a> <span href="#process_FIXME_${process?counter}"></span></li>
+      <li><a href="#process_details_${process?counter}">Detailergebnisse</a> <span href="#process_details_${process?counter}"></span>
+        <ol>
+         <#if process.getLinks('process_dataTransmission')?has_content>
+            <li><a href="#process_transmissions_${process?counter}">Art übermittelter Daten und deren Empfänger</a> <span href="#process_transmissions_${process?counter}"></span></li>
+         </#if>
+         <#if process.getLinks('process_tom')?has_content>
+            <li><a href="#process_toms_${process?counter}">Technische und organisatorische Maßnahmen</a> <span href="#process_toms_${process?counter}"></span></li>
+         </#if>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</#list>
+</ol>
 
 # ${bundle.main_page}{#main_page}
 
