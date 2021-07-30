@@ -12,7 +12,9 @@
     "text/plain"
   ],
   "targetTypes": [
-    "person"
+    {
+      "modelType": "person"
+    }
   ],
   "data": {
     "person": "/persons/${targetId}"

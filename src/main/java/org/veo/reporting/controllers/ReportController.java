@@ -49,9 +49,9 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import org.veo.reporting.CreateReport;
 import org.veo.reporting.CreateReport.TargetSpecification;
 import org.veo.reporting.DataProvider;
-import org.veo.reporting.EntityType;
 import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportEngine;
+import org.veo.reporting.TypeSpecification;
 import org.veo.reporting.VeoClient;
 
 import freemarker.template.TemplateException;
@@ -125,8 +125,9 @@ public class ReportController {
 
         // exactly one target entity is supported at the moment
         TargetSpecification target = createReport.getTargets().get(0);
-        List<EntityType> supportedTargetTypes = configuration.get().getTargetTypes();
-        if (!supportedTargetTypes.contains(target.type)) {
+        Set<TypeSpecification> supportedTargetTypes = configuration.get().getTargetTypes();
+        if (supportedTargetTypes.stream()
+                .noneMatch(typeSpecification -> typeSpecification.getModelType() == target.type)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Target type " + target.type + " not supported by report " + id);
         }

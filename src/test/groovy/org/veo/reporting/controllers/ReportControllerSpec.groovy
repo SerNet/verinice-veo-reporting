@@ -78,7 +78,10 @@ public class ReportControllerSpec extends Specification {
             ],
             outputTypes:['application/pdf'],
             multipleTargetsSupported:false,
-            targetTypes:  ['scope']]
+            targetTypes:  [
+                [modelType: 'scope', subTypes: ['SCP_ResponsibleBody']]
+            ]
+        ]
     }
 
     def "try to create an unknown report"(){

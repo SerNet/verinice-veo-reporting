@@ -43,7 +43,11 @@ class ReportConfigurationSpec extends Specification {
         with(reportConfiguration){
             name.de == 'Verzeichnis der Verarbeitungstätigkeiten'
             description.de == 'Eine detaillierte Übersicht über die in einem Scope durchgeführten Verarbeitungstätigkeiten'
-            targetTypes == [EntityType.scope]
+            targetTypes.size() == 1
+            with(targetTypes.first()) {
+                modelType == EntityType.scope
+                subTypes == ['SCP_ResponsibleBody'] as Set
+            }
             outputTypes == ['application/pdf']
         }
     }

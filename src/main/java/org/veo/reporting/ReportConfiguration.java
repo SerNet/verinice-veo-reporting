@@ -19,6 +19,7 @@ package org.veo.reporting;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -42,7 +43,7 @@ public class ReportConfiguration {
             @JsonProperty(value = "templateType", required = true) String templateType,
             @JsonProperty(value = "outputTypes", required = true) List<String> outputTypes,
             @JsonProperty(value = "multipleTargetsSupported", defaultValue = "false") boolean multipleTargetsSupported,
-            @JsonProperty(value = "targetTypes", required = true) List<EntityType> targetTypes,
+            @JsonProperty(value = "targetTypes", required = true) Set<TypeSpecification> targetTypes,
             @JsonProperty(value = "data", required = true) Map<String, String> data) {
         this.name = name;
         this.description = description;
@@ -66,7 +67,7 @@ public class ReportConfiguration {
 
     private final boolean multipleTargetsSupported;
 
-    private final List<EntityType> targetTypes;
+    private final Set<TypeSpecification> targetTypes;
 
     private final Map<String, String> data;
 
@@ -92,7 +93,7 @@ public class ReportConfiguration {
         return outputTypes;
     }
 
-    public List<EntityType> getTargetTypes() {
+    public Set<TypeSpecification> getTargetTypes() {
         return targetTypes;
     }
 

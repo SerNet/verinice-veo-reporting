@@ -13,7 +13,9 @@
     "text/csv"
   ],
   "targetTypes": [
-    "unit"
+    {
+      "modelType": "unit"
+    }
   ],
   "data": {
     "processes": "/processes?unit=${targetId}&size=2147483647"

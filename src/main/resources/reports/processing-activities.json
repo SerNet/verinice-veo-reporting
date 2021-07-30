@@ -11,7 +11,12 @@
     "application/pdf"
   ],
   "targetTypes": [
-    "scope"
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_ResponsibleBody"
+      ]
+    }
   ],
   "data": {
     "scope": "/scopes/${targetId}",
