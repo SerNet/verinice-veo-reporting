@@ -432,11 +432,6 @@ ${scope.name}
 </@section>
 </#if>
 
-<@section 'Ort der Datenverarbeitung (intern, extern )'>
-|:---|
-| ? |
-</@section>
-
 <@section 'Betriebsstadium'>
 |:---|
 | ${(bundle[process.process_processingDetails_operatingStage])!bundle.unknown} |
