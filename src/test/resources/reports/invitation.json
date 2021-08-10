@@ -4,12 +4,17 @@
     "en": "Invitation"
   },
   "description": {
+    
   },
   "templateFile": "invitation.txt",
-  "templateType":"text/plain",
-  "outputTypes": ["text/plain"],
-  "targetTypes": ["person"],
+  "templateType": "text/plain",
+  "outputTypes": [
+    "text/plain"
+  ],
+  "targetTypes": [
+    "person"
+  ],
   "data": {
-	"person" : "/persons/${targetId}" 
+    "person": "/persons/${targetId}"
   }
 }

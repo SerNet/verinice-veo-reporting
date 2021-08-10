@@ -1,17 +1,21 @@
 {
-	"name": {
-	  "en": "Process list",
-	  "de": "Liste der Prozesse"
-	},
-	"description": {
-	  "en": "A simple list of all processes",
-	  "de": "Eine einfache Liste mit allen Prozessen"
-	},
-	"templateFile": "processes.csv",
-	"templateType": "text/csv",
-	"outputTypes": ["text/csv"],
-	"targetTypes": ["unit"],
-	"data": {
-		"processes": "/processes?unit=${targetId}&size=2147483647"
-	}
+  "name": {
+    "en": "Process list",
+    "de": "Liste der Prozesse"
+  },
+  "description": {
+    "en": "A simple list of all processes",
+    "de": "Eine einfache Liste mit allen Prozessen"
+  },
+  "templateFile": "processes.csv",
+  "templateType": "text/csv",
+  "outputTypes": [
+    "text/csv"
+  ],
+  "targetTypes": [
+    "unit"
+  ],
+  "data": {
+    "processes": "/processes?unit=${targetId}&size=2147483647"
+  }
 }

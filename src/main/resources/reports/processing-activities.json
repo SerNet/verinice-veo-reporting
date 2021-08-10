@@ -1,20 +1,24 @@
 {
-    "name": {
-      "de": "Verzeichnis der Verarbeitungstätigkeiten"
-    },
-    "description": {
-      "de": "Eine detaillierte Übersicht über die in einem Scope durchgeführten Verarbeitungstätigkeiten"
-    },
-	"templateFile": "vvt.md",
-	"templateType": "text/markdown",
-	"outputTypes": ["application/pdf"],
-	"targetTypes": ["scope"],
-	"data": {
-		"scope": "/scopes/${targetId}",
-		"scopes": "/scopes?size=2147483647",
-		"processes": "/processes?size=2147483647",
-		"persons": "/persons?size=2147483647",
-		"controls": "/controls?size=2147483647",
-		"assets": "/assets?size=2147483647"
-	}
+  "name": {
+    "de": "Verzeichnis der Verarbeitungstätigkeiten"
+  },
+  "description": {
+    "de": "Eine detaillierte Übersicht über die in einem Scope durchgeführten Verarbeitungstätigkeiten"
+  },
+  "templateFile": "vvt.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    "scope"
+  ],
+  "data": {
+    "scope": "/scopes/${targetId}",
+    "scopes": "/scopes?size=2147483647",
+    "processes": "/processes?size=2147483647",
+    "persons": "/persons?size=2147483647",
+    "controls": "/controls?size=2147483647",
+    "assets": "/assets?size=2147483647"
+  }
 }
