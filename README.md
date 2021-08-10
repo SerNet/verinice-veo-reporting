@@ -52,6 +52,8 @@ There is a single REST controller (`org.veo.reporting.controllers.ReportControll
 
 As there is no report editor yet, there is a demo mode that can be enabled via a command line switch. In that mode, the files in `src/main/resources/templates` are observed for modification, in which case the `processing-activities` and `process-list` reports are generated and written into the `/tmp` folder.
 
-Enable with `./gradlew bootRun --args="--spring.profiles.active=demo --veo.accesstoken=XXXX"` and use at your own risk.
+You need to specify the UUID of the scope that should be used for testing. You can extract the UUID from the browser URL on the scope's edit page.
+
+Enable with `./gradlew bootRun --args="--spring.profiles.active=demo --veo.accesstoken=XXXX --veo.demoscopeid=9f6f0199-7a14-4a1d-8345-80a0c1b60519"` and use at your own risk.
 
 See `org.veo.reporting.Demo`.

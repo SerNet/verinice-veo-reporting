@@ -54,10 +54,11 @@ public class Demo {
         logger.info("Demo mode enabled");
         var reportEngine = ctx.getBean(ReportEngine.class);
         var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
+        var scopeId = ctx.getEnvironment().getRequiredProperty("veo.demoscopeid");
         var veoClient = ctx.getBean(VeoClient.class);
         var authHeader = "Bearer " + token;
         var processes = veoClient.fetchData("/processes?size=2147483647", authHeader);
-        var scope = veoClient.fetchData("/scopes/c7186469-4514-4e11-af5a-c2839457b1b9", authHeader);
+        var scope = veoClient.fetchData("/scopes/" + scopeId, authHeader);
         var scopes = veoClient.fetchData("/scopes?size=2147483647", authHeader);
         var persons = veoClient.fetchData("/persons?size=2147483647", authHeader);
         var controls = veoClient.fetchData("/controls?size=2147483647", authHeader);
