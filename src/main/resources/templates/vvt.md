@@ -145,8 +145,8 @@
 
 | Vertretung  ||
 |:---|:---|
-| Leitung der verantwortlichen Stelle<br/>(einschließlich Vertreter) | ${management.person_generalInformation_givenName!bundle.unknown} ${management.person_generalInformation_familyName!bundle.unknown} |
-| Leitung der Datenverarbeitung |  ${headOfDataProcessing.person_generalInformation_givenName!bundle.unknown} ${headOfDataProcessing.person_generalInformation_familyName!bundle.unknown} |
+| Leitung der verantwortlichen Stelle<br/>(einschließlich Vertreter) | ${management.person_generalInformation_givenName!} ${management.person_generalInformation_familyName!} |
+| Leitung der Datenverarbeitung |  ${headOfDataProcessing.person_generalInformation_givenName!} ${headOfDataProcessing.person_generalInformation_familyName!} |
 
 
 <#assign dataProtectionOfficer=rel(scope, 'scope_dataProtectionOfficer')! />
@@ -204,9 +204,9 @@ Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO {.text-center }
 ### I. Rechtmäßigkeit der Verarbeitung{.underline}
 
 #### 1. Feststellungen{.underline}
-${process.process_opinionDPO_findings!bundle.unknown} 
+${process.process_opinionDPO_findings!} 
 #### 2. Empfehlungen{.underline}
-${process.process_opinionDPO_recommendations!bundle.unknown} 
+${process.process_opinionDPO_recommendations!} 
 <div class="pagebreak"></div>
 
 ### II. Rechtmäßigkeit der technischen und organisatorischen Maßnahmen{.underline}
@@ -229,8 +229,8 @@ ${scope.name}
 
 
 |:---|:---|
-| Abteilung/Fachbereich<br/>${process.process_processingDetails_responsibleDepartment!bundle.unknown} | Leiter Fachabteilung<br/>${responsiblePerson.name!bundle.unknown} |
-| Datum der Befragung<br/>${(process.process_processingDetails_surveyConductedOn?date.iso)!bundle.unknown} ||
+| Abteilung/Fachbereich<br/>${process.process_processingDetails_responsibleDepartment!} | Leiter Fachabteilung<br/>${responsiblePerson.name!} |
+| Datum der Befragung<br/>${(process.process_processingDetails_surveyConductedOn?date.iso)!} ||
 </div>
 
 <#assign sectionCount = 1>
@@ -248,27 +248,27 @@ ${scope.name}
 <@section 'Verarbeitungsangaben'>
 
 |:---|:---|
-| Bezeichnung der Verarbeitung<br/>${process.name} | Beschreibung der Verarbeitung<br/>${process.description!bundle.unknown} |
-| Art der Verarbeitung<br/> ${(bundle[process.process_processingDetails_typeOfSurvey])!bundle.unknown} ||
-| Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO | ${(process.process_processing_asProcessor?string(bundle.yes, bundle.no))!bundle.unknown} |
+| Bezeichnung der Verarbeitung<br/>${process.name} | Beschreibung der Verarbeitung<br/>${process.description!} |
+| Art der Verarbeitung<br/> ${(bundle[process.process_processingDetails_typeOfSurvey])!} ||
+| Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO | ${(process.process_processing_asProcessor?string(bundle.yes, bundle.no))!} |
 </@section>
 
 <@section 'Angaben zum gemeinsam Verantwortlichen'>
 |:---|
-| **Gemeinsam für die Verarbeitung Verantwortliche Art. 26 DS-GVO**<br/>${(jointControllership.name)!bundle.unknown} |
+| **Gemeinsam für die Verarbeitung Verantwortliche Art. 26 DS-GVO**<br/>${(jointControllership.name)!} |
 </@section>
 
 <@section 'Zweckbestimmung der Datenverarbeitung'>
 |:---|
-| ${process.process_intendedPurpose_intendedPurpose!bundle.unknown} |
+| ${process.process_intendedPurpose_intendedPurpose!} |
 </@section>
 
 <@section 'Rechtsgrundlage für die Datenverarbeitung'>
 |:---|
-| ${(process.process_dataProcessing_legalBasis?map(item->bundle[item])?join(', '))!bundle.unknown} |
+| ${(process.process_dataProcessing_legalBasis?map(item->bundle[item])?join(', '))!} |
 | **Sonstige Rechtsgrundlagen:**{.underline} |
-| ${process.process_dataProcessing_otherLegalBasis!bundle.unknown} |
-| **Erläuterungen:**<br/> ${process.process_dataProcessing_explanation!bundle.unknown} |
+| ${process.process_dataProcessing_otherLegalBasis!} |
+| **Erläuterungen:**<br/> ${process.process_dataProcessing_explanation!} |
 </@section>
 
 <#assign processDataTypeLinks=process.getLinks('process_dataType')! />
@@ -280,8 +280,8 @@ ${scope.name}
 <#list processDataTypeLinks as dataTypeLink>
 <#assign dataType=resolve(dataTypeLink.target.targetUri) />
 <#assign dataOrigin=dataTypeLink.process_dataType_dataOrigin! />
-<#assign effectiveDataOrigin=(dataOrigin == 'process_dataType_dataOrigin_other')?then(dataTypeLink.process_dataType_otherDataOrigin!bundle.unknown,(bundle[dataTypeLink.process_dataType_dataOrigin])!bundle.unknown) />
-| ${dataType.name} | ${effectiveDataOrigin} | ${dataTypeLink.process_dataType_comment!bundle.unknown} |
+<#assign effectiveDataOrigin=(dataOrigin == 'process_dataType_dataOrigin_other')?then(dataTypeLink.process_dataType_otherDataOrigin!,(bundle[dataTypeLink.process_dataType_dataOrigin])!) />
+| ${dataType.name} | ${effectiveDataOrigin} | ${dataTypeLink.process_dataType_comment!} |
 </#list>
 </@section>
 </#if>
@@ -315,9 +315,9 @@ ${scope.name}
 
 <@section 'Informationspflichten Art. 13, 14 DS-GVO'>
 |:---|
-| ${process.process_informationsObligations_status!bundle.unknown} |
+| ${process.process_informationsObligations_status!} |
 | **Erläuterungen**{.underline}<br/> |
-| ${process.process_informationsObligations_explanation!bundle.unknown} |
+| ${process.process_informationsObligations_explanation!} |
 </@section>
 
 <#if transmissions?has_content>
@@ -350,7 +350,7 @@ ${scope.name}
 
 |:---|:---|
 | **Art der Daten** | **Rechtsgrundlage für Datenübertragung** |
-| ${transmissionDataTypes?map(t->t.name)?join(", ")} | ${effectiveDataTransferLegalBasis!bundle.unknown} |
+| ${transmissionDataTypes?map(t->t.name)?join(", ")} | ${effectiveDataTransferLegalBasis!} |
 
 <#macro recipient_section link_to_recipient recipient_label>
 <div class="section">
@@ -358,14 +358,14 @@ ${scope.name}
 
 |:---|
 | **${recipient_label}**
-| ${(recipient.name)!bundle.unknown} |
+| ${(recipient.name)!} |
 | **Datenübermittlung in Drittland** |
-| ${(link_to_recipient.process_internalRecipient_thirdCountryProcessing?string(bundle.yes, bundle.no))!bundle.unknown} |
+| ${(link_to_recipient.process_internalRecipient_thirdCountryProcessing?string(bundle.yes, bundle.no))!} |
 | **Name des Staates** |
-| ${(link_to_recipient.process_internalRecipient_thirdCountryName)!bundle.unknown} |
+| ${(link_to_recipient.process_internalRecipient_thirdCountryName)!} |
 | **Angabe geeigneter Garantien**|
-| ${link_to_recipient.process_internalRecipient_thirdCountryGuarantees!bundle.unknown} |
-| **Erläuterungen:**{.underline}<br/> ${link_to_recipient.process_internalRecipient_thirdCountryExplanation!bundle.unknown}  |
+| ${link_to_recipient.process_internalRecipient_thirdCountryGuarantees!} |
+| **Erläuterungen:**{.underline}<br/> ${link_to_recipient.process_internalRecipient_thirdCountryExplanation!}  |
 </div>
 </#macro>
 
@@ -401,7 +401,7 @@ ${scope.name}
 
 |:---|
 | **Erläuterungen:**{.underline}|
-| ${transmission.process_dataTransfer_explanation!bundle.unknown}|
+| ${transmission.process_dataTransfer_explanation!}|
 </div>
 
 </#list>
@@ -416,8 +416,8 @@ ${scope.name}
 
 <@section 'Zugriffsberechtigte Personengruppen (Berechtigungsgruppen)'>
 |:---|
-| **Ein Berechtigungskonzept ist vorhanden**<br/>${(process.process_accessAuthorization_concept?string(bundle.yes, bundle.no))!bundle.unknown} |
-| **Beschreibung des Berechtigungsverfahrens:**<br/>${process.process_accessAuthorization_description!bundle.unknown} |
+| **Ein Berechtigungskonzept ist vorhanden**<br/>${(process.process_accessAuthorization_concept?string(bundle.yes, bundle.no))!} |
+| **Beschreibung des Berechtigungsverfahrens:**<br/>${process.process_accessAuthorization_description!} |
 </@section>
 
 <#assign relatedAssets=rels(process, 'process_requiredApplications')![] + rels(process, 'process_requiredITSystems')![] />
@@ -427,19 +427,19 @@ ${scope.name}
 |:---|
 | **Name** {.text-center .underline}| **Typ** {.text-center .underline}| **Beschreibung** {.text-center .underline}|
 <#list relatedAssets as asset>
-| ${(asset.name)!bundle.unknown} | ? | ${asset.description!bundle.unknown} |
+| ${(asset.name)!} | ? | ${asset.description!} |
 </#list>
 </@section>
 </#if>
 
 <@section 'Betriebsstadium'>
 |:---|
-| ${(bundle[process.process_processingDetails_operatingStage])!bundle.unknown} |
+| ${(bundle[process.process_processingDetails_operatingStage])!} |
 </@section>
 
 <@section 'Datenschutz-Folgenabschätzung erforderlich?'>
 |:---|
-| ${(process.process_opinionDPO_privacyImpactAssessment?string(bundle.yes, bundle.no))!bundle.unknown} |
+| ${(process.process_opinionDPO_privacyImpactAssessment?string(bundle.yes, bundle.no))!} |
 </@section>
 
 

@@ -1,4 +1,4 @@
-<#function to_user_presentable val = bundle.unknown>
+<#function to_user_presentable val = "">
   <#if val?is_boolean>
     <#return val?then(bundle.yes, bundle.no)>
   </#if>
