@@ -103,22 +103,34 @@ public class Demo {
 
     static void createReports(ReportEngine reportEngine, Map<String, Object> templateInput,
             Map<String, Object> entriesForLanguage) throws IOException {
-        ResourceBundle bundle;
+        ResourceBundle bundleAV;
+        ResourceBundle bundleVVT;
+        try (InputStream is = Files
+                .newInputStream(Paths.get("src/main/resources/templates/av_de.properties"))) {
+            bundleAV = new PropertyResourceBundle(is);
+        }
         try (InputStream is = Files
                 .newInputStream(Paths.get("src/main/resources/templates/vvt_de.properties"))) {
-            bundle = new PropertyResourceBundle(is);
+            bundleVVT = new PropertyResourceBundle(is);
         }
 
         HashMap<String, Object> workingCopy = new HashMap<>(templateInput);
-        MapResourceBundle mergedBundle = MapResourceBundle.createMergedBundle(bundle,
+        MapResourceBundle mergedBundleAV = MapResourceBundle.createMergedBundle(bundleAV,
                 entriesForLanguage);
-        workingCopy.put("bundle", mergedBundle);
+        MapResourceBundle mergedBundleVVT = MapResourceBundle.createMergedBundle(bundleVVT,
+                entriesForLanguage);
+
+        workingCopy.put("bundle", mergedBundleVVT);
         try {
             createReport(reportEngine, "/tmp/vvt.md", "vvt.md", workingCopy, "text/markdown",
                     "text/markdown");
             createReport(reportEngine, "/tmp/vvt.html", "vvt.md", workingCopy, "text/markdown",
                     "text/html");
             createReport(reportEngine, "/tmp/vvt.pdf", "vvt.md", workingCopy, "text/markdown",
+                    "application/pdf");
+            workingCopy.put("bundle", mergedBundleAV);
+
+            createReport(reportEngine, "/tmp/av.pdf", "av.md", workingCopy, "text/markdown",
                     "application/pdf");
 
             createReport(reportEngine, "/tmp/processes.csv", "processes.csv", templateInput,
