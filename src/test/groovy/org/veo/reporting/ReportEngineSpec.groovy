@@ -156,11 +156,12 @@ I'd like to invite you to my birthday party.'''
         when:
         def configs = reportEngine.getReports()
         then:
-        configs.size() == 3
+        configs.size() == 4
         configs.keySet().sort() == [
             'invitation',
             'process-list',
-            'processing-activities'
+            'processing-activities',
+            'processing-on-behalf'
         ]
     }
 }

@@ -1,0 +1,27 @@
+{
+  "name": {
+    "de": "AV gem. Art 30 II DS-GVO"
+  },
+  "description": {
+    "de": "Dokumentation über die Auftraggeber und für sie durchgeführte Verarbeitungstätigkeiten (Auftragsverarbeitung)"
+  },
+  "templateFile": "av.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_ResponsibleBody"
+      ]
+    }
+  ],
+  "data": {
+    "scope": "/scopes/${targetId}",
+    "scopes": "/scopes?size=2147483647",
+    "processes": "/processes?size=2147483647",
+    "persons": "/persons?size=2147483647"
+  }
+}
