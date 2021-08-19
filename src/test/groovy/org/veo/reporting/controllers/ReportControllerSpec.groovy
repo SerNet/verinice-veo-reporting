@@ -35,7 +35,6 @@ import org.veo.reporting.VeoClient
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
-import spock.lang.Ignore
 import spock.lang.Specification
 
 @AutoConfigureMockMvc
@@ -267,11 +266,9 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
         response.status == 400
     }
 
-    @Ignore("I don't want to keep this up-to-date while the report is still being planned")
-    // FIXME find a simpler report to use for the PDF generation test
     def "create a PDF report"(){
         when:
-        def response = POST("/reports/processing-activities", 'abc', 'de',[
+        def response = POST("/reports/processing-on-behalf", 'abc', 'de',[
             outputType:'application/pdf',
             targets: [
                 [
@@ -285,47 +282,161 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
 
         1 * veoClient.fetchData('/scopes/0815', 'Bearer: abc') >> [
             name: 'My Scope',
+            id: '0815',
+            type: 'scope',
             links:[
-                scope_person_responsibleRegulatoryAuthority: [
-                    [target: [
+                scope_management: [
+                    [
+                        target: [
                             displayName: 'Foo',
-                            targetUri: '/persons/12345'
-                        ]]
+                            targetUri: '/persons/1'
+                        ],
+                        attributes: [:]
+                    ]
+                ],
+                scope_dataProtectionOfficer: [
+                    [
+                        target: [
+                            displayName: 'Foo',
+                            targetUri: '/persons/2'
+                        ],
+                        attributes: [:]
+                    ]
                 ]
             ],
             members: [
                 [
-                    targetUri : '/processes/f96de830-eacb-4083-b149-3305bcef8fc0'
+                    targetUri : '/processes/1'
                 ]
             ]
         ]
         1 * veoClient.fetchData('/processes?size=2147483647', 'Bearer: abc') >> [
             [
-                id: 'f96de830-eacb-4083-b149-3305bcef8fc0',
+                id: '1',
                 name: 'Verarbeitungstätigkeit 1',
-                subType: ['fd672b7d-7e22-4c71-992c-76b59c0d4ee8': 'VT']
+                description: 'Hier wird etwas verarbeitet',
+                type: 'process',
+                subType: ['fd672b7d-7e22-4c71-992c-76b59c0d4ee8': 'PRO_DataProcessing'],
+                customAspects: [
+                    process_processing: [
+                        attributes: [
+                            process_processing_asProcessor : false
+                        ]
+                    ]
+                ],
+                links:[
+                    process_controller : [
+                        [
+                            target: [
+                                displayName: 'Foo',
+                                targetUri: '/scopes/1'
+                            ],
+                            attributes: [:]
+                        ]
+                    ]
+                ]
             ]
         ]
         1 * veoClient.fetchData('/persons?size=2147483647', 'Bearer: abc') >> [
-            [id: '12345',
-                name: 'Foo Bar']
+            [
+                id: '1',
+                type:'person',
+                name: 'John Doe',
+                customAspects: [
+                    person_generalInformation: [
+                        attributes: [
+                            person_generalInformation_familyName : 'Doe',
+                            person_generalInformation_givenName: 'John'
+                        ]
+                    ]
+                ],
+            ],
+            [
+                id: '2',
+                type:'person',
+                name: 'Jane Doe',
+                customAspects: [
+                    person_generalInformation: [
+                        attributes: [
+                            person_generalInformation_familyName : 'Doe',
+                            person_generalInformation_givenName: 'Jane'
+                        ]
+                    ]
+                ],
+            ],
+            [
+                id: '3',
+                type:'person',
+                name: 'Jack Doe',
+                customAspects: [
+                    person_generalInformation: [
+                        attributes: [
+                            person_generalInformation_familyName : 'Doe',
+                            person_generalInformation_givenName: 'John'
+                        ]
+                    ]
+                ],
+            ],
+            [
+                id: '4',
+                type:'person',
+                name: 'June Doe',
+                customAspects: [
+                    person_generalInformation: [
+                        attributes: [
+                            person_generalInformation_familyName : 'Doe',
+                            person_generalInformation_givenName: 'Jane'
+                        ]
+                    ]
+                ],
+            ]
         ]
-        1 * veoClient.fetchData('/controls?size=2147483647', 'Bearer: abc') >> []
+        1 * veoClient.fetchData('/scopes?size=2147483647', 'Bearer: abc') >> [
+            [
+                name: 'Their Scope',
+                id: '1',
+                type: 'scope',
+                links:[
+                    scope_management: [
+                        [
+                            target: [
+                                displayName: 'Foo',
+                                targetUri: '/persons/3'
+                            ],
+                            attributes: [:]
+                        ]
+                    ],
+                    scope_dataProtectionOfficer: [
+                        [
+                            target: [
+                                displayName: 'Foo',
+                                targetUri: '/persons/4'
+                            ],
+                            attributes: [:]
+                        ]
+                    ]
+                ],
+                members: [
+                    [
+                        targetUri : '/processes/1'
+                    ]
+                ]
+            ]
+        ]
         1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
-            name: 'Name',
-            person_generalInformation_familyName: 'Nachname',
-            scope_address_address1: 'Adresse',
-            scope_address_postcode: 'Postleitzahl',
-            scope_address_city: 'Stadt'
+            scope_contactInformation_phone: 'Telefon',
+            scope_contactInformation_fax: 'Fax',
+            scope_dataProtectionOfficer: 'Datenschutzbeauftragte',
+            description: 'Beschreibung'
         ]
         when:
         PDDocument doc = PDDocument.load(response.contentAsByteArray)
         then:
-        doc.numberOfPages == 8
+        doc.numberOfPages == 1
         when:
         def text = new PDFTextStripper().getText(doc)
         then:
-        text.startsWith('Verzeichnis der\nVerarbeitungstätigkeiten')
+        text.startsWith('AV gem. Art 30 II DS-GVO')
     }
 
     MockHttpServletResponse GET(url) {
