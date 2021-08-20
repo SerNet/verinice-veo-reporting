@@ -8,3 +8,15 @@
  */
 
 rootProject.name = 'veo-reporting'
+
+boolean isCiServer = System.getenv().containsKey("CI")
+
+buildCache {
+    local {
+        enabled = !isCiServer
+    }
+    remote(HttpBuildCache) {
+        url = 'https://bob-2019:8090/cache/'
+        push = isCiServer
+    }
+}
