@@ -14,10 +14,10 @@
   ],
   "targetTypes": [
     {
-      "modelType": "unit"
+      "modelType": "scope"
     }
   ],
   "data": {
-    "processes": "/processes?unit=${targetId}&size=2147483647"
+    "scopeMembers": "/scopes/{targetId}/members"
   }
 }

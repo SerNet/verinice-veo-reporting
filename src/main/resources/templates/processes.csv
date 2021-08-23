@@ -1,4 +1,5 @@
-name;uuid;unit;abbreviation;custom aspects
+<#assign processes = scopeMembers?filter(item -> item.type == 'process')>
+name;uuid;unit;abbreviation;subtypes;custom aspects
 <#list processes as process>
-${process.name};${process.id};${process.owner.displayName};${process.abbreviation!"NO ABBREVIATION DEFINED"};${process.customAspects?keys?join(", ")}
+${process.name};${process.id};${process.owner.displayName};${process.abbreviation!"NO ABBREVIATION DEFINED"};${process.subType?values?join(", ")};${process.customAspects?keys?join(", ")}
 </#list>
