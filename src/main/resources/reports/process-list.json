@@ -18,6 +18,6 @@
     }
   ],
   "data": {
-    "scopeMembers": "/scopes/{targetId}/members"
+    "scopeMembers": "/scopes/${targetId}/members"
   }
 }
