@@ -315,7 +315,7 @@ ${scope.name}
 
 <@section 'Informationspflichten Art. 13, 14 DS-GVO'>
 |:---|
-| ${process.process_informationsObligations_status!} |
+| ${(process.process_informationsObligations_status?string(bundle.yes, bundle.no))!} |
 | **Erläuterungen**{.underline}<br/> |
 | ${process.process_informationsObligations_explanation!} |
 </@section>
