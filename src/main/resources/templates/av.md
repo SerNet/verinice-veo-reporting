@@ -52,7 +52,7 @@
 
 | ${bundle.processing}  | ${bundle.description} | ${bundle.controller_details} | ${bundle.controller_management} | ${bundle.scope_dataProtectionOfficer} |
 |:---|:---|:---|:---|:---|
-<#list processesInScope?filter(p-> p.process_processing_asProcessor??) as process>
+<#list processesInScope?filter(p-> p.process_processing_asProcessor!false) as process>
 <#assign controller=rel(process, 'process_controller')!>
 <#assign managementController=(rel(controller, 'scope_management'))!>
 <#assign dataProtectionOfficerController=(rel(controller, 'scope_dataProtectionOfficer'))!>
