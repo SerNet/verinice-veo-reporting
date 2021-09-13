@@ -113,4 +113,14 @@ I'd like to invite you to my birthday party.'''
         then:
         text == 'HTML: &lt;h1&gt;Data&lt;/h1&gt;'
     }
+
+    def "Freemarker class resolving is disabled"(){
+        given:
+        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
+        when:
+        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('resolver-test.txt', [data: "whatever"], System.out)
+        then:
+        def e = thrown(freemarker.core._MiscTemplateException)
+        e.message =~ /Instantiating freemarker.template.utility.Execute is not allowed in the template for security reasons/
+    }
 }
