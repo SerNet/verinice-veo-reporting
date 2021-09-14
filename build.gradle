@@ -14,7 +14,7 @@ repositories {
 }
 
 def versions = [
-    openhtmltopdf: '1.0.9',
+    openhtmltopdf: '1.0.10',
     phfonts: '4.2.0',
 ]
 
