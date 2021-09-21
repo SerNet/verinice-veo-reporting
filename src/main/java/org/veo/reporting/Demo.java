@@ -135,8 +135,6 @@ public class Demo {
             createReport(reportEngine, "/tmp/av.pdf", "av.md", workingCopy, "text/markdown",
                     "application/pdf");
 
-            createReport(reportEngine, "/tmp/processes.csv", "processes.csv", templateInput,
-                    "text/csv", "text/csv");
         } catch (IOException | TemplateException e) {
             logger.error("Error creating reports", e);
         }
