@@ -481,15 +481,12 @@ ${scope.name}
   <tbody>
     <@tomsection 'control_dataProtection_objectives_pseudonymization', 'Pseudonymisierung'/>
     <@tomsection 'control_dataProtection_objectives_confidentiality', 'Gewährleistung der Vertraulichkeit'/>
-    <tr class="gray">
-      <td colspan="3">Verschlüsselung???</td>
-    </tr>
-    <@tomsection 'control_dataProtection_objectives_confidentiality', 'Gewährleistung der Vertraulichkeit'/>
     <@tomsection 'control_dataProtection_objectives_integrity', 'Gewährleistung der Integrität'/>
     <@tomsection 'control_dataProtection_objectives_availability', 'Gewährleistung der Verfügbarkeit'/>
     <@tomsection 'control_dataProtection_objectives_resilience', 'Gewährleistung der Belastbarkeit'/>
     <@tomsection 'control_dataProtection_objectives_recoverability', 'Wiederherstellbarkeit'/>
     <@tomsection 'control_dataProtection_objectives_effectiveness', 'Wirksamkeit der TOMs'/>
+    <@tomsection 'control_dataProtection_objectives_encryption', 'Verschlüsselung'/>
   </tbody>
 </table> 
 </@section>
