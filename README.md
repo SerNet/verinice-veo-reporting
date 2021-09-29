@@ -57,3 +57,7 @@ You need to specify the UUID of the scope that should be used for testing. You c
 Enable with `./gradlew bootRun --args="--spring.profiles.active=demo --veo.accesstoken=XXXX --veo.demoscopeid=9f6f0199-7a14-4a1d-8345-80a0c1b60519"` and use at your own risk.
 
 See `org.veo.reporting.Demo`.
+
+## License
+
+verinice.veo is released under GNU AFFERO GENERAL PUBLIC LICENSE Version 3 (see LICENSE.txt) and uses third party libraries that are distributed under their own terms.
