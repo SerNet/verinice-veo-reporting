@@ -64,7 +64,7 @@ I'd like to invite you to my birthday party.'''
         def objectData = [
             name: 'Asset',
             id: '0815',
-            type: 'Asset',
+            type: 'asset',
             customAspects: [
                 basic : [
                     attributes: [
@@ -90,6 +90,67 @@ I'd like to invite you to my birthday party.'''
         def text = os.toString()
         then:
         text == 'The foo is bar.\nThe other foo is baz.'
+    }
+
+    def "Access linked objects"(){
+        given:
+        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
+        ByteArrayOutputStream os = new ByteArrayOutputStream()
+        def persons = [
+            [
+                name: 'John',
+                id: '1',
+                type: 'person',
+                links: [
+                    father : [
+                        [
+                            target:[
+                                targetUri : 'http://example.org/persons/2'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                name: 'Jack',
+                id: '2',
+                type: 'person',
+                links: [
+                    child : [
+                        [
+                            target:[
+                                targetUri : 'http://example.org/persons/1'
+                            ]
+                        ],
+                        [
+                            target:[
+                                targetUri : 'http://example.org/persons/3'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                name: 'Jane',
+                id: '3',
+                type: 'person',
+                links: [
+                    father : [
+                        [
+                            target:[
+                                targetUri : 'http://example.org/persons/2'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+        when:
+        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('custom-link-test.txt', [persons: persons], os)
+        def text = os.toString()
+        then:
+        text == '''John's father is named Jack.
+Jack's children are named John and Jane.'''
     }
 
     def "HTML is escaped in Markdown templates"(){

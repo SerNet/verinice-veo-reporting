@@ -22,8 +22,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import freemarker.core.TemplateClassResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,17 +36,24 @@ import freemarker.cache.MergingTemplateConfigurationFactory;
 import freemarker.cache.NullCacheStorage;
 import freemarker.cache.OrMatcher;
 import freemarker.cache.TemplateLoader;
+import freemarker.core.Environment;
 import freemarker.core.HTMLOutputFormat;
+import freemarker.core.TemplateClassResolver;
 import freemarker.core.TemplateConfiguration;
 import freemarker.core.XMLOutputFormat;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import freemarker.template.TemplateModelException;
 
 public class TemplateEvaluatorImpl implements TemplateEvaluator {
 
     private static final Logger logger = LoggerFactory.getLogger(TemplateEvaluatorImpl.class);
+
+    // FIXME: remove this mapping after VEO-854
+    private static final Map<String, String> pathComponentByType = Map.of("asset", "assets",
+            "control", "controls", "person", "persons", "process", "processes", "scope", "scopes");
 
     private final Configuration cfg;
 
@@ -61,7 +71,6 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
             logger.info("Caching disabled");
             cfg.setCacheStorage(NullCacheStorage.INSTANCE);
         }
-        cfg.setObjectWrapper(new VeoReportingObjectWrapper(cfg.getIncompatibleImprovements()));
 
         TemplateConfiguration tcMD = new TemplateConfiguration();
         tcMD.setOutputFormat(MarkdownOutputFormat.INSTANCE);
@@ -84,7 +93,53 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
         logger.info("Evaluating template {}", templateName);
 
         try (Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
-            template.process(data, writer);
+
+            Map<String, Object> entitiesByPath = new HashMap<>();
+
+            VeoReportingObjectWrapper objectWrapper = new VeoReportingObjectWrapper(
+                    cfg.getIncompatibleImprovements(), entitiesByPath);
+            Environment env = template.createProcessingEnvironment(data, writer, objectWrapper);
+            logger.info("Building entity lookup map");
+            addRecursively(entitiesByPath, data);
+
+            env.process();
         }
     }
+
+    private void addRecursively(Map<String, Object> entitiesByPath, Object data)
+            throws TemplateModelException {
+        logger.debug("adding entities from {}", data);
+        if (data instanceof Map) {
+            Map<?, ?> map = (Map<?, ?>) data;
+            Object id = map.get("id");
+            Object type = map.get("type");
+
+            if (id != null && type != null) {
+                // FIXME: we should read this from the DTO! (VEO-854)
+                String pathComponent = pathComponentByType.get(type);
+                if (pathComponent == null) {
+                    throw new TemplateModelException("Unhandled entity type " + type);
+                }
+
+                String uri = "/" + pathComponent + "/" + id;
+                logger.debug("adding {}: {}", uri, map);
+                entitiesByPath.put(uri, map);
+            } else {
+                for (Entry<?, ?> e : map.entrySet()) {
+                    logger.debug("Found key {}", e.getKey());
+                    addRecursively(entitiesByPath, e.getValue());
+                }
+            }
+
+        } else if (data instanceof Collection) {
+            Collection<?> list = (Collection<?>) data;
+            for (Object object : list) {
+                logger.debug(" found item: {}", object);
+                addRecursively(entitiesByPath, object);
+            }
+
+        }
+
+    }
+
 }

@@ -18,6 +18,11 @@
 package org.veo.templating;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.veo.templating.adapters.VeoReportingEntityAdapter;
 import org.veo.templating.adapters.VeoReportingLinkAdapter;
@@ -29,8 +34,16 @@ import freemarker.template.Version;
 
 public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
 
-    public VeoReportingObjectWrapper(Version incompatibleImprovements) {
+    private static final Logger logger = LoggerFactory.getLogger(VeoReportingObjectWrapper.class);
+    private static final Pattern pathPattern = Pattern.compile("(/(\\w+/[0-9a-f-]+))$",
+            Pattern.CASE_INSENSITIVE);
+
+    private final Map<String, Object> entitiesByPath;
+
+    public VeoReportingObjectWrapper(Version incompatibleImprovements,
+            Map<String, Object> entitiesByPath) {
         super(incompatibleImprovements);
+        this.entitiesByPath = entitiesByPath;
     }
 
     @Override
@@ -46,6 +59,18 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
             }
         }
         return super.wrap(obj);
+    }
+
+    public Object resolve(String uri) throws TemplateModelException {
+        logger.debug("resolve uri {}", uri);
+        Matcher m = pathPattern.matcher(uri);
+        if (m.find()) {
+            String path = m.group(1);
+            logger.debug("path = {}", path);
+            return entitiesByPath.get(path);
+        } else {
+            throw new TemplateModelException("Cannot resolve " + uri + ", malformed uri format.");
+        }
     }
 
 }

@@ -17,9 +17,13 @@
  */
 package org.veo.templating.adapters;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.veo.templating.VeoReportingObjectWrapper;
 
@@ -33,6 +37,8 @@ import freemarker.template.WrappingTemplateModel;
 
 public class VeoReportingEntityAdapter extends WrappingTemplateModel
         implements TemplateHashModel, AdapterTemplateModel {
+
+    private static final Logger logger = LoggerFactory.getLogger(VeoReportingEntityAdapter.class);
 
     private final Map<?, ?> m;
     private final VeoReportingObjectWrapper ow;
@@ -56,6 +62,12 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
         }
         if ("getLinks".equals(key)) {
             return new GetLinks(m, ow);
+        }
+        if ("getLinked".equals(key)) {
+            return new GetLinked(m, ow);
+        }
+        if ("findFirstLinked".equals(key)) {
+            return new FindFirstLinked(m, ow);
         }
 
         @SuppressWarnings("unchecked")
@@ -82,17 +94,18 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
         return false;
     }
 
-    private static final class GetLinks implements TemplateMethodModelEx {
+    private abstract static class SingleStringArgumentMethod implements TemplateMethodModelEx {
         private final Map<?, ?> m;
         private final VeoReportingObjectWrapper ow;
 
-        public GetLinks(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+        public SingleStringArgumentMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
             this.m = m;
             this.ow = ow;
         }
 
         @Override
-        public Object exec(List arguments) throws TemplateModelException {
+        public final Object exec(List arguments) throws TemplateModelException {
+            logger.debug("execute {} with arguments {}", getClass().getName(), arguments);
             if (arguments.size() != 1) {
                 throw new TemplateModelException("Expecting exactly 1 arguments");
             }
@@ -101,8 +114,100 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
                 throw new TemplateModelException(
                         "Expecting a String argument but got " + typeObj.getClass());
             }
-            Map<String, ?> links = (Map<String, ?>) m.get("links");
-            return ow.wrap(links.get(((SimpleScalar) typeObj).getAsString()));
+            String arg = ((SimpleScalar) typeObj).getAsString();
+            return ow.wrap(doExec(arg));
+        }
+
+        protected Object getProperty(String name) {
+            return m.get(name);
+        }
+
+        protected Object resolve(String path) throws TemplateModelException {
+            return ow.resolve(path);
+        }
+
+        protected abstract Object doExec(String arg) throws TemplateModelException;
+
+    }
+
+    private static final class GetLinks extends SingleStringArgumentMethod {
+
+        public GetLinks(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+            super(m, ow);
+        }
+
+        @Override
+        public Object doExec(String arg) throws TemplateModelException {
+            Map<String, ?> links = (Map<String, ?>) getProperty("links");
+            logger.debug("links: {}", links);
+            return links.get(arg);
+        }
+    }
+
+    private abstract static class LinkResolvingMethod extends SingleStringArgumentMethod {
+
+        public LinkResolvingMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+            super(m, ow);
+        }
+
+        protected Object resolve(Object link) throws TemplateModelException {
+            logger.debug("Found link {}", link);
+            Map target = (Map) ((Map) link).get("target");
+            logger.debug("target = {}", target);
+
+            String targetUri = (String) ((Map) target).get("targetUri");
+            logger.debug("targetUri = {}", targetUri);
+            Object targetEntity = resolve(targetUri);
+            logger.debug("targetEntity = {}", targetEntity);
+            if (targetEntity == null) {
+                throw new TemplateModelException(
+                        "Failed to resolve entity with targetUri " + targetUri);
+            }
+            return targetEntity;
+        }
+    }
+
+    private static final class FindFirstLinked extends LinkResolvingMethod {
+
+        public FindFirstLinked(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+            super(m, ow);
+        }
+
+        @Override
+        public Object doExec(String arg) throws TemplateModelException {
+            Map<String, ?> links = (Map<String, ?>) getProperty("links");
+            Object linksOfType = links.get(arg);
+            if (linksOfType instanceof List) {
+                List l = (List) linksOfType;
+                if (!l.isEmpty()) {
+                    Object link = l.get(0);
+                    return resolve(link);
+                }
+            }
+            return null;
+        }
+    }
+
+    private static final class GetLinked extends LinkResolvingMethod {
+
+        public GetLinked(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+            super(m, ow);
+        }
+
+        @Override
+        public Object doExec(String arg) throws TemplateModelException {
+            Map<String, ?> links = (Map<String, ?>) getProperty("links");
+            Object linksOfType = links.get(arg);
+            if (linksOfType instanceof List) {
+                List l = (List) linksOfType;
+                List result = new ArrayList<>(l.size());
+                for (Object object : l) {
+                    result.add(resolve(object));
+                }
+
+                return result;
+            }
+            return null;
         }
     }
 

@@ -1,0 +1,4 @@
+<#assign john=persons?first>
+<#assign jack=persons[1]>
+John's father is named ${john.findFirstLinked('father').name}.
+Jack's children are named ${jack.getLinked('child')?map(c->c.name)?join(" and ")}.
