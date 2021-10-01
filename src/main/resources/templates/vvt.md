@@ -5,52 +5,16 @@
  table = com.table
  >
 
-<#function resolve uri>
-  <#local parts = uri?split("/")>
-  <#local type = parts[parts?size-2]>
-  <#local id = parts[parts?size-1]>
-
-  <#local lookup = {
-    "assets" : assets,
-    "controls" : controls,
-    "persons" : persons,
-    "processes" : processes,
-    "scopes" : scopes
-  }/>
-
-  <#local coll = lookup[type]! />
-  <#local filteredColl = coll?filter(s -> s.id == id)>
-  <#if (filteredColl?size == 0)>
-    <#stop "Cannot resolve ${uri}, ${type} with id ${id} not found">
-  </#if>
-  <#return filteredColl?first>
-</#function>
-
-<#function rels object name>
-  <#local raw = object.getLinks(name)!>
-  <#if (raw!?size > 0)>
-    <#return raw?map(l -> resolve(l.target.targetUri))>
-  </#if>
-</#function>
-
-<#function rel object name>
-  <#local links = object.getLinks(name)!>
-  <#if (links!?size > 0)>
-    <#return resolve(links?first.target.targetUri)>
-  </#if>
-</#function>
-
 <#--  OLD VERSION, recursive membership
 <#function is_member_recursive scope entity>
-  <#local filteredMembers = scope.members?filter(m -> m.targetUri?contains('/scopes/') || m.targetUri?contains('/processes/'))>
-  <#local resolvedFilteredMembers = filteredMembers?map(m -> resolve(m.targetUri))>
-  <#return resolvedFilteredMembers?map(member->member.id)?seq_contains(entity.id) || (resolvedFilteredMembers?filter(member->member.type=='scope' && is_member_recursive(member, entity))?size > 0)>
+  <#local filteredMembers = scope.getMembers()?filter(m -> m.type == 'scope' || m.type == 'process')>
+  <#return filteredMembers?map(member->member.id)?seq_contains(entity.id) || (filteredMembers?filter(member->member.type=='scope' && is_member_recursive(member, entity))?size > 0)>
 </#function>
 
 <#assign processesInScope = processes?filter(p ->p.subType?values?seq_contains('PRO_DataProcessing'))?filter(p -> is_member_recursive(scope, p))>
 -->
 
-<#assign processesInScope = scope.members?filter(m -> m.targetUri?contains('/processes/'))?map(m -> resolve(m.targetUri))?filter(p ->p.subType?values?seq_contains('PRO_DataProcessing'))>
+<#assign processesInScope = scope.getMembers()?filter(m -> m.type == 'process')?filter(p ->p.subType?values?seq_contains('PRO_DataProcessing'))>
 
 <style>
 <#include "styles/default.css">
@@ -139,8 +103,8 @@
   ]/>
 
 
-<#assign management=rel(scope, 'scope_management')! />
-<#assign headOfDataProcessing=rel(scope, 'scope_headOfDataProcessing')! />
+<#assign management=scope.findFirstLinked('scope_management')! />
+<#assign headOfDataProcessing=scope.findFirstLinked('scope_headOfDataProcessing')! />
 
 
 | Vertretung  ||
@@ -149,7 +113,7 @@
 | Leitung der Datenverarbeitung |  ${headOfDataProcessing.person_generalInformation_givenName!} ${headOfDataProcessing.person_generalInformation_familyName!} |
 
 
-<#assign dataProtectionOfficer=rel(scope, 'scope_dataProtectionOfficer')! />
+<#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')! />
 
 <@table 'Datenschutzbeauftragte',
   dataProtectionOfficer,
@@ -190,9 +154,9 @@ ${process.name}
 
 <#list processesInScope as process>
 
-<#assign controller=rel(process, 'process_controller')! />
-<#assign jointControllership=rel(process, 'process_jointControllership')! />
-<#assign transmissions=rels(process, 'process_dataTransmission')! />
+<#assign controller=process.findFirstLinked('process_controller')! />
+<#assign jointControllership=process.findFirstLinked('process_jointControllership')! />
+<#assign transmissions=process.getLinked('process_dataTransmission')! />
 
 
 # <span style="display:inline-block; width: 6cm;">Verarbeitung: </span>${process.name} {#process_${process?counter}}
@@ -225,7 +189,7 @@ ${process.process_opinionDPO_recommendations!}
 ### Name des Unternehmens
 ${scope.name}
 
-<#assign responsiblePerson=rel(process, 'process_responsiblePerson')! />
+<#assign responsiblePerson=process.findFirstLinked('process_responsiblePerson')! />
 
 
 |:---|:---|
@@ -278,7 +242,7 @@ ${scope.name}
 |:---|
  **Art der verarbeiteten Daten / Datenkategorien** | **Herkunft der Daten** | **Bemerkungen:**|
 <#list processDataTypeLinks as dataTypeLink>
-<#assign dataType=resolve(dataTypeLink.target.targetUri) />
+<#assign dataType=dataTypeLink.getTarget() />
 <#assign dataOrigin=dataTypeLink.process_dataType_dataOrigin! />
 <#assign effectiveDataOrigin=(dataOrigin == 'process_dataType_dataOrigin_other')?then(dataTypeLink.process_dataType_otherDataOrigin!,(bundle[dataTypeLink.process_dataType_dataOrigin])!) />
 | ${dataType.name} | ${effectiveDataOrigin} | ${dataTypeLink.process_dataType_comment!} |
@@ -327,7 +291,7 @@ ${scope.name}
 <#list transmissions as transmission>
 
 <#assign recipientType=transmission.process_recipient_type! />
-<#assign transmissionDataTypes=rels(transmission, 'process_dataType')! />
+<#assign transmissionDataTypes=transmission.getLinked('process_dataType')! />
 
 <#assign dataTransferLegalBasis=transmission.process_dataTransfer_legalBasis! />
 <#assign hasOtherLegalBasis=dataTransferLegalBasis?seq_contains('process_dataTransfer_legalBasis_others') />
@@ -354,7 +318,7 @@ ${scope.name}
 
 <#macro recipient_section link_to_recipient recipient_label>
 <div class="section">
-<#assign recipient=resolve(link_to_recipient.target.targetUri) />
+<#assign recipient=link_to_recipient.getTarget() />
 
 |:---|
 | **${recipient_label}**
@@ -420,7 +384,7 @@ ${scope.name}
 | **Beschreibung des Berechtigungsverfahrens:**<br/>${process.process_accessAuthorization_description!} |
 </@section>
 
-<#assign relatedAssets=rels(process, 'process_requiredApplications')![] + rels(process, 'process_requiredITSystems')![] />
+<#assign relatedAssets=process.getLinked('process_requiredApplications')![] + process.getLinked('process_requiredITSystems')![] />
 <#if relatedAssets?has_content>
 
 <@section 'Systeminformationen über Hard- und Software'>
@@ -443,7 +407,7 @@ ${scope.name}
 </@section>
 
 
-<#assign toms=rels(process, 'process_tom')! />
+<#assign toms=process.getLinked('process_tom')! />
 <#if toms?has_content>
 <@section 'Technische und organisatorische Maßnahmen{ #process_toms_${process?counter} }'  >
 
