@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.veo.templating.VeoReportingObjectWrapper;
+import org.veo.templating.methods.NoArgumentsMethod;
 import org.veo.templating.methods.SingleStringArgumentMethod;
 
 import freemarker.template.AdapterTemplateModel;
@@ -59,9 +60,23 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
         if (val != null) {
             return wrap(val);
         }
+
+        Object type = m.get("type");
+        // for now, scopes have members, everything else has parts
+        if ("scope".equals(type)) {
+            if ("getMembers".equals(key)) {
+                return new GetMembers(m, ow);
+            }
+        } else {
+            if ("getParts".equals(key)) {
+                return new GetParts(m, ow);
+            }
+        }
+
         if ("getLinks".equals(key)) {
             return new GetLinks(m, ow);
         }
+
         if ("getLinked".equals(key)) {
             return new GetLinked(m, ow);
         }
@@ -107,26 +122,55 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
         }
     }
 
+    private static final class GetMembers extends NoArgumentsMethod {
+
+        public GetMembers(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+            super(m, ow);
+        }
+
+        @Override
+        public Object doExec() throws TemplateModelException {
+            List<?> members = (List<?>) getProperty("members");
+            logger.debug("members: {}", members);
+            return resolveRefs(members);
+        }
+    }
+
+    private static final class GetParts extends NoArgumentsMethod {
+
+        public GetParts(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+            super(m, ow);
+        }
+
+        @Override
+        public Object doExec() throws TemplateModelException {
+            List<?> parts = (List<?>) getProperty("parts");
+            logger.debug("parts: {}", parts);
+            return resolveRefs(parts);
+        }
+    }
+
     private abstract static class LinkResolvingMethod extends SingleStringArgumentMethod {
 
         public LinkResolvingMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
             super(m, ow);
         }
 
-        protected Object resolve(Object link) throws TemplateModelException {
+        protected Object resolveLink(Object link) throws TemplateModelException {
             logger.debug("Found link {}", link);
             Map target = (Map) ((Map) link).get("target");
             logger.debug("target = {}", target);
+            resolveRef(target);
+            return resolveRef(target);
+        }
 
-            String targetUri = (String) ((Map) target).get("targetUri");
-            logger.debug("targetUri = {}", targetUri);
-            Object targetEntity = resolve(targetUri);
-            logger.debug("targetEntity = {}", targetEntity);
-            if (targetEntity == null) {
-                throw new TemplateModelException(
-                        "Failed to resolve entity with targetUri " + targetUri);
+        protected Object resolveLinks(List<?> linksOfType) throws TemplateModelException {
+            List result = new ArrayList<>(linksOfType.size());
+            for (Object link : linksOfType) {
+                Map target = (Map) ((Map) link).get("target");
+                result.add(resolveRef(target));
             }
-            return targetEntity;
+            return result;
         }
     }
 
@@ -144,7 +188,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
                 List l = (List) linksOfType;
                 if (!l.isEmpty()) {
                     Object link = l.get(0);
-                    return resolve(link);
+                    return resolveLink(link);
                 }
             }
             return null;
@@ -162,16 +206,12 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
             Map<String, ?> links = (Map<String, ?>) getProperty("links");
             Object linksOfType = links.get(arg);
             if (linksOfType instanceof List) {
-                List l = (List) linksOfType;
-                List result = new ArrayList<>(l.size());
-                for (Object object : l) {
-                    result.add(resolve(object));
-                }
+                return resolveLinks((List) linksOfType);
 
-                return result;
             }
             return null;
         }
+
     }
 
 }

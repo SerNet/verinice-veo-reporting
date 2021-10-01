@@ -153,6 +153,75 @@ I'd like to invite you to my birthday party.'''
 Jack's children are named John and Jane.'''
     }
 
+    def "Access a scope's members"(){
+        given:
+        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
+        ByteArrayOutputStream os = new ByteArrayOutputStream()
+        def data = [
+            scopes:[
+                [
+                    name: 'S1',
+                    id: '1',
+                    type: 'scope',
+                    members: [
+                        [
+                            targetUri : 'http://example.org/persons/1'
+                        ]
+                    ]
+                ]
+            ],
+            persons: [
+                [
+                    name: 'Jack',
+                    id: '1',
+                    type: 'person'
+
+                ]
+            ]
+        ]
+        when:
+        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('scope-member-test.txt', data, os)
+        def text = os.toString()
+        then:
+        text == 'Elements in the scope: Jack.'
+    }
+
+    def "Access a composize person entity's parts"(){
+        given:
+        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
+        ByteArrayOutputStream os = new ByteArrayOutputStream()
+        def persons = [
+            [
+                name: 'Family',
+                id: '1',
+                type: 'person',
+                parts: [
+                    [
+                        targetUri : 'http://example.org/persons/2'
+                    ],
+                    [
+                        targetUri : 'http://example.org/persons/3'
+                    ]
+                ]
+            ],
+            [
+                name: 'Jack',
+                id: '2',
+                type: 'person'
+            ],
+            [
+                name: 'Jane',
+                id: '3',
+                type: 'person'
+            ]
+        ]
+        when:
+        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('composite-part-test.txt', [persons: persons], os)
+        def text = os.toString()
+        then:
+        text == '''Our family members are named Jack and Jane.'''
+    }
+
     def "HTML is escaped in Markdown templates"(){
         given:
         def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
