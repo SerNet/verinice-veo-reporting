@@ -424,19 +424,23 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
             ]
         ]
         1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
+            name: 'Name',
+            scope_contactInformation_email: 'E-Mail',
             scope_contactInformation_phone: 'Telefon',
             scope_contactInformation_fax: 'Fax',
             scope_dataProtectionOfficer: 'Datenschutzbeauftragte',
+            scope_management: 'Leitung der Verantwortlichen Stelle',
             description: 'Beschreibung'
         ]
         when:
         PDDocument doc = PDDocument.load(response.contentAsByteArray)
         then:
-        doc.numberOfPages == 1
+        doc.numberOfPages == 3
         when:
         def text = new PDFTextStripper().getText(doc)
         then:
-        text.startsWith('AV gem. Art 30 II DS-GVO')
+        text.startsWith('''Auftragsverarbeitungen
+gemäß Art. 30 II DS-GVO''')
     }
 
     MockHttpServletResponse GET(url) {
