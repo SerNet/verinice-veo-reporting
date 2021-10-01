@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.veo.templating.VeoReportingObjectWrapper;
+import org.veo.templating.methods.NoArgumentsMethod;
 
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.TemplateHashModel;
@@ -32,10 +33,12 @@ public class VeoReportingLinkAdapter extends WrappingTemplateModel
         implements TemplateHashModel, AdapterTemplateModel {
 
     private final Map<?, ?> m;
+    private final VeoReportingObjectWrapper ow;
 
     public VeoReportingLinkAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
         super(ow);
         this.m = m;
+        this.ow = ow;
     }
 
     @Override
@@ -48,6 +51,9 @@ public class VeoReportingLinkAdapter extends WrappingTemplateModel
         Object val = m.get(key);
         if (val != null) {
             return wrap(val);
+        }
+        if ("getTarget".equals(key)) {
+            return new GetTarget(m, ow);
         }
 
         @SuppressWarnings("unchecked")
@@ -67,4 +73,17 @@ public class VeoReportingLinkAdapter extends WrappingTemplateModel
         return false;
     }
 
+    private static final class GetTarget extends NoArgumentsMethod {
+
+        public GetTarget(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+            super(m, ow);
+        }
+
+        @Override
+        public Object doExec() throws TemplateModelException {
+            Map target = (Map) getProperty("target");
+            logger.debug("target = {}", target);
+            return resolveRef(target);
+        }
+    }
 }

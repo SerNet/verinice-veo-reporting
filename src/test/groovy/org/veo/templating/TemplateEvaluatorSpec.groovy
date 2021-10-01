@@ -104,8 +104,18 @@ I'd like to invite you to my birthday party.'''
                 links: [
                     father : [
                         [
-                            target:[
+                            target: [
                                 targetUri : 'http://example.org/persons/2'
+                            ]
+                        ]
+                    ],
+                    mother : [
+                        [
+                            attributes: [
+                                biological: true
+                            ],
+                            target: [
+                                targetUri : 'http://example.org/persons/4'
                             ]
                         ]
                     ]
@@ -143,6 +153,11 @@ I'd like to invite you to my birthday party.'''
                         ]
                     ]
                 ]
+            ],
+            [
+                name: 'Mary',
+                id: '4',
+                type: 'person'
             ]
         ]
         when:
@@ -150,6 +165,7 @@ I'd like to invite you to my birthday party.'''
         def text = os.toString()
         then:
         text == '''John's father is named Jack.
+Mary is Jack's biological mother.
 Jack's children are named John and Jane.'''
     }
 

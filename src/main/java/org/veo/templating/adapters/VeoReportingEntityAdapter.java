@@ -72,35 +72,32 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
                 return new GetParts(m, ow);
             }
         }
-
-        if ("getLinks".equals(key)) {
+        switch (key) {
+        case "getLinks":
             return new GetLinks(m, ow);
-        }
-
-        if ("getLinked".equals(key)) {
+        case "getLinked":
             return new GetLinked(m, ow);
-        }
-        if ("findFirstLinked".equals(key)) {
+        case "findFirstLinked":
             return new FindFirstLinked(m, ow);
-        }
-
-        @SuppressWarnings("unchecked")
-        Map<String, ?> customAspects = (Map<String, ?>) m.get("customAspects");
-        if (customAspects != null) {
-            for (Entry<String, ?> ca : customAspects.entrySet()) {
-                @SuppressWarnings("unchecked")
-                Map<String, ?> attributes = (Map<String, ?>) ((Map<String, ?>) ca.getValue())
-                        .get("attributes");
-                if (attributes != null) {
-                    for (Entry<String, ?> a : attributes.entrySet()) {
-                        if (key.equals(a.getKey())) {
-                            return wrap(a.getValue());
+        default:
+            @SuppressWarnings("unchecked")
+            Map<String, ?> customAspects = (Map<String, ?>) m.get("customAspects");
+            if (customAspects != null) {
+                for (Entry<String, ?> ca : customAspects.entrySet()) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, ?> attributes = (Map<String, ?>) ((Map<String, ?>) ca.getValue())
+                            .get("attributes");
+                    if (attributes != null) {
+                        for (Entry<String, ?> a : attributes.entrySet()) {
+                            if (key.equals(a.getKey())) {
+                                return wrap(a.getValue());
+                            }
                         }
                     }
                 }
             }
+            return null;
         }
-        return null;
     }
 
     @Override
