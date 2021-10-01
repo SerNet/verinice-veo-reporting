@@ -26,11 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.veo.templating.VeoReportingObjectWrapper;
+import org.veo.templating.methods.SingleStringArgumentMethod;
 
 import freemarker.template.AdapterTemplateModel;
-import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateHashModel;
-import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.WrappingTemplateModel;
@@ -92,42 +91,6 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     @Override
     public boolean isEmpty() throws TemplateModelException {
         return false;
-    }
-
-    private abstract static class SingleStringArgumentMethod implements TemplateMethodModelEx {
-        private final Map<?, ?> m;
-        private final VeoReportingObjectWrapper ow;
-
-        public SingleStringArgumentMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-            this.m = m;
-            this.ow = ow;
-        }
-
-        @Override
-        public final Object exec(List arguments) throws TemplateModelException {
-            logger.debug("execute {} with arguments {}", getClass().getName(), arguments);
-            if (arguments.size() != 1) {
-                throw new TemplateModelException("Expecting exactly 1 arguments");
-            }
-            Object typeObj = arguments.get(0);
-            if (!(typeObj instanceof SimpleScalar)) {
-                throw new TemplateModelException(
-                        "Expecting a String argument but got " + typeObj.getClass());
-            }
-            String arg = ((SimpleScalar) typeObj).getAsString();
-            return ow.wrap(doExec(arg));
-        }
-
-        protected Object getProperty(String name) {
-            return m.get(name);
-        }
-
-        protected Object resolve(String path) throws TemplateModelException {
-            return ow.resolve(path);
-        }
-
-        protected abstract Object doExec(String arg) throws TemplateModelException;
-
     }
 
     private static final class GetLinks extends SingleStringArgumentMethod {
