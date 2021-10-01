@@ -160,7 +160,7 @@ ${process.name}
 
 
 # <span style="display:inline-block; width: 6cm;">Verarbeitung: </span>${process.name} {#process_${process?counter}}
-<#if process.process_processing_asProcessor??>
+<#if process.process_processing_asProcessor!false>
 Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO {.text-center }
 </#if>
 ## Prüfergebnis zur materiellen Rechtmäßigkeit {.text-center .underline #process_FIXME_${process?counter}}
