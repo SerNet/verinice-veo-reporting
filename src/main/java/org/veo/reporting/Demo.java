@@ -20,12 +20,15 @@ package org.veo.reporting;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -87,9 +90,17 @@ public class Demo {
                 scopeMembers);
         createReports(reportEngine, templateInput, entriesForLanguage);
         Path template = Paths.get("src/main/resources/templates");
-
         try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
-            template.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+
+            Files.walkFileTree(template, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+                        throws IOException {
+                    dir.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+
             WatchKey key;
             try {
                 while ((key = watchService.take()) != null) {
