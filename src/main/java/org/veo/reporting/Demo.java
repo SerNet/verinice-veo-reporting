@@ -87,18 +87,20 @@ public class Demo {
                 scopeMembers);
         createReports(reportEngine, templateInput, entriesForLanguage);
         Path template = Paths.get("src/main/resources/templates");
-        WatchService watchService = FileSystems.getDefault().newWatchService();
-        template.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
-        WatchKey key;
-        try {
-            while ((key = watchService.take()) != null) {
-                if (!key.pollEvents().isEmpty()) {
-                    createReports(reportEngine, templateInput, entriesForLanguage);
+
+        try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+            template.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+            WatchKey key;
+            try {
+                while ((key = watchService.take()) != null) {
+                    if (!key.pollEvents().isEmpty()) {
+                        createReports(reportEngine, templateInput, entriesForLanguage);
+                    }
+                    key.reset();
                 }
-                key.reset();
+            } catch (InterruptedException e) {
+                logger.info("Exiting ...");
             }
-        } catch (InterruptedException e) {
-            logger.info("Exiting ...");
         }
         ctx.stop();
     }
