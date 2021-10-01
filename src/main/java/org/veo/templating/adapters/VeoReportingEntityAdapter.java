@@ -35,10 +35,12 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
         implements TemplateHashModel, AdapterTemplateModel {
 
     private final Map<?, ?> m;
+    private final VeoReportingObjectWrapper ow;
 
     public VeoReportingEntityAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
         super(ow);
         this.m = m;
+        this.ow = ow;
     }
 
     @Override
@@ -53,7 +55,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
             return wrap(val);
         }
         if ("getLinks".equals(key)) {
-            return new GetLinks(m);
+            return new GetLinks(m, ow);
         }
 
         @SuppressWarnings("unchecked")
@@ -82,9 +84,11 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
 
     private static final class GetLinks implements TemplateMethodModelEx {
         private final Map<?, ?> m;
+        private final VeoReportingObjectWrapper ow;
 
-        public GetLinks(Map<?, ?> m) {
+        public GetLinks(Map<?, ?> m, VeoReportingObjectWrapper ow) {
             this.m = m;
+            this.ow = ow;
         }
 
         @Override
@@ -98,7 +102,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
                         "Expecting a String argument but got " + typeObj.getClass());
             }
             Map<String, ?> links = (Map<String, ?>) m.get("links");
-            return links.get(((SimpleScalar) typeObj).getAsString());
+            return ow.wrap(links.get(((SimpleScalar) typeObj).getAsString()));
         }
     }
 
