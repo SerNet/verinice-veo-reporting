@@ -69,7 +69,6 @@ dl.tom dd {
 <bookmarks>
   <bookmark name="${bundle.toc}" href="#toc"/>
   <bookmark name="${bundle.main_page}" href="#main_page"/>
-  <bookmark name="${bundle.activities_overview}" href="#overview"/>
 <#list processesInScope as process>
   <bookmark name="${process.name}" href="#process_${process?counter}">
     <bookmark name="Prüfergebnis zur materiellen Rechtmäßigkeit" href="#process_FIXME_${process?counter}" />
@@ -95,7 +94,6 @@ dl.tom dd {
 
 <ol class="toc">
   <li><a href="#main_page">${bundle.main_page}</a> <span href="#main_page"></span></li>
-  <li><a href="#overview">${bundle.activities_overview}</a> <span href="#overview"></span></li>
 <#list processesInScope as process>
   <li><a href="#process_${process?counter}">${process.name}</a> <span href="#process_${process?counter}"></span>
     <ol>
@@ -169,14 +167,6 @@ dl.tom dd {
 ]/>
 
 </div>
-<div class="pagebreak"></div>
-
-# ${bundle.activities_overview}{#overview}
-
-<#list processesInScope as process>
-${process.name}  
-</#list>
-
 <div class="pagebreak"></div>
 
 <#list processesInScope as process>
