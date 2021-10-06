@@ -175,10 +175,13 @@ ${process.process_opinionDPO_recommendations!}
 
 ### II. Rechtmäßigkeit der technischen und organisatorischen Maßnahmen{.underline}
 #### 1. Zertifizierung nach anerkannten Standard
-
+${(process.process_tomAssessment_certification?then(process.process_tomAssessment_certificationStandard, bundle.no))!""}
 #### 2. IT-Sicherheitskonzept
-
+${(process.process_tomAssessment_securityConcept?then(bundle.yes, bundle.no))!""}
 #### 3. Gesamtbeurteilung der Maßnahmen
+${process.process_tomAssessment_overallAssessment!} 
+#### 4. ${bundle.process_tomAssessment_comment}
+${process.process_tomAssessment_comment!} 
 
 <div class="pagebreak"></div>
 
