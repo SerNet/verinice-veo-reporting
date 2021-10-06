@@ -261,6 +261,23 @@ ${(process.process_dataProcessing_legalBasis?map(item->bundle[item])?join(', '))
 <@def bundle.process_dataType_dataOrigin effectiveDataOrigin true />
 
 <@def bundle.process_dataType_comment dataTypeLink.process_dataType_comment />
+
+<#if dataTypeLink.process_dataType_deletionPeriod?has_content>
+${bundle.process_dataType_deletionPeriod}
+: ${(bundle.getObject(dataTypeLink.process_dataType_deletionPeriod))}
+</#if>
+
+<@def bundle.process_dataType_deletionPeriod dataTypeLink.process_dataType_otherDeletionPeriod />
+
+<#if dataTypeLink.process_dataType_deletionPeriodStart?has_content>
+${bundle.process_dataType_deletionPeriodStart}
+: ${(bundle.getObject(dataTypeLink.process_dataType_deletionPeriodStart))}
+</#if>
+
+<@def bundle.process_dataType_deletionPeriodStart dataTypeLink.process_dataType_otherDeletionPeriodStart />
+
+<@def bundle.process_dataType_descriptionDeletionProcedure dataTypeLink.process_dataType_descriptionDeletionProcedure />
+
 </#list>
 </@section>
 </#if>
