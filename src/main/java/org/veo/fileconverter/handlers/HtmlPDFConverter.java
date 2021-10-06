@@ -37,6 +37,7 @@ import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.render.DefaultObjectDrawerFactory;
 
 import org.veo.fileconverter.ConversionHandler;
+import org.veo.fileconverter.charts.VeoJFreeChartPieDiagramObjectDrawer;
 
 /**
  * Converts HTML to PDF
@@ -70,6 +71,7 @@ public class HtmlPDFConverter implements ConversionHandler {
             DefaultObjectDrawerFactory factory = new DefaultObjectDrawerFactory();
             factory.registerDrawer("jfreechart/pie", new JFreeChartPieDiagramObjectDrawer());
             factory.registerDrawer("jfreechart/bar", new JFreeChartBarDiagramObjectDrawer());
+            factory.registerDrawer("jfreechart/veo-pie", new VeoJFreeChartPieDiagramObjectDrawer());
             builder.useObjectDrawerFactory(factory);
 
             org.jsoup.nodes.Document doc;
