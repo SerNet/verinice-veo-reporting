@@ -32,6 +32,11 @@ ${term}
 .section {
   page-break-inside: avoid;
 }
+
+h3, h4 {
+  page-break-after: avoid;
+}
+
 .section h3 {
   margin-bottom: 1mm;
 }
