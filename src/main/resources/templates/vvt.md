@@ -4,6 +4,17 @@
  row = com.row
  table = com.table
  >
+ 
+<#macro def term definition="" alwaysShow=false>
+<#if definition?has_content || alwaysShow>
+${term}
+<#if definition?has_content>
+: ${definition}
+<#else>
+: &nbsp;
+</#if>
+</#if>
+</#macro>
 
 <#--  OLD VERSION, recursive membership
 <#function is_member_recursive scope entity>
@@ -24,10 +35,6 @@
 .section h3 {
   margin-bottom: 1mm;
 }
-.section table td:first-child,
-.section table th:first-child {
-  padding-left: 0;
-}
 .transmission {
   margin-left: 5mm;
 }
@@ -38,6 +45,9 @@
 }
 .main_page table th:first-child, .main_page table td:first-child {
   width: 8cm;
+}
+dt {
+  font-weight: 600;
 }
 </style>
 
@@ -178,19 +188,6 @@ ${process.process_opinionDPO_recommendations!}
 
 ## Detailergebnisse {#process_details_${process?counter} .text-center .underline}
 
-<div class="section">
-
-### Name des Unternehmens
-${scope.name}
-
-<#assign responsiblePerson=process.findFirstLinked('process_responsiblePerson')! />
-
-
-|:---|:---|
-| Abteilung/Fachbereich<br/>${process.process_processingDetails_responsibleDepartment!} | Leiter Fachabteilung<br/>${responsiblePerson.name!} |
-| Datum der Befragung<br/>${(process.process_processingDetails_surveyConductedOn?date.iso)!} ||
-</div>
-
 <#macro section title id="">
 <div class="section">
 
@@ -202,42 +199,68 @@ ${scope.name}
 </div>
 </#macro>
 
+<@section 'Allgemeine Informationen'>
 
-<@section 'Verarbeitungsangaben'>
+Name des Unternehmens
+: ${scope.name}
 
-|:---|:---|
-| Bezeichnung der Verarbeitung<br/>${process.name} | Beschreibung der Verarbeitung<br/>${process.description!} |
-| Art der Verarbeitung<br/> ${(bundle[process.process_processingDetails_typeOfSurvey])!} ||
-| Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO | ${(process.process_processing_asProcessor?string(bundle.yes, bundle.no))!} |
+<#assign responsiblePerson=process.findFirstLinked('process_responsiblePerson')! />
+
+Abteilung/Fachbereich
+: ${process.process_processingDetails_responsibleDepartment!}
+
+Leiter Fachabteilung
+: ${responsiblePerson.name!}
+
+${bundle.process_processingDetails_surveyConductedOn}
+: ${(process.process_processingDetails_surveyConductedOn?date.iso)!}
+</@section>
+
+<@section 'Allgemeine Verarbeitungsangaben'>
+
+Bezeichnung der Verarbeitung
+: ${process.name}
+
+Beschreibung der Verarbeitung
+: ${process.description!}
+
+Art der Verarbeitung
+: ${(bundle[process.process_processingDetails_typeOfSurvey])!}
+
+Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO
+: ${(process.process_processing_asProcessor?string(bundle.yes, bundle.no))!}
 </@section>
 
 <@section 'Angaben zum gemeinsam Verantwortlichen'>
-|:---|
-| **Gemeinsam für die Verarbeitung Verantwortliche Art. 26 DS-GVO**<br/>${(jointControllership.name)!} |
+<@def "Gemeinsam für die Verarbeitung Verantwortliche Art. 26 DS-GVO" jointControllership.name true />
 </@section>
 
 <@section 'Zweckbestimmung der Datenverarbeitung'>
-|:---|
-| ${process.process_intendedPurpose_intendedPurpose!} |
+${process.process_intendedPurpose_intendedPurpose!}
 </@section>
 
 <@section 'Rechtsgrundlage für die Datenverarbeitung'>
-|:---|
-| ${(process.process_dataProcessing_legalBasis?map(item->bundle[item])?join(', '))!} |
-| **Sonstige Rechtsgrundlagen:**{.underline} |
-| ${process.process_dataProcessing_otherLegalBasis!} |
-| **Erläuterungen:**<br/> ${process.process_dataProcessing_explanation!} |
+${(process.process_dataProcessing_legalBasis?map(item->bundle[item])?join(', '))!}
 </@section>
+
+<@def "Sonstige Rechtsgrundlagen" process.process_dataProcessing_otherLegalBasis true />
+
+<@def "Erläuterungen" process.process_dataProcessing_explanation true />
 
 <#assign processDataTypeLinks=process.getLinks('process_dataType')! />
 
 <#if processDataTypeLinks?has_content>
 <@section 'Datenkategorien'>
-|:---|
- **Art der verarbeiteten Daten / Datenkategorien** | **Bemerkungen:**|
 <#list processDataTypeLinks as dataTypeLink>
 <#assign dataType=dataTypeLink.getTarget() />
-| ${dataType.name} | ${dataTypeLink.process_dataType_comment!} |
+<#assign dataOrigin=dataTypeLink.process_dataType_dataOrigin! />
+<#assign effectiveDataOrigin=(dataOrigin == 'process_dataType_dataOrigin_other')?then(dataTypeLink.process_dataType_otherDataOrigin!,(bundle[dataTypeLink.process_dataType_dataOrigin])!) />
+
+#### ${dataType.name}
+
+<@def bundle.process_dataType_dataOrigin effectiveDataOrigin true />
+
+<@def bundle.process_dataType_comment dataTypeLink.process_dataType_comment />
 </#list>
 </@section>
 </#if>
@@ -267,10 +290,10 @@ ${effectiveDataSubjects}
 </#if>
 
 <@section 'Informationspflichten Art. 13, 14 DS-GVO'>
-|:---|
-| ${(process.process_informationsObligations_status?string(bundle.yes, bundle.no))!} |
-| **Erläuterungen**{.underline}<br/> |
-| ${process.process_informationsObligations_explanation!} |
+${(process.process_informationsObligations_status?string(bundle.yes, bundle.no))!}
+
+<@def "Erläuterungen" process.process_informationsObligations_explanation true />
+
 </@section>
 
 <#if transmissions?has_content>
@@ -300,26 +323,26 @@ ${effectiveDataSubjects}
 
 #### ${transmission.name}
 
-|:---|:---|
-| **Art der Daten** | **Rechtsgrundlage für Datenübertragung** |
-| ${transmissionDataTypes?map(t->t.name)?join(", ")} | ${effectiveDataTransferLegalBasis!} |
+Art der Daten
+: ${transmissionDataTypes?map(t->t.name)?join(", ")}
+
+Rechtsgrundlage für Datenübertragung
+: ${effectiveDataTransferLegalBasis!}
 
 <#macro recipient_section link_to_recipient recipient_label>
 <div class="section">
 <#assign recipient=link_to_recipient.getTarget() />
 
-|:---|
-| **${recipient_label}**
-| ${(recipient.name)!} |
-| **Datenübermittlung in Drittland** |
-| ${(link_to_recipient.process_internalRecipient_thirdCountryProcessing?string(bundle.yes, bundle.no))!} |
-<#if thirdCountryProcessing!false>
-| **Name des Landes** |
-| ${(link_to_recipient.process_internalRecipient_thirdCountryName)!} |
-| **Angabe geeigneter Garantien**|
-| ${link_to_recipient.process_internalRecipient_thirdCountryGuarantees!} |
-| **Erläuterungen:**{.underline}<br/> ${link_to_recipient.process_internalRecipient_thirdCountryExplanation!}  |
-</#if>
+<@def recipient_label recipient.name true />
+
+<@def "Datenübermittlung in Drittland", (link_to_recipient.process_internalRecipient_thirdCountryProcessing?string(bundle.yes, bundle.no))!"" true />
+
+<@def "Name des Landes" link_to_recipient.process_internalRecipient_thirdCountryName true />
+
+<@def "Angabe geeigneter Garantien" link_to_recipient.process_internalRecipient_thirdCountryGuarantees true />
+	
+<@def "Erläuterungen" link_to_recipient.process_internalRecipient_thirdCountryExplanation true />
+
 </div>
 </#macro>
 
@@ -353,9 +376,7 @@ ${effectiveDataSubjects}
 !!! UNBEKANNTER EMPFÄNGERTYP
 </#switch>
 
-|:---|
-| **Erläuterungen:**{.underline}|
-| ${transmission.process_dataTransfer_explanation!}|
+<@def "Erläuterungen" transmission.process_dataTransfer_explanation true />
 </div>
 
 </#list>
@@ -363,9 +384,9 @@ ${effectiveDataSubjects}
 </#if>
 
 <@section 'Zugriffsberechtigte Personengruppen (Berechtigungsgruppen)'>
-|:---|
-| **Ein Berechtigungskonzept ist vorhanden**<br/>${(process.process_accessAuthorization_concept?string(bundle.yes, bundle.no))!} |
-| **Beschreibung des Berechtigungsverfahrens:**<br/>${process.process_accessAuthorization_description!} |
+<@def "Ein Berechtigungskonzept ist vorhanden", (process.process_accessAuthorization_concept?string(bundle.yes, bundle.no))!"" true />
+
+<@def "Beschreibung des Berechtigungsverfahrens" process.process_accessAuthorization_description true />
 </@section>
 
 <#assign relatedAssets=(process.getLinked('process_requiredApplications')![]) + (process.getLinked('process_requiredITSystems')![]) />
@@ -381,8 +402,7 @@ ${effectiveDataSubjects}
 </#if>
 
 <@section 'Betriebsstadium'>
-|:---|
-| ${(bundle[process.process_processingDetails_operatingStage])!} |
+${(bundle[process.process_processingDetails_operatingStage])!}
 </@section>
 
 <@section 'Datenschutz-Folgenabschätzung'>
