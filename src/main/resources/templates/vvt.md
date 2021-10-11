@@ -355,19 +355,17 @@ Rechtsgrundlage für Datenübertragung
 <@def "Erläuterungen" transmission.process_dataTransfer_explanation true />
 
 
-<#macro recipient_section link_to_recipient recipient_label>
+<#macro recipient_section recipient_label recipient thirdCountryProcessing=false thirdCountryName="" thirdCountryGuarantees="" thirdCountryExplanation="">
 <div class="section">
-<#assign recipient=link_to_recipient.getTarget() />
-
 <@def recipient_label recipient.name true />
 
-<@def "Datenübermittlung in Drittland", (link_to_recipient.process_internalRecipient_thirdCountryProcessing?string(bundle.yes, bundle.no))!"" true />
+<@def "Datenübermittlung in Drittland", (thirdCountryProcessing?string(bundle.yes, bundle.no))!"", true />
 
-<@def "Name des Landes" link_to_recipient.process_internalRecipient_thirdCountryName true />
+<@def "Name des Landes" thirdCountryName true />
 
-<@def "Angabe geeigneter Garantien" link_to_recipient.process_internalRecipient_thirdCountryGuarantees true />
+<@def "Angabe geeigneter Garantien" thirdCountryGuarantees true />
 	
-<@def "Erläuterungen" link_to_recipient.process_internalRecipient_thirdCountryExplanation true />
+<@def "Erläuterungen" thirdCountryExplanation true />
 
 </div>
 </#macro>
@@ -377,24 +375,24 @@ Rechtsgrundlage für Datenübertragung
 <#case "process_recipient_type_internal">
 <#assign internalRecipientLinks=transmission.getLinks('process_internalRecipient')! />
 #### Interne Empfänger
-<#list internalRecipientLinks as internalRecipientLink>
-<@recipient_section internalRecipientLink "Interne Stelle"/>
+<#list internalRecipientLinks as link>
+<@recipient_section "Interne Stelle" link.getTarget(), link.process_internalRecipient_thirdCountryProcessing link.process_internalRecipient_thirdCountryName link.process_internalRecipient_thirdCountryGuarantees link.process_internalRecipient_thirdCountryExplanation/>
 </#list>
 <#break>
 
 <#case "process_recipient_type_external">
 <#assign externalRecipientLinks=transmission.getLinks('process_externalRecipient')! />
 #### Externe Empfänger
-<#list externalRecipientLinks as externalRecipientLink>
-<@recipient_section externalRecipientLink "Externe Stelle"/>
+<#list externalRecipientLinks as link>
+<@recipient_section "Externe Stelle" link.getTarget(), link.process_externalRecipient_thirdCountryProcessing link.process_externalRecipient_thirdCountryName link.process_externalRecipient_thirdCountryGuarantees link.process_externalRecipient_thirdCountryExplanation/>
 </#list>
 <#break>
 
 <#case "process_recipient_type_processor">
 <#assign processorsLinks=transmission.getLinks('process_processor')! />
 #### Auftragnehmer / Dienstleister
-<#list processorsLinks as processorLink>
-<@recipient_section processorLink "Auftragnehmer"/>
+<#list processorsLinks as link>
+<@recipient_section "Auftragnehmer" link.getTarget(), link.process_processor_thirdCountryProcessing link.process_processor_thirdCountryName link.process_processor_thirdCountryGuarantees link.process_processor_thirdCountryExplanation/>
 </#list>
 <#break>
 
