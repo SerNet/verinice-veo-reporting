@@ -14,9 +14,19 @@ dt {
 .scopeinfo dd {
   padding-bottom: 2mm;
 }
-
+.processinfo h3 {
+  page-break-after: avoid;
+}
 .processinfo dl {
   padding-left: 4mm;
+}
+
+.transmissioninfo {
+  page-break-inside: avoid;
+}
+
+.transmissioninfo dl {
+  padding-bottom: 2mm;
 }
 </style>
 
@@ -28,7 +38,6 @@ dt {
 </#list>
   </bookmark>
 </bookmarks>
-
 
 <div class="cover">
 <h1>${bundle.title}</h1>
@@ -98,6 +107,74 @@ ${bundle.scope_dataProtectionOfficer}
 : ${[dataProtectionOfficerController.name!,dataProtectionOfficerController.person_contactInformation_office!,dataProtectionOfficerController.person_contactInformation_email!]?filter(v->v?has_content)?join("  \n")}
 
 </div>
+
+<#macro def term definition="" >
+${term}
+<#if definition?has_content>
+: ${definition}
+<#else>
+: &nbsp;
+</#if>
+</#macro>
+
+<#macro transmissions_section title transmissions recipientLinkType thirdCountryFilterAttribute thirdCountryNameAttribute thirdCountryGuaranteesAttribute>
+
+<#if transmissions?has_content>
+
+### ${title}
+
+<#list transmissions as transmission>
+
+<div class="transmissioninfo">
+
+#### ${transmission.name}
+
+<#local recipientLinks=(transmission.getLinks(recipientLinkType))![] />
+<#local recipientLinksThirdCountry=recipientLinks?filter(l->l[thirdCountryFilterAttribute]!false) />
+
+<#if recipientLinksThirdCountry?has_content>
+
+<#list recipientLinksThirdCountry as recipientLinkThirdCountry>
+<div class="recipientinfo">
+
+<@def bundle.name recipientLinkThirdCountry.getTarget().name />
+
+<@def bundle[thirdCountryNameAttribute] recipientLinkThirdCountry[thirdCountryNameAttribute] />
+
+<@def bundle[thirdCountryGuaranteesAttribute] recipientLinkThirdCountry[thirdCountryGuaranteesAttribute] />
+
+</div>
+</#list>
+</#if>
+</div>
+</#list>
+</#if>
+</#macro>
+
+<#assign transmissions=processing.getLinked('process_dataTransmission')! />
+
+<#assign relevantTransmissionsExternal=transmissions?filter(t-> 
+  (t.getLinks('process_externalRecipient')![])?filter(l->l.process_externalRecipient_thirdCountryProcessing!false)?has_content) />
+
+<#assign relevantTransmissionsProcessor=transmissions?filter(t-> 
+  (t.getLinks('process_processor')![])?filter(l->l.process_processor_thirdCountryProcessing!false)?has_content) />
+
+<@transmissions_section 
+  "Datenübertragungen an externe Empfänger in Drittstaaten"
+  relevantTransmissionsExternal
+  'process_externalRecipient'
+  'process_externalRecipient_thirdCountryProcessing'
+  'process_externalRecipient_thirdCountryName'
+  'process_externalRecipient_thirdCountryGuarantees' />
+
+<@transmissions_section 
+  "Datenübertragungen an Auftragsverarbeiter in Drittstaaten"
+  relevantTransmissionsProcessor
+  'process_processor'
+  'process_processor_thirdCountryProcessing'
+  'process_processor_thirdCountryName'
+  'process_processor_thirdCountryGuarantees' />
+
 </#list>
 </div>
 </#list>
