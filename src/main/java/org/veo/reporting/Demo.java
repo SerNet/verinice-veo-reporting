@@ -158,7 +158,7 @@ public class Demo {
             throws IOException, TemplateException {
         try (var os = Files.newOutputStream(Paths.get(fileName))) {
             reportEngine.generateReport(templateName, templateInput, templateType, outputType, os);
-            logger.info("Report {} creted at {}", templateName, fileName);
+            logger.info("Report {} created at {}", templateName, fileName);
         }
     }
 
