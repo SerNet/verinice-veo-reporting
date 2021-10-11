@@ -17,7 +17,7 @@
 #
 veo:
   reporting:
-    veo_url: https://api.develop.verinice.com/veo
+    veo_url: https://veo.develop.verinice.com
     http_proxy_host: null
     http_proxy_port: 3128
     use_filebased_template_loading: false
@@ -34,6 +34,3 @@ management:
       enabled: true
     readinessstate:
       enabled: true
-server:
-  servlet:
-    context-path: /reporting/
