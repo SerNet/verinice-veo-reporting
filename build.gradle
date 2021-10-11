@@ -9,6 +9,8 @@ plugins {
     id 'pmd'
 }
 
+version = '0.2'
+
 repositories {
     mavenCentral()
 }
