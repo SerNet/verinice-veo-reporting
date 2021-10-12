@@ -38,6 +38,15 @@ There are some configuration parameters that can be set via the usual Spring Boo
 `veo.reporting.http_proxy_host`
 : An optional proxy that is required to access `veo.reporting.veo_url`.
 
+`veo.reporting.cors.origins`
+: A comma-separated list of allowed CORS origin-patterns.
+
+`veo.reporting.cors.headers`
+A comma-separated-list of additional headers to allow in CORS requests
+    # Note: The 'Authorization' header is always allowed.
+    # Example: X-Ample, X-Custom-Header
+    headers:
+
 ## API
 
 There is a single REST controller (`org.veo.reporting.controllers.ReportController`) handling requests to the `/reports` URL namespace.
