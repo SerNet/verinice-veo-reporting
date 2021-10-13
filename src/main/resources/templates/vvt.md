@@ -384,7 +384,7 @@ ${scope.name}
 | **Beschreibung des Berechtigungsverfahrens:**<br/>${process.process_accessAuthorization_description!} |
 </@section>
 
-<#assign relatedAssets=process.getLinked('process_requiredApplications')![] + process.getLinked('process_requiredITSystems')![] />
+<#assign relatedAssets=(process.getLinked('process_requiredApplications')![]) + (process.getLinked('process_requiredITSystems')![]) />
 <#if relatedAssets?has_content>
 
 <@section 'Systeminformationen über Hard- und Software'>
