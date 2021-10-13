@@ -76,7 +76,7 @@ ${bundle.scope_dataProtectionOfficer}
 ${process.description!}
 
 
-### Auftragsverarbeiter
+### ${bundle.controllers}
 
 <#assign controllers=process.getLinked('process_controller')!>
 <#list controllers as controller>
