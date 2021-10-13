@@ -297,8 +297,7 @@ ${scope.name}
 <#assign transmissionDataTypes=transmission.getLinked('process_dataType')! />
 
 <#assign dataTransferLegalBasis=transmission.process_dataTransfer_legalBasis! />
-<#assign hasOtherLegalBasis=dataTransferLegalBasis?seq_contains('process_dataTransfer_legalBasis_others') />
-<#assign dataTransferLegalBasis=dataTransferLegalBasis?filter(v -> v != 'process_dataTransfer_legalBasis_others') />
+<#assign hasOtherLegalBasis=transmission.process_dataTransfer_otherLegalBasis?has_content />
 <#assign dataTransferLegalBasis=dataTransferLegalBasis?map(v->bundle.getObject(v)) />
 <#assign effectiveDataTransferLegalBasis=dataTransferLegalBasis?join(', ') />
 
