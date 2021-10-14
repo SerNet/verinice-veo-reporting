@@ -67,8 +67,9 @@ public class ReportingSecurityConfig extends WebSecurityConfigurerAdapter {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        // Authorization is always needed, additional headers are configurable:
+        // Authorization and Content-Type are always needed, additional headers are configurable:
         corsConfig.addAllowedHeader(HttpHeaders.AUTHORIZATION);
+        corsConfig.addAllowedHeader(HttpHeaders.CONTENT_TYPE);
 
         Arrays.stream(allowedHeaders).forEach(s -> {
             logger.debug("Added CORS allowed header: {}", s);

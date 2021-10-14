@@ -97,7 +97,10 @@ public class CORSSpec extends Specification {
                 HttpMethod.DELETE,
                 HttpMethod.OPTIONS
             ]*.name().join(',')
-            getHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS).contains(HttpHeaders.AUTHORIZATION)
+            with(getHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS)){
+                contains(HttpHeaders.AUTHORIZATION)
+                contains(HttpHeaders.CONTENT_TYPE)
+            }
         }
     }
 
@@ -111,7 +114,7 @@ public class CORSSpec extends Specification {
         def actions =  mvc.perform(MockMvcRequestBuilders.options(relativeUri)
                 .header(HttpHeaders.ORIGIN, testOrigin)
                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, method.name())
-                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS, HttpHeaders.AUTHORIZATION))
+                .header(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS, HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE))
         actions.andReturn().response
     }
 }
