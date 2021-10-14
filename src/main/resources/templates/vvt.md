@@ -160,7 +160,7 @@ ${process.name}
 
 
 # <span style="display:inline-block; width: 6cm;">Verarbeitung: </span>${process.name} {#process_${process?counter}}
-<#if process.process_processing_asProcessor??>
+<#if process.process_processing_asProcessor!false>
 Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO {.text-center }
 </#if>
 ## Prüfergebnis zur materiellen Rechtmäßigkeit {.text-center .underline #process_FIXME_${process?counter}}
@@ -175,10 +175,13 @@ ${process.process_opinionDPO_recommendations!}
 
 ### II. Rechtmäßigkeit der technischen und organisatorischen Maßnahmen{.underline}
 #### 1. Zertifizierung nach anerkannten Standard
-
+${(process.process_tomAssessment_certification?then(process.process_tomAssessment_certificationStandard, bundle.no))!""}
 #### 2. IT-Sicherheitskonzept
-
+${(process.process_tomAssessment_securityConcept?then(bundle.yes, bundle.no))!""}
 #### 3. Gesamtbeurteilung der Maßnahmen
+${process.process_tomAssessment_overallAssessment!} 
+#### 4. ${bundle.process_tomAssessment_comment}
+${process.process_tomAssessment_comment!} 
 
 <div class="pagebreak"></div>
 
@@ -294,8 +297,7 @@ ${scope.name}
 <#assign transmissionDataTypes=transmission.getLinked('process_dataType')! />
 
 <#assign dataTransferLegalBasis=transmission.process_dataTransfer_legalBasis! />
-<#assign hasOtherLegalBasis=dataTransferLegalBasis?seq_contains('process_dataTransfer_legalBasis_others') />
-<#assign dataTransferLegalBasis=dataTransferLegalBasis?filter(v -> v != 'process_dataTransfer_legalBasis_others') />
+<#assign hasOtherLegalBasis=transmission.process_dataTransfer_otherLegalBasis?has_content />
 <#assign dataTransferLegalBasis=dataTransferLegalBasis?map(v->bundle.getObject(v)) />
 <#assign effectiveDataTransferLegalBasis=dataTransferLegalBasis?join(', ') />
 
@@ -384,7 +386,7 @@ ${scope.name}
 | **Beschreibung des Berechtigungsverfahrens:**<br/>${process.process_accessAuthorization_description!} |
 </@section>
 
-<#assign relatedAssets=process.getLinked('process_requiredApplications')![] + process.getLinked('process_requiredITSystems')![] />
+<#assign relatedAssets=(process.getLinked('process_requiredApplications')![]) + (process.getLinked('process_requiredITSystems')![]) />
 <#if relatedAssets?has_content>
 
 <@section 'Systeminformationen über Hard- und Software'>

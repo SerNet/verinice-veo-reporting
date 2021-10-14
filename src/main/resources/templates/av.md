@@ -1,4 +1,4 @@
-<#assign processesInScope = scope.getMembers()?filter(m -> m.type == 'process')?filter(p ->p.subType?values?seq_contains('PRO_DataProcessing'))?filter(p->p.process_processing_asProcessor == true)>
+<#assign processings = scope.getMembers()?filter(m -> m.type == 'process')?filter(p ->p.subType?values?seq_contains('PRO_DataProcessing'))?filter(p-> p.process_processing_asProcessor!false)>
 
 <#assign management=scope.findFirstLinked('scope_management')!>
 <#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')!>
@@ -23,8 +23,8 @@ dt {
 <bookmarks>
   <bookmark name="${bundle.scope_name}" href="#main_page"/>
   <bookmark name="${bundle.processing_activities}" href="#processing_activities">
-<#list processesInScope as process>
-    <bookmark name="${process.name}" href="#process_${process?counter}"/>
+<#list processings as processing>
+    <bookmark name="${processing.name}" href="#processing_${processing?counter}"/>
 </#list>
   </bookmark>
 </bookmarks>
@@ -67,18 +67,18 @@ ${bundle.scope_dataProtectionOfficer}
 
 # ${bundle.processing_activities}{#processing_activities}
 
-<#list processesInScope?filter(p-> p.process_processing_asProcessor!false) as process>
+<#list processings as processing>
 
 <div class="processinfo">
 
-## ${process.name} {#process_${process?counter}}
+## ${processing.name} {#processing_${processing?counter}}
 
-${process.description!}
+${processing.description!}
 
 
-### Auftragsverarbeiter
+### ${bundle.controllers}
 
-<#assign controllers=process.getLinked('process_controller')!>
+<#assign controllers=processing.getLinked('process_controller')!>
 <#list controllers as controller>
 <#assign managementController=(controller.findFirstLinked('scope_management'))!>
 <#assign dataProtectionOfficerController=(controller.findFirstLinked('scope_dataProtectionOfficer'))!>
