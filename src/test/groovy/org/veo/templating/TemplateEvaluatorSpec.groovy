@@ -246,7 +246,7 @@ Jack's children are named John and Jane.'''
         new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('escape-test.md', [data: "<h1>Data</h1>"], os)
         def text = os.toString()
         then:
-        text == 'HTML: &lt;h1&gt;Data&lt;/h1&gt;'
+        text == '&lt;h1&gt;Data&lt;/h1&gt;'
     }
 
     def "HTML is escaped in HTML templates"(){
