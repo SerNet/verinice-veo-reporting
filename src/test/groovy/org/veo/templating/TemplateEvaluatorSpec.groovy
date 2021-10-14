@@ -249,6 +249,17 @@ Jack's children are named John and Jane.'''
         text == '&lt;h1&gt;Data&lt;/h1&gt;'
     }
 
+    def "Line breaks are converted for Markdown output"(){
+        given:
+        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
+        ByteArrayOutputStream os = new ByteArrayOutputStream()
+        when:
+        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('escape-test.md', [data: 'Hello\nWorld!'], os)
+        def text = os.toString()
+        then:
+        text == 'Hello  \nWorld!'
+    }
+
     def "HTML is escaped in HTML templates"(){
         given:
         def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")

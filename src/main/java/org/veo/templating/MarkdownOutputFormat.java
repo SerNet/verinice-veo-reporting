@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import freemarker.core.CommonMarkupOutputFormat;
+import freemarker.core.OutputFormat;
 import freemarker.template.TemplateModelException;
 import freemarker.template.utility.StringUtil;
 
@@ -57,12 +58,16 @@ public class MarkdownOutputFormat extends CommonMarkupOutputFormat<TemplateMarkd
 
     @Override
     public void output(String textToEsc, Writer out) throws IOException, TemplateModelException {
-        StringUtil.XHTMLEnc(textToEsc, out);
+        StringUtil.XHTMLEnc(replaceNewLines(textToEsc), out);
     }
 
     @Override
     public String escapePlainText(String plainTextContent) {
-        return StringUtil.XHTMLEnc(plainTextContent);
+        return StringUtil.XHTMLEnc(replaceNewLines(plainTextContent));
+    }
+
+    private static String replaceNewLines(String text) {
+        return text.replace("\n", "  \n");
     }
 
     @Override
