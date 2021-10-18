@@ -243,12 +243,10 @@ ${scope.name}
 <#if processDataTypeLinks?has_content>
 <@section 'Datenkategorien'>
 |:---|
- **Art der verarbeiteten Daten / Datenkategorien** | **Herkunft der Daten** | **Bemerkungen:**|
+ **Art der verarbeiteten Daten / Datenkategorien** | **Bemerkungen:**|
 <#list processDataTypeLinks as dataTypeLink>
 <#assign dataType=dataTypeLink.getTarget() />
-<#assign dataOrigin=dataTypeLink.process_dataType_dataOrigin! />
-<#assign effectiveDataOrigin=(dataOrigin == 'process_dataType_dataOrigin_other')?then(dataTypeLink.process_dataType_otherDataOrigin!,(bundle[dataTypeLink.process_dataType_dataOrigin])!) />
-| ${dataType.name} | ${effectiveDataOrigin} | ${dataTypeLink.process_dataType_comment!} |
+| ${dataType.name} | ${dataTypeLink.process_dataType_comment!} |
 </#list>
 </@section>
 </#if>
