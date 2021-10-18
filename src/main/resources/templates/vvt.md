@@ -435,7 +435,7 @@ ${bundle.process_opinionDPO_comment}
   <thead>
     <tr>
       <td>Ums.</td>
-      <td>Maßnahme</ins></td>
+      <td>Maßnahme</td>
     </tr>
   </thead>
   <tbody>
