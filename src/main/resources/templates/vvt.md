@@ -426,7 +426,6 @@ ${bundle.process_opinionDPO_comment}
 <tr>
   <td class="${className}">${bundle[tom_status]}</td>
   <td>${t.name}</td>
-  <td>?</td>
 </tr>
 </#list>
 </#if>
@@ -437,7 +436,6 @@ ${bundle.process_opinionDPO_comment}
     <tr>
       <td>Ums.</td>
       <td>Maßnahme</ins></td>
-      <td>Anmerkungen</ins></td>
     </tr>
   </thead>
   <tbody>
