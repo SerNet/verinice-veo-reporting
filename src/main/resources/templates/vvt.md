@@ -322,7 +322,7 @@ ${effectiveDataSubjects}
 | ${(recipient.name)!} |
 | **Datenübermittlung in Drittland** |
 | ${(link_to_recipient.process_internalRecipient_thirdCountryProcessing?string(bundle.yes, bundle.no))!} |
-| **Name des Staates** |
+| **Name des Landes** |
 | ${(link_to_recipient.process_internalRecipient_thirdCountryName)!} |
 | **Angabe geeigneter Garantien**|
 | ${link_to_recipient.process_internalRecipient_thirdCountryGuarantees!} |
