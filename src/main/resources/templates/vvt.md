@@ -391,9 +391,9 @@ ${scope.name}
 
 <@section 'Systeminformationen über Hard- und Software'>
 |:---|
-| **Name** {.text-center .underline}| **Typ** {.text-center .underline}| **Beschreibung** {.text-center .underline}|
+| **Name** {.text-center .underline}| **Beschreibung** {.text-center .underline}|
 <#list relatedAssets as asset>
-| ${(asset.name)!} | ? | ${asset.description!} |
+| ${(asset.name)!} | ${asset.description!} |
 </#list>
 </@section>
 </#if>
