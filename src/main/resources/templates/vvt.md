@@ -372,12 +372,6 @@ ${scope.name}
 </@section>
 </#if>
 
-
-<@section 'Löschfristen'>
-|:---|
-| **Fristabhängige Löschung**<br/>?<br/>**Löschverfahren**<br>?<br/>**Erläuterung:**{.underline}<br>? |
-</@section>
-
 <@section 'Zugriffsberechtigte Personengruppen (Berechtigungsgruppen)'>
 |:---|
 | **Ein Berechtigungskonzept ist vorhanden**<br/>${(process.process_accessAuthorization_concept?string(bundle.yes, bundle.no))!} |
