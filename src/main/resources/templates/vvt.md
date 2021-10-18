@@ -270,11 +270,8 @@ ${scope.name}
 </#if>
 
 
-<@section 'Beschreibung der betroffenen Personengruppen'>
-|:---|
-| **Kreis der betroffenen Personengruppen** | 
-| ${effectiveDataSubjects} | 
-| **Bemerkungen:**{.underline}<br/> ? |
+<@section "Kategorien betroffener Personen">
+${effectiveDataSubjects}
 </@section>
 </#if>
 
