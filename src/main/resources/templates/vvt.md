@@ -36,6 +36,9 @@
   margin-top: 5mm;
   margin-bottom: 5mm;
 }
+.main_page table th:first-child, .main_page table td:first-child {
+  width: 8cm;
+}
 </style>
 
 <bookmarks>
@@ -200,15 +203,12 @@ ${scope.name}
 | Datum der Befragung<br/>${(process.process_processingDetails_surveyConductedOn?date.iso)!} ||
 </div>
 
-<#assign sectionCount = 1>
-
 <#macro section title>
 <div class="section">
 
-### ${sectionCount}. ${title} { .sectionheader }
+### ${title} { .sectionheader }
 <#nested>
 </div>
-<#assign sectionCount++>
 </#macro>
 
 
@@ -243,12 +243,10 @@ ${scope.name}
 <#if processDataTypeLinks?has_content>
 <@section 'Datenkategorien'>
 |:---|
- **Art der verarbeiteten Daten / Datenkategorien** | **Herkunft der Daten** | **Bemerkungen:**|
+ **Art der verarbeiteten Daten / Datenkategorien** | **Bemerkungen:**|
 <#list processDataTypeLinks as dataTypeLink>
 <#assign dataType=dataTypeLink.getTarget() />
-<#assign dataOrigin=dataTypeLink.process_dataType_dataOrigin! />
-<#assign effectiveDataOrigin=(dataOrigin == 'process_dataType_dataOrigin_other')?then(dataTypeLink.process_dataType_otherDataOrigin!,(bundle[dataTypeLink.process_dataType_dataOrigin])!) />
-| ${dataType.name} | ${effectiveDataOrigin} | ${dataTypeLink.process_dataType_comment!} |
+| ${dataType.name} | ${dataTypeLink.process_dataType_comment!} |
 </#list>
 </@section>
 </#if>
@@ -272,11 +270,8 @@ ${scope.name}
 </#if>
 
 
-<@section 'Beschreibung der betroffenen Personengruppen'>
-|:---|
-| **Kreis der betroffenen Personengruppen** | 
-| ${effectiveDataSubjects} | 
-| **Bemerkungen:**{.underline}<br/> ? |
+<@section "Kategorien betroffener Personen">
+${effectiveDataSubjects}
 </@section>
 </#if>
 
@@ -312,7 +307,7 @@ ${scope.name}
 
 <div class="transmission">
 
-#### Übertragung ${transmission.name}
+#### ${transmission.name}
 
 |:---|:---|
 | **Art der Daten** | **Rechtsgrundlage für Datenübertragung** |
@@ -327,11 +322,13 @@ ${scope.name}
 | ${(recipient.name)!} |
 | **Datenübermittlung in Drittland** |
 | ${(link_to_recipient.process_internalRecipient_thirdCountryProcessing?string(bundle.yes, bundle.no))!} |
-| **Name des Staates** |
+<#if thirdCountryProcessing!false>
+| **Name des Landes** |
 | ${(link_to_recipient.process_internalRecipient_thirdCountryName)!} |
 | **Angabe geeigneter Garantien**|
 | ${link_to_recipient.process_internalRecipient_thirdCountryGuarantees!} |
 | **Erläuterungen:**{.underline}<br/> ${link_to_recipient.process_internalRecipient_thirdCountryExplanation!}  |
+</#if>
 </div>
 </#macro>
 
@@ -374,12 +371,6 @@ ${scope.name}
 </@section>
 </#if>
 
-
-<@section 'Löschfristen'>
-|:---|
-| **Fristabhängige Löschung**<br/>?<br/>**Löschverfahren**<br>?<br/>**Erläuterung:**{.underline}<br>? |
-</@section>
-
 <@section 'Zugriffsberechtigte Personengruppen (Berechtigungsgruppen)'>
 |:---|
 | **Ein Berechtigungskonzept ist vorhanden**<br/>${(process.process_accessAuthorization_concept?string(bundle.yes, bundle.no))!} |
@@ -391,9 +382,9 @@ ${scope.name}
 
 <@section 'Systeminformationen über Hard- und Software'>
 |:---|
-| **Name** {.text-center .underline}| **Typ** {.text-center .underline}| **Beschreibung** {.text-center .underline}|
+| **Name** {.text-center .underline}| **Beschreibung** {.text-center .underline}|
 <#list relatedAssets as asset>
-| ${(asset.name)!} | ? | ${asset.description!} |
+| ${(asset.name)!} | ${asset.description!} |
 </#list>
 </@section>
 </#if>
@@ -403,9 +394,14 @@ ${scope.name}
 | ${(bundle[process.process_processingDetails_operatingStage])!} |
 </@section>
 
-<@section 'Datenschutz-Folgenabschätzung erforderlich?'>
-|:---|
-| ${(process.process_opinionDPO_privacyImpactAssessment?string(bundle.yes, bundle.no))!} |
+<@section 'Datenschutz-Folgenabschätzung'>
+${bundle.process_opinionDPO_privacyImpactAssessment}
+: ${(process.process_opinionDPO_privacyImpactAssessment?string(bundle.yes, bundle.no))!""}
+
+<#if process.process_opinionDPO_privacyImpactAssessment!false && process.process_opinionDPO_comment?has_content>
+${bundle.process_opinionDPO_comment}
+: ${process.process_opinionDPO_comment}
+</#if>
 </@section>
 
 
@@ -430,7 +426,6 @@ ${scope.name}
 <tr>
   <td class="${className}">${bundle[tom_status]}</td>
   <td>${t.name}</td>
-  <td>?</td>
 </tr>
 </#list>
 </#if>
@@ -440,8 +435,7 @@ ${scope.name}
   <thead>
     <tr>
       <td>Ums.</td>
-      <td>Maßnahme</ins></td>
-      <td>Anmerkungen</ins></td>
+      <td>Maßnahme</td>
     </tr>
   </thead>
   <tbody>
