@@ -36,6 +36,9 @@
   margin-top: 5mm;
   margin-bottom: 5mm;
 }
+.main_page table th:first-child, .main_page table td:first-child {
+  width: 8cm;
+}
 </style>
 
 <bookmarks>
