@@ -203,15 +203,12 @@ ${scope.name}
 | Datum der Befragung<br/>${(process.process_processingDetails_surveyConductedOn?date.iso)!} ||
 </div>
 
-<#assign sectionCount = 1>
-
 <#macro section title>
 <div class="section">
 
-### ${sectionCount}. ${title} { .sectionheader }
+### ${title} { .sectionheader }
 <#nested>
 </div>
-<#assign sectionCount++>
 </#macro>
 
 
