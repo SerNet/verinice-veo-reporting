@@ -307,7 +307,7 @@ ${effectiveDataSubjects}
 
 <div class="transmission">
 
-#### Übertragung ${transmission.name}
+#### ${transmission.name}
 
 |:---|:---|
 | **Art der Daten** | **Rechtsgrundlage für Datenübertragung** |
