@@ -394,9 +394,14 @@ ${effectiveDataSubjects}
 | ${(bundle[process.process_processingDetails_operatingStage])!} |
 </@section>
 
-<@section 'Datenschutz-Folgenabschätzung erforderlich?'>
-|:---|
-| ${(process.process_opinionDPO_privacyImpactAssessment?string(bundle.yes, bundle.no))!} |
+<@section 'Datenschutz-Folgenabschätzung'>
+${bundle.process_opinionDPO_privacyImpactAssessment}
+: ${(process.process_opinionDPO_privacyImpactAssessment?string(bundle.yes, bundle.no))!""}
+
+<#if process.process_opinionDPO_privacyImpactAssessment!false && process.process_opinionDPO_comment?has_content>
+${bundle.process_opinionDPO_comment}
+: ${process.process_opinionDPO_comment}
+</#if>
 </@section>
 
 
