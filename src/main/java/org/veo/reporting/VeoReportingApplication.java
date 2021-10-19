@@ -93,7 +93,7 @@ public class VeoReportingApplication {
 
     @Bean
     public VeoClient createVeoClient(ClientHttpRequestFactory httpRequestFactory,
-            @Value("${veo.reporting.veo_url:https://veo.develop.verinice.com}") String veoUrl) {
+            @Value("${veo.reporting.veo_url}") String veoUrl) {
         return new VeoClientImpl(httpRequestFactory, veoUrl);
     }
 

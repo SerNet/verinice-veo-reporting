@@ -30,10 +30,10 @@ Authorization
 
 ## Configuration
 
-There are some configuration parameters that can be set via the usual Spring Boot service configuration mechanisms.
+Configuration parameters can be set via the usual Spring Boot service configuration mechanisms.
 
-`veo.reporting.veo_url`
-: The URL of the veo backend, e.g. `https://veo.develop.verinice.com`
+`veo.reporting.veo_url` (required)
+: The URL of the veo backend, e.g. `https://api.develop.verinice.com/veo`
 
 `veo.reporting.http_proxy_host`
 : An optional proxy that is required to access `veo.reporting.veo_url`.
