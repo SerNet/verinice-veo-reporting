@@ -42,10 +42,7 @@ Configuration parameters can be set via the usual Spring Boot service configurat
 : A comma-separated list of allowed CORS origin-patterns.
 
 `veo.reporting.cors.headers`
-A comma-separated-list of additional headers to allow in CORS requests
-    # Note: The 'Authorization' and 'Content-Type' headers are always allowed.
-    # Example: X-Ample, X-Custom-Header
-    headers:
+: A comma-separated list of additional headers to allow in CORS requests. The 'Authorization' and 'Content-Type' headers are always allowed. Example: X-Ample, X-Custom-Header
 
 ## API
 
