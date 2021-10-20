@@ -89,6 +89,7 @@ I'd like to invite you to my birthday party.'''
                 name: 'John',
                 id: '1',
                 type: 'person',
+                _self: 'http://example.org/persons/1',
                 links: [
                     father : [
                         [
@@ -112,6 +113,7 @@ I'd like to invite you to my birthday party.'''
             [
                 name: 'Jack',
                 id: '2',
+                _self: 'http://example.org/persons/2',
                 type: 'person',
                 links: [
                     child : [
@@ -131,6 +133,7 @@ I'd like to invite you to my birthday party.'''
             [
                 name: 'Jane',
                 id: '3',
+                _self: 'http://example.org/persons/3',
                 type: 'person',
                 links: [
                     father : [
@@ -145,6 +148,7 @@ I'd like to invite you to my birthday party.'''
             [
                 name: 'Mary',
                 id: '4',
+                _self: 'http://example.org/persons/4',
                 type: 'person'
             ]
         ]
@@ -162,6 +166,7 @@ Jack's children are named John and Jane.'''
                 [
                     name: 'S1',
                     id: '1',
+                    _self: 'http://example.org/scopes/1',
                     type: 'scope',
                     members: [
                         [
@@ -174,6 +179,7 @@ Jack's children are named John and Jane.'''
                 [
                     name: 'Jack',
                     id: '1',
+                    _self: 'http://example.org/persons/1',
                     type: 'person'
 
                 ]
@@ -192,6 +198,7 @@ Jack's children are named John and Jane.'''
                 name: 'Family',
                 id: '1',
                 type: 'person',
+                _self: 'http://example.org/persons/1',
                 parts: [
                     [
                         targetUri : 'http://example.org/persons/2'
@@ -204,11 +211,13 @@ Jack's children are named John and Jane.'''
             [
                 name: 'Jack',
                 id: '2',
+                _self: 'http://example.org/persons/2',
                 type: 'person'
             ],
             [
                 name: 'Jane',
                 id: '3',
+                _self: 'http://example.org/persons/3',
                 type: 'person'
             ]
         ]

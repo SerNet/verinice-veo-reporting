@@ -51,10 +51,6 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
 
     private static final Logger logger = LoggerFactory.getLogger(TemplateEvaluatorImpl.class);
 
-    // FIXME: remove this mapping after VEO-854
-    private static final Map<String, String> pathComponentByType = Map.of("asset", "assets",
-            "control", "controls", "person", "persons", "process", "processes", "scope", "scopes");
-
     private final Configuration cfg;
 
     public TemplateEvaluatorImpl(TemplateLoader templateLoader, boolean useCache) {
@@ -94,11 +90,11 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
 
         try (Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
 
-            Map<String, Object> entitiesByPath = new HashMap<>();
-            addRecursively(entitiesByPath, data);
+            Map<String, Object> entitiesByUri = new HashMap<>();
+            addRecursively(entitiesByUri, data);
 
             VeoReportingObjectWrapper objectWrapper = new VeoReportingObjectWrapper(
-                    cfg.getIncompatibleImprovements(), entitiesByPath);
+                    cfg.getIncompatibleImprovements(), entitiesByUri);
             Environment env = template.createProcessingEnvironment(data, writer, objectWrapper);
             logger.info("Building entity lookup map");
 
@@ -106,28 +102,19 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
         }
     }
 
-    private void addRecursively(Map<String, Object> entitiesByPath, Object data)
+    private void addRecursively(Map<String, Object> entitiesByUri, Object data)
             throws TemplateModelException {
         logger.debug("adding entities from {}", data);
         if (data instanceof Map) {
             Map<?, ?> map = (Map<?, ?>) data;
-            Object id = map.get("id");
-            Object type = map.get("type");
-
-            if (id != null && type != null) {
-                // FIXME: we should read this from the DTO! (VEO-854)
-                String pathComponent = pathComponentByType.get(type);
-                if (pathComponent == null) {
-                    throw new TemplateModelException("Unhandled entity type " + type);
-                }
-
-                String uri = "/" + pathComponent + "/" + id;
-                logger.debug("adding {}: {}", uri, map);
-                entitiesByPath.put(uri, map);
+            String selfUri = (String) map.get("_self");
+            if (selfUri != null) {
+                logger.debug("adding {}: {}", selfUri, map);
+                entitiesByUri.put(selfUri, map);
             } else {
                 for (Entry<?, ?> e : map.entrySet()) {
                     logger.debug("Found key {}", e.getKey());
-                    addRecursively(entitiesByPath, e.getValue());
+                    addRecursively(entitiesByUri, e.getValue());
                 }
             }
 
@@ -135,7 +122,7 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
             Collection<?> list = (Collection<?>) data;
             for (Object object : list) {
                 logger.debug(" found item: {}", object);
-                addRecursively(entitiesByPath, object);
+                addRecursively(entitiesByUri, object);
             }
 
         }

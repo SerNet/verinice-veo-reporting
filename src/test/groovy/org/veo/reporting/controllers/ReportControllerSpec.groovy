@@ -283,13 +283,14 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
         1 * veoClient.fetchData('/scopes/0815', 'Bearer: abc') >> [
             name: 'My Scope',
             id: '0815',
+            _self: 'http://example.org/scopes/0815',
             type: 'scope',
             links:[
                 scope_management: [
                     [
                         target: [
                             displayName: 'Foo',
-                            targetUri: '/persons/1'
+                            targetUri: 'http://example.org/persons/1'
                         ],
                         attributes: [:]
                     ]
@@ -298,7 +299,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                     [
                         target: [
                             displayName: 'Foo',
-                            targetUri: '/persons/2'
+                            targetUri: 'http://example.org/persons/2'
                         ],
                         attributes: [:]
                     ]
@@ -306,7 +307,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
             ],
             members: [
                 [
-                    targetUri : '/processes/1'
+                    targetUri: 'http://example.org/processes/1'
                 ]
             ]
         ]
@@ -315,6 +316,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                 id: '1',
                 name: 'Verarbeitungstätigkeit 1',
                 description: 'Hier wird etwas verarbeitet',
+                _self: 'http://example.org/processes/1',
                 type: 'process',
                 domains: [
                     'fd672b7d-7e22-4c71-992c-76b59c0d4ee8':[
@@ -333,7 +335,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                         [
                             target: [
                                 displayName: 'Foo',
-                                targetUri: '/scopes/1'
+                                targetUri: 'http://example.org/scopes/1'
                             ],
                             attributes: [:]
                         ]
@@ -346,6 +348,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                 id: '1',
                 type:'person',
                 name: 'John Doe',
+                _self: 'http://example.org/persons/1',
                 customAspects: [
                     person_generalInformation: [
                         attributes: [
@@ -359,6 +362,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                 id: '2',
                 type:'person',
                 name: 'Jane Doe',
+                _self: 'http://example.org/persons/2',
                 customAspects: [
                     person_generalInformation: [
                         attributes: [
@@ -372,6 +376,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                 id: '3',
                 type:'person',
                 name: 'Jack Doe',
+                _self: 'http://example.org/persons/3',
                 customAspects: [
                     person_generalInformation: [
                         attributes: [
@@ -385,6 +390,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                 id: '4',
                 type:'person',
                 name: 'June Doe',
+                _self: 'http://example.org/persons/4',
                 customAspects: [
                     person_generalInformation: [
                         attributes: [
@@ -400,12 +406,13 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                 name: 'Their Scope',
                 id: '1',
                 type: 'scope',
+                _self: 'http://example.org/scopes/1',
                 links:[
                     scope_management: [
                         [
                             target: [
                                 displayName: 'Foo',
-                                targetUri: '/persons/3'
+                                targetUri: 'http://example.org/persons/3'
                             ],
                             attributes: [:]
                         ]
@@ -414,7 +421,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                         [
                             target: [
                                 displayName: 'Foo',
-                                targetUri: '/persons/4'
+                                targetUri: 'http://example.org/persons/4'
                             ],
                             attributes: [:]
                         ]
@@ -422,7 +429,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                 ],
                 members: [
                     [
-                        targetUri : '/processes/1'
+                        targetUri: 'http://example.org/processes/1'
                     ]
                 ]
             ]
