@@ -43,8 +43,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerErrorException;
-import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import org.veo.reporting.CreateReport;
 import org.veo.reporting.CreateReport.TargetSpecification;
@@ -72,13 +72,10 @@ public class ReportController {
 
     private final ReportEngine reportEngine;
     private final VeoClient veoClient;
-    private final LocaleResolver localeResolver;
 
-    public ReportController(ReportEngine reportEngine, VeoClient veoClient,
-            LocaleResolver localeResolver) {
+    public ReportController(ReportEngine reportEngine, VeoClient veoClient) {
         this.reportEngine = reportEngine;
         this.veoClient = veoClient;
-        this.localeResolver = localeResolver;
     }
 
     /**
@@ -131,7 +128,7 @@ public class ReportController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Target type " + target.type + " not supported by report " + id);
         }
-        Locale locale = localeResolver.resolveLocale(request);
+        Locale locale = RequestContextUtils.getLocale(request);
         logger.info("Request locale = {}", locale);
 
         String desiredLanguage = locale.getLanguage();
