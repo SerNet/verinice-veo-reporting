@@ -29,6 +29,7 @@ import org.veo.templating.VeoReportingObjectWrapper;
 import org.veo.templating.methods.NoArgumentsMethod;
 import org.veo.templating.methods.SingleStringArgumentMethod;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
@@ -43,6 +44,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     private final Map<?, ?> m;
     private final VeoReportingObjectWrapper ow;
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public VeoReportingEntityAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
         super(ow);
         this.m = Map.copyOf(m);
@@ -50,6 +52,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     }
 
     @Override
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public Object getAdaptedObject(Class<?> hint) {
         return m;
     }

@@ -26,6 +26,8 @@ import javax.validation.constraints.Size;
 import org.veo.fileconverter.FileConverter;
 import org.veo.reporting.controllers.ReportController;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * The DTO for a report creation. It specifies the entities that the report is
  * run upon and the desired output format.
@@ -52,6 +54,7 @@ public class CreateReport {
         this.outputType = outputType;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public List<TargetSpecification> getTargets() {
         return targets;
     }

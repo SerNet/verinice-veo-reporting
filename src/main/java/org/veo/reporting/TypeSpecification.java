@@ -25,6 +25,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public class TypeSpecification {
 
     @JsonCreator
@@ -43,6 +45,7 @@ public class TypeSpecification {
         return modelType;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public Set<String> getSubTypes() {
         return subTypes;
     }
