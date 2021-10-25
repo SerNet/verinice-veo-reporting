@@ -45,7 +45,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
 
     public VeoReportingEntityAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
         super(ow);
-        this.m = m;
+        this.m = Map.copyOf(m);
         this.ow = ow;
     }
 

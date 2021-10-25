@@ -37,7 +37,7 @@ public class VeoReportingLinkAdapter extends WrappingTemplateModel
 
     public VeoReportingLinkAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
         super(ow);
-        this.m = m;
+        this.m = Map.copyOf(m);
         this.ow = ow;
     }
 

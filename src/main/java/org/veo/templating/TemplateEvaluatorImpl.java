@@ -95,12 +95,12 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
         try (Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
 
             Map<String, Object> entitiesByPath = new HashMap<>();
+            addRecursively(entitiesByPath, data);
 
             VeoReportingObjectWrapper objectWrapper = new VeoReportingObjectWrapper(
                     cfg.getIncompatibleImprovements(), entitiesByPath);
             Environment env = template.createProcessingEnvironment(data, writer, objectWrapper);
             logger.info("Building entity lookup map");
-            addRecursively(entitiesByPath, data);
 
             env.process();
         }

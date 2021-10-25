@@ -57,7 +57,7 @@ public class CreateReport {
     }
 
     public void setTargets(List<TargetSpecification> targets) {
-        this.targets = targets;
+        this.targets = List.copyOf(targets);
     }
 
     public static class TargetSpecification {

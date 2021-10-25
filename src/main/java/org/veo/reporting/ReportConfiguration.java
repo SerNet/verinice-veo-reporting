@@ -45,14 +45,14 @@ public class ReportConfiguration {
             @JsonProperty(value = "multipleTargetsSupported", defaultValue = "false") boolean multipleTargetsSupported,
             @JsonProperty(value = "targetTypes", required = true) Set<TypeSpecification> targetTypes,
             @JsonProperty(value = "data", required = true) Map<String, String> data) {
-        this.name = name;
-        this.description = description;
+        this.name = Map.copyOf(name);
+        this.description = Map.copyOf(description);
         this.templateFile = templateFile;
         this.templateType = templateType;
-        this.outputTypes = outputTypes;
+        this.outputTypes = List.copyOf(outputTypes);
         this.multipleTargetsSupported = multipleTargetsSupported;
-        this.targetTypes = targetTypes;
-        this.data = data;
+        this.targetTypes = Set.copyOf(targetTypes);
+        this.data = Map.copyOf(data);
     }
 
     private final Map<String, String> name;

@@ -44,7 +44,7 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
     public VeoReportingObjectWrapper(Version incompatibleImprovements,
             Map<String, Object> entitiesByPath) {
         super(incompatibleImprovements);
-        this.entitiesByPath = entitiesByPath;
+        this.entitiesByPath = Map.copyOf(entitiesByPath);
     }
 
     @Override

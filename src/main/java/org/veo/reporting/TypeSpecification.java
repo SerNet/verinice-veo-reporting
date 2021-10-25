@@ -17,6 +17,7 @@
  */
 package org.veo.reporting;
 
+import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.constraints.NotNull;
@@ -31,7 +32,7 @@ public class TypeSpecification {
             @JsonProperty(value = "modelType", required = true) EntityType modelType,
             @JsonProperty(value = "subTypes", required = false) Set<String> subTypes) {
         this.modelType = modelType;
-        this.subTypes = subTypes;
+        this.subTypes = Optional.ofNullable(subTypes).map(Set::copyOf).orElse(null);
     }
 
     EntityType modelType;
