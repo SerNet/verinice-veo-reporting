@@ -3,5 +3,6 @@
   "bbUseDefaultReviewers": false,
   "reviewers": ["jk"],
   "automerge": true,
-  "automergeType": "pr"
+  "automergeType": "pr",
+  "assignAutomerge": true
 }
