@@ -101,6 +101,7 @@ public class CORSSpec extends Specification {
                 contains(HttpHeaders.AUTHORIZATION)
                 contains(HttpHeaders.CONTENT_TYPE)
             }
+            getHeader(HttpHeaders.ACCESS_CONTROL_MAX_AGE) == "1800"
         }
     }
 

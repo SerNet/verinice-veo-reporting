@@ -17,6 +17,7 @@
  */
 package org.veo.reporting.security;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
@@ -80,6 +81,7 @@ public class ReportingSecurityConfig extends WebSecurityConfigurerAdapter {
             logger.debug("Added CORS origin pattern: {}", s);
             corsConfig.addAllowedOriginPattern(s);
         });
+        corsConfig.setMaxAge(Duration.ofMinutes(30));
         source.registerCorsConfiguration("/**", corsConfig);
         return source;
     }
