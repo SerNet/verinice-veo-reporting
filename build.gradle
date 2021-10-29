@@ -15,11 +15,6 @@ repositories {
     mavenCentral()
 }
 
-def versions = [
-    openhtmltopdf: '1.0.10',
-    phfonts: '4.2.0',
-]
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -28,15 +23,15 @@ dependencies {
     implementation 'javax.validation:validation-api'
     implementation 'org.freemarker:freemarker:2.3.31'
     implementation 'com.vladsch.flexmark:flexmark-all:0.62.2'
-    implementation "com.openhtmltopdf:openhtmltopdf-core:$versions.openhtmltopdf"
-    implementation "com.openhtmltopdf:openhtmltopdf-pdfbox:$versions.openhtmltopdf"
-    implementation "com.openhtmltopdf:openhtmltopdf-slf4j:$versions.openhtmltopdf"
-    implementation "com.helger.font:ph-fonts-api:$versions.phfonts"
+    implementation 'com.openhtmltopdf:openhtmltopdf-core:1.0.10'
+    implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10'
+    implementation 'com.openhtmltopdf:openhtmltopdf-slf4j:1.0.10'
+    implementation 'com.helger.font:ph-fonts-api:4.2.0'
 
     compileOnly 'com.github.spotbugs:spotbugs-annotations:4.4.2'
 
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
-    runtimeOnly "com.helger.font:ph-fonts-open-sans:$versions.phfonts"
+    runtimeOnly 'com.helger.font:ph-fonts-open-sans:4.2.0'
 
     testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
