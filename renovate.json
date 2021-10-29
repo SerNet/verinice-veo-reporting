@@ -4,5 +4,15 @@
   "reviewers": ["jk"],
   "automerge": true,
   "automergeType": "pr",
-  "assignAutomerge": true
+  "assignAutomerge": true,
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^com.openhtmltopdf:"],
+      "groupName": "OpenHTMLtoPDF"
+    },
+        {
+    "matchPackagePatterns": ["^com.helger.font:"],
+      "groupName": "ph-fonts"
+    }
+  ]
 }
