@@ -22,35 +22,30 @@ import spock.lang.Specification
 
 public class TemplateEvaluatorSpec extends Specification {
 
+    def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
+
+    def templateEvaluator =  new TemplateEvaluatorImpl(templateLoader, true)
+
+
     def "Test hello world template"(){
-        given:
-        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
-        ByteArrayOutputStream os = new ByteArrayOutputStream()
         when:
-        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('helloworld.txt', [name: "John"], os)
-        def text = os.toString()
+        def text = execute('helloworld.txt', [name: "John"])
         then:
         text == 'Hello John.'
     }
 
     def "Test invitation template"(){
         given:
-        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
-        def templateEvaluator = new TemplateEvaluatorImpl(templateLoader, true)
-        ByteArrayOutputStream os = new ByteArrayOutputStream()
         def bundleDe = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_de.properties'))
         def bundleEn = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_en.properties'))
         when:
-        templateEvaluator.executeTemplate('invitation.txt', [person:[name: "Johannes"], bundle: bundleDe], os)
-        def text = os.toString()
+        def text = execute('invitation.txt', [person:[name: "Johannes"], bundle: bundleDe],)
         then:
         text == '''Hallo Johannes,
 
 Hiermit lade ich Dich zu meinem Geburtstag ein.'''
         when:
-        os = new ByteArrayOutputStream()
-        templateEvaluator.executeTemplate('invitation.txt',  [person:[name: "John"], bundle: bundleEn], os)
-        text = os.toString()
+        text = execute('invitation.txt',  [person:[name: "John"], bundle: bundleEn])
         then:
         text == '''Hi John,
 
@@ -58,9 +53,6 @@ I'd like to invite you to my birthday party.'''
     }
 
     def "Access custom attribute"(){
-        given:
-        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
-        ByteArrayOutputStream os = new ByteArrayOutputStream()
         def objectData = [
             name: 'Asset',
             id: '0815',
@@ -86,16 +78,12 @@ I'd like to invite you to my birthday party.'''
             ]
         ]
         when:
-        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('custom-aspect-test.txt', [input: objectData], os)
-        def text = os.toString()
+        def text = execute('custom-aspect-test.txt', [input: objectData])
         then:
         text == 'The foo is bar.\nThe other foo is baz.'
     }
 
     def "Access linked objects"(){
-        given:
-        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
-        ByteArrayOutputStream os = new ByteArrayOutputStream()
         def persons = [
             [
                 name: 'John',
@@ -161,8 +149,7 @@ I'd like to invite you to my birthday party.'''
             ]
         ]
         when:
-        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('custom-link-test.txt', [persons: persons], os)
-        def text = os.toString()
+        def text = execute('custom-link-test.txt', [persons: persons])
         then:
         text == '''John's father is named Jack.
 Mary is Jack's biological mother.
@@ -170,9 +157,6 @@ Jack's children are named John and Jane.'''
     }
 
     def "Access a scope's members"(){
-        given:
-        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
-        ByteArrayOutputStream os = new ByteArrayOutputStream()
         def data = [
             scopes:[
                 [
@@ -196,16 +180,13 @@ Jack's children are named John and Jane.'''
             ]
         ]
         when:
-        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('scope-member-test.txt', data, os)
-        def text = os.toString()
+        def text = execute('scope-member-test.txt', data)
         then:
         text == 'Elements in the scope: Jack.'
     }
 
     def "Access a composize person entity's parts"(){
         given:
-        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
-        ByteArrayOutputStream os = new ByteArrayOutputStream()
         def persons = [
             [
                 name: 'Family',
@@ -232,52 +213,44 @@ Jack's children are named John and Jane.'''
             ]
         ]
         when:
-        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('composite-part-test.txt', [persons: persons], os)
-        def text = os.toString()
+        def text = execute('composite-part-test.txt', [persons: persons])
         then:
         text == '''Our family members are named Jack and Jane.'''
     }
 
     def "HTML is escaped in Markdown templates"(){
-        given:
-        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
-        ByteArrayOutputStream os = new ByteArrayOutputStream()
         when:
-        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('escape-test.md', [data: "<h1>Data</h1>"], os)
-        def text = os.toString()
+        def text = execute('escape-test.md', [data: "<h1>Data</h1>"])
         then:
         text == '&lt;h1&gt;Data&lt;/h1&gt;'
     }
 
     def "Line breaks are converted for Markdown output"(){
-        given:
-        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
-        ByteArrayOutputStream os = new ByteArrayOutputStream()
         when:
-        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('escape-test.md', [data: 'Hello\nWorld!'], os)
-        def text = os.toString()
+        def text = execute('escape-test.md', [data: 'Hello\nWorld!'])
         then:
         text == 'Hello  \nWorld!'
     }
 
     def "HTML is escaped in HTML templates"(){
-        given:
-        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
-        ByteArrayOutputStream os = new ByteArrayOutputStream()
         when:
-        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('escape-test.html', [data: "<h1>Data</h1>"], os)
-        def text = os.toString()
+        def text = execute('escape-test.html', [data: "<h1>Data</h1>"])
         then:
         text == 'HTML: &lt;h1&gt;Data&lt;/h1&gt;'
     }
 
     def "Freemarker class resolving is disabled"(){
-        given:
-        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
         when:
-        new TemplateEvaluatorImpl(templateLoader, true).executeTemplate('resolver-test.txt', [data: "whatever"], System.out)
+        def text = execute('resolver-test.txt', [data: "whatever"])
         then:
         def e = thrown(freemarker.core._MiscTemplateException)
         e.message =~ /Instantiating freemarker.template.utility.Execute is not allowed in the template for security reasons/
+    }
+
+    String execute(String templateName, data) {
+        new ByteArrayOutputStream().withCloseable {
+            templateEvaluator.executeTemplate(templateName, data, it)
+            it.toString()
+        }
     }
 }
