@@ -316,7 +316,11 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
                 name: 'Verarbeitungstätigkeit 1',
                 description: 'Hier wird etwas verarbeitet',
                 type: 'process',
-                subType: ['fd672b7d-7e22-4c71-992c-76b59c0d4ee8': 'PRO_DataProcessing'],
+                domains: [
+                    'fd672b7d-7e22-4c71-992c-76b59c0d4ee8':[
+                        subType: 'PRO_DataProcessing'
+                    ]
+                ],
                 customAspects: [
                     process_processing: [
                         attributes: [

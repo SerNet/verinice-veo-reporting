@@ -218,6 +218,61 @@ Jack's children are named John and Jane.'''
         text == '''Our family members are named Jack and Jane.'''
     }
 
+    def "Check an entity for a subType"(){
+        given:
+        def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
+        ByteArrayOutputStream os = new ByteArrayOutputStream()
+        def persons = [
+            [
+                name: 'Jane',
+                id: '1',
+                type: 'person',
+                domains: [
+                    'abc':[
+                        subType : 'MySubType'
+                    ]
+                ]
+            ],
+            [
+                name: 'John',
+                id: '2',
+                type: 'person'
+            ],
+            [
+                name: 'Jack',
+                id: '3',
+                type: 'person',
+                domains: [
+                    'abc':[
+                        subType : 'OtherSubType'
+                    ]
+                ]
+            ],
+            [
+                name: 'Sue',
+                id: '3',
+                type: 'person',
+                domains: [
+                    'abc':[
+                        subType : 'OtherSubType'
+                    ],
+                    'def':[
+                        subType : 'MySubType'
+                    ]
+                ]
+            ]
+        ]
+        when:
+        def text = execute('subType-test.txt', [persons: persons])
+        then:
+        text == '''\
+                Jane: yes
+                John: no
+                Jack: no
+                Sue: yes
+                '''.stripIndent()
+    }
+
     def "HTML is escaped in Markdown templates"(){
         when:
         def text = execute('escape-test.md', [data: "<h1>Data</h1>"])

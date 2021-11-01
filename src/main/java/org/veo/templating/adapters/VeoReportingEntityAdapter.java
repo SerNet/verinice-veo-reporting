@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +83,8 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
             return new GetLinked(m, ow);
         case "findFirstLinked":
             return new FindFirstLinked(m, ow);
+        case "hasSubType":
+            return new HasSubType(m, ow);
         default:
             @SuppressWarnings("unchecked")
             Map<String, ?> customAspects = (Map<String, ?>) m.get("customAspects");
@@ -106,6 +109,23 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     @Override
     public boolean isEmpty() throws TemplateModelException {
         return false;
+    }
+
+    private static final class HasSubType extends SingleStringArgumentMethod {
+
+        public HasSubType(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+            super(m, ow);
+        }
+
+        @Override
+        public Object doExec(String arg) throws TemplateModelException {
+            var domains = (Map<String, Map<String, ?>>) getProperty("domains");
+
+            logger.debug("domains: {}", domains);
+            return domains != null && domains.values().stream()
+                    .map(domainAssociation -> (String) domainAssociation.get("subType"))
+                    .anyMatch(subTypeInDomain -> Objects.equals(arg, subTypeInDomain));
+        }
     }
 
     private static final class GetLinks extends SingleStringArgumentMethod {

@@ -1,0 +1,3 @@
+<#list persons as person>
+${person.name}: ${person.hasSubType('MySubType')?string('yes', 'no')}
+</#list>
