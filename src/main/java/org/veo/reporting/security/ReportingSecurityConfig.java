@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,6 +50,7 @@ public class ReportingSecurityConfig extends WebSecurityConfigurerAdapter {
     private String[] allowedHeaders;
 
     @Override
+    @SuppressFBWarnings("SECSPRCSRFPD")
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.cors();
