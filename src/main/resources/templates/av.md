@@ -160,7 +160,7 @@ ${term}
   (t.getLinks('process_processor')![])?filter(l->l.process_processor_thirdCountryProcessing!false)?has_content) />
 
 <@transmissions_section 
-  "Datenübertragungen an externe Empfänger in Drittländer"
+  bundle.transmissions_external
   relevantTransmissionsExternal
   'process_externalRecipient'
   'process_externalRecipient_thirdCountryProcessing'
@@ -168,7 +168,7 @@ ${term}
   'process_externalRecipient_thirdCountryGuarantees' />
 
 <@transmissions_section 
-  "Datenübertragungen an Auftragsverarbeiter in Drittländer"
+  bundle.transmissions_processor
   relevantTransmissionsProcessor
   'process_processor'
   'process_processor_thirdCountryProcessing'
