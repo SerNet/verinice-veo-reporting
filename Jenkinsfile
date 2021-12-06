@@ -4,7 +4,7 @@
 
 def projectVersion
 def imageForGradleStages = 'openjdk:17-jdk-bullseye'
-def dockerArgsForGradleStages = '-e GRADLE_USER_HOME=$WORKSPACE/gradle-home'
+def dockerArgsForGradleStages = '-v /data/gradle-homes/executor-$EXECUTOR_NUMBER:/gradle-home -e GRADLE_USER_HOME=/gradle-home'
 
 pipeline {
     agent none
