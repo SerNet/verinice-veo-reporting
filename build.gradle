@@ -30,7 +30,7 @@ dependencies {
     implementation 'com.openhtmltopdf:openhtmltopdf-slf4j:1.0.10'
     implementation 'com.helger.font:ph-fonts-api:4.2.0'
 
-    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.5.1'
+    compileOnly 'com.github.spotbugs:spotbugs-annotations:4.5.2'
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.11.0'
 
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
