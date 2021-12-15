@@ -168,24 +168,12 @@ Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO {.text-center }
 </#if>
 ## Prüfergebnis zur materiellen Rechtmäßigkeit {.text-center .underline #process_FIXME_${process?counter}}
 
-### I. Rechtmäßigkeit der Verarbeitung{.underline}
+### Rechtmäßigkeit der Verarbeitung{.underline}
 
 #### 1. Feststellungen{.underline}
 ${process.process_opinionDPO_findings!} 
 #### 2. Empfehlungen{.underline}
 ${process.process_opinionDPO_recommendations!} 
-<div class="pagebreak"></div>
-
-### II. Rechtmäßigkeit der technischen und organisatorischen Maßnahmen{.underline}
-#### 1. Zertifizierung nach anerkannten Standard
-${(process.process_tomAssessment_certification?then(process.process_tomAssessment_certificationStandard, bundle.no))!""}
-#### 2. IT-Sicherheitskonzept
-${(process.process_tomAssessment_securityConcept?then(bundle.yes, bundle.no))!""}
-#### 3. Gesamtbeurteilung der Maßnahmen
-${process.process_tomAssessment_overallAssessment!} 
-#### 4. ${bundle.process_tomAssessment_comment}
-${process.process_tomAssessment_comment!} 
-
 <div class="pagebreak"></div>
 
 ## Detailergebnisse {#process_details_${process?counter} .text-center .underline}
