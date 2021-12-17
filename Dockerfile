@@ -12,7 +12,7 @@ LABEL org.opencontainers.image.source=https://github.com/verinice/verinice-veo-r
 
 USER nonroot
 
-COPY --chown=nonroot:nonroot build/libs/veo-reporting-${VEO_REPORTING_VERSION}.jar veo-reporting.jar
+COPY --chown=nonroot:nonroot build/libs/veo-reporting-${VEO_REPORTING_VERSION}.jar /app/veo-reporting.jar
 
 WORKDIR /app
 EXPOSE 8080
