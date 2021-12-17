@@ -1,4 +1,4 @@
-FROM openjdk:17-slim
+FROM gcr.io/distroless/java17-debian11:nonroot
 
 ARG VEO_REPORTING_VERSION
 
@@ -10,11 +10,10 @@ LABEL org.opencontainers.image.authors=verinice@sernet.de
 LABEL org.opencontainers.image.licenses=AGPL-3.0
 LABEL org.opencontainers.image.source=https://github.com/verinice/verinice-veo-reporting
 
-RUN adduser --home /app --disabled-password --gecos '' veo
-USER veo
+USER nonroot
+
+COPY --chown=nonroot:nonroot build/libs/veo-reporting-${VEO_REPORTING_VERSION}.jar veo-reporting.jar
+
 WORKDIR /app
-
-COPY build/libs/veo-reporting-${VEO_REPORTING_VERSION}.jar veo-reporting.jar
-
 EXPOSE 8080
-CMD ["java", "-jar", "veo-reporting.jar"]
+CMD ["veo-reporting.jar"]
