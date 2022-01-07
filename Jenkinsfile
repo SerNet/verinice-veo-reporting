@@ -89,6 +89,7 @@ pipeline {
                     withDockerRegistry(credentialsId: 'gcr:verinice-projekt@gcr', url: 'https://eu.gcr.io') {
                         dockerImage.push("git-${env.GIT_COMMIT}")
                         if (env.GIT_BRANCH == 'main') {
+                            dockerImage.push(projectVersion)
                             dockerImage.push("latest")
                             dockerImage.push(env.BUILD_NUMBER)
                         }  else if (env.GIT_BRANCH == 'develop') {
