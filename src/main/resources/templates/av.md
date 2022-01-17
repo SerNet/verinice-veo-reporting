@@ -94,6 +94,14 @@ ${processing.description!}
 
 <div class="controllerinfo">
 
+<#macro multiline data... >
+<#list data as d>
+ <#if d?has_content>
+   ${d}  
+ </#if>
+</#list>
+</#macro>
+
 #### ${controller.name!}
 
 ${bundle.address}
@@ -101,10 +109,10 @@ ${bundle.address}
 ${controller.scope_address_postcode!} ${controller.scope_address_city!}
 
 ${bundle.controller_management}
-: ${[managementController.name!,managementController.person_contactInformation_office!,managementController.person_contactInformation_email!]?filter(v->v?has_content)?join("  \n")}
+: <@multiline managementController.name, managementController.person_contactInformation_office, managementController.person_contactInformation_email />
 
 ${bundle.scope_dataProtectionOfficer}
-: ${[dataProtectionOfficerController.name!,dataProtectionOfficerController.person_contactInformation_office!,dataProtectionOfficerController.person_contactInformation_email!]?filter(v->v?has_content)?join("  \n")}
+: <@multiline dataProtectionOfficerController.name, dataProtectionOfficerController.person_contactInformation_office, dataProtectionOfficerController.person_contactInformation_email />
 
 </div>
 
