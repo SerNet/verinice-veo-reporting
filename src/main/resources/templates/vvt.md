@@ -1,4 +1,4 @@
-<#import "/libs/commons.ftlh" as com>
+<#import "/libs/commons.md" as com>
 
 <#assign to_user_presentable = com.to_user_presentable
  row = com.row
