@@ -58,16 +58,40 @@ public class MarkdownOutputFormat extends CommonMarkupOutputFormat<TemplateMarkd
 
     @Override
     public void output(String textToEsc, Writer out) throws IOException, TemplateModelException {
-        StringUtil.XHTMLEnc(replaceNewLines(textToEsc), out);
+        appendWithEncoding(textToEsc, out);
     }
 
     @Override
     public String escapePlainText(String plainTextContent) {
-        return StringUtil.XHTMLEnc(replaceNewLines(plainTextContent));
+        StringBuilder sb = new StringBuilder();
+        try {
+            appendWithEncoding(plainTextContent, sb);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return sb.toString();
     }
 
-    private static String replaceNewLines(String text) {
-        return text.replace("\n", "  \n");
+    private static void appendWithEncoding(String text, Appendable out) throws IOException {
+        for (int cp : text.codePoints().toArray()) {
+            boolean isSafeChar = Character.isLetterOrDigit(cp);
+            if (isSafeChar) {
+                out.append((char) cp);
+            } else if (cp == '\n') {
+                out.append("  \n");
+            } else if (Character.isBmpCodePoint(cp)) {
+                // these characters might carry special meaning in Markdown,
+                // so we better escape them
+                out.append("&#");
+                out.append(Integer.toString(cp));
+                out.append(";");
+            } else {
+                char[] chars = Character.toChars(cp);
+                for (int i = 0; i < chars.length; i++) {
+                    out.append(chars[i]);
+                }
+            }
+        }
     }
 
     @Override

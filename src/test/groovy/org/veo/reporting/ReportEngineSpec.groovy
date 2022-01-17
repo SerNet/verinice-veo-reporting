@@ -18,6 +18,7 @@
 package org.veo.reporting
 
 import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.text.PDFTextStripper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -49,7 +50,7 @@ Age
 : 42
 
 Height
-: 5&#39;8&quot;
+: 5&#39;8&#34;
 
 
 ## Work life
@@ -158,6 +159,46 @@ I'd like to invite you to my birthday party.'''
             'processing-on-behalf'
         ]
     }
+
+    def "Special content is preserved (Markdown template, PDF output)"(){
+        when:
+        PDDocument doc = renderPDF('escape-test.md','text/markdown', [data: input])
+        def text = new PDFTextStripper().getText(doc)
+        then:
+        text == output
+        where:
+        input                                | output
+        'Hello\nWorld'                       | 'Hello\nWorld\n'
+        'foo*bar*'                           | 'foo*bar*\n'
+        '![img](file:///localPath/test.pdf)' | '![img](file:///localPath/test.pdf)\n'
+    }
+
+    def "Special content is preserved (Markdown template, HTML output)"(){
+        when:
+        String text = renderHTML('escape-test.md','text/markdown', [data: input])
+        then:
+        text == output
+        where:
+        input                                | output
+        'Hello\nWorld'                       | '<p>Hello<br />\nWorld</p>\n'
+        'foo*bar*'                           | '<p>foo*bar*</p>\n'
+        '![img](file:///localPath/test.pdf)' | '<p>![img](file:///localPath/test.pdf)</p>\n'
+    }
+
+    def "Meaningful Markdown characters end up properly in the final document"(){
+        given:
+        def text = 'Auftragsverarbeitungen gemäß Art. 30 II DS-GVO'
+        when:
+        def htmlText = renderHTML('escape-test-with-html-heading.md','text/markdown', [data: text])
+        then:
+        htmlText == '<h1>Auftragsverarbeitungen&#32;gemäß&#32;Art&#46;&#32;30&#32;II&#32;DS&#45;GVO</h1>\n'
+        when:
+        PDDocument doc = renderPDF('escape-test-with-html-heading.md','text/markdown', [data: text])
+        def pdfText = new PDFTextStripper().getText(doc)
+        then:
+        pdfText == 'Auftragsverarbeitungen gemäß Art. 30 II DS-\nGVO\n'
+    }
+
 
     private PDDocument renderPDF(String templateName, String templateType, Map data) {
         new ByteArrayOutputStream().withCloseable {

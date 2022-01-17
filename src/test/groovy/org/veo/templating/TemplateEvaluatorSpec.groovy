@@ -286,15 +286,34 @@ Jack's children are named John and Jane.'''
         when:
         def text = execute('escape-test.md', [data: "<h1>Data</h1>"])
         then:
-        text == '&lt;h1&gt;Data&lt;/h1&gt;'
+        text == '&#60;h1&#62;Data&#60;&#47;h1&#62;'
+    }
+
+    def "Markdown is escaped in Markdown templates"(){
+        when:
+        def text = execute('escape-test.md', [data: input])
+        then:
+        text == output
+        where:
+        input | output
+        '*foo*' | '&#42;foo&#42;'
+        '![img](file:///localPath/test.pdf)' | '&#33;&#91;img&#93;&#40;file&#58;&#47;&#47;&#47;localPath&#47;test&#46;pdf&#41;'
     }
 
     def "Line breaks are converted for Markdown output"(){
         when:
         def text = execute('escape-test.md', [data: 'Hello\nWorld!'])
         then:
-        text == 'Hello  \nWorld!'
+        text == 'Hello  \nWorld&#33;'
     }
+
+    def "Emojis are left alone for Markdown output"(){
+        when:
+        def text = execute('escape-test.md', [data: "😭"])
+        then:
+        text == '😭'
+    }
+
 
     def "HTML is escaped in HTML templates"(){
         when:
