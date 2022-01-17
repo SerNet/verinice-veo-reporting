@@ -191,10 +191,13 @@ ${scope.name}
 | Datum der Befragung<br/>${(process.process_processingDetails_surveyConductedOn?date.iso)!} ||
 </div>
 
-<#macro section title>
+<#macro section title id="">
 <div class="section">
 
 ### ${title} { .sectionheader }
+<#if id?has_content>
+{ #${id?no_esc} }
+</#if>
 <#nested>
 </div>
 </#macro>
@@ -272,7 +275,7 @@ ${effectiveDataSubjects}
 
 <#if transmissions?has_content>
 
-<@section 'Art übermittelter Daten und deren Empfänger { #process_transmissions_${process?counter} }'>
+<@section 'Art übermittelter Daten und deren Empfänger' 'process_transmissions_${process?counter}'>
 
 <#list transmissions as transmission>
 
@@ -395,7 +398,7 @@ ${bundle.process_opinionDPO_comment}
 
 <#assign toms=process.getLinked('process_tom')! />
 <#if toms?has_content>
-<@section 'Technische und organisatorische Maßnahmen{ #process_toms_${process?counter} }'  >
+<@section 'Technische und organisatorische Maßnahmen' 'process_toms_${process?counter}'  >
 
 <#macro tomsection objective title>
 <#assign tomsinsection = toms?filter(t->t.control_dataProtection_objectives!?seq_contains(objective))!>
