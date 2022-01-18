@@ -170,9 +170,9 @@ Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO {.text-center }
 
 ### Rechtmäßigkeit der Verarbeitung{.underline}
 
-#### 1. Feststellungen{.underline}
+#### Feststellungen{.underline}
 ${process.process_opinionDPO_findings!} 
-#### 2. Empfehlungen{.underline}
+#### Empfehlungen{.underline}
 ${process.process_opinionDPO_recommendations!} 
 <div class="pagebreak"></div>
 
