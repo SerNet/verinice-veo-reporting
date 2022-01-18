@@ -357,6 +357,9 @@ Art der Daten
 Rechtsgrundlage für Datenübertragung
 : ${effectiveDataTransferLegalBasis!}
 
+<@def "Erläuterungen" transmission.process_dataTransfer_explanation true />
+
+
 <#macro recipient_section link_to_recipient recipient_label>
 <div class="section">
 <#assign recipient=link_to_recipient.getTarget() />
@@ -404,7 +407,6 @@ Rechtsgrundlage für Datenübertragung
 !!! UNBEKANNTER EMPFÄNGERTYP
 </#switch>
 
-<@def "Erläuterungen" transmission.process_dataTransfer_explanation true />
 </div>
 
 </#list>
