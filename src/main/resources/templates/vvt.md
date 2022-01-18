@@ -239,6 +239,9 @@ Art der Verarbeitung
 
 Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO
 : ${(process.process_processing_asProcessor?string(bundle.yes, bundle.no))!}
+
+${bundle.process_processingDetails_operatingStage}
+: ${(bundle[process.process_processingDetails_operatingStage])!}
 </@section>
 
 <@section 'Angaben zum gemeinsam Verantwortlichen'>
@@ -426,10 +429,6 @@ Rechtsgrundlage für Datenübertragung
 </#list>
 </@section>
 </#if>
-
-<@section 'Betriebsstadium'>
-${(bundle[process.process_processingDetails_operatingStage])!}
-</@section>
 
 <@section 'Datenschutz-Folgenabschätzung'>
 ${bundle.process_opinionDPO_privacyImpactAssessment}
