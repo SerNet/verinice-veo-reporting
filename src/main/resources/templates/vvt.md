@@ -89,7 +89,6 @@ dl.tom dd {
 # ${bundle.toc} {#toc}
 
 <ol class="toc">
-  <li><a href="#toc">${bundle.toc}</a> <span href="#toc"></span></li>
   <li><a href="#main_page">${bundle.main_page}</a> <span href="#main_page"></span></li>
   <li><a href="#overview">${bundle.activities_overview}</a> <span href="#overview"></span></li>
 <#list processesInScope as process>
