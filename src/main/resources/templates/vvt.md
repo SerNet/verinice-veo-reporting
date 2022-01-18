@@ -64,6 +64,10 @@ dl.tom {
 dl.tom dd {
   margin-left: 2mm;
 }
+
+.pullup {
+  margin-top: -4mm;
+}
 </style>
 
 <bookmarks>
@@ -175,22 +179,29 @@ dl.tom dd {
 <#assign jointControllership=process.getLinked('process_jointControllership')! />
 <#assign transmissions=process.getLinked('process_dataTransmission')! />
 
-
-# <span style="display:inline-block; width: 6cm;">Verarbeitung: </span>${process.name} {#process_${process?counter}}
+# ${process.name} {#process_${process?counter}}
 <#if process.process_processing_asProcessor!false>
-Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO {.text-center }
+<div class="pullup">
+Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO
+</div>
 </#if>
-## Prüfergebnis zur materiellen Rechtmäßigkeit {.text-center .underline #process_FIXME_${process?counter}}
 
-### Rechtmäßigkeit der Verarbeitung{.underline}
+<div class="section">
 
-#### Feststellungen{.underline}
-${process.process_opinionDPO_findings!} 
-#### Empfehlungen{.underline}
-${process.process_opinionDPO_recommendations!} 
+## Prüfergebnis zur materiellen Rechtmäßigkeit {#process_FIXME_${process?counter}}
+
+### Rechtmäßigkeit der Verarbeitung
+
+Feststellungen
+: ${process.process_opinionDPO_findings!} 
+
+Empfehlungen
+: ${process.process_opinionDPO_recommendations!} 
+</div>
+
 <div class="pagebreak"></div>
 
-## Detailergebnisse {#process_details_${process?counter} .text-center .underline}
+## Detailergebnisse {#process_details_${process?counter}}
 
 <#macro section title id="">
 <div class="section">
@@ -422,7 +433,7 @@ Rechtsgrundlage für Datenübertragung
 
 <@section 'Systeminformationen über Hard- und Software'>
 |:---|
-| **Name** {.text-center .underline}| **Beschreibung** {.text-center .underline}|
+| **Name** | **Beschreibung** |
 <#list relatedAssets as asset>
 | ${(asset.name)!} | ${asset.description!} |
 </#list>
