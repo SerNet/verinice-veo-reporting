@@ -172,7 +172,7 @@ dl.tom dd {
 <#list processesInScope as process>
 
 <#assign controller=process.findFirstLinked('process_controller')! />
-<#assign jointControllership=process.findFirstLinked('process_jointControllership')! />
+<#assign jointControllership=process.getLinked('process_jointControllership')! />
 <#assign transmissions=process.getLinked('process_dataTransmission')! />
 
 
@@ -238,9 +238,11 @@ ${bundle.process_processingDetails_operatingStage}
 : ${(bundle[process.process_processingDetails_operatingStage])!}
 </@section>
 
-<@section 'Angaben zum gemeinsam Verantwortlichen'>
-<@def "Gemeinsam für die Verarbeitung Verantwortliche Art. 26 DS-GVO" jointControllership.name true />
+<#if jointControllership?has_content>
+<@section 'Gemeinsam für die Verarbeitung Verantwortliche Art. 26 DS-GVO'>
+${jointControllership?map(item->item.name)?join(", ")}
 </@section>
+</#if>
 
 <@section 'Zweckbestimmung der Datenverarbeitung'>
 ${process.process_intendedPurpose_intendedPurpose!}
