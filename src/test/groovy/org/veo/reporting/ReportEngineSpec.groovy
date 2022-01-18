@@ -76,10 +76,7 @@ Favorite drink
             height: '''5'8"''',
             favorites: [drink:'Rum']]
         when:
-        def str = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('profile.md', data, 'text/markdown', 'text/html', it )
-            it.toString()
-        }
+        def str = renderHTML('profile.md','text/markdown', data)
         then:
         str == '''<h1><a href="#profile-for-guybrush-threepwood" id="profile-for-guybrush-threepwood"></a>Profile for Guybrush Threepwood</h1>
 <h2><a href="#basic-attributes" id="basic-attributes"></a>Basic attributes</h2>
@@ -116,10 +113,7 @@ Favorite drink
             height: '''5'8"''',
             favorites: [drink:'Rum']]
         when:
-        PDDocument doc = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('profile.md', data, 'text/markdown', 'application/pdf', it )
-            PDDocument.load(it.toByteArray())
-        }
+        PDDocument doc = renderPDF('profile.md','text/markdown', data)
         then:
         doc.documentCatalog.documentOutline != null
         doc.documentCatalog.documentOutline.children().size() == 3
@@ -163,5 +157,19 @@ I'd like to invite you to my birthday party.'''
             'processing-activities',
             'processing-on-behalf'
         ]
+    }
+
+    private PDDocument renderPDF(String templateName, String templateType, Map data) {
+        new ByteArrayOutputStream().withCloseable {
+            reportEngine.generateReport(templateName, data, templateType, 'application/pdf', it )
+            PDDocument.load(it.toByteArray())
+        }
+    }
+
+    private String renderHTML(String templateName, String templateType, Map data) {
+        new ByteArrayOutputStream().withCloseable {
+            reportEngine.generateReport(templateName, data, templateType, 'text/html', it)
+            it.toString()
+        }
     }
 }
