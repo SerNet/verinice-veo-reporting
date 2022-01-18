@@ -250,7 +250,7 @@ ${process.process_intendedPurpose_intendedPurpose!}
 ${(process.process_dataProcessing_legalBasis?map(item->bundle[item])?join(', '))!}
 </@section>
 
-<@def "Sonstige Rechtsgrundlagen" process.process_dataProcessing_otherLegalBasis true />
+<@def "Sonstige Rechtsgrundlagen" process.process_dataProcessing_otherLegalBasis />
 
 <@def "Erläuterungen" process.process_dataProcessing_explanation true />
 
@@ -315,7 +315,7 @@ ${effectiveDataSubjects}
 <@section 'Informationspflichten Art. 13, 14 DS-GVO'>
 ${(process.process_informationsObligations_status?string(bundle.yes, bundle.no))!}
 
-<@def "Erläuterungen" process.process_informationsObligations_explanation true />
+<@def "Erläuterungen" process.process_informationsObligations_explanation />
 
 </@section>
 
@@ -361,11 +361,12 @@ Rechtsgrundlage für Datenübertragung
 
 <@def "Datenübermittlung in Drittland", (thirdCountryProcessing?string(bundle.yes, bundle.no))!"", true />
 
+<#if thirdCountryProcessing!false>
 <@def "Name des Landes" thirdCountryName true />
 
 <@def "Angabe geeigneter Garantien" thirdCountryGuarantees true />
-	
-<@def "Erläuterungen" thirdCountryExplanation true />
+</#if>
+<@def "Erläuterungen" thirdCountryExplanation />
 
 </div>
 </#macro>
@@ -409,7 +410,9 @@ Rechtsgrundlage für Datenübertragung
 <@section 'Zugriffsberechtigte Personengruppen (Berechtigungsgruppen)'>
 <@def "Ein Berechtigungskonzept ist vorhanden", (process.process_accessAuthorization_concept?string(bundle.yes, bundle.no))!"" true />
 
+<#if process.process_accessAuthorization_concept!false>
 <@def "Beschreibung des Berechtigungsverfahrens" process.process_accessAuthorization_description true />
+</#if>
 </@section>
 
 <#assign relatedAssets=(process.getLinked('process_requiredApplications')![]) + (process.getLinked('process_requiredITSystems')![]) />
