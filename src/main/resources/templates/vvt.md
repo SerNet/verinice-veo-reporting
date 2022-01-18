@@ -49,6 +49,16 @@ ${term}
 dt {
   font-weight: 600;
 }
+.tomsectiontitle {
+  page-break-after: avoid;
+}
+dl.tom {
+  margin: 1mm 0mm;
+}
+
+dl.tom dd {
+  margin-left: 2mm;
+}
 </style>
 
 <bookmarks>
@@ -439,8 +449,8 @@ ${bundle.process_opinionDPO_comment}
 <#macro tomsection objective title>
 <#assign tomsinsection = toms?filter(t->t.control_dataProtection_objectives!?seq_contains(objective))!>
 <#if tomsinsection?has_content>
-<tr class="gray">
-  <td colspan="3">${title}</td>
+<tr class="gray tomsectiontitle">
+  <td colspan="2">${title}</td>
 </tr>
 <#list tomsinsection as t>
 <#assign tom_status=t.control_implementation_status />
@@ -452,13 +462,13 @@ ${bundle.process_opinionDPO_comment}
   '') />
 <tr>
   <td class="${className}">${bundle[tom_status]}</td>
-  <td>${t.name}</td>
+  <td><dl class="tom"><dt>${t.name}</dt><dd>${t.control_implementation_explanation!}</dd></dl></td>
 </tr>
 </#list>
 </#if>
 </#macro>
 
-<table class="table">
+<table class="table toms">
   <thead>
     <tr>
       <td>Ums.</td>
