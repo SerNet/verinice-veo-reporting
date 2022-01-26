@@ -379,6 +379,7 @@ Rechtsgrundlage für Datenübertragung
 
 <@def "Angabe geeigneter Garantien" thirdCountryGuarantees true />
 </#if>
+
 <@def "Erläuterungen" thirdCountryExplanation />
 
 </div>
