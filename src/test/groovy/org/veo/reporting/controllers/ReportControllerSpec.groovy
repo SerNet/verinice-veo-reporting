@@ -59,7 +59,8 @@ public class ReportControllerSpec extends Specification {
             'invitation',
             'process-list',
             'processing-activities',
-            'processing-on-behalf'
+            'processing-on-behalf',
+            'risk-analysis'
         ]
     }
 

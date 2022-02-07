@@ -67,6 +67,7 @@ public class Demo {
         var persons = veoClient.fetchData("/persons?size=2147483647", authHeader);
         var controls = veoClient.fetchData("/controls?size=2147483647", authHeader);
         var assets = veoClient.fetchData("/assets?size=2147483647", authHeader);
+        var scenarios = veoClient.fetchData("/scenarios?size=2147483647", authHeader);
         var domains = veoClient.fetchData("/domains", authHeader);
         Map<String, Object> entriesForLanguage = veoClient.fetchTranslations(Locale.GERMANY,
                 authHeader);
@@ -85,11 +86,14 @@ public class Demo {
         System.out.println(writer.writeValueAsString(controls));
         System.out.println("\nAssets:");
         System.out.println(writer.writeValueAsString(assets));
+        System.out.println("\nScenarios:");
+        System.out.println(writer.writeValueAsString(scenarios));
         System.out.println("\nDomains:");
         System.out.println(writer.writeValueAsString(domains));
 
         var templateInput = Map.of("scope", scope, "scopes", scopes, "processes", processes,
-                "persons", persons, "controls", controls, "assets", assets, "domains", domains);
+                "persons", persons, "controls", controls, "assets", assets, "scenarios", scenarios,
+                "domains", domains);
         createReports(reportEngine, templateInput, entriesForLanguage);
         Path template = Paths.get("src/main/resources/templates");
         try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
@@ -122,6 +126,7 @@ public class Demo {
             Map<String, Object> entriesForLanguage) throws IOException {
         ResourceBundle bundleAV;
         ResourceBundle bundleVVT;
+        ResourceBundle bundleDPRA;
         try (InputStream is = Files
                 .newInputStream(Paths.get("src/main/resources/templates/av_de.properties"))) {
             bundleAV = new PropertyResourceBundle(is);
@@ -130,21 +135,33 @@ public class Demo {
                 .newInputStream(Paths.get("src/main/resources/templates/vvt_de.properties"))) {
             bundleVVT = new PropertyResourceBundle(is);
         }
+        try (InputStream is = Files
+                .newInputStream(Paths.get("src/main/resources/templates/dpra_de.properties"))) {
+            bundleDPRA = new PropertyResourceBundle(is);
+        }
 
         HashMap<String, Object> workingCopy = new HashMap<>(templateInput);
         MapResourceBundle mergedBundleAV = MapResourceBundle.createMergedBundle(bundleAV,
                 entriesForLanguage);
         MapResourceBundle mergedBundleVVT = MapResourceBundle.createMergedBundle(bundleVVT,
                 entriesForLanguage);
+        MapResourceBundle mergedBundleDPRA = MapResourceBundle.createMergedBundle(bundleDPRA,
+                entriesForLanguage);
 
-        workingCopy.put("bundle", mergedBundleVVT);
         try {
+            workingCopy.put("bundle", mergedBundleVVT);
+
             createReport(reportEngine, "/tmp/vvt.md", "vvt.md", workingCopy, "text/markdown",
                     "text/markdown");
             createReport(reportEngine, "/tmp/vvt.html", "vvt.md", workingCopy, "text/markdown",
                     "text/html");
             createReport(reportEngine, "/tmp/vvt.pdf", "vvt.md", workingCopy, "text/markdown",
                     "application/pdf");
+            workingCopy.put("bundle", mergedBundleDPRA);
+            createReport(reportEngine, "/tmp/dpra.pdf", "dpra.md", workingCopy, "text/markdown",
+                    "application/pdf");
+            createReport(reportEngine, "/tmp/dpra.html", "dpra.md", workingCopy, "text/markdown",
+                    "text/html");
             workingCopy.put("bundle", mergedBundleAV);
 
             createReport(reportEngine, "/tmp/av.pdf", "av.md", workingCopy, "text/markdown",
