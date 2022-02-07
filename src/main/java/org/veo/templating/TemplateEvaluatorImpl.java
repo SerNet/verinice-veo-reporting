@@ -31,6 +31,8 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.veo.templating.methods.ColorContrast;
+
 import freemarker.cache.ConditionalTemplateConfigurationFactory;
 import freemarker.cache.FileExtensionMatcher;
 import freemarker.cache.MergingTemplateConfigurationFactory;
@@ -68,6 +70,7 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
             logger.info("Caching disabled");
             cfg.setCacheStorage(NullCacheStorage.INSTANCE);
         }
+        cfg.setSharedVariable("colorContrast", ColorContrast.INSTANCE);
 
         TemplateConfiguration tcMD = new TemplateConfiguration();
         tcMD.setOutputFormat(MarkdownOutputFormat.INSTANCE);
