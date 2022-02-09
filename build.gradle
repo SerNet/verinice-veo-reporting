@@ -24,7 +24,7 @@ dependencies {
 
     implementation 'javax.validation:validation-api'
     implementation 'org.freemarker:freemarker:2.3.31'
-    implementation 'com.vladsch.flexmark:flexmark-all:0.62.2'
+    implementation 'com.vladsch.flexmark:flexmark-all:0.64.0'
     implementation 'com.openhtmltopdf:openhtmltopdf-core:1.0.10'
     implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10'
     implementation 'com.openhtmltopdf:openhtmltopdf-slf4j:1.0.10'
