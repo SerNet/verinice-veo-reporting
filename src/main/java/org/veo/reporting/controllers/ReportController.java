@@ -200,7 +200,7 @@ public class ReportController {
           }
         };
     MediaType mediaType = MediaType.valueOf(outputType);
-    if (mediaType.getType().equals("text") && mediaType.getCharset() == null) {
+    if ("text".equals(mediaType.getType()) && mediaType.getCharset() == null) {
       mediaType = new MediaType(mediaType, StandardCharsets.UTF_8);
     }
     return ResponseEntity.ok().contentType(mediaType).body(stream);

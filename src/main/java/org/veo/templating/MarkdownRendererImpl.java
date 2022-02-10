@@ -32,6 +32,7 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 
 public class MarkdownRendererImpl implements MarkdownRenderer {
 
+  @Override
   public void renderToHTML(Reader reader, Writer writer) throws IOException {
     MutableDataSet options = new MutableDataSet();
 

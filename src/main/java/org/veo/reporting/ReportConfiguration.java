@@ -35,6 +35,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class ReportConfiguration {
 
+  private static final String EI_EXPOSE_REP = "EI_EXPOSE_REP";
+
   @JsonCreator
   public ReportConfiguration(
       @JsonProperty(value = "name", required = true) Map<String, String> name,
@@ -72,12 +74,12 @@ public class ReportConfiguration {
 
   private final Map<String, String> data;
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
+  @SuppressFBWarnings(EI_EXPOSE_REP)
   public Map<String, String> getName() {
     return name;
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
+  @SuppressFBWarnings(EI_EXPOSE_REP)
   public Map<String, String> getDescription() {
     return description;
   }
@@ -92,18 +94,18 @@ public class ReportConfiguration {
     return templateType;
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
+  @SuppressFBWarnings(EI_EXPOSE_REP)
   public List<String> getOutputTypes() {
     return outputTypes;
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
+  @SuppressFBWarnings(EI_EXPOSE_REP)
   public Set<TypeSpecification> getTargetTypes() {
     return targetTypes;
   }
 
   @JsonIgnore
-  @SuppressFBWarnings("EI_EXPOSE_REP")
+  @SuppressFBWarnings(EI_EXPOSE_REP)
   public Map<String, String> getData() {
     return data;
   }

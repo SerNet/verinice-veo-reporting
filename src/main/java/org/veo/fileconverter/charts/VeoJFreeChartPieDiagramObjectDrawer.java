@@ -51,12 +51,6 @@ import org.veo.reporting.exception.VeoReportingException;
 
 public class VeoJFreeChartPieDiagramObjectDrawer implements FSObjectDrawer {
 
-  static {
-    var openSansFontResources = FontResourceManager.getAllResourcesOfFontType("Open Sans");
-    openSansRegular = loadFont(openSansFontResources, 400);
-    openSansBold = loadFont(openSansFontResources, 700);
-  }
-
   private static final Pattern PATTERN_RGB =
       Pattern.compile("rgb *\\( *([0-9]+), *([0-9]+), *([0-9]+) *\\)");
 
@@ -65,6 +59,12 @@ public class VeoJFreeChartPieDiagramObjectDrawer implements FSObjectDrawer {
 
   private static final Font openSansRegular;
   private static final Font openSansBold;
+
+  static {
+    var openSansFontResources = FontResourceManager.getAllResourcesOfFontType("Open Sans");
+    openSansRegular = loadFont(openSansFontResources, 400);
+    openSansBold = loadFont(openSansFontResources, 700);
+  }
 
   static Map<Shape, String> buildShapeLinkMap(ChartRenderingInfo renderingInfo, int dotsPerPixel) {
     Map<Shape, String> linkShapes = null;
@@ -132,7 +132,7 @@ public class VeoJFreeChartPieDiagramObjectDrawer implements FSObjectDrawer {
       if (!(item instanceof Element)) continue;
       Element childElement = (Element) item;
       String tagName = ((Element) item).getTagName();
-      if (!tagName.equals("data") && !tagName.equals("td")) continue;
+      if (!"data".equals(tagName) && !"td".equals(tagName)) continue;
       String name = childElement.getAttribute("name");
       double value = Double.parseDouble(childElement.getAttribute("value"));
       String url = childElement.getAttribute("url");

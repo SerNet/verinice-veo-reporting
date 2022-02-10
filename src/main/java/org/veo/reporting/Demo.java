@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -48,6 +49,7 @@ import freemarker.template.TemplateException;
  * only meant to be used by developers and is nowhere near production quality, that's why it must be
  * enabled via the <code>demo</code> Spring Boot profile.
  */
+@SuppressWarnings("PMD.SystemPrintln")
 public class Demo {
 
   private static final Logger logger = LoggerFactory.getLogger(Demo.class);
@@ -180,7 +182,7 @@ public class Demo {
           "processing-activities",
           "/tmp/vvt.pdf",
           dataProvider,
-          "application/pdf",
+          MediaType.APPLICATION_PDF_VALUE,
           parameters,
           entriesForLanguage);
       createReport(
@@ -188,7 +190,7 @@ public class Demo {
           "risk-analysis",
           "/tmp/dpra.pdf",
           dataProvider,
-          "application/pdf",
+          MediaType.APPLICATION_PDF_VALUE,
           parameters,
           entriesForLanguage);
       createReport(
@@ -206,7 +208,7 @@ public class Demo {
             "dp-impact-assessment",
             "/tmp/dpia.pdf",
             dataProvider,
-            "application/pdf",
+            MediaType.APPLICATION_PDF_VALUE,
             parameters,
             entriesForLanguage);
         createReport(
@@ -223,7 +225,7 @@ public class Demo {
           "processing-on-behalf",
           "/tmp/av.pdf",
           dataProvider,
-          "application/pdf",
+          MediaType.APPLICATION_PDF_VALUE,
           parameters,
           entriesForLanguage);
 

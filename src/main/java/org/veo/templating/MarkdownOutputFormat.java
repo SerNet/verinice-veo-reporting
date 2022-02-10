@@ -86,8 +86,8 @@ public class MarkdownOutputFormat extends CommonMarkupOutputFormat<TemplateMarkd
         out.append(";");
       } else {
         char[] chars = Character.toChars(cp);
-        for (int i = 0; i < chars.length; i++) {
-          out.append(chars[i]);
+        for (char element : chars) {
+          out.append(element);
         }
       }
     }
@@ -95,7 +95,7 @@ public class MarkdownOutputFormat extends CommonMarkupOutputFormat<TemplateMarkd
 
   @Override
   public boolean isLegacyBuiltInBypassed(String builtInName) {
-    return builtInName.equals("html") || builtInName.equals("xml") || builtInName.equals("xhtml");
+    return "html".equals(builtInName) || "xml".equals(builtInName) || "xhtml".equals(builtInName);
   }
 
   @Override

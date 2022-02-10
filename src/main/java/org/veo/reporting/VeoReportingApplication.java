@@ -64,9 +64,11 @@ public class VeoReportingApplication {
     XRLog.setLoggerImpl(new Slf4jLogger());
     FontResourceManager.reInit(null);
     System.setProperty("java.util.PropertyResourceBundle.encoding", StandardCharsets.UTF_8.name());
-    ConfigurableApplicationContext ctx = SpringApplication.run(VeoReportingApplication.class, args);
-    if (Stream.of(ctx.getEnvironment().getActiveProfiles()).anyMatch("demo"::equals)) {
-      Demo.runDemo(ctx);
+    try (ConfigurableApplicationContext ctx =
+        SpringApplication.run(VeoReportingApplication.class, args)) {
+      if (Stream.of(ctx.getEnvironment().getActiveProfiles()).anyMatch("demo"::equals)) {
+        Demo.runDemo(ctx);
+      }
     }
   }
 

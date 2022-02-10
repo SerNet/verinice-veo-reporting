@@ -90,6 +90,7 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
             new ConditionalTemplateConfigurationFactory(new FileExtensionMatcher("md"), tcMD)));
   }
 
+  @Override
   public void executeTemplate(String templateName, Map data, OutputStream out)
       throws TemplateException, IOException {
     logger.info("Evaluating template {}", templateName);

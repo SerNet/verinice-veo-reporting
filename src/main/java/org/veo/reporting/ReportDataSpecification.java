@@ -27,6 +27,8 @@ import java.util.Map;
  */
 public class ReportDataSpecification extends HashMap<String, String> {
 
+  private static final long serialVersionUID = 6411696686822163540L;
+
   public ReportDataSpecification(Map<String, String> keysAndUrls) {
     super(keysAndUrls);
   }

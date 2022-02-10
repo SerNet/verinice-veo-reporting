@@ -22,9 +22,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.veo.templating.VeoReportingObjectWrapper;
 import org.veo.templating.methods.SingleNumberArgumentMethod;
 import org.veo.templating.methods.VeoTemplateMethod;
@@ -38,9 +35,6 @@ import freemarker.template.WrappingTemplateModel;
 
 public class VeoReportingRiskDefinitionAdapter extends WrappingTemplateModel
     implements TemplateHashModel, AdapterTemplateModel {
-
-  private static final Logger logger =
-      LoggerFactory.getLogger(VeoReportingRiskDefinitionAdapter.class);
 
   private final Map<?, ?> m;
   private final VeoReportingObjectWrapper ow;

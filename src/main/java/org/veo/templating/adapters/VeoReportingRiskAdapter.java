@@ -21,9 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.veo.templating.VeoReportingObjectWrapper;
 import org.veo.templating.methods.VeoTemplateMethod;
 
@@ -36,8 +33,6 @@ import freemarker.template.WrappingTemplateModel;
 
 public class VeoReportingRiskAdapter extends WrappingTemplateModel
     implements TemplateHashModel, AdapterTemplateModel {
-
-  private static final Logger logger = LoggerFactory.getLogger(VeoReportingRiskAdapter.class);
 
   private final Map<?, ?> m;
   private final VeoReportingObjectWrapper ow;
