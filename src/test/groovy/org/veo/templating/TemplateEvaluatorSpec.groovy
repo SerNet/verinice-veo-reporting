@@ -17,6 +17,8 @@
  */
 package org.veo.templating
 
+import org.veo.reporting.MapResourceBundle
+
 import freemarker.cache.ClassTemplateLoader
 import spock.lang.Specification
 
@@ -280,6 +282,26 @@ Jack's children are named John and Jane.'''
                 Jack: no
                 Sue: yes
                 '''.stripIndent()
+    }
+
+    def "Access implementation status"(){
+        def bundle = new MapResourceBundle(['control_implementation_status_yes':'Ja'])
+        def objectData = [
+            name: 'Control',
+            id: '0815',
+            type: 'control',
+            customAspects: [
+                control_implementation : [
+                    attributes: [
+                        control_implementation_status: 'control_implementation_status_yes'
+                    ]
+                ]
+            ]
+        ]
+        when:
+        def text = execute('implementation-status-test.txt', [input:  objectData, bundle: bundle])
+        then:
+        text == 'Implementation status: Ja\nColor code: #12AE0F'
     }
 
     def "HTML is escaped in Markdown templates"(){

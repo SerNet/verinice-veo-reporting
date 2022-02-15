@@ -1,0 +1,3 @@
+<#assign status = input.getImplementationStatus() />
+Implementation status: ${status.label}
+Color code: ${status.color}

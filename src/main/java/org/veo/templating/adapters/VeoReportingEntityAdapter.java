@@ -76,6 +76,11 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
                 return new GetParts(m, ow);
             }
         }
+        if ("control".equals(type)) {
+            if ("getImplementationStatus".equals(key)) {
+                return new GetImplementationStatus(m, ow);
+            }
+        }
         switch (key) {
         case "getLinks":
             return new GetLinks(m, ow);
@@ -232,6 +237,39 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
             return null;
         }
 
+    }
+
+    private static final class GetImplementationStatus extends NoArgumentsMethod {
+
+        private static final Map<String, String> statusColors = Map.of(
+                "control_implementation_status_yes", "#12AE0F", "control_implementation_status_no",
+                "#AE0D11", "control_implementation_status_partially", "#EDE92F",
+                "control_implementation_status_notApplicable", "#49A2ED");
+
+        public GetImplementationStatus(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+            super(m, ow);
+        }
+
+        @Override
+        public Object doExec() throws TemplateModelException {
+            // TODO: read implementation status from risk values
+            Map customAspects = (Map) getProperty("customAspects");
+            Map controlImplementation = (Map) customAspects.get("control_implementation");
+            if (controlImplementation == null) {
+                return null;
+            }
+            Map controlImplementationAttributes = (Map) controlImplementation.get("attributes");
+            String implementationStatus = (String) controlImplementationAttributes
+                    .get("control_implementation_status");
+            if (implementationStatus == null) {
+                return null;
+            }
+            String name = getLabel(implementationStatus);
+            // TODO: read colors from risk configuration
+            String color = statusColors.get(implementationStatus);
+            return Map.of("id", implementationStatus, "label", name, "color", color);
+
+        }
     }
 
 }
