@@ -48,6 +48,10 @@ abstract class VeoTemplateMethod implements TemplateMethodModelEx {
         return ow.resolve(path);
     }
 
+    protected String getLabel(String key) {
+        return ow.getLabel(key);
+    }
+
     protected Object resolveRef(Object objectReference) throws TemplateModelException {
         logger.debug("resolve object reference {}", objectReference);
 

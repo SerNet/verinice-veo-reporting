@@ -19,6 +19,7 @@ package org.veo.templating;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.veo.templating.adapters.VeoReportingEntityAdapter;
 import org.veo.templating.adapters.VeoReportingLinkAdapter;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -37,9 +39,13 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
 
     private final Map<String, Object> entitiesByUri;
 
+    private final ResourceBundle bundle;
+
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public VeoReportingObjectWrapper(Version incompatibleImprovements,
-            Map<String, Object> entitiesByUri) {
+            Map<String, Object> entitiesByUri, ResourceBundle bundle) {
         super(incompatibleImprovements);
+        this.bundle = bundle;
         this.entitiesByUri = Map.copyOf(entitiesByUri);
     }
 
@@ -62,6 +68,10 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
         Objects.requireNonNull(uri);
         logger.debug("resolve uri {}", uri);
         return entitiesByUri.get(uri);
+    }
+
+    public String getLabel(String key) {
+        return bundle.getString(key);
     }
 
 }

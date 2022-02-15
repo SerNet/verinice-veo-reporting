@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,7 +95,8 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
             addRecursively(entitiesByUri, data);
 
             VeoReportingObjectWrapper objectWrapper = new VeoReportingObjectWrapper(
-                    cfg.getIncompatibleImprovements(), entitiesByUri);
+                    cfg.getIncompatibleImprovements(), entitiesByUri,
+                    (ResourceBundle) data.get("bundle"));
             Environment env = template.createProcessingEnvironment(data, writer, objectWrapper);
             logger.info("Building entity lookup map");
 
