@@ -72,7 +72,19 @@ public class VeoClientImpl implements VeoClient {
                     Map m = objectMapper.treeToValue(tree, Map.class);
                     // add support for paged results
                     if (m.containsKey("items")) {
-                        return m.get("items");
+                        List list = (List) m.get("items");
+                        // TODO VEO-1215: remove workaround for fetching risks
+                        if (uri.toString().contains("processes?size")) {
+                            for (Object item : list) {
+                                Map itemAsMap = (Map) item;
+                                String url = (String) itemAsMap.get("_self");
+                                String riskUrl = url + "/risks";
+                                Object risks = fetchData(URI.create(riskUrl), authorizationHeader);
+                                itemAsMap.put("risks", risks);
+                            }
+                        }
+
+                        return list;
                     }
                     return m;
                 }
