@@ -461,15 +461,17 @@ ${bundle.process_opinionDPO_comment}
   <td colspan="2">${title}</td>
 </tr>
 <#list tomsinsection as t>
-<#assign tom_status=t.control_implementation_status! />
-<#assign className=tom_status?switch(
-  'control_implementation_status_yes', 'green',
-  'control_implementation_status_no', 'red',
-  'control_implementation_status_partially', 'yellow',
-  'control_implementation_status_notApplicable', 'light-gray',
-  '') />
+<#assign statusTdStyle="">
+<#assign tom_status=t.getImplementationStatus()! />
+<#assign tom_status_output="">
+<#if tom_status?has_content>
+<#assign backgroundColor=tom_status.color />
+<#assign color=colorContrast(backgroundColor, '#e3e3e3', '#7c7c7b', '#929292')>
+<#assign statusTdStyle="background-color:${backgroundColor};color:${color}">
+<#assign tom_status_output=tom_status.label>
+</#if>
 <tr>
-  <td class="${className}"><#if tom_status?has_content>${bundle[tom_status]}</#if></td>
+  <td style="${statusTdStyle}">${tom_status_output}</td>
   <td><dl class="tom"><dt>${t.name}</dt><dd>${t.control_implementation_explanation!}</dd></dl></td>
 </tr>
 </#list>
