@@ -463,15 +463,15 @@ ${bundle.process_opinionDPO_comment}
   <td colspan="2">${title}</td>
 </tr>
 <#list tomsinsection as t>
-<#assign tom_status=t.control_implementation_status />
-<#assign className=t.control_implementation_status?switch(
+<#assign tom_status=t.control_implementation_status! />
+<#assign className=tom_status?switch(
   'control_implementation_status_yes', 'green',
   'control_implementation_status_no', 'red',
   'control_implementation_status_partially', 'yellow',
   'control_implementation_status_notApplicable', 'light-gray',
   '') />
 <tr>
-  <td class="${className}">${bundle[tom_status]}</td>
+  <td class="${className}"><#if tom_status?has_content>${bundle[tom_status]}</#if></td>
   <td><dl class="tom"><dt>${t.name}</dt><dd>${t.control_implementation_explanation!}</dd></dl></td>
 </tr>
 </#list>
