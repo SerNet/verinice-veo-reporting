@@ -154,8 +154,8 @@ public class Demo {
     }
 
     private static void createReport(ReportEngine reportEngine, String fileName,
-            String templateName, Object templateInput, String templateType, String outputType)
-            throws IOException, TemplateException {
+            String templateName, Map<String, Object> templateInput, String templateType,
+            String outputType) throws IOException, TemplateException {
         try (var os = Files.newOutputStream(Paths.get(fileName))) {
             reportEngine.generateReport(templateName, templateInput, templateType, outputType, os);
             logger.info("Report {} created at {}", templateName, fileName);

@@ -83,7 +83,7 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
 
     }
 
-    public void executeTemplate(String templateName, Object data, OutputStream out)
+    public void executeTemplate(String templateName, Map data, OutputStream out)
             throws TemplateException, IOException {
         Template template = cfg.getTemplate(templateName);
         logger.info("Evaluating template {}", templateName);

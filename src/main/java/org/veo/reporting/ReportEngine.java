@@ -79,8 +79,8 @@ public interface ReportEngine {
      * @param output
      *            the target output stream
      */
-    void generateReport(String templateName, Object data, String templateType, String outputType,
-            OutputStream output) throws IOException, TemplateException;
+    void generateReport(String templateName, Map<String, Object> data, String templateType,
+            String outputType, OutputStream output) throws IOException, TemplateException;
 
     Map<String, ReportConfiguration> getReports();
 

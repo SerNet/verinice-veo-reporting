@@ -96,7 +96,7 @@ public class ReportEngineImpl implements ReportEngine {
     }
 
     @Override
-    public void generateReport(String templateName, Object data, String templateType,
+    public void generateReport(String templateName, Map<String, Object> data, String templateType,
             String outputType, OutputStream output) throws IOException, TemplateException {
         if (outputType.equals(templateType)) {
             templateEvaluator.executeTemplate(templateName, data, output);
