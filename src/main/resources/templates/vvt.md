@@ -54,9 +54,6 @@ h3, h4 {
 dt {
   font-weight: 600;
 }
-.tomsectiontitle {
-  page-break-after: avoid;
-}
 dl.tom {
   margin: 1mm 0mm;
 }
@@ -459,6 +456,7 @@ ${bundle.process_opinionDPO_comment}
 <#macro tomsection objective title>
 <#assign tomsinsection = toms?filter(t->t.control_dataProtection_objectives!?seq_contains(objective))!>
 <#if tomsinsection?has_content>
+<tbody>
 <tr class="gray tomsectiontitle">
   <td colspan="2">${title}</td>
 </tr>
@@ -475,6 +473,7 @@ ${bundle.process_opinionDPO_comment}
   <td><dl class="tom"><dt>${t.name}</dt><dd>${t.control_implementation_explanation!}</dd></dl></td>
 </tr>
 </#list>
+</tbody>
 </#if>
 </#macro>
 
@@ -485,16 +484,14 @@ ${bundle.process_opinionDPO_comment}
       <td>Maßnahme</td>
     </tr>
   </thead>
-  <tbody>
-    <@tomsection 'control_dataProtection_objectives_pseudonymization', 'Pseudonymisierung'/>
-    <@tomsection 'control_dataProtection_objectives_confidentiality', 'Gewährleistung der Vertraulichkeit'/>
-    <@tomsection 'control_dataProtection_objectives_integrity', 'Gewährleistung der Integrität'/>
-    <@tomsection 'control_dataProtection_objectives_availability', 'Gewährleistung der Verfügbarkeit'/>
-    <@tomsection 'control_dataProtection_objectives_resilience', 'Gewährleistung der Belastbarkeit'/>
-    <@tomsection 'control_dataProtection_objectives_recoverability', 'Wiederherstellbarkeit'/>
-    <@tomsection 'control_dataProtection_objectives_effectiveness', 'Wirksamkeit der TOMs'/>
-    <@tomsection 'control_dataProtection_objectives_encryption', 'Verschlüsselung'/>
-  </tbody>
+  <@tomsection 'control_dataProtection_objectives_pseudonymization', 'Pseudonymisierung'/>
+  <@tomsection 'control_dataProtection_objectives_confidentiality', 'Gewährleistung der Vertraulichkeit'/>
+  <@tomsection 'control_dataProtection_objectives_integrity', 'Gewährleistung der Integrität'/>
+  <@tomsection 'control_dataProtection_objectives_availability', 'Gewährleistung der Verfügbarkeit'/>
+  <@tomsection 'control_dataProtection_objectives_resilience', 'Gewährleistung der Belastbarkeit'/>
+  <@tomsection 'control_dataProtection_objectives_recoverability', 'Wiederherstellbarkeit'/>
+  <@tomsection 'control_dataProtection_objectives_effectiveness', 'Wirksamkeit der TOMs'/>
+  <@tomsection 'control_dataProtection_objectives_encryption', 'Verschlüsselung'/>
 </table> 
 </@section>
 </#if>
