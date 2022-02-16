@@ -18,14 +18,14 @@ ${term}
 
 <#--  OLD VERSION, recursive membership
 <#function is_member_recursive scope entity>
-  <#local filteredMembers = scope.getMembers()?filter(m -> m.type == 'scope' || m.type == 'process')>
+  <#local filteredMembers = scope.members?filter(m -> m.type == 'scope' || m.type == 'process')>
   <#return filteredMembers?map(member->member.id)?seq_contains(entity.id) || (filteredMembers?filter(member->member.type=='scope' && is_member_recursive(member, entity))?size > 0)>
 </#function>
 
 <#assign processesInScope = processes?filter(p ->p.subType?values?seq_contains('PRO_DataProcessing'))?filter(p -> is_member_recursive(scope, p))>
 -->
 
-<#assign processesInScope = scope.getMembers()?filter(m -> m.type == 'process')?filter(p ->p.hasSubType('PRO_DataProcessing'))>
+<#assign processesInScope = scope.members?filter(m -> m.type == 'process')?filter(p ->p.hasSubType('PRO_DataProcessing'))>
 
 <style>
 <#include "styles/default.css">
@@ -269,7 +269,7 @@ ${(process.process_dataProcessing_legalBasis?map(item->bundle[item])?join(', '))
 <#if processDataTypeLinks?has_content>
 <@section 'Datenkategorien'>
 <#list processDataTypeLinks as dataTypeLink>
-<#assign dataType=dataTypeLink.getTarget() />
+<#assign dataType=dataTypeLink.target />
 <#assign dataOrigin=dataTypeLink.process_dataType_dataOrigin! />
 
 #### ${dataType.name}
@@ -388,7 +388,7 @@ Rechtsgrundlage für Datenübertragung
 <#assign internalRecipientLinks=transmission.getLinks('process_internalRecipient')! />
 #### Interne Empfänger
 <#list internalRecipientLinks as link>
-<@recipient_section "Interne Stelle" link.getTarget(), link.process_internalRecipient_thirdCountryProcessing link.process_internalRecipient_thirdCountryName link.process_internalRecipient_thirdCountryGuarantees link.process_internalRecipient_thirdCountryExplanation/>
+<@recipient_section "Interne Stelle" link.target, link.process_internalRecipient_thirdCountryProcessing link.process_internalRecipient_thirdCountryName link.process_internalRecipient_thirdCountryGuarantees link.process_internalRecipient_thirdCountryExplanation/>
 </#list>
 <#break>
 
@@ -396,7 +396,7 @@ Rechtsgrundlage für Datenübertragung
 <#assign externalRecipientLinks=transmission.getLinks('process_externalRecipient')! />
 #### Externe Empfänger
 <#list externalRecipientLinks as link>
-<@recipient_section "Externe Stelle" link.getTarget(), link.process_externalRecipient_thirdCountryProcessing link.process_externalRecipient_thirdCountryName link.process_externalRecipient_thirdCountryGuarantees link.process_externalRecipient_thirdCountryExplanation/>
+<@recipient_section "Externe Stelle" link.target, link.process_externalRecipient_thirdCountryProcessing link.process_externalRecipient_thirdCountryName link.process_externalRecipient_thirdCountryGuarantees link.process_externalRecipient_thirdCountryExplanation/>
 </#list>
 <#break>
 
@@ -404,7 +404,7 @@ Rechtsgrundlage für Datenübertragung
 <#assign processorsLinks=transmission.getLinks('process_processor')! />
 #### Auftragnehmer / Dienstleister
 <#list processorsLinks as link>
-<@recipient_section "Auftragnehmer" link.getTarget(), link.process_processor_thirdCountryProcessing link.process_processor_thirdCountryName link.process_processor_thirdCountryGuarantees link.process_processor_thirdCountryExplanation/>
+<@recipient_section "Auftragnehmer" link.target, link.process_processor_thirdCountryProcessing link.process_processor_thirdCountryName link.process_processor_thirdCountryGuarantees link.process_processor_thirdCountryExplanation/>
 </#list>
 <#break>
 

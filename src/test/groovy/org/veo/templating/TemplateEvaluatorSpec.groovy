@@ -193,7 +193,7 @@ Jack's children are named John and Jane.'''
         text == 'Elements in the scope: Jack.'
     }
 
-    def "Access a composize person entity's parts"(){
+    def "Access a composite person entity's parts"(){
         given:
         def persons = [
             [

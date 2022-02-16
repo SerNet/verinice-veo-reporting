@@ -59,12 +59,15 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
             } else if (m.containsKey("target") && m.containsKey("attributes")) {
                 // this is probably a custom link
                 return new VeoReportingLinkAdapter((Map<?, ?>) obj, this);
+            } else if (m.containsKey("targetUri")) {
+                // this is probably ref
+                return wrap(resolve((String) m.get("targetUri")));
             }
         }
         return super.wrap(obj);
     }
 
-    public Object resolve(String uri) throws TemplateModelException {
+    private Object resolve(String uri) throws TemplateModelException {
         Objects.requireNonNull(uri);
         logger.debug("resolve uri {}", uri);
         return entitiesByUri.get(uri);

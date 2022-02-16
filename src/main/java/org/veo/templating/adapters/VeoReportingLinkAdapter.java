@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.veo.templating.VeoReportingObjectWrapper;
-import org.veo.templating.methods.NoArgumentsMethod;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import freemarker.template.AdapterTemplateModel;
@@ -34,13 +33,11 @@ public class VeoReportingLinkAdapter extends WrappingTemplateModel
         implements TemplateHashModel, AdapterTemplateModel {
 
     private final Map<?, ?> m;
-    private final VeoReportingObjectWrapper ow;
 
     @SuppressFBWarnings("EI_EXPOSE_REP2")
     public VeoReportingLinkAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
         super(ow);
         this.m = Map.copyOf(m);
-        this.ow = ow;
     }
 
     @Override
@@ -54,9 +51,6 @@ public class VeoReportingLinkAdapter extends WrappingTemplateModel
         Object val = m.get(key);
         if (val != null) {
             return wrap(val);
-        }
-        if ("getTarget".equals(key)) {
-            return new GetTarget(m, ow);
         }
 
         @SuppressWarnings("unchecked")
@@ -76,17 +70,4 @@ public class VeoReportingLinkAdapter extends WrappingTemplateModel
         return false;
     }
 
-    private static final class GetTarget extends NoArgumentsMethod {
-
-        public GetTarget(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-            super(m, ow);
-        }
-
-        @Override
-        public Object doExec() throws TemplateModelException {
-            Map target = (Map) getProperty("target");
-            logger.debug("target = {}", target);
-            return resolveRef(target);
-        }
-    }
 }

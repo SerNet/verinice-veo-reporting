@@ -17,11 +17,11 @@
  */
 package org.veo.templating.adapters;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,16 +66,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
         }
 
         Object type = m.get("type");
-        // for now, scopes have members, everything else has parts
-        if ("scope".equals(type)) {
-            if ("getMembers".equals(key)) {
-                return new GetMembers(m, ow);
-            }
-        } else {
-            if ("getParts".equals(key)) {
-                return new GetParts(m, ow);
-            }
-        }
+
         if ("control".equals(type)) {
             if ("getImplementationStatus".equals(key)) {
                 return new GetImplementationStatus(m, ow);
@@ -147,59 +138,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
         }
     }
 
-    private static final class GetMembers extends NoArgumentsMethod {
-
-        public GetMembers(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-            super(m, ow);
-        }
-
-        @Override
-        public Object doExec() throws TemplateModelException {
-            List<?> members = (List<?>) getProperty("members");
-            logger.debug("members: {}", members);
-            return resolveRefs(members);
-        }
-    }
-
-    private static final class GetParts extends NoArgumentsMethod {
-
-        public GetParts(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-            super(m, ow);
-        }
-
-        @Override
-        public Object doExec() throws TemplateModelException {
-            List<?> parts = (List<?>) getProperty("parts");
-            logger.debug("parts: {}", parts);
-            return resolveRefs(parts);
-        }
-    }
-
-    private abstract static class LinkResolvingMethod extends SingleStringArgumentMethod {
-
-        public LinkResolvingMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-            super(m, ow);
-        }
-
-        protected Object resolveLink(Object link) throws TemplateModelException {
-            logger.debug("Found link {}", link);
-            Map target = (Map) ((Map) link).get("target");
-            logger.debug("target = {}", target);
-            resolveRef(target);
-            return resolveRef(target);
-        }
-
-        protected Object resolveLinks(List<?> linksOfType) throws TemplateModelException {
-            List result = new ArrayList<>(linksOfType.size());
-            for (Object link : linksOfType) {
-                Map target = (Map) ((Map) link).get("target");
-                result.add(resolveRef(target));
-            }
-            return result;
-        }
-    }
-
-    private static final class FindFirstLinked extends LinkResolvingMethod {
+    private static final class FindFirstLinked extends SingleStringArgumentMethod {
 
         public FindFirstLinked(Map<?, ?> m, VeoReportingObjectWrapper ow) {
             super(m, ow);
@@ -212,15 +151,15 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
             if (linksOfType instanceof List) {
                 List l = (List) linksOfType;
                 if (!l.isEmpty()) {
-                    Object link = l.get(0);
-                    return resolveLink(link);
+                    Map firstLink = (Map) l.get(0);
+                    return firstLink.get("target");
                 }
             }
             return null;
         }
     }
 
-    private static final class GetLinked extends LinkResolvingMethod {
+    private static final class GetLinked extends SingleStringArgumentMethod {
 
         public GetLinked(Map<?, ?> m, VeoReportingObjectWrapper ow) {
             super(m, ow);
@@ -231,7 +170,8 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
             Map<String, ?> links = (Map<String, ?>) getProperty("links");
             Object linksOfType = links.get(arg);
             if (linksOfType instanceof List) {
-                return resolveLinks((List) linksOfType);
+                return ((List) linksOfType).stream().map(m -> ((Map) m).get("target"))
+                        .collect(Collectors.toList());
 
             }
             return null;

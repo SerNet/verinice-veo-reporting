@@ -1,2 +1,2 @@
 <#assign family=persons?first>
-Our family members are named ${family.getParts()?map(member->member.name)?join(' and ')}.
+Our family members are named ${family.parts?map(member->member.name)?join(' and ')}.

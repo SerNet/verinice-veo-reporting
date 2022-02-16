@@ -1,4 +1,4 @@
-<#assign processings = scope.getMembers()?filter(m -> m.type == 'process')?filter(p ->p.hasSubType('PRO_DataProcessing'))?filter(p-> p.process_processing_asProcessor!false)>
+<#assign processings = scope.members?filter(m -> m.type == 'process')?filter(p ->p.hasSubType('PRO_DataProcessing'))?filter(p-> p.process_processing_asProcessor!false)>
 
 <#assign management=scope.findFirstLinked('scope_management')!>
 <#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')!>
@@ -145,7 +145,7 @@ ${term}
 <#list recipientLinksThirdCountry as recipientLinkThirdCountry>
 <div class="recipientinfo">
 
-<@def bundle.name recipientLinkThirdCountry.getTarget().name />
+<@def bundle.name recipientLinkThirdCountry.target.name />
 
 <@def bundle[thirdCountryNameAttribute] recipientLinkThirdCountry[thirdCountryNameAttribute] />
 

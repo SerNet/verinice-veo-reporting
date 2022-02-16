@@ -17,7 +17,6 @@
  */
 package org.veo.templating.methods;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,40 +43,8 @@ abstract class VeoTemplateMethod implements TemplateMethodModelEx {
         return m.get(name);
     }
 
-    protected Object resolve(String path) throws TemplateModelException {
-        return ow.resolve(path);
-    }
-
     protected String getLabel(String key) {
         return ow.getLabel(key);
-    }
-
-    protected Object resolveRef(Object objectReference) throws TemplateModelException {
-        logger.debug("resolve object reference {}", objectReference);
-
-        String targetUri = (String) ((Map) objectReference).get("targetUri");
-        logger.debug("targetUri = {}", targetUri);
-        if (targetUri == null) {
-            throw new TemplateModelException(
-                    "No targetUri property found in object reference " + objectReference);
-        }
-        Object targetEntity = resolve(targetUri);
-        logger.debug("targetEntity = {}", targetEntity);
-        if (targetEntity == null) {
-            throw new TemplateModelException(
-                    "Failed to resolve entity with targetUri " + targetUri);
-        }
-        return targetEntity;
-    }
-
-    protected Object resolveRefs(List objectReferences) throws TemplateModelException {
-        logger.debug("resolve object references {}", objectReferences);
-
-        List result = new ArrayList<>(objectReferences.size());
-        for (Object ref : objectReferences) {
-            result.add(resolveRef(ref));
-        }
-        return result;
     }
 
     @Override

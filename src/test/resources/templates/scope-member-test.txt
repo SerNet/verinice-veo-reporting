@@ -1,1 +1,1 @@
-Elements in the scope: ${scopes?first.getMembers()?map(member->member.name)?join(', ')}.
+Elements in the scope: ${scopes?first.members?map(member->member.name)?join(', ')}.

@@ -2,5 +2,5 @@
 <#assign jack=persons[1]>
 John's father is named ${john.findFirstLinked('father').name}.
 <#assign johnsMother=john.getLinks('mother')?first>
-${johnsMother.getTarget().name} is ${johnsMother.biological?then("","not ")}Jack's biological mother.
+${johnsMother.target.name} is ${johnsMother.biological?then("","not ")}Jack's biological mother.
 Jack's children are named ${jack.getLinked('child')?map(c->c.name)?join(" and ")}.
