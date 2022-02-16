@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import org.veo.templating.adapters.VeoReportingEntityAdapter;
 import org.veo.templating.adapters.VeoReportingLinkAdapter;
+import org.veo.templating.adapters.VeoReportingRiskAdapter;
+import org.veo.templating.adapters.VeoReportingRiskDefinitionAdapter;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import freemarker.template.DefaultObjectWrapper;
@@ -59,6 +61,13 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
             } else if (m.containsKey("target") && m.containsKey("attributes")) {
                 // this is probably a custom link
                 return new VeoReportingLinkAdapter((Map<?, ?>) obj, this);
+            } else if (m.containsKey("scenario") && m.containsKey("domains")) {
+                // this is probably a risk
+                return new VeoReportingRiskAdapter((Map<?, ?>) obj, this);
+            } else if (m.containsKey("probability")
+                    && m.containsKey("implementationStateDefinition")) {
+                // this is probably a risk definition
+                return new VeoReportingRiskDefinitionAdapter((Map<?, ?>) obj, this);
             } else if (m.containsKey("targetUri")) {
                 // this is probably ref
                 return wrap(resolve((String) m.get("targetUri")));

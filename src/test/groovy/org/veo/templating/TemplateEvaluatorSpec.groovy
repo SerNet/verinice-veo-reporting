@@ -20,6 +20,7 @@ package org.veo.templating
 import org.veo.reporting.MapResourceBundle
 
 import freemarker.cache.ClassTemplateLoader
+import groovy.json.JsonSlurper
 import spock.lang.Specification
 
 public class TemplateEvaluatorSpec extends Specification {
@@ -318,6 +319,7 @@ Jack's children are named John and Jane.'''
                 '''.stripIndent()
     }
 
+    //TODO VEO-1197: rewrite this to use the aspects
     def "Access implementation status"(){
         def bundle = new MapResourceBundle(['control_implementation_status_yes':'Ja'])
         def objectData = [
@@ -336,6 +338,98 @@ Jack's children are named John and Jane.'''
         def text = execute('implementation-status-test.txt', [input:  objectData, bundle: bundle])
         then:
         text == 'Implementation status: Ja\nColor code: #12AE0F'
+    }
+
+
+
+    def "Access risk values"(){
+        def domainId = 'd4132a67-03c8-4f82-9585-6b240585c34e'
+        def scenarioId = '9da57c19-8a53-4df5-aeed-86b0bfaf9399'
+        def personId = 'bb60c3da-663b-42f9-baae-59abef95879c'
+        def controlId = '00b63349-fa7e-4aad-a20a-18d12c854311'
+        def bundle = new MapResourceBundle(['control_implementation_status_yes':'Ja'])
+        def objectData = [
+            name: 'Process',
+            id: '123',
+            type: 'process',
+            risks: [
+                [
+                    "domains" : [
+                        (domainId): [
+                            "reference": [
+                                "targetUri": "http://localhost/domains/$domainId"
+                            ],
+                            "riskDefinitions": [
+                                "DSRA": [
+                                    "probability": [
+                                        "effectiveProbability" : 3
+                                    ],
+                                    "impactValues": [
+                                        [
+                                            "category": "A",
+                                            "specificImpact": 1
+                                        ]
+                                    ],
+                                    "riskValues": [
+                                        [
+                                            "category": "A",
+                                            "residualRiskExplanation": "PROBLEM",
+                                            "riskTreatments": ["RISK_TREATMENT_REDUCTION"]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    "scenario": [
+                        "targetUri": "http://localhost/scenarios/$scenarioId".toString()
+                    ],
+                    "riskOwner": [
+                        "targetUri": "http://localhost/persons/$personId".toString()
+                    ],
+                    "mitigation": [
+                        "targetUri": "http://localhost/controls/$controlId".toString()
+                    ]
+                ]
+            ]
+        ]
+        def scenario = [
+            name: 'Fire',
+            id: scenarioId,
+            type: 'scenario',
+            '_self': "http://localhost/scenarios/$scenarioId".toString()
+        ]
+        def person = [
+            name: 'John Doe',
+            id: personId,
+            type: 'person',
+            '_self': "http://localhost/persons/$personId".toString()
+        ]
+        def control = [
+            name: 'Fixitall',
+            id: controlId,
+            type: 'control',
+            '_self': "http://localhost/controls/$controlId".toString()
+        ]
+        def domain = [
+            id: domainId,
+            riskDefinitions : [
+                'DSRA': TemplateEvaluatorSpec.getResourceAsStream('/DSRA.json').withCloseable {
+                    new JsonSlurper().parse(it)
+                }
+            ]
+        ]
+        when:
+        def text = execute('risk-test.txt', [input:  objectData, scenario: scenario,person: person,control: control, bundle: bundle, domain: domain])
+        then:
+        text == '''\
+                Scenario: Fire
+                Owner: John Doe
+                Mitigation: Fixitall
+                Effective Probability: sehr häufig
+                Specific Impact (A): begrenzt
+                Control implementation status: nein
+                '''.stripIndent()
     }
 
     def "HTML is escaped in Markdown templates"(){

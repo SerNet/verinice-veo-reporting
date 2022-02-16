@@ -24,9 +24,9 @@ import org.veo.templating.VeoReportingObjectWrapper;
 
 import freemarker.template.TemplateModelException;
 
-public abstract class SingleStringArgumentMethod extends VeoTemplateMethod {
+public abstract class SingleNumberArgumentMethod extends VeoTemplateMethod {
 
-    protected SingleStringArgumentMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+    protected SingleNumberArgumentMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
         super(m, ow);
     }
 
@@ -35,9 +35,9 @@ public abstract class SingleStringArgumentMethod extends VeoTemplateMethod {
         if (arguments.size() != 1) {
             throw new TemplateModelException("Expecting exactly 1 argument");
         }
-        return doExec(asString(arguments.get(0)));
+        return doExec(asNumber(arguments.get(0)));
     }
 
-    protected abstract Object doExec(String arg) throws TemplateModelException;
+    protected abstract Object doExec(Number arg) throws TemplateModelException;
 
 }

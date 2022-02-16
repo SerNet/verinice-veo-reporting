@@ -25,10 +25,12 @@ import org.slf4j.LoggerFactory;
 
 import org.veo.templating.VeoReportingObjectWrapper;
 
+import freemarker.template.SimpleNumber;
+import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 
-abstract class VeoTemplateMethod implements TemplateMethodModelEx {
+public abstract class VeoTemplateMethod implements TemplateMethodModelEx {
     private final Map<?, ?> m;
     private final VeoReportingObjectWrapper ow;
 
@@ -55,4 +57,19 @@ abstract class VeoTemplateMethod implements TemplateMethodModelEx {
 
     protected abstract Object doExec(List arguments) throws TemplateModelException;
 
+    protected String asString(Object arg) throws TemplateModelException {
+        if (!(arg instanceof SimpleScalar)) {
+            throw new TemplateModelException(
+                    "Expecting a String argument but got " + arg.getClass());
+        }
+        return ((SimpleScalar) arg).getAsString();
+    }
+
+    protected Number asNumber(Object arg) throws TemplateModelException {
+        if (!(arg instanceof SimpleNumber)) {
+            throw new TemplateModelException(
+                    "Expecting a Number argument but got " + arg.getClass());
+        }
+        return ((SimpleNumber) arg).getAsNumber();
+    }
 }

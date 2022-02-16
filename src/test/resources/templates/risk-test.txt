@@ -1,0 +1,15 @@
+<#assign risks = input.risks />
+<#list risks as risk>
+Scenario: ${risk.scenario.name}
+Owner: ${risk.riskOwner.name}
+Mitigation: ${risk.mitigation.name}
+<#assign riskDefinitionId = 'DSRA' />
+<#assign riskDefinition = domain.riskDefinitions[riskDefinitionId] />
+<#assign riskData = risk.getRiskValues(domain.id, riskDefinitionId) />
+Effective Probability: ${riskDefinition.getProbability(riskData.effectiveProbability).label}
+<#assign impactValuesAvailability = riskData['A'] />
+Specific Impact (A): ${riskDefinition.getImpact('A', impactValuesAvailability.specificImpact).label}
+<#-- TODO VEO-1197: read implementation status from risk values -->
+<#assign mitigationStatus = 1?int />
+Control implementation status: ${riskDefinition.getImplementationStatus(mitigationStatus).label}
+</#list>

@@ -183,6 +183,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
 
     }
 
+    // TODO VEO-1197: rewrite this to use the aspects
     private static final class GetImplementationStatus extends NoArgumentsMethod {
 
         private static final Map<String, String> statusColors = Map.of(
@@ -196,7 +197,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
 
         @Override
         public Object doExec() throws TemplateModelException {
-            // TODO: read implementation status from risk values
+            // TODO VEO-1197: read implementation status from risk values
             Map customAspects = (Map) getProperty("customAspects");
             Map controlImplementation = (Map) customAspects.get("control_implementation");
             if (controlImplementation == null) {
@@ -209,7 +210,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
                 return null;
             }
             String name = getLabel(implementationStatus);
-            // TODO: read colors from risk configuration
+            // TODO VEO-1197: read colors from risk configuration
             String color = statusColors.get(implementationStatus);
             return Map.of("id", implementationStatus, "label", name, "color", color);
 
