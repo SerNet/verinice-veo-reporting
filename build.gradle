@@ -36,7 +36,7 @@ dependencies {
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'com.helger.font:ph-fonts-open-sans:4.2.0'
 
-    testImplementation 'org.spockframework:spock-spring:2.0-groovy-3.0'
+    testImplementation 'org.spockframework:spock-spring:2.1-groovy-3.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.codehaus.groovy:groovy-json'
     testImplementation 'org.codehaus.groovy:groovy-xml'
