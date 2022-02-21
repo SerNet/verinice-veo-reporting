@@ -193,6 +193,40 @@ Jack's children are named John and Jane.'''
         text == 'Elements in the scope: Jack.'
     }
 
+    def "Access a scope's members with specific type if other members are missing"(){
+        def data = [
+            scopes:[
+                [
+                    name: 'S1',
+                    id: '1',
+                    _self: 'http://example.org/scopes/1',
+                    type: 'scope',
+                    members: [
+                        [
+                            targetUri : 'http://example.org/persons/1'
+                        ],
+                        [
+                            targetUri : 'http://example.org/assets/1'
+                        ]
+                    ]
+                ]
+            ],
+            persons: [
+                [
+                    name: 'Jack',
+                    id: '1',
+                    _self: 'http://example.org/persons/1',
+                    type: 'person'
+
+                ]
+            ]
+        ]
+        when:
+        def text = execute('scope-member-type-filter-test.txt', data)
+        then:
+        text == 'Persons in the scope: Jack.'
+    }
+
     def "Access a composite person entity's parts"(){
         given:
         def persons = [

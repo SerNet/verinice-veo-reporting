@@ -1,4 +1,4 @@
-<#assign processings = scope.members?filter(m -> m.type == 'process')?filter(p ->p.hasSubType('PRO_DataProcessing'))?filter(p-> p.process_processing_asProcessor!false)>
+<#assign processings = scope.getMembersWithType('process')?filter(p ->p.hasSubType('PRO_DataProcessing'))?filter(p-> p.process_processing_asProcessor!false)>
 
 <#assign management=scope.findFirstLinked('scope_management')!>
 <#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')!>

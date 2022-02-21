@@ -1,0 +1,1 @@
+Persons in the scope: ${scopes?first.getMembersWithType('person')?map(member->member.name)?join(', ')}.

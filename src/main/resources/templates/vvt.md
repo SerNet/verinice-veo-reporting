@@ -25,7 +25,7 @@ ${term}
 <#assign processesInScope = processes?filter(p ->p.subType?values?seq_contains('PRO_DataProcessing'))?filter(p -> is_member_recursive(scope, p))>
 -->
 
-<#assign processesInScope = scope.members?filter(m -> m.type == 'process')?filter(p ->p.hasSubType('PRO_DataProcessing'))>
+<#assign processesInScope = scope.getMembersWithType('process')?filter(p ->p.hasSubType('PRO_DataProcessing'))>
 
 <style>
 <#include "styles/default.css">

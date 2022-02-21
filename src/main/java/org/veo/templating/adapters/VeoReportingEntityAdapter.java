@@ -66,7 +66,11 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
         }
 
         Object type = m.get("type");
-
+        if ("scope".equals(type)) {
+            if ("getMembersWithType".equals(key)) {
+                return new GetMembersWithType(m, ow);
+            }
+        }
         if ("control".equals(type)) {
             if ("getImplementationStatus".equals(key)) {
                 return new GetImplementationStatus(m, ow);
@@ -209,6 +213,23 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
             String color = statusColors.get(implementationStatus);
             return Map.of("id", implementationStatus, "label", name, "color", color);
 
+        }
+    }
+
+    private static final class GetMembersWithType extends SingleStringArgumentMethod {
+
+        public GetMembersWithType(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+            super(m, ow);
+        }
+
+        @Override
+        public Object doExec(String arg) throws TemplateModelException {
+            var members = (List) getProperty("members");
+            var filteredMembers = members.stream().filter(member -> {
+                // FIXME: VEO-1203: use type in idref to filter
+                return ((String) ((Map) member).get("targetUri")).contains("/" + arg);
+            }).collect(Collectors.toList());
+            return filteredMembers;
         }
     }
 
