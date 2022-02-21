@@ -70,7 +70,11 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
     private Object resolve(String uri) throws TemplateModelException {
         Objects.requireNonNull(uri);
         logger.debug("resolve uri {}", uri);
-        return entitiesByUri.get(uri);
+        Object entity = entitiesByUri.get(uri);
+        if (entity == null) {
+            throw new TemplateModelException("Failed to resolve entity with targetUri " + uri);
+        }
+        return entity;
     }
 
     public String getLabel(String key) {
