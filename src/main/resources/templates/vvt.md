@@ -451,6 +451,11 @@ ${bundle.process_opinionDPO_comment}
 
 <#assign toms=process.getLinked('process_tom')! />
 <#if toms?has_content>
+
+<#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
+<#assign domain=domains?filter(it->it.name == 'DS-GVO')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
+<#assign riskDefinitionId=scope.domains[domain.id].riskDefinition! />
+
 <@section 'Technische und organisatorische Maßnahmen' 'process_toms_${process?counter}'  >
 
 <#macro tomsection objective title>
@@ -462,13 +467,17 @@ ${bundle.process_opinionDPO_comment}
 </tr>
 <#list tomsinsection as t>
 <#assign statusTdStyle="">
-<#assign tom_status=t.getImplementationStatus()! />
 <#assign tom_status_output="">
+<#if riskDefinitionId?has_content>
+<#assign tom_status=t.getImplementationStatus(domain.id, riskDefinitionId)! />
 <#if tom_status?has_content>
-<#assign backgroundColor=tom_status.color />
+<#assign riskDefinition=domain.riskDefinitions[riskDefinitionId] />
+<#assign implementationStatus = riskDefinition.getImplementationStatus(tom_status) />
+<#assign backgroundColor=implementationStatus.color />
 <#assign color=colorContrast(backgroundColor, '#e3e3e3', '#7c7c7b', '#929292')>
 <#assign statusTdStyle="background-color:${backgroundColor};color:${color}">
-<#assign tom_status_output=tom_status.label>
+<#assign tom_status_output=implementationStatus.label>
+</#if>
 </#if>
 <tr>
   <td style="${statusTdStyle}">${tom_status_output}</td>

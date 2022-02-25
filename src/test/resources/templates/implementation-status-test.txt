@@ -1,3 +1,6 @@
-<#assign status = input.getImplementationStatus() />
-Implementation status: ${status.label}
-Color code: ${status.color}
+<#assign riskDefinitionId = 'DSRA' />
+<#assign status = input.getImplementationStatus(domain.id, riskDefinitionId) />
+<#assign riskDefinition = domain.riskDefinitions[riskDefinitionId] />
+<#assign implementationStatus = riskDefinition.getImplementationStatus(status) />
+Implementation status: ${implementationStatus.label}
+Color code: ${implementationStatus.color}

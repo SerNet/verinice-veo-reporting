@@ -66,6 +66,7 @@ public class Demo {
         var persons = veoClient.fetchData("/persons?size=2147483647", authHeader);
         var controls = veoClient.fetchData("/controls?size=2147483647", authHeader);
         var assets = veoClient.fetchData("/assets?size=2147483647", authHeader);
+        var domains = veoClient.fetchData("/domains", authHeader);
         Map<String, Object> entriesForLanguage = veoClient.fetchTranslations(Locale.GERMANY,
                 authHeader);
 
@@ -83,9 +84,11 @@ public class Demo {
         System.out.println(writer.writeValueAsString(controls));
         System.out.println("\nAssets:");
         System.out.println(writer.writeValueAsString(assets));
+        System.out.println("\nDomains:");
+        System.out.println(writer.writeValueAsString(domains));
 
         var templateInput = Map.of("scope", scope, "scopes", scopes, "processes", processes,
-                "persons", persons, "controls", controls, "assets", assets);
+                "persons", persons, "controls", controls, "assets", assets, "domains", domains);
         createReports(reportEngine, templateInput, entriesForLanguage);
         Path template = Paths.get("src/main/resources/templates");
         try (WatchService watchService = FileSystems.getDefault().newWatchService()) {

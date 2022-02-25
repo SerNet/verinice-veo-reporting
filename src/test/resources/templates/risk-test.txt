@@ -9,7 +9,6 @@ Mitigation: ${risk.mitigation.name}
 Effective Probability: ${riskDefinition.getProbability(riskData.effectiveProbability).label}
 <#assign impactValuesAvailability = riskData['A'] />
 Specific Impact (A): ${riskDefinition.getImpact('A', impactValuesAvailability.specificImpact).label}
-<#-- TODO VEO-1197: read implementation status from risk values -->
-<#assign mitigationStatus = 1?int />
+<#assign mitigationStatus = risk.mitigation.getImplementationStatus(domain.id, riskDefinitionId) />
 Control implementation status: ${riskDefinition.getImplementationStatus(mitigationStatus).label}
 </#list>

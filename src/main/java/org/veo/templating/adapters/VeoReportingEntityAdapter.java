@@ -21,14 +21,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.veo.templating.VeoReportingObjectWrapper;
-import org.veo.templating.methods.NoArgumentsMethod;
 import org.veo.templating.methods.SingleStringArgumentMethod;
+import org.veo.templating.methods.VeoTemplateMethod;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import freemarker.template.AdapterTemplateModel;
@@ -183,37 +184,29 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
 
     }
 
-    // TODO VEO-1197: rewrite this to use the aspects
-    private static final class GetImplementationStatus extends NoArgumentsMethod {
-
-        private static final Map<String, String> statusColors = Map.of(
-                "control_implementation_status_yes", "#12AE0F", "control_implementation_status_no",
-                "#AE0D11", "control_implementation_status_partially", "#EDE92F",
-                "control_implementation_status_notApplicable", "#49A2ED");
+    private static final class GetImplementationStatus extends VeoTemplateMethod {
 
         public GetImplementationStatus(Map<?, ?> m, VeoReportingObjectWrapper ow) {
             super(m, ow);
         }
 
         @Override
-        public Object doExec() throws TemplateModelException {
-            // TODO VEO-1197: read implementation status from risk values
-            Map customAspects = (Map) getProperty("customAspects");
-            Map controlImplementation = (Map) customAspects.get("control_implementation");
-            if (controlImplementation == null) {
-                return null;
+        protected Object doExec(List arguments) throws TemplateModelException {
+            if (arguments.size() != 2) {
+                throw new TemplateModelException(
+                        "Expecting 2 arguments, domain ID and risk definition ID");
             }
-            Map controlImplementationAttributes = (Map) controlImplementation.get("attributes");
-            String implementationStatus = (String) controlImplementationAttributes
-                    .get("control_implementation_status");
-            if (implementationStatus == null) {
-                return null;
-            }
-            String name = getLabel(implementationStatus);
-            // TODO VEO-1197: read colors from risk configuration
-            String color = statusColors.get(implementationStatus);
-            return Map.of("id", implementationStatus, "label", name, "color", color);
 
+            String domainId = asString(arguments.get(0));
+            String riskDefinitionId = asString(arguments.get(1));
+
+            return Optional.ofNullable(getProperty("domains"))
+                    .map(domains -> ((Map) domains).get(domainId))
+                    .map(dataForDomain -> ((Map) dataForDomain).get("riskValues"))
+                    .map(riskDefinitions -> ((Map) riskDefinitions).get(riskDefinitionId))
+                    .map(dataForRiskDefinition -> ((Map) dataForRiskDefinition)
+                            .get("implementationStatus"))
+                    .orElse(null);
         }
     }
 

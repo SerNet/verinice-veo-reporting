@@ -17,8 +17,6 @@
  */
 package org.veo.templating
 
-import org.veo.reporting.MapResourceBundle
-
 import freemarker.cache.ClassTemplateLoader
 import groovy.json.JsonSlurper
 import spock.lang.Specification
@@ -319,25 +317,36 @@ Jack's children are named John and Jane.'''
                 '''.stripIndent()
     }
 
-    //TODO VEO-1197: rewrite this to use the aspects
     def "Access implementation status"(){
-        def bundle = new MapResourceBundle(['control_implementation_status_yes':'Ja'])
+        def domainId = '2428ac8f-75f7-48fe-a7f1-d799b967e163'
         def objectData = [
             name: 'Control',
             id: '0815',
             type: 'control',
-            customAspects: [
-                control_implementation : [
-                    attributes: [
-                        control_implementation_status: 'control_implementation_status_yes'
+            domains: [
+                (domainId): [
+                    riskValues: [
+                        DSRA : [
+                            implementationStatus: 0
+                        ]
                     ]
                 ]
             ]
         ]
+        def domain = [
+            id: domainId,
+            riskDefinitions : [
+                'DSRA': TemplateEvaluatorSpec.getResourceAsStream('/DSRA.json').withCloseable {
+                    new JsonSlurper().parse(it)
+                }
+            ]
+        ]
         when:
-        def text = execute('implementation-status-test.txt', [input:  objectData, bundle: bundle])
+        def text = execute('implementation-status-test.txt', [input:  objectData, domain: domain])
         then:
-        text == 'Implementation status: Ja\nColor code: #12AE0F'
+        text == '''\
+                Implementation status: ja
+                Color code: #12AE0F'''.stripIndent()
     }
 
 
@@ -347,7 +356,6 @@ Jack's children are named John and Jane.'''
         def scenarioId = '9da57c19-8a53-4df5-aeed-86b0bfaf9399'
         def personId = 'bb60c3da-663b-42f9-baae-59abef95879c'
         def controlId = '00b63349-fa7e-4aad-a20a-18d12c854311'
-        def bundle = new MapResourceBundle(['control_implementation_status_yes':'Ja'])
         def objectData = [
             name: 'Process',
             id: '123',
@@ -409,7 +417,16 @@ Jack's children are named John and Jane.'''
             name: 'Fixitall',
             id: controlId,
             type: 'control',
-            '_self': "http://localhost/controls/$controlId".toString()
+            '_self': "http://localhost/controls/$controlId".toString(),
+            domains: [
+                (domainId): [
+                    riskValues: [
+                        DSRA : [
+                            implementationStatus: 1
+                        ]
+                    ]
+                ]
+            ]
         ]
         def domain = [
             id: domainId,
@@ -420,7 +437,7 @@ Jack's children are named John and Jane.'''
             ]
         ]
         when:
-        def text = execute('risk-test.txt', [input:  objectData, scenario: scenario,person: person,control: control, bundle: bundle, domain: domain])
+        def text = execute('risk-test.txt', [input:  objectData, scenario: scenario,person: person,control: control, domain: domain])
         then:
         text == '''\
                 Scenario: Fire

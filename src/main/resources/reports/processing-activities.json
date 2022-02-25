@@ -24,6 +24,7 @@
     "processes": "/processes?size=2147483647",
     "persons": "/persons?size=2147483647",
     "controls": "/controls?size=2147483647",
-    "assets": "/assets?size=2147483647"
+    "assets": "/assets?size=2147483647",
+    "domains": "/domains"
   }
 }
