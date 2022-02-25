@@ -77,7 +77,7 @@ dl.tom dd {
       <#if process.getLinks('process_dataTransmission')?has_content>
         <bookmark name="Art übermittelter Daten und deren Empfänger" href="#process_transmissions_${process?counter}"/>
       </#if>
-      <#if process.getLinks('process_tom')?has_content>
+      <#if process.risks?map(r->r.mitigation!)?filter(it -> it??)?filter(it -> it.parts?has_content)?has_content>
         <bookmark name="Technische und organisatorische Maßnahmen" href="#process_toms_${process?counter}"/>
       </#if>
     </bookmark>
@@ -104,7 +104,7 @@ dl.tom dd {
          <#if process.getLinks('process_dataTransmission')?has_content>
             <li><a href="#process_transmissions_${process?counter}">Art übermittelter Daten und deren Empfänger</a> <span href="#process_transmissions_${process?counter}"></span></li>
          </#if>
-         <#if process.getLinks('process_tom')?has_content>
+         <#if process.risks?map(r->r.mitigation!)?filter(it -> it??)?filter(it -> it.parts?has_content)?has_content>
             <li><a href="#process_toms_${process?counter}">Technische und organisatorische Maßnahmen</a> <span href="#process_toms_${process?counter}"></span></li>
          </#if>
         </ol>
@@ -449,8 +449,8 @@ ${bundle.process_opinionDPO_comment}
 </@section>
 
 
-<#assign toms=process.getLinked('process_tom')! />
-<#if toms?has_content>
+<#assign mitigations=process.risks?map(r->r.mitigation!)?filter(it -> it??)?filter(it -> it.parts?has_content) />
+<#if mitigations?has_content>
 
 <#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
 <#assign domain=domains?filter(it->it.name == 'DS-GVO')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
@@ -459,6 +459,8 @@ ${bundle.process_opinionDPO_comment}
 <@section 'Technische und organisatorische Maßnahmen' 'process_toms_${process?counter}'  >
 
 <#macro tomsection objective title>
+<#list mitigations as mitigation>
+<#assign toms = mitigation.parts>
 <#assign tomsinsection = toms?filter(t->t.control_dataProtection_objectives!?seq_contains(objective))!>
 <#if tomsinsection?has_content>
 <tbody>
@@ -486,6 +488,7 @@ ${bundle.process_opinionDPO_comment}
 </#list>
 </tbody>
 </#if>
+</#list>
 </#macro>
 
 <table class="table toms">
