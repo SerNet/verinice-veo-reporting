@@ -42,3 +42,6 @@ management:
       enabled: true
     readinessstate:
       enabled: true
+spring:
+  jndi:
+    ignore: true
