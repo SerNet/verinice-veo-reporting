@@ -60,7 +60,8 @@ public class Demo {
         var scopeId = ctx.getEnvironment().getRequiredProperty("veo.demoscopeid");
         var veoClient = ctx.getBean(VeoClient.class);
         var authHeader = "Bearer " + token;
-        var processes = veoClient.fetchData("/processes?size=2147483647", authHeader);
+        var processes = veoClient.fetchData("/processes?size=2147483647&embedRisks=true",
+                authHeader);
         var scope = veoClient.fetchData("/scopes/" + scopeId, authHeader);
         var scopes = veoClient.fetchData("/scopes?size=2147483647", authHeader);
         var persons = veoClient.fetchData("/persons?size=2147483647", authHeader);
