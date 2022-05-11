@@ -55,7 +55,7 @@ public class ReportControllerSpec extends Specification {
         when:
         def reports = new JsonSlurper().parseText(response.contentAsString)
         then:
-        reports.keySet().sort() == [
+        reports.keySet() ==~ [
             'invitation',
             'process-list',
             'processing-activities',

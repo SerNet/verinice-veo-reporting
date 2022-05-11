@@ -151,7 +151,7 @@ I'd like to invite you to my birthday party.'''
         when:
         def configs = reportEngine.getReports()
         then:
-        configs.keySet().sort() == [
+        configs.keySet() ==~ [
             'invitation',
             'process-list',
             'processing-activities',
