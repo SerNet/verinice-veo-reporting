@@ -156,7 +156,8 @@ I'd like to invite you to my birthday party.'''
             'process-list',
             'processing-activities',
             'processing-on-behalf',
-            'risk-analysis'
+            'risk-analysis',
+            'dp-impact-assessment'
         ]
     }
 

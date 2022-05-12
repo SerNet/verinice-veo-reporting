@@ -60,7 +60,8 @@ public class ReportControllerSpec extends Specification {
             'process-list',
             'processing-activities',
             'processing-on-behalf',
-            'risk-analysis'
+            'risk-analysis',
+            'dp-impact-assessment'
         ]
     }
 

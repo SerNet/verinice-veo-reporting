@@ -1,0 +1,30 @@
+{
+  "name": {
+    "de": "Datenschutz-Folgenabschätzung"
+  },
+  "description": {
+    "de": "Hier muss nochmal jemand einen Text liefern."
+  },
+  "templateFile": "dpia.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "process",
+      "subTypes": [
+        "PRO_DPIA"
+      ]
+    }
+  ],
+  "data": {
+    "dpia": "/processes/${targetId}&embedRisks=true",
+    "scopes": "/scopes?size=2147483647",
+    "processes": "/processes?size=2147483647&embedRisks=true",
+    "persons": "/persons?size=2147483647",
+    "controls": "/controls?size=2147483647",
+    "scenarios": "/scenarios?size=2147483647",
+    "domains": "/domains"
+  }
+}

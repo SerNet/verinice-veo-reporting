@@ -94,7 +94,18 @@ public class Demo {
         var templateInput = Map.of("scope", scope, "scopes", scopes, "processes", processes,
                 "persons", persons, "controls", controls, "assets", assets, "scenarios", scenarios,
                 "domains", domains);
-        createReports(reportEngine, templateInput, entriesForLanguage);
+        boolean createDPIAReports = false;
+        var dpiaId = ctx.getEnvironment().getProperty("veo.demodpiaid");
+
+        if (dpiaId != null) {
+            var dpia = veoClient.fetchData("/processes/" + dpiaId + "?embedRisks=true", authHeader);
+            System.out.println("\nDPIA:");
+            System.out.println(writer.writeValueAsString(dpia));
+            templateInput = new HashMap<>(templateInput);
+            templateInput.put("dpia", dpia);
+            createDPIAReports = true;
+        }
+        createReports(reportEngine, templateInput, entriesForLanguage, createDPIAReports);
         Path template = Paths.get("src/main/resources/templates");
         try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 
@@ -111,7 +122,8 @@ public class Demo {
             try {
                 while ((key = watchService.take()) != null) {
                     if (!key.pollEvents().isEmpty()) {
-                        createReports(reportEngine, templateInput, entriesForLanguage);
+                        createReports(reportEngine, templateInput, entriesForLanguage,
+                                createDPIAReports);
                     }
                     key.reset();
                 }
@@ -123,7 +135,7 @@ public class Demo {
     }
 
     static void createReports(ReportEngine reportEngine, Map<String, Object> templateInput,
-            Map<String, Object> entriesForLanguage) throws IOException {
+            Map<String, Object> entriesForLanguage, boolean createDPIAReports) throws IOException {
         ResourceBundle bundleAV;
         ResourceBundle bundleVVT;
         ResourceBundle bundleDPRA;
@@ -162,6 +174,21 @@ public class Demo {
                     "application/pdf");
             createReport(reportEngine, "/tmp/dpra.html", "dpra.md", workingCopy, "text/markdown",
                     "text/html");
+            if (createDPIAReports) {
+                try (InputStream is = Files.newInputStream(
+                        Paths.get("src/main/resources/templates/dpia_de.properties"))) {
+                    ResourceBundle bundleDPIA = new PropertyResourceBundle(is);
+                    MapResourceBundle mergedBundleDPIA = MapResourceBundle
+                            .createMergedBundle(bundleDPIA, entriesForLanguage);
+
+                    workingCopy.put("bundle", mergedBundleDPIA);
+                    createReport(reportEngine, "/tmp/dpia.pdf", "dpia.md", workingCopy,
+                            "text/markdown", "application/pdf");
+                    createReport(reportEngine, "/tmp/dpia.html", "dpia.md", workingCopy,
+                            "text/markdown", "text/html");
+                }
+
+            }
             workingCopy.put("bundle", mergedBundleAV);
 
             createReport(reportEngine, "/tmp/av.pdf", "av.md", workingCopy, "text/markdown",
