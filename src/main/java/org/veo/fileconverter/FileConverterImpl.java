@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import org.veo.fileconverter.handlers.HtmlPDFConverter;
 import org.veo.fileconverter.handlers.MarkdownHtmlConverter;
+import org.veo.reporting.exception.VeoReportingException;
 
 public class FileConverterImpl implements FileConverter {
 
@@ -50,7 +51,7 @@ public class FileConverterImpl implements FileConverter {
                 .computeIfAbsent(inputType, key -> new ConcurrentHashMap<>())
                 .put(outputType, converter);
         if (entry != null) {
-            throw new RuntimeException(
+            throw new VeoReportingException(
                     "Conflicting converters found for " + inputType + " -> " + outputType);
         }
     }

@@ -26,6 +26,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import org.veo.reporting.exception.VeoReportingException;
+
 /**
  * A conversion handler that delegates to a pair of conversion handlers A and B
  * to support direct conversion from A's input format to B's output format by
@@ -79,7 +81,7 @@ public class ComposedConversionHandler implements ConversionHandler {
                 // wait for the second handler to finish
                 future.get();
             } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException("Error running conversion", e);
+                throw new VeoReportingException("Error running conversion", e);
             }
         }
     }

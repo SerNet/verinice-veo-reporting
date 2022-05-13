@@ -42,6 +42,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.veo.fileconverter.FileConverter;
+import org.veo.reporting.exception.VeoReportingException;
 import org.veo.templating.TemplateEvaluator;
 
 import freemarker.template.TemplateException;
@@ -119,7 +120,7 @@ public class ReportEngineImpl implements ReportEngine {
                     // wait for the conversion to finish
                     future.get();
                 } catch (InterruptedException | ExecutionException e) {
-                    throw new RuntimeException("Error running conversion", e);
+                    throw new VeoReportingException("Error running conversion", e);
                 }
             }
         }
@@ -143,12 +144,12 @@ public class ReportEngineImpl implements ReportEngine {
                     logger.info("Read report {} from {}", reportConfiguration.getName(), resource);
                     return reportConfiguration;
                 } catch (IOException e) {
-                    throw new RuntimeException("Error loading report configurations", e);
+                    throw new VeoReportingException("Error loading report configurations", e);
                 }
             }));
 
         } catch (IOException e) {
-            throw new RuntimeException("Error loading report configurations", e);
+            throw new VeoReportingException("Error loading report configurations", e);
         }
 
     }
@@ -163,7 +164,7 @@ public class ReportEngineImpl implements ReportEngine {
             var config = objectMapper.readValue(is, ReportConfiguration.class);
             return Optional.of(config);
         } catch (IOException e) {
-            throw new RuntimeException("Error loading report configuration", e);
+            throw new VeoReportingException("Error loading report configuration", e);
         }
     }
 }

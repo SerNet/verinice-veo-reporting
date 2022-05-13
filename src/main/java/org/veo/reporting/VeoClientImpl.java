@@ -34,6 +34,8 @@ import org.springframework.http.client.ClientHttpResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.veo.reporting.exception.VeoReportingException;
+
 public class VeoClientImpl implements VeoClient {
 
     private static final Logger logger = LoggerFactory.getLogger(VeoClientImpl.class);
@@ -61,8 +63,9 @@ public class VeoClientImpl implements VeoClient {
             if (!response.getStatusCode().is2xxSuccessful()) {
                 logger.error("HTTP error {} for {}, message: {}", response.getRawStatusCode(), uri,
                         response.getStatusText());
-                throw new RuntimeException("Failed to retrieve data from " + uri + ", status code: "
-                        + response.getRawStatusCode() + ", message: " + response.getStatusText());
+                throw new VeoReportingException("Failed to retrieve data from " + uri
+                        + ", status code: " + response.getRawStatusCode() + ", message: "
+                        + response.getStatusText());
             }
             try (var body = response.getBody()) {
                 JsonNode tree = objectMapper.readTree(body);

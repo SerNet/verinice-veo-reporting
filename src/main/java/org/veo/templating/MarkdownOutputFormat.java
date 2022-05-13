@@ -20,6 +20,8 @@ package org.veo.templating;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.veo.reporting.exception.VeoReportingException;
+
 import freemarker.core.CommonMarkupOutputFormat;
 import freemarker.core.OutputFormat;
 import freemarker.template.TemplateModelException;
@@ -67,7 +69,7 @@ public class MarkdownOutputFormat extends CommonMarkupOutputFormat<TemplateMarkd
         try {
             appendWithEncoding(plainTextContent, sb);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new VeoReportingException(e);
         }
         return sb.toString();
     }
