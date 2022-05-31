@@ -438,11 +438,14 @@ Rechtsgrundlage für Datenübertragung
 </@section>
 </#if>
 
+<#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
+<#assign domain=domains?filter(it->it.name == 'DS-GVO')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
+
 <@section 'Datenschutz-Folgenabschätzung'>
 ${bundle.process_opinionDPO_privacyImpactAssessment}
-: ${(process.process_opinionDPO_privacyImpactAssessment?string(bundle.yes, bundle.no))!""}
+: ${(process.domains[domain.id].decisionResults.piaMandatory.value?string(bundle.yes, bundle.no))!""}
 
-<#if process.process_opinionDPO_privacyImpactAssessment!false && process.process_opinionDPO_comment?has_content>
+<#if ((process.domains[domain.id].decisionResults.piaMandatory.value)!false) && process.process_opinionDPO_comment?has_content>
 ${bundle.process_opinionDPO_comment}
 : ${process.process_opinionDPO_comment}
 </#if>
@@ -452,8 +455,6 @@ ${bundle.process_opinionDPO_comment}
 <#assign mitigations=process.risks?map(r->r.mitigation!)?filter(it -> it??)?filter(it -> it.parts?has_content) />
 <#if mitigations?has_content>
 
-<#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
-<#assign domain=domains?filter(it->it.name == 'DS-GVO')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 <#assign riskDefinitionId=scope.domains[domain.id].riskDefinition! />
 
 <@section 'Technische und organisatorische Maßnahmen' 'process_toms_${process?counter}'  >
