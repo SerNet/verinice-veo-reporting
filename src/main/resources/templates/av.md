@@ -1,3 +1,6 @@
+<#import "/libs/commons.md" as com>
+
+<#assign def = com.def />
 <#assign processings = scope.getMembersWithType('process')?filter(p ->p.hasSubType('PRO_DataProcessing'))?filter(p-> p.process_processing_asProcessor!false)>
 
 <#assign management=scope.findFirstLinked('scope_management')!>
@@ -115,15 +118,6 @@ ${bundle.scope_dataProtectionOfficer}
 : <@multiline dataProtectionOfficerController.name, dataProtectionOfficerController.person_contactInformation_office, dataProtectionOfficerController.person_contactInformation_email />
 
 </div>
-
-<#macro def term definition="" >
-${term}
-<#if definition?has_content>
-: ${definition}
-<#else>
-: &nbsp;
-</#if>
-</#macro>
 
 <#macro transmissions_section title transmissions recipientLinkType thirdCountryFilterAttribute thirdCountryNameAttribute thirdCountryGuaranteesAttribute>
 

@@ -23,3 +23,14 @@
 <@row object,aspectDef />
 </#list>
 </#macro>
+
+<#macro def term definition="" alwaysShow=false>
+<#if definition?has_content || alwaysShow>
+${term}
+<#if definition?has_content>
+: ${definition}
+<#else>
+: &nbsp;
+</#if>
+</#if>
+</#macro>

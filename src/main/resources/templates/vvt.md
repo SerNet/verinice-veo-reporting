@@ -3,19 +3,9 @@
 <#assign to_user_presentable = com.to_user_presentable
  row = com.row
  table = com.table
+ def = com.def
  >
  
-<#macro def term definition="" alwaysShow=false>
-<#if definition?has_content || alwaysShow>
-${term}
-<#if definition?has_content>
-: ${definition}
-<#else>
-: &nbsp;
-</#if>
-</#if>
-</#macro>
-
 <#--  OLD VERSION, recursive membership
 <#function is_member_recursive scope entity>
   <#local filteredMembers = scope.members?filter(m -> m.type == 'scope' || m.type == 'process')>
