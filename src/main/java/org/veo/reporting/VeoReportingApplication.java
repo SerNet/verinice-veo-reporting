@@ -33,6 +33,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -43,6 +44,7 @@ import com.openhtmltopdf.util.XRLog;
 
 import org.veo.fileconverter.FileConverter;
 import org.veo.fileconverter.FileConverterImpl;
+import org.veo.reporting.security.ReportingSecurityConfig;
 import org.veo.templating.TemplateEvaluator;
 import org.veo.templating.TemplateEvaluatorImpl;
 
@@ -51,6 +53,7 @@ import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
 
 @SpringBootApplication
+@Import(ReportingSecurityConfig.class)
 public class VeoReportingApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(VeoReportingApplication.class);
