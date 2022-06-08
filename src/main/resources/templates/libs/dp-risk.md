@@ -17,7 +17,7 @@
 </#macro>
 
 
-<#macro riskdisplay risk domain riskDefinition>
+<#macro riskdisplay risk domain riskDefinition={}>
 <div class="risk">
 
 <#assign scenario = risk.scenario>
@@ -28,7 +28,7 @@
 
 <@com.def "Risikobeschreibung", (scenario.description)!, true />
 
-<#assign riskDataAvailable = risk.domains[domain.id].riskDefinitions[riskDefinition.id]?has_content />
+<#assign riskDataAvailable = riskDefinition?has_content && risk.domains[domain.id].riskDefinitions[riskDefinition.id]?has_content />
 <#if riskDataAvailable>
 <#assign riskValues = risk.getRiskValues(domain.id, riskDefinition.id)>
 
