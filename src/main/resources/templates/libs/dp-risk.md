@@ -34,10 +34,10 @@
 
 <table class="table" style="width:100%;font-size:70%;">
 <colgroup>
-  <col span="1" style="width: 20%;">
+  <col span="1" style="width: 15%;">
   <col span="1" style="width: 10%;">
   <col span="1" style="width: 12%;">
-  <col span="1" style="width: 46%;">
+  <col span="1" style="width: 51%;">
   <col span="1" style="width: 12%;">
 </colgroup>
 <thead>
@@ -48,7 +48,7 @@
 </tr>
 <tr>
 <th>Effektive Auswirkung</th>
-<th>Effektive Eintrittswahrscheinlichkeit</th>
+<th>Effektive Eintritts&shy;wahrscheinlichkeit</th>
 <th>Bruttorisiko (maximaler Wert)</th>
 <th>Risikobehandlungsoptionen</th>
 <th>Nettorisiko (maximaler Wert)</th>
