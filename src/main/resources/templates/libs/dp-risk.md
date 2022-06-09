@@ -26,7 +26,7 @@
 
 <@com.def "Risikoverantwortlicher/-Eigentümer", (risk.riskOwner.name)! />
 
-<@com.def "Risikobeschreibung", (scenario.description)!, true />
+<@com.def "Risikobeschreibung", scenario.description />
 
 <#assign riskDataAvailable = riskDefinition?has_content && risk.domains[domain.id].riskDefinitions[riskDefinition.id]?has_content />
 <#if riskDataAvailable>
