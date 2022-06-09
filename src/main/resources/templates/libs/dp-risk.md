@@ -50,7 +50,7 @@
 <th>Effektive Auswirkung</th>
 <th>Effektive Eintrittswahrscheinlichkeit</th>
 <th>Bruttorisiko (maximaler Wert)</th>
-<th>Risikoreduktion</th>
+<th>Risikobehandlungsoptionen</th>
 <th>Nettorisiko (maximaler Wert)</th>
 </tr>
 </thead>
