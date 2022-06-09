@@ -186,7 +186,7 @@ dt {
    'person_contactInformation_email'
   ]/>
 
-<#if (scope.scope_thirdCountry_status??)>
+<#if (scope.scope_thirdCountry_status!false)>
 <@table bundle.thirdCountry_table_caption, scope, [
   'scope_thirdCountry_name',
   'scope_thirdCountry_address1',
