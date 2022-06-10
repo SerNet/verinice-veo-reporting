@@ -264,7 +264,7 @@ ${(process.process_dataProcessing_legalBasis?map(item->bundle[item])?join(', '))
 
 #### ${dataType.name}
 
-<@def bundle.process_dataType_dataOrigin bundle[dataOrigin]! true />
+<@def bundle.process_dataType_dataOrigin dataOrigin?has_content?then(bundle[dataOrigin], "") true />
 
 <@def bundle.process_dataType_comment dataTypeLink.process_dataType_comment />
 
