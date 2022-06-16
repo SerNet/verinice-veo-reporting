@@ -268,9 +268,9 @@ ${(process.process_dataProcessing_legalBasis?map(item->bundle[item])?join(', '))
 
 <@def bundle.process_dataType_comment dataTypeLink.process_dataType_comment />
 
-<#if dataTypeLink.process_dataType_deletionPeriod?has_content>
+<#if dataTypeLink.process_dataType_deletionPeriodCount?has_content && dataTypeLink.process_dataType_deletionPeriod?has_content>
 ${bundle.process_dataType_deletionPeriod}
-: ${(bundle.getObject(dataTypeLink.process_dataType_deletionPeriod))}
+: ${dataTypeLink.process_dataType_deletionPeriodCount} ${(bundle.getObject(dataTypeLink.process_dataType_deletionPeriod))}
 </#if>
 
 <@def bundle.process_dataType_deletionPeriod dataTypeLink.process_dataType_otherDeletionPeriod />
