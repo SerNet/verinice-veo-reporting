@@ -291,7 +291,7 @@ Angaben zu gemeinsam Verantwortlichen
 |:------------|:-----|
 | Hohes Risiko | ${(dpia.process_PIAResult_risk?string(bundle.yes, bundle.no))!} ${dpia.process_PIAResult_comment} |  
 | Konsultation der Aufsichtsbehörde erforderlich | ${(dpia.process_PIAResult_consultationRequired?string(bundle.yes, bundle.no))!} ${dpia.process_PIAResult_consultationJustification} |
-| Konsultation durchgeführt | ${(dpia.process_PIAResult_consultationConducted?string(bundle.yes, bundle.no))!} <br/>Datum ${dpia.process_PIAResult_consultationDate?date.iso } <br/>Ergebnis der Konsultation ${dpia.process_PIAResult_consultationResult!}|
+| Konsultation durchgeführt | ${(dpia.process_PIAResult_consultationConducted?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_consultationDate?has_content><br/>Datum ${dpia.process_PIAResult_consultationDate?date.iso } <br/>Ergebnis der Konsultation ${dpia.process_PIAResult_consultationResult!}</#if>|
 | Bemerkungen DSB | ${dpia.process_PIAResult_commentsPIO} |
 
 </#list>
