@@ -19,7 +19,7 @@
     }
   ],
   "data": {
-    "dpia": "/processes/${targetId}&embedRisks=true",
+    "dpia": "/processes/${targetId}?embedRisks=true",
     "scopes": "/scopes?size=2147483647",
     "processes": "/processes?size=2147483647&embedRisks=true",
     "persons": "/persons?size=2147483647",
