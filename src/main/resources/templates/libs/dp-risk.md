@@ -1,10 +1,10 @@
 <#import "/libs/commons.md" as com>
 
 <#function riskReductionLabel raw>
-  <#return { "RISK_TREATMENT_ACCEPTANCE": "Risiko-Akzeptanz",
+  <#return { "RISK_TREATMENT_ACCEPTANCE": "Risikoakzeptanz",
       "RISK_TREATMENT_AVOIDANCE": "Risikovermeidung",
       "RISK_TREATMENT_NONE": "Keins",
-      "RISK_TREATMENT_REDUCTION": "Risikominderung",
+      "RISK_TREATMENT_REDUCTION": "Risikoreduktion",
       "RISK_TREATMENT_TRANSFER": "Risikotransfer"}[raw] />
 </#function>
 
