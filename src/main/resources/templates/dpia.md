@@ -150,7 +150,7 @@ Angaben zu gemeinsam Verantwortlichen
 ## Beteiligte Auftragsverarbeiter
 
 |:------------|:-----|
-| Name des Auftzragsverarbeiters | ${scope.name} |  
+| Name des Auftragsverarbeiters | ${scope.name} |  
 
 </#list>
 </#if>
