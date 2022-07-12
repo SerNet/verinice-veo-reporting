@@ -289,8 +289,8 @@ Angaben zu gemeinsam Verantwortlichen
 # Ergebnis der DSFA nach Durchführung
 
 |:------------|:-----|
-| Hohes Risiko | ${(dpia.process_PIAResult_risk?string(bundle.yes, bundle.no))!} ${dpia.process_PIAResult_comment} |  
-| Konsultation der Aufsichtsbehörde erforderlich | ${(dpia.process_PIAResult_consultationRequired?string(bundle.yes, bundle.no))!} ${dpia.process_PIAResult_consultationJustification} |
+| Hohes Risiko | ${(dpia.process_PIAResult_risk?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_comment?has_content><br/>${dpia.process_PIAResult_comment}</#if> |  
+| Konsultation der Aufsichtsbehörde erforderlich | ${(dpia.process_PIAResult_consultationRequired?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_consultationJustification?has_content><br/>${dpia.process_PIAResult_consultationJustification}</#if> |
 | Konsultation durchgeführt | ${(dpia.process_PIAResult_consultationConducted?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_consultationDate?has_content><br/>Datum ${dpia.process_PIAResult_consultationDate?date.iso } <br/>Ergebnis der Konsultation ${dpia.process_PIAResult_consultationResult!}</#if>|
 | Bemerkungen DSB | ${dpia.process_PIAResult_commentsPIO} |
 
