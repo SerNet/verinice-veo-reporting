@@ -9,7 +9,7 @@ plugins {
     id 'pmd'
 }
 
-version = '0.13-SNAPSHOT'
+version = '0.13'
 
 repositories {
     mavenCentral()
