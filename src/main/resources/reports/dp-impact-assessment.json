@@ -3,7 +3,7 @@
     "de": "Datenschutz-Folgenabschätzung"
   },
   "description": {
-    "de": "Hier muss nochmal jemand einen Text liefern."
+    "de": "Eine Auflistung der Informationen zu durchgeführten Datenschutz-Folgenabschätzungen"
   },
   "templateFile": "dpia.md",
   "templateType": "text/markdown",
