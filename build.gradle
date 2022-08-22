@@ -3,7 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.13.RELEASE'
     id 'groovy'
     id 'jacoco'
-    id "com.github.spotbugs" version '5.0.9'
+    id "com.github.spotbugs" version '5.0.10'
     id 'org.cadixdev.licenser' version '0.6.1'
     id "com.gorylenko.gradle-git-properties" version "2.4.1"
     id 'pmd'
