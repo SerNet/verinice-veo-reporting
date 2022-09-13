@@ -39,6 +39,7 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
+import com.helger.font.api.FontResourceManager;
 import com.openhtmltopdf.slf4j.Slf4jLogger;
 import com.openhtmltopdf.util.XRLog;
 
@@ -60,6 +61,7 @@ public class VeoReportingApplication {
 
     public static void main(String[] args) throws IOException {
         XRLog.setLoggerImpl(new Slf4jLogger());
+        FontResourceManager.reInit(null);
         ConfigurableApplicationContext ctx = SpringApplication.run(VeoReportingApplication.class,
                 args);
         if (Stream.of(ctx.getEnvironment().getActiveProfiles()).anyMatch("demo"::equals)) {
