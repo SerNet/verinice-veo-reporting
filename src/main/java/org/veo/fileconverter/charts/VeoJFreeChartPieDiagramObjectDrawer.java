@@ -18,9 +18,11 @@
 package org.veo.fileconverter.charts;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -38,17 +40,31 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.helger.commons.collection.impl.ICommonsOrderedSet;
+import com.helger.font.api.FontResourceManager;
+import com.helger.font.api.IFontResource;
 import com.openhtmltopdf.extend.FSObjectDrawer;
 import com.openhtmltopdf.extend.OutputDevice;
 import com.openhtmltopdf.render.RenderingContext;
 
+import org.veo.reporting.exception.VeoReportingException;
+
 public class VeoJFreeChartPieDiagramObjectDrawer implements FSObjectDrawer {
+
+    static {
+        var openSansFontResources = FontResourceManager.getAllResourcesOfFontType("Open Sans");
+        openSansRegular = loadFont(openSansFontResources, 400);
+        openSansBold = loadFont(openSansFontResources, 700);
+    }
 
     private static final Pattern PATTERN_RGB = Pattern
             .compile("rgb *\\( *([0-9]+), *([0-9]+), *([0-9]+) *\\)");
 
     private static final Pattern PATTERN_HTML = Pattern
             .compile("#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})", Pattern.CASE_INSENSITIVE);
+
+    private static final Font openSansRegular;
+    private static final Font openSansBold;
 
     static Map<Shape, String> buildShapeLinkMap(ChartRenderingInfo renderingInfo,
             int dotsPerPixel) {
@@ -68,6 +84,17 @@ public class VeoJFreeChartPieDiagramObjectDrawer implements FSObjectDrawer {
             }
         }
         return linkShapes;
+    }
+
+    private static Font loadFont(ICommonsOrderedSet<IFontResource> openSansFontResources,
+            int weight) {
+        IFontResource resource = openSansFontResources.findFirst(
+                f -> f.getFontWeight().getWeight() == weight && f.getFontStyle().isRegular());
+        try (InputStream is = resource.getBufferedInputStream()) {
+            return Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch (Exception e1) {
+            throw new VeoReportingException("Error initializing chart font", e1);
+        }
     }
 
     public static Color parseColor(String input) {
@@ -136,6 +163,9 @@ public class VeoJFreeChartPieDiagramObjectDrawer implements FSObjectDrawer {
         chart1.getLegend().setItemPaint(defaultFontColor);
 
         chart1.getTitle().setPaint(defaultFontColor);
+        chart1.getTitle().setFont(openSansBold.deriveFont(Font.BOLD, 20f));
+        chart1.getLegend().setItemFont(openSansRegular.deriveFont(Font.PLAIN, 12f));
+        plot.setLabelFont(openSansRegular.deriveFont(Font.PLAIN, 12f));
 
         final ChartRenderingInfo renderingInfo = new ChartRenderingInfo();
         outputDevice.drawWithGraphics((float) x, (float) y, (float) width / dotsPerPixel,
