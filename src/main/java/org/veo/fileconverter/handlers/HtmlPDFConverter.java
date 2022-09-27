@@ -81,7 +81,7 @@ public class HtmlPDFConverter implements ConversionHandler {
 
             Document dom = new W3CDom().fromJsoup(doc);
             builder.withW3cDocument(dom, "");
-
+            builder.usePdfUaAccessbility(true);
             builder.toStream(output);
             try (PdfBoxRenderer renderer = builder.buildPdfRenderer()) {
                 renderer.layout();
