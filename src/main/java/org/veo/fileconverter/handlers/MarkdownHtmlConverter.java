@@ -32,6 +32,7 @@ import java.util.Locale;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import org.veo.fileconverter.ConversionHandler;
 import org.veo.reporting.ReportCreationParameters;
@@ -62,6 +63,14 @@ public class MarkdownHtmlConverter implements ConversionHandler {
                         new OutputStreamWriter(output, StandardCharsets.UTF_8))) {
             new MarkdownRendererImpl().renderToHTML(reader, intermediateWriter);
             Document doc = Jsoup.parse(intermediateWriter.toString());
+            Element html = doc.getElementsByTag("html").first();
+            Locale locale = parameters.getLocale();
+            if (locale.getCountry().isEmpty()) {
+                html.attr("lang", locale.getLanguage());
+            } else {
+                html.attr("lang", locale.getLanguage() + "-" + locale.getCountry());
+            }
+
             writer.write(doc.toString());
         }
     }

@@ -79,7 +79,7 @@ Favorite drink
         when:
         def str = renderHTML('profile.md','text/markdown', data)
         then:
-        str == '''<html>
+        str == '''<html lang="en-US">
  <head></head>
  <body>
   <h1 id="profile-for-guybrush-threepwood">Profile for Guybrush Threepwood</h1> 
@@ -142,7 +142,12 @@ Favorite drink
             'Work life',
             'Private life'
         ]
-        doc.documentCatalog.language == 'EN-US'
+        doc.documentCatalog.language == 'en-US'
+
+        when:
+        doc = renderPDF('profile.md','text/markdown', data, Locale.GERMANY)
+        then:
+        doc.documentCatalog.language == 'de-DE'
     }
 
     def "Render report with different locales"(){
@@ -221,16 +226,16 @@ I'd like to invite you to my birthday party.'''
     }
 
 
-    private PDDocument renderPDF(String templateName, String templateType, Map data) {
+    private PDDocument renderPDF(String templateName, String templateType, Map data, Locale locale = Locale.US) {
         new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport(templateName, data, templateType, 'application/pdf', it, new ReportCreationParameters(Locale.US))
+            reportEngine.generateReport(templateName, data, templateType, 'application/pdf', it, new ReportCreationParameters(locale))
             PDDocument.load(it.toByteArray())
         }
     }
 
-    private String renderHTML(String templateName, String templateType, Map data) {
+    private String renderHTML(String templateName, String templateType, Map data, Locale locale = Locale.US) {
         new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport(templateName, data, templateType, 'text/html', it, new ReportCreationParameters(Locale.US))
+            reportEngine.generateReport(templateName, data, templateType, 'text/html', it, new ReportCreationParameters(locale))
             it.toString()
         }
     }
