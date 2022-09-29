@@ -79,30 +79,49 @@ Favorite drink
         when:
         def str = renderHTML('profile.md','text/markdown', data)
         then:
-        str == '''<h1 id="profile-for-guybrush-threepwood">Profile for Guybrush Threepwood</h1>
-<h2 id="basic-attributes">Basic attributes</h2>
-<dl>
-<dt>Age</dt>
-<dd>42</dd>
-<dt>Height</dt>
-<dd>5'8&quot;</dd>
-</dl>
-<h2 id="work-life">Work life</h2>
-<dl>
-<dt>Profession</dt>
-<dd>Pirate</dd>
-</dl>
-<h2 id="private-life">Private life</h2>
-<dl>
-<dt>Favorite drink</dt>
-<dd>Rum</dd>
-</dl>
-<bookmarks>
-  <bookmark name="Basic attributes" href="#basic-attributes" />
-  <bookmark name="Work life" href="#work-life" />
-  <bookmark name="Private life" href="#private-life" />
-</bookmarks>
-'''
+        str == '''<html>
+ <head></head>
+ <body>
+  <h1 id="profile-for-guybrush-threepwood">Profile for Guybrush Threepwood</h1> 
+  <h2 id="basic-attributes">Basic attributes</h2> 
+  <dl> 
+   <dt>
+    Age
+   </dt> 
+   <dd>
+    42
+   </dd> 
+   <dt>
+    Height
+   </dt> 
+   <dd>
+    5'8"
+   </dd> 
+  </dl> 
+  <h2 id="work-life">Work life</h2> 
+  <dl> 
+   <dt>
+    Profession
+   </dt> 
+   <dd>
+    Pirate
+   </dd> 
+  </dl> 
+  <h2 id="private-life">Private life</h2> 
+  <dl> 
+   <dt>
+    Favorite drink
+   </dt> 
+   <dd>
+    Rum
+   </dd> 
+  </dl> <bookmarks> 
+   <bookmark name="Basic attributes" href="#basic-attributes" /> 
+   <bookmark name="Work life" href="#work-life" /> 
+   <bookmark name="Private life" href="#private-life" /> 
+  </bookmarks> 
+ </body>
+</html>'''
     }
 
 
@@ -128,7 +147,7 @@ Favorite drink
     def "Render report with different locales"(){
         when:
         String text = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('invitation', 'text/plain',Locale.GERMANY, it,{key, url->[name: 'Max']}, [:])
+            reportEngine.generateReport('invitation', 'text/plain',Locale.GERMANY, it,{ key, url->[name: 'Max']}, [:])
             it.toString()
         }
         then:
@@ -138,7 +157,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
         when:
 
         text = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('invitation', 'text/plain',Locale.US, it,{key, url->[name: 'Jack']}, [:])
+            reportEngine.generateReport('invitation', 'text/plain',Locale.US, it,{ key, url->[name: 'Jack']}, [:])
             it.toString()
         }
         then:
@@ -166,24 +185,24 @@ I'd like to invite you to my birthday party.'''
         PDDocument doc = renderPDF('escape-test.md','text/markdown', [data: input])
         def text = new PDFTextStripper().getText(doc)
         then:
-        text == output
+        text.contains(output)
         where:
         input                                | output
-        'Hello\nWorld'                       | 'Hello\nWorld\n'
-        'foo*bar*'                           | 'foo*bar*\n'
-        '![img](file:///localPath/test.pdf)' | '![img](file:///localPath/test.pdf)\n'
+        'Hello\nWorld'                       | 'Hello\nWorld'
+        'foo*bar*'                           | 'foo*bar*'
+        '![img](file:///localPath/test.pdf)' | '![img](file:///localPath/test.pdf)'
     }
 
     def "Special content is preserved (Markdown template, HTML output)"(){
         when:
         String text = renderHTML('escape-test.md','text/markdown', [data: input])
         then:
-        text == output
+        text.contains(output)
         where:
         input                                | output
-        'Hello\nWorld'                       | '<p>Hello<br />\nWorld</p>\n'
-        'foo*bar*'                           | '<p>foo*bar*</p>\n'
-        '![img](file:///localPath/test.pdf)' | '<p>![img](file:///localPath/test.pdf)</p>\n'
+        'Hello\nWorld'                       | '<p>Hello<br> World</p>'
+        'foo*bar*'                           | '<p>foo*bar*</p>'
+        '![img](file:///localPath/test.pdf)' | '<p>![img](file:///localPath/test.pdf)</p>'
     }
 
     def "Meaningful Markdown characters end up properly in the final document"(){
@@ -192,7 +211,7 @@ I'd like to invite you to my birthday party.'''
         when:
         def htmlText = renderHTML('escape-test-with-html-heading.md','text/markdown', [data: text])
         then:
-        htmlText == '<h1>Auftragsverarbeitungen&#32;gemäß&#32;Art&#46;&#32;30&#32;II&#32;DS&#45;GVO</h1>\n'
+        htmlText.contains('<h1>Auftragsverarbeitungen gemäß Art. 30 II DS-GVO</h1>')
         when:
         PDDocument doc = renderPDF('escape-test-with-html-heading.md','text/markdown', [data: text])
         def pdfText = new PDFTextStripper().getText(doc)

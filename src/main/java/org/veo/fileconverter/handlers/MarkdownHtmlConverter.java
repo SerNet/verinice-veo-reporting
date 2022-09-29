@@ -25,8 +25,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import org.veo.fileconverter.ConversionHandler;
 import org.veo.templating.MarkdownRendererImpl;
@@ -50,9 +54,12 @@ public class MarkdownHtmlConverter implements ConversionHandler {
     public void convert(InputStream input, OutputStream output) throws IOException {
         try (Reader reader = new BufferedReader(
                 new InputStreamReader(input, StandardCharsets.UTF_8));
+                StringWriter intermediateWriter = new StringWriter();
                 Writer writer = new BufferedWriter(
                         new OutputStreamWriter(output, StandardCharsets.UTF_8))) {
-            new MarkdownRendererImpl().renderToHTML(reader, writer);
+            new MarkdownRendererImpl().renderToHTML(reader, intermediateWriter);
+            Document doc = Jsoup.parse(intermediateWriter.toString());
+            writer.write(doc.toString());
         }
     }
 
