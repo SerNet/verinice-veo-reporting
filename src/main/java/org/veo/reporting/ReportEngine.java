@@ -19,7 +19,6 @@ package org.veo.reporting;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -47,8 +46,8 @@ public interface ReportEngine {
      *            the report identifier/name
      * @param outputType
      *            the desired output MIME type
-     * @param locale
-     *            the locale that the report is to be generated in
+     * @param parameters
+     *            the parameters for the report creation
      * @param outputStream
      *            the target output stream
      * @param dataProvider
@@ -60,7 +59,7 @@ public interface ReportEngine {
      *            bundle passed to the report in addition to the ones that are
      *            defined in the report's resource bundle itself.
      */
-    void generateReport(String reportName, String outputType, Locale locale,
+    void generateReport(String reportName, String outputType, ReportCreationParameters parameters,
             OutputStream outputStream, DataProvider dataProvider,
             Map<String, Object> dynamicBundleEntries) throws IOException, TemplateException;
 
@@ -78,9 +77,12 @@ public interface ReportEngine {
      *            the desired output MIME type
      * @param output
      *            the target output stream
+     * @param parameters
+     *            the parameters for the report creation
      */
     void generateReport(String templateName, Map<String, Object> data, String templateType,
-            String outputType, OutputStream output) throws IOException, TemplateException;
+            String outputType, OutputStream output, ReportCreationParameters parameters)
+            throws IOException, TemplateException;
 
     Map<String, ReportConfiguration> getReports();
 

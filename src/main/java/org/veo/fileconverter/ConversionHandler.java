@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.veo.reporting.ReportCreationParameters;
+
 /**
  * A handler that can convert data from one format to another one, e.g.
  * text/markdown to text/html. This is not meant to be used directly. See
@@ -43,6 +45,7 @@ public interface ConversionHandler {
     /**
      * performs the actual conversion
      */
-    void convert(InputStream input, OutputStream output) throws IOException;
+    void convert(InputStream input, OutputStream output, ReportCreationParameters parameters)
+            throws IOException;
 
 }

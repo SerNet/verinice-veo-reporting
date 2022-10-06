@@ -24,7 +24,6 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Optional;
@@ -66,9 +65,10 @@ public class ReportEngineImpl implements ReportEngine {
     }
 
     @Override
-    public void generateReport(String reportName, String outputType, Locale locale,
-            OutputStream outputStream, DataProvider dataProvider,
-            Map<String, Object> dynamicBundleEntries) throws IOException, TemplateException {
+    public void generateReport(String reportName, String outputType,
+            ReportCreationParameters parameters, OutputStream outputStream,
+            DataProvider dataProvider, Map<String, Object> dynamicBundleEntries)
+            throws IOException, TemplateException {
 
         ReportConfiguration config = getReport(reportName)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown report " + reportName));
@@ -82,9 +82,10 @@ public class ReportEngineImpl implements ReportEngine {
         String templateBaseName = templateName.split("\\.")[0];
         String bundleName = "templates." + templateBaseName;
         logger.info("Loading resourceBundle for template {}, locale {} from {}", templateName,
-                locale, bundleName);
+                parameters.getLocale(), bundleName);
         try {
-            ResourceBundle reportBundle = ResourceBundle.getBundle(bundleName, locale);
+            ResourceBundle reportBundle = ResourceBundle.getBundle(bundleName,
+                    parameters.getLocale());
             logger.info("Bundle loaded, locale: {}", reportBundle.getLocale());
             data.put("bundle",
                     MapResourceBundle.createMergedBundle(reportBundle, dynamicBundleEntries));
@@ -92,13 +93,15 @@ public class ReportEngineImpl implements ReportEngine {
             logger.warn("No resource bundle found for template {}", templateName);
             data.put("bundle", new MapResourceBundle(dynamicBundleEntries));
         }
-        generateReport(templateName, data, config.getTemplateType(), outputType, outputStream);
+        generateReport(templateName, data, config.getTemplateType(), outputType, outputStream,
+                parameters);
 
     }
 
     @Override
     public void generateReport(String templateName, Map<String, Object> data, String templateType,
-            String outputType, OutputStream output) throws IOException, TemplateException {
+            String outputType, OutputStream output, ReportCreationParameters parameters)
+            throws IOException, TemplateException {
         if (outputType.equals(templateType)) {
             templateEvaluator.executeTemplate(templateName, data, output);
         } else {
@@ -106,7 +109,8 @@ public class ReportEngineImpl implements ReportEngine {
                     PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
                 // start async conversion of the template output
                 Future<Void> future = executorService.submit(() -> {
-                    converter.convert(pipedInputStream, templateType, output, outputType);
+                    converter.convert(pipedInputStream, templateType, output, outputType,
+                            parameters);
                     return null;
                 });
                 try {

@@ -160,20 +160,22 @@ public class Demo {
         MapResourceBundle mergedBundleDPRA = MapResourceBundle.createMergedBundle(bundleDPRA,
                 entriesForLanguage);
 
+        ReportCreationParameters parameters = new ReportCreationParameters(Locale.GERMANY);
+
         try {
             workingCopy.put("bundle", mergedBundleVVT);
 
             createReport(reportEngine, "/tmp/vvt.md", "vvt.md", workingCopy, "text/markdown",
-                    "text/markdown");
+                    "text/markdown", parameters);
             createReport(reportEngine, "/tmp/vvt.html", "vvt.md", workingCopy, "text/markdown",
-                    "text/html");
+                    "text/html", parameters);
             createReport(reportEngine, "/tmp/vvt.pdf", "vvt.md", workingCopy, "text/markdown",
-                    "application/pdf");
+                    "application/pdf", parameters);
             workingCopy.put("bundle", mergedBundleDPRA);
             createReport(reportEngine, "/tmp/dpra.pdf", "dpra.md", workingCopy, "text/markdown",
-                    "application/pdf");
+                    "application/pdf", parameters);
             createReport(reportEngine, "/tmp/dpra.html", "dpra.md", workingCopy, "text/markdown",
-                    "text/html");
+                    "text/html", parameters);
             if (createDPIAReports) {
                 try (InputStream is = Files.newInputStream(
                         Paths.get("src/main/resources/templates/dpia_de.properties"))) {
@@ -183,16 +185,16 @@ public class Demo {
 
                     workingCopy.put("bundle", mergedBundleDPIA);
                     createReport(reportEngine, "/tmp/dpia.pdf", "dpia.md", workingCopy,
-                            "text/markdown", "application/pdf");
+                            "text/markdown", "application/pdf", parameters);
                     createReport(reportEngine, "/tmp/dpia.html", "dpia.md", workingCopy,
-                            "text/markdown", "text/html");
+                            "text/markdown", "text/html", parameters);
                 }
 
             }
             workingCopy.put("bundle", mergedBundleAV);
 
             createReport(reportEngine, "/tmp/av.pdf", "av.md", workingCopy, "text/markdown",
-                    "application/pdf");
+                    "application/pdf", parameters);
 
         } catch (IOException | TemplateException e) {
             logger.error("Error creating reports", e);
@@ -201,9 +203,11 @@ public class Demo {
 
     private static void createReport(ReportEngine reportEngine, String fileName,
             String templateName, Map<String, Object> templateInput, String templateType,
-            String outputType) throws IOException, TemplateException {
+            String outputType, ReportCreationParameters parameters)
+            throws IOException, TemplateException {
         try (var os = Files.newOutputStream(Paths.get(fileName))) {
-            reportEngine.generateReport(templateName, templateInput, templateType, outputType, os);
+            reportEngine.generateReport(templateName, templateInput, templateType, outputType, os,
+                    parameters);
             logger.info("Report {} created at {}", templateName, fileName);
         }
     }

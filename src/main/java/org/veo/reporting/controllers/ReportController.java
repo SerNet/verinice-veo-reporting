@@ -50,6 +50,7 @@ import org.veo.reporting.CreateReport;
 import org.veo.reporting.CreateReport.TargetSpecification;
 import org.veo.reporting.DataProvider;
 import org.veo.reporting.ReportConfiguration;
+import org.veo.reporting.ReportCreationParameters;
 import org.veo.reporting.ReportEngine;
 import org.veo.reporting.TypeSpecification;
 import org.veo.reporting.VeoClient;
@@ -157,8 +158,8 @@ public class ReportController {
 
         StreamingResponseBody stream = out -> {
             try {
-                reportEngine.generateReport(id, outputType, locale, out, dataProvider,
-                        entriesForLanguage);
+                reportEngine.generateReport(id, outputType, new ReportCreationParameters(locale),
+                        out, dataProvider, entriesForLanguage);
                 logger.info("Report generated");
             } catch (TemplateException e) {
                 logger.error("Error creating report", e);

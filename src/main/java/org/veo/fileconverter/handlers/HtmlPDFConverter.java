@@ -40,6 +40,7 @@ import com.openhtmltopdf.render.DefaultObjectDrawerFactory;
 
 import org.veo.fileconverter.ConversionHandler;
 import org.veo.fileconverter.charts.VeoJFreeChartPieDiagramObjectDrawer;
+import org.veo.reporting.ReportCreationParameters;
 
 /**
  * Converts HTML to PDF
@@ -57,7 +58,8 @@ public class HtmlPDFConverter implements ConversionHandler {
     }
 
     @Override
-    public void convert(InputStream input, OutputStream output) throws IOException {
+    public void convert(InputStream input, OutputStream output, ReportCreationParameters parameters)
+            throws IOException {
 
         // uncomment to set optional extensions
         // options.set(TocExtension.LIST_CLASS,

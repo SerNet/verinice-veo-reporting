@@ -39,7 +39,7 @@ class ReportEngineSpec extends Specification {
             favorites: [drink:'Rum']]
         when:
         def str = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('profile.md', data, 'text/markdown', 'text/markdown', it )
+            reportEngine.generateReport('profile.md', data, 'text/markdown', 'text/markdown', it, new ReportCreationParameters(Locale.US) )
             it.toString()
         }
         then:
@@ -142,12 +142,13 @@ Favorite drink
             'Work life',
             'Private life'
         ]
+        doc.documentCatalog.language == 'EN-US'
     }
 
     def "Render report with different locales"(){
         when:
         String text = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('invitation', 'text/plain',Locale.GERMANY, it,{ key, url->[name: 'Max']}, [:])
+            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.GERMANY), it,{key, url->[name: 'Max']}, [:])
             it.toString()
         }
         then:
@@ -157,7 +158,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
         when:
 
         text = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('invitation', 'text/plain',Locale.US, it,{ key, url->[name: 'Jack']}, [:])
+            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.US), it,{key, url->[name: 'Jack']}, [:])
             it.toString()
         }
         then:
@@ -222,14 +223,14 @@ I'd like to invite you to my birthday party.'''
 
     private PDDocument renderPDF(String templateName, String templateType, Map data) {
         new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport(templateName, data, templateType, 'application/pdf', it )
+            reportEngine.generateReport(templateName, data, templateType, 'application/pdf', it, new ReportCreationParameters(Locale.US))
             PDDocument.load(it.toByteArray())
         }
     }
 
     private String renderHTML(String templateName, String templateType, Map data) {
         new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport(templateName, data, templateType, 'text/html', it)
+            reportEngine.generateReport(templateName, data, templateType, 'text/html', it, new ReportCreationParameters(Locale.US))
             it.toString()
         }
     }

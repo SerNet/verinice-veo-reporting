@@ -1,6 +1,6 @@
 /**
  * verinice.veo reporting
- * Copyright (C) 2021  Jochen Kemnade
+ * Copyright (C) 2022  Jochen Kemnade
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,22 +15,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.veo.fileconverter;
+package org.veo.reporting;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.Locale;
 
-import org.veo.reporting.ReportCreationParameters;
+public class ReportCreationParameters {
 
-/**
- * A service that can convert a file from one format to another. It uses a set
- * of handlers, each of which supports the conversion from a single format to a
- * single other one. See {@link ConversionHandler}.
- */
-public interface FileConverter {
+    public ReportCreationParameters(Locale locale) {
+        this.locale = locale;
+    }
 
-    void convert(InputStream input, String inputType, OutputStream output, String outputType,
-            ReportCreationParameters parameters) throws IOException;
+    private final Locale locale;
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    @Override
+    public String toString() {
+        return "ReportCreationParameters [locale=" + locale + "]";
+    }
 
 }

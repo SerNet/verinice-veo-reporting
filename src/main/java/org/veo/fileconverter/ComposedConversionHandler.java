@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import org.veo.reporting.ReportCreationParameters;
 import org.veo.reporting.exception.VeoReportingException;
 
 /**
@@ -61,17 +62,18 @@ public class ComposedConversionHandler implements ConversionHandler {
     }
 
     @Override
-    public void convert(InputStream input, OutputStream output) throws IOException {
+    public void convert(InputStream input, OutputStream output, ReportCreationParameters parameters)
+            throws IOException {
         try (PipedInputStream pipedInputStream = new PipedInputStream();
                 PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
             // start async conversion of the first
             // handler's output with the second handler
             Future<Void> future = executorService.submit(() -> {
-                secondHandler.convert(pipedInputStream, output);
+                secondHandler.convert(pipedInputStream, output, parameters);
                 return null;
             });
             try {
-                firstHandler.convert(input, pipedOutputStream);
+                firstHandler.convert(input, pipedOutputStream, parameters);
             } catch (IOException e) {
                 // first handler failed, cancel the second handler task
                 future.cancel(true);

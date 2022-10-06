@@ -28,11 +28,13 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import org.veo.fileconverter.ConversionHandler;
+import org.veo.reporting.ReportCreationParameters;
 import org.veo.templating.MarkdownRendererImpl;
 
 /**
@@ -51,7 +53,8 @@ public class MarkdownHtmlConverter implements ConversionHandler {
     }
 
     @Override
-    public void convert(InputStream input, OutputStream output) throws IOException {
+    public void convert(InputStream input, OutputStream output, ReportCreationParameters parameters)
+            throws IOException {
         try (Reader reader = new BufferedReader(
                 new InputStreamReader(input, StandardCharsets.UTF_8));
                 StringWriter intermediateWriter = new StringWriter();

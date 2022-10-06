@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import org.veo.fileconverter.handlers.HtmlPDFConverter;
 import org.veo.fileconverter.handlers.MarkdownHtmlConverter;
+import org.veo.reporting.ReportCreationParameters;
 import org.veo.reporting.exception.VeoReportingException;
 
 public class FileConverterImpl implements FileConverter {
@@ -61,8 +62,8 @@ public class FileConverterImpl implements FileConverter {
      * java.lang.String, java.io.OutputStream, java.lang.String)
      */
     @Override
-    public void convert(InputStream input, String inputType, OutputStream output, String outputType)
-            throws IOException {
+    public void convert(InputStream input, String inputType, OutputStream output, String outputType,
+            ReportCreationParameters parameters) throws IOException {
         if (inputType.equals(outputType)) {
             input.transferTo(output);
         } else {
@@ -72,7 +73,7 @@ public class FileConverterImpl implements FileConverter {
                 throw new IllegalArgumentException(
                         "Cannot convert " + inputType + " to " + outputType);
             }
-            converter.convert(input, output);
+            converter.convert(input, output, parameters);
         }
     }
 
