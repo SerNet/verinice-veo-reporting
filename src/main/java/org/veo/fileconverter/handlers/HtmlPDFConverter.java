@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.EnumSet;
 import java.util.Scanner;
 
 import org.jsoup.Jsoup;
@@ -31,6 +32,7 @@ import com.helger.font.api.FontResourceManager;
 import com.helger.font.api.IFontStyle;
 import com.openhtmltopdf.objects.jfreechart.JFreeChartBarDiagramObjectDrawer;
 import com.openhtmltopdf.objects.jfreechart.JFreeChartPieDiagramObjectDrawer;
+import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder.FSFontUseCase;
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder.FontStyle;
 import com.openhtmltopdf.pdfboxout.PdfBoxRenderer;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
@@ -92,6 +94,9 @@ public class HtmlPDFConverter implements ConversionHandler {
         FontResourceManager.getAllResourcesOfFontType("Open Sans").forEach(font -> {
             builder.useFont(font::getBufferedInputStream, font.getFontName(),
                     font.getFontWeight().getWeight(), convertFontStyle(font.getFontStyle()), true);
+            builder.useFont(font::getBufferedInputStream, font.getFontName(),
+                    font.getFontWeight().getWeight(), convertFontStyle(font.getFontStyle()), true,
+                    EnumSet.of(FSFontUseCase.FALLBACK_PRE));
         });
     }
 

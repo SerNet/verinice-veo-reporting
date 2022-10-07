@@ -197,7 +197,7 @@ I'd like to invite you to my birthday party.'''
         PDDocument doc = renderPDF('escape-test-with-html-heading.md','text/markdown', [data: text])
         def pdfText = new PDFTextStripper().getText(doc)
         then:
-        pdfText == 'Auftragsverarbeitungen gemäß Art. 30 II DS-\nGVO\n'
+        pdfText == 'Auftragsverarbeitungen gemäß Art. 30 II \nDS-GVO\n'
     }
 
 
