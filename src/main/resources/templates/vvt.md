@@ -83,19 +83,22 @@ dl.tom dd {
 
 # ${bundle.toc} {#toc}
 
+<#macro tocitem target text><a title="${bundle('jumpto', text)}" href="#${target}">${text}</a> <span href="#${target}"></span></#macro>
+
+
 <ol class="toc">
-  <li><a href="#main_page">${bundle.main_page}</a> <span href="#main_page"></span></li>
-<#list processesInScope as process>
-  <li><a href="#process_${process?counter}">${process.name}</a> <span href="#process_${process?counter}"></span>
+  <li><@tocitem "main_page" bundle.main_page /></li>
+  <#list processesInScope as process>
+  <li><@tocitem "process_${process?counter}" process.name />
     <ol>
-      <li><a href="#process_FIXME_${process?counter}">Prüfergebnis zur materiellen Rechtmäßigkeit</a> <span href="#process_FIXME_${process?counter}"></span></li>
-      <li><a href="#process_details_${process?counter}">Detailergebnisse</a> <span href="#process_details_${process?counter}"></span>
+      <li><@tocitem "process_FIXME_${process?counter}" "Prüfergebnis zur materiellen Rechtmäßigkeit" /></li>
+      <li><@tocitem "process_FIXME_${process?counter}" "Detailergebnisse" />
         <ol>
          <#if process.getLinks('process_dataTransmission')?has_content>
-            <li><a href="#process_transmissions_${process?counter}">Art übermittelter Daten und deren Empfänger</a> <span href="#process_transmissions_${process?counter}"></span></li>
+            <li><@tocitem "process_transmissions_${process?counter}" "Art übermittelter Daten und deren Empfänger" /></li>
          </#if>
          <#if process.risks?map(r->r.mitigation!)?filter(it -> it??)?filter(it -> it.parts?has_content)?has_content>
-            <li><a href="#process_toms_${process?counter}">Technische und organisatorische Maßnahmen</a> <span href="#process_toms_${process?counter}"></span></li>
+            <li><@tocitem "process_toms_${process?counter}" "Technische und organisatorische Maßnahmen" /></li>
          </#if>
         </ol>
       </li>
