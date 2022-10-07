@@ -25,7 +25,7 @@ class MarkdownRendererSpec extends Specification {
         given:
         MarkdownRendererImpl renderer = new MarkdownRendererImpl()
         String markdown = '''\
-# CommonMark
+# CommonMark {#commonmark}
 ## A strongly defined, highly compatible specification of Markdown
 
 
@@ -38,9 +38,9 @@ It’s a plain text format for writing structured documents, based on formatting
         renderer.renderToHTML(new StringReader(markdown), writer)
         def output = writer.toString()
         then:
-        output == '''<h1><a href="#commonmark" id="commonmark"></a>CommonMark</h1>
-<h2><a href="#a-strongly-defined-highly-compatible-specification-of-markdown" id="a-strongly-defined-highly-compatible-specification-of-markdown"></a>A strongly defined, highly compatible specification of Markdown</h2>
-<h2><a href="#what-is-markdown" id="what-is-markdown"></a>What is Markdown?</h2>
+        output == '''<h1 id="commonmark">CommonMark</h1>
+<h2 id="a-strongly-defined-highly-compatible-specification-of-markdown">A strongly defined, highly compatible specification of Markdown</h2>
+<h2 id="what-is-markdown">What is Markdown?</h2>
 <p>It’s a plain text format for writing structured documents, based on formatting conventions from email and usenet.</p>
 '''
     }

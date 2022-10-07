@@ -79,20 +79,20 @@ Favorite drink
         when:
         def str = renderHTML('profile.md','text/markdown', data)
         then:
-        str == '''<h1><a href="#profile-for-guybrush-threepwood" id="profile-for-guybrush-threepwood"></a>Profile for Guybrush Threepwood</h1>
-<h2><a href="#basic-attributes" id="basic-attributes"></a>Basic attributes</h2>
+        str == '''<h1 id="profile-for-guybrush-threepwood">Profile for Guybrush Threepwood</h1>
+<h2 id="basic-attributes">Basic attributes</h2>
 <dl>
 <dt>Age</dt>
 <dd>42</dd>
 <dt>Height</dt>
 <dd>5'8&quot;</dd>
 </dl>
-<h2><a href="#work-life" id="work-life"></a>Work life</h2>
+<h2 id="work-life">Work life</h2>
 <dl>
 <dt>Profession</dt>
 <dd>Pirate</dd>
 </dl>
-<h2><a href="#private-life" id="private-life"></a>Private life</h2>
+<h2 id="private-life">Private life</h2>
 <dl>
 <dt>Favorite drink</dt>
 <dd>Rum</dd>
