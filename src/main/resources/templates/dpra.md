@@ -150,7 +150,7 @@ dt {
 
 
 
-# ${bundle.main_page}{#main_page}
+# ${bundle.main_page} {#main_page}
 
 <div class="main_page">
 
@@ -198,7 +198,7 @@ dt {
 </div>
 <#if riskDefinitionId?has_content>
 
-# ${bundle.risk_matrix}{#risk_matrix}
+# ${bundle.risk_matrix} {#risk_matrix}
 
 <#assign riskDefinition=domain.riskDefinitions[riskDefinitionId] />
 
@@ -262,7 +262,7 @@ ${risk.name}
 
 <div class="pagebreak"></div>
 
-# ${bundle.chart_section_title}{#charts}
+# ${bundle.chart_section_title} {#charts}
 
 <div class="left risk_charts_col">
 <object type="jfreechart/veo-pie" style="margin-bottom: 2cm;width:10cm;height:8cm;margin:auto;" title="${bundle.risk_distribution} (${bundle.gross})">

@@ -47,7 +47,7 @@ dt {
 <p>powered by verinice</p>
 </div>
 
-# ${bundle.scope_name}{#main_page}
+# ${bundle.scope_name} {#main_page}
 
 <div class="scopeinfo">
 
@@ -77,7 +77,7 @@ ${bundle.scope_dataProtectionOfficer}
 
 <div class="pagebreak"/>
 
-# ${bundle.processing_activities}{#processing_activities}
+# ${bundle.processing_activities} {#processing_activities}
 
 <#list processings as processing>
 

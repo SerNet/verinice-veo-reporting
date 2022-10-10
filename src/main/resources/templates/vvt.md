@@ -104,7 +104,7 @@ dl.tom dd {
 </#list>
 </ol>
 
-# ${bundle.main_page}{#main_page}
+# ${bundle.main_page} {#main_page}
 
 <div class="main_page">
 

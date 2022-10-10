@@ -61,7 +61,7 @@ dt {
 
 <#if scope?has_content>
 
-# ${bundle.main_page}{#main_page}
+# ${bundle.main_page} {#main_page}
 
 <div class="main_page">
 
