@@ -265,7 +265,7 @@ ${risk.name}
 # ${bundle.chart_section_title} {#charts}
 
 <div class="left risk_charts_col">
-<object type="jfreechart/veo-pie" style="margin-bottom: 2cm;width:10cm;height:8cm;margin:auto;" title="${bundle.risk_distribution} (${bundle.gross})">
+<object type="jfreechart/veo-pie" style="margin-bottom: 2cm;width:10cm;height:8cm;margin:auto;" title="${bundle.risk_distribution} (${bundle.gross})" alt="${bundle.chart}: ${bundle.risk_distribution} (${bundle.gross})">
 <#list riskDefinition.riskValues as riskValue>
   <#assign filteredRisks=processRisksInDomainWithData?filter(r->
   r.domains[domain.id].riskDefinitions[riskDefinitionId].riskValues?map(it->it.inherentRisk!-1)?max == riskValue.ordinalValue)>
@@ -277,7 +277,7 @@ ${risk.name}
 </div>
 
 <div class="left risk_charts_col">
-<object type="jfreechart/veo-pie" style="margin-bottom: 2cm;width:10cm;height:8cm;margin:auto;" title="${bundle.risk_distribution} (${bundle.net})">
+<object type="jfreechart/veo-pie" style="margin-bottom: 2cm;width:10cm;height:8cm;margin:auto;" title="${bundle.risk_distribution} (${bundle.net})" alt="${bundle.chart}: ${bundle.risk_distribution} (${bundle.net})">
 <#list riskDefinition.riskValues as riskValue>
   <#assign filteredRisks=processRisksInDomainWithData?filter(r->
   r.domains[domain.id].riskDefinitions[riskDefinitionId].riskValues?map(it->it.residualRisk!-1)?max == riskValue.ordinalValue)>
