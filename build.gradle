@@ -29,7 +29,10 @@ dependencies {
     implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10'
     implementation 'com.openhtmltopdf:openhtmltopdf-slf4j:1.0.10'
     implementation 'com.openhtmltopdf:openhtmltopdf-objects:1.0.10'
+    implementation 'org.apache.pdfbox:pdfbox:2.0.27'
+    implementation 'de.rototor.pdfbox:graphics2d:0.41'
     implementation 'org.jfree:jfreechart:1.5.3'
+    implementation 'org.jsoup:jsoup:1.15.3'
     implementation 'com.helger.font:ph-fonts-api:5.0.0'
 
     compileOnly 'com.github.spotbugs:spotbugs-annotations:4.7.2'

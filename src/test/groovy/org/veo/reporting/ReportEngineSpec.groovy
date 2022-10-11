@@ -82,44 +82,44 @@ Favorite drink
         str == '''<html lang="en-US">
  <head></head>
  <body>
-  <h1 id="profile-for-guybrush-threepwood">Profile for Guybrush Threepwood</h1> 
-  <h2 id="basic-attributes">Basic attributes</h2> 
-  <dl> 
+  <h1 id="profile-for-guybrush-threepwood">Profile for Guybrush Threepwood</h1>
+  <h2 id="basic-attributes">Basic attributes</h2>
+  <dl>
    <dt>
     Age
-   </dt> 
+   </dt>
    <dd>
     42
-   </dd> 
+   </dd>
    <dt>
     Height
-   </dt> 
+   </dt>
    <dd>
     5'8"
-   </dd> 
-  </dl> 
-  <h2 id="work-life">Work life</h2> 
-  <dl> 
+   </dd>
+  </dl>
+  <h2 id="work-life">Work life</h2>
+  <dl>
    <dt>
     Profession
-   </dt> 
+   </dt>
    <dd>
     Pirate
-   </dd> 
-  </dl> 
-  <h2 id="private-life">Private life</h2> 
-  <dl> 
+   </dd>
+  </dl>
+  <h2 id="private-life">Private life</h2>
+  <dl>
    <dt>
     Favorite drink
-   </dt> 
+   </dt>
    <dd>
     Rum
-   </dd> 
-  </dl> <bookmarks> 
-   <bookmark name="Basic attributes" href="#basic-attributes" /> 
-   <bookmark name="Work life" href="#work-life" /> 
+   </dd>
+  </dl> <bookmarks>
+   <bookmark name="Basic attributes" href="#basic-attributes" />
+   <bookmark name="Work life" href="#work-life" />
    <bookmark name="Private life" href="#private-life" /> 
-  </bookmarks> 
+  </bookmarks>
  </body>
 </html>'''
     }
