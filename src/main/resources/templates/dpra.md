@@ -304,7 +304,7 @@ ${risk.name}
 ## Risiken
 
 <#list processRisksInDomain as risk>
-<@dpRisk.riskdisplay risk domain riskDefinition />
+<@dpRisk.riskdisplay 3 risk domain riskDefinition />
 </#list>
 
 </#if>

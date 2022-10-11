@@ -17,12 +17,12 @@
 </#macro>
 
 
-<#macro riskdisplay risk domain riskDefinition={}>
+<#macro riskdisplay headinglevel risk domain riskDefinition={}>
 <div class="risk">
 
 <#assign scenario = risk.scenario>
 
-### ${(scenario.name)!} (${risk.designator})
+<#list 0..<headinglevel as i>#</#list> ${(scenario.name)!} (${risk.designator})
 
 <@com.def "Risikoverantwortlicher/-Eigentümer", (risk.riskOwner.name)! />
 

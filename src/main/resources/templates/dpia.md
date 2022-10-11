@@ -267,7 +267,7 @@ Angaben zu gemeinsam Verantwortlichen
 <#assign riskDefinition=domain.riskDefinitions[riskDefinitionId] />
 
 <#list processRisksInDomain as risk>
-<@dpRisk.riskdisplay risk domain riskDefinition />
+<@dpRisk.riskdisplay 2 risk domain riskDefinition />
 </#list>
 
 </#if>
@@ -281,7 +281,7 @@ Angaben zu gemeinsam Verantwortlichen
 <#assign riskDefinition=domain.riskDefinitions[riskDefinitionId] />
 
 <#list processRisksInDomain as risk>
-<@dpRisk.riskdisplay risk domain riskDefinition />
+<@dpRisk.riskdisplay 2 risk domain riskDefinition />
 </#list>
 
 </#if>
