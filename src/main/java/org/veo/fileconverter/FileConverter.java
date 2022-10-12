@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
 
 /**
@@ -31,6 +32,7 @@ import org.veo.reporting.ReportCreationParameters;
 public interface FileConverter {
 
     void convert(InputStream input, String inputType, OutputStream output, String outputType,
-            ReportCreationParameters parameters) throws IOException;
+            ReportConfiguration reportConfiguration, ReportCreationParameters parameters)
+            throws IOException;
 
 }

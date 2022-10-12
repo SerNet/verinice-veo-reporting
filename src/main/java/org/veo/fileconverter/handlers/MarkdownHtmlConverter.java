@@ -35,6 +35,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import org.veo.fileconverter.ConversionHandler;
+import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
 import org.veo.templating.MarkdownRendererImpl;
 
@@ -54,7 +55,8 @@ public class MarkdownHtmlConverter implements ConversionHandler {
     }
 
     @Override
-    public void convert(InputStream input, OutputStream output, ReportCreationParameters parameters)
+    public void convert(InputStream input, OutputStream output,
+            ReportConfiguration reportConfiguration, ReportCreationParameters parameters)
             throws IOException {
         try (Reader reader = new BufferedReader(
                 new InputStreamReader(input, StandardCharsets.UTF_8));

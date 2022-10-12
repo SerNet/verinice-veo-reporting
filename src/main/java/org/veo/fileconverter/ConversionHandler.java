@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
 
 /**
@@ -45,7 +46,7 @@ public interface ConversionHandler {
     /**
      * performs the actual conversion
      */
-    void convert(InputStream input, OutputStream output, ReportCreationParameters parameters)
-            throws IOException;
+    void convert(InputStream input, OutputStream output, ReportConfiguration reportConfiguration,
+            ReportCreationParameters parameters) throws IOException;
 
 }

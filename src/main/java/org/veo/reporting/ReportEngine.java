@@ -25,7 +25,6 @@ import java.util.Optional;
 import org.veo.fileconverter.FileConverter;
 import org.veo.templating.TemplateEvaluator;
 
-import freemarker.cache.TemplateLoader;
 import freemarker.template.TemplateException;
 
 /**
@@ -66,13 +65,11 @@ public interface ReportEngine {
     /**
      * Execute a template directly, bypassing the data fetching and bundle
      * loading mechanisms.
-     * 
-     * @param templateName
-     *            the template file name (see {@link TemplateLoader}
+     *
+     * @param reportConfiguration
+     *            the report configuration
      * @param data
      *            the data that is available for the template execution
-     * @param templateType
-     *            the MIME type of the template
      * @param outputType
      *            the desired output MIME type
      * @param output
@@ -80,7 +77,7 @@ public interface ReportEngine {
      * @param parameters
      *            the parameters for the report creation
      */
-    void generateReport(String templateName, Map<String, Object> data, String templateType,
+    void generateReport(ReportConfiguration reportConfiguration, Map<String, Object> data,
             String outputType, OutputStream output, ReportCreationParameters parameters)
             throws IOException, TemplateException;
 

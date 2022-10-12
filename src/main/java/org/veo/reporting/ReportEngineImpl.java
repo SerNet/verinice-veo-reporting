@@ -93,28 +93,28 @@ public class ReportEngineImpl implements ReportEngine {
             logger.warn("No resource bundle found for template {}", templateName);
             data.put("bundle", new MapResourceBundle(dynamicBundleEntries));
         }
-        generateReport(templateName, data, config.getTemplateType(), outputType, outputStream,
-                parameters);
+        generateReport(config, data, outputType, outputStream, parameters);
 
     }
 
     @Override
-    public void generateReport(String templateName, Map<String, Object> data, String templateType,
+    public void generateReport(ReportConfiguration reportConfiguration, Map<String, Object> data,
             String outputType, OutputStream output, ReportCreationParameters parameters)
             throws IOException, TemplateException {
-        if (outputType.equals(templateType)) {
-            templateEvaluator.executeTemplate(templateName, data, output);
+        if (outputType.equals(reportConfiguration.getTemplateType())) {
+            templateEvaluator.executeTemplate(reportConfiguration.getTemplateFile(), data, output);
         } else {
             try (PipedInputStream pipedInputStream = new PipedInputStream();
                     PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
                 // start async conversion of the template output
                 Future<Void> future = executorService.submit(() -> {
-                    converter.convert(pipedInputStream, templateType, output, outputType,
-                            parameters);
+                    converter.convert(pipedInputStream, reportConfiguration.getTemplateType(),
+                            output, outputType, reportConfiguration, parameters);
                     return null;
                 });
                 try {
-                    templateEvaluator.executeTemplate(templateName, data, pipedOutputStream);
+                    templateEvaluator.executeTemplate(reportConfiguration.getTemplateFile(), data,
+                            pipedOutputStream);
                 } catch (TemplateException | IOException e) {
                     // template evaluation failed, cancel the conversion task
                     future.cancel(true);

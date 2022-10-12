@@ -20,6 +20,7 @@ package org.veo.templating
 import org.apache.pdfbox.pdmodel.PDDocument
 
 import org.veo.fileconverter.handlers.HtmlPDFConverter
+import org.veo.reporting.ReportConfiguration
 import org.veo.reporting.ReportCreationParameters
 
 import groovy.xml.MarkupBuilder
@@ -45,10 +46,10 @@ class HtmlPDFConverterSpec extends Specification {
             }
             it.toString()
         }
-
+        ReportConfiguration reportConfiguration = Mock()
         when:
         PDDocument doc = new ByteArrayOutputStream().withCloseable {
-            converter.convert(new ByteArrayInputStream(html.bytes), it, new ReportCreationParameters(Locale.US))
+            converter.convert(new ByteArrayInputStream(html.bytes), it, reportConfiguration, new ReportCreationParameters(Locale.US))
             PDDocument.load(it.toByteArray())
         }
         then:

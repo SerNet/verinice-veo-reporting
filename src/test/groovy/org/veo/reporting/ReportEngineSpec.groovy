@@ -37,9 +37,13 @@ class ReportEngineSpec extends Specification {
             age: 42,
             height: '''5'8"''',
             favorites: [drink:'Rum']]
+        ReportConfiguration reportConfiguration = Stub {
+            getTemplateFile() >> 'profile.md'
+            getTemplateType() >> 'text/markdown'
+        }
         when:
         def str = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('profile.md', data, 'text/markdown', 'text/markdown', it, new ReportCreationParameters(Locale.US) )
+            reportEngine.generateReport(reportConfiguration, data, 'text/markdown', it, new ReportCreationParameters(Locale.US) )
             it.toString()
         }
         then:
@@ -227,15 +231,25 @@ I'd like to invite you to my birthday party.'''
 
 
     private PDDocument renderPDF(String templateName, String templateType, Map data, Locale locale = Locale.US) {
+        ReportConfiguration reportConfiguration = Stub {
+            getName() >> ['en': 'Test PDF report', 'de': 'Test-PDF-Report']
+            getTemplateFile() >> templateName
+            getTemplateType() >> templateType
+        }
         new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport(templateName, data, templateType, 'application/pdf', it, new ReportCreationParameters(locale))
+            reportEngine.generateReport(reportConfiguration, data, 'application/pdf', it, new ReportCreationParameters(locale))
             PDDocument.load(it.toByteArray())
         }
     }
 
     private String renderHTML(String templateName, String templateType, Map data, Locale locale = Locale.US) {
+        ReportConfiguration reportConfiguration = Stub {
+            getName() >> ['en': 'Test HTML report', 'de': 'Test-HTML-Report']
+            getTemplateFile() >> templateName
+            getTemplateType() >> templateType
+        }
         new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport(templateName, data, templateType, 'text/html', it, new ReportCreationParameters(locale))
+            reportEngine.generateReport(reportConfiguration, data, 'text/html', it, new ReportCreationParameters(locale))
             it.toString()
         }
     }

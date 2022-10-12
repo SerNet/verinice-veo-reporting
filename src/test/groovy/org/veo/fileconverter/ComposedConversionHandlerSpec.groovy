@@ -20,6 +20,7 @@ package org.veo.fileconverter
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.Executors
 
+import org.veo.reporting.ReportConfiguration
 import org.veo.reporting.ReportCreationParameters
 
 import spock.lang.Specification
@@ -32,12 +33,13 @@ class ComposedConversionHandlerSpec extends Specification {
         ConversionHandler reverseHandler = new ReverseText()
         ConversionHandler upperCaseHandler = new UpperCaseText()
         def executor = Executors.newSingleThreadExecutor()
+        ReportConfiguration reportConfiguration = Mock()
         when:
         def compositeHandler = new ComposedConversionHandler(reverseHandler, upperCaseHandler, executor)
         def os = new ByteArrayOutputStream()
         new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8)).withStream { is->
             os.withStream {
-                compositeHandler.convert(is, it, new ReportCreationParameters(Locale.US))
+                compositeHandler.convert(is, it, reportConfiguration, new ReportCreationParameters(Locale.US))
             }
         }
         def output = new String(os.toByteArray(), 'UTF-8')
@@ -49,7 +51,7 @@ class ComposedConversionHandlerSpec extends Specification {
     class ReverseText implements ConversionHandler {
 
         @Override
-        public void convert(InputStream input, OutputStream output, ReportCreationParameters parameters) throws IOException {
+        public void convert(InputStream input, OutputStream output, ReportConfiguration reportConfiguration, ReportCreationParameters parameters) throws IOException {
             input.withReader('UTF-8') {  r->
                 output.withWriter('UTF-8') { w->
                     w << r.text.reverse()
@@ -71,7 +73,7 @@ class ComposedConversionHandlerSpec extends Specification {
     class UpperCaseText implements ConversionHandler {
 
         @Override
-        public void convert(InputStream input, OutputStream output, ReportCreationParameters parameters) throws IOException {
+        public void convert(InputStream input, OutputStream output, ReportConfiguration reportConfiguration, ReportCreationParameters parameters) throws IOException {
             input.withReader('UTF-8') {
                 char c
                 while((c = it.read()) != -1) {
