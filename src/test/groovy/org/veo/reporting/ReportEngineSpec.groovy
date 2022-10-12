@@ -84,7 +84,9 @@ Favorite drink
         def str = renderHTML('profile.md','text/markdown', data)
         then:
         str == '''<html lang="en-US">
- <head></head>
+ <head>
+  <title>Test HTML report</title>
+ </head>
  <body>
   <h1 id="profile-for-guybrush-threepwood">Profile for Guybrush Threepwood</h1>
   <h2 id="basic-attributes">Basic attributes</h2>

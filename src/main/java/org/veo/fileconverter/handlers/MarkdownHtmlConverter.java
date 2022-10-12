@@ -29,6 +29,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -71,6 +72,12 @@ public class MarkdownHtmlConverter implements ConversionHandler {
                 html.attr("lang", locale.getLanguage());
             } else {
                 html.attr("lang", locale.getLanguage() + "-" + locale.getCountry());
+            }
+            Element head = Optional.ofNullable(html.getElementsByTag("head").first())
+                    .orElseGet(() -> html.appendElement("head"));
+            if (head.getElementsByTag("title").first() == null) {
+                head.appendElement("title")
+                        .text(reportConfiguration.getName().get(locale.getLanguage()));
             }
 
             writer.write(doc.toString());
