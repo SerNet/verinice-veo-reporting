@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 
 import org.veo.reporting.VeoClient
+import org.veo.reporting.exception.DataFetchingException
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
@@ -453,6 +454,26 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
         then:
         text.startsWith('''Auftragsverarbeitungen
 gemäß Art. 30 II DS-GVO''')
+    }
+
+    def "Status 401 from data backend results in status 401"(){
+        when:
+        def response = POST("/reports/processing-on-behalf", 'abc', 'de', [
+            outputType:'application/pdf',
+            targets: [
+                [
+                    type: 'scope',
+                    id: '0815'
+                ]
+            ]
+        ])
+        then:
+        response.status == 401
+        response.contentAsString == 'Failed to retrieve data from http://localhost/scopes/0815, status code: 401, message: Invalid token'
+
+        1 * veoClient.fetchData('/scopes/0815', 'Bearer: abc') >> {
+            throw new DataFetchingException('http://localhost/scopes/0815', 401, 'Invalid token')
+        }
     }
 
     MockHttpServletResponse GET(url) {
