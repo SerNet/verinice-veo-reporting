@@ -54,6 +54,7 @@ import org.veo.reporting.ReportCreationParameters;
 import org.veo.reporting.ReportEngine;
 import org.veo.reporting.TypeSpecification;
 import org.veo.reporting.VeoClient;
+import org.veo.reporting.exception.InvalidReportParametersException;
 
 import freemarker.template.TemplateException;
 
@@ -126,7 +127,7 @@ public class ReportController {
         Set<TypeSpecification> supportedTargetTypes = configuration.get().getTargetTypes();
         if (supportedTargetTypes.stream()
                 .noneMatch(typeSpecification -> typeSpecification.getModelType() == target.type)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            throw new InvalidReportParametersException(
                     "Target type " + target.type + " not supported by report " + id);
         }
         Locale locale = RequestContextUtils.getLocale(request);
@@ -135,7 +136,7 @@ public class ReportController {
         String desiredLanguage = locale.getLanguage();
         Set<String> supportedLanguages = configuration.get().getName().keySet();
         if (!supportedLanguages.contains(desiredLanguage)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            throw new InvalidReportParametersException(
                     "Language " + desiredLanguage + " not supported by report " + id
                             + ", supported languages: " + supportedLanguages);
         }

@@ -17,14 +17,23 @@
  */
 package org.veo.reporting;
 
+import java.util.stream.Collectors;
+
+import javax.validation.ConstraintViolation;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.veo.reporting.exception.DataFetchingException;
+import org.veo.reporting.exception.InvalidReportParametersException;
 
 @ControllerAdvice
 public class VeoReportingExceptionHandler {
@@ -37,8 +46,36 @@ public class VeoReportingExceptionHandler {
         return handle(exception, HttpStatus.valueOf(exception.getStatusCode()));
     }
 
+    @ExceptionHandler({ MethodArgumentNotValidException.class })
+    protected ResponseEntity<String> handle(MethodArgumentNotValidException exception) {
+        logger.error("Error invoking method", exception);
+        return handle(exception.getBindingResult().getAllErrors().stream()
+                .map(er -> er.unwrap(ConstraintViolation.class))
+                .map(v -> v.getPropertyPath() + ": " + v.getMessage())
+                .collect(Collectors.joining(" ")), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ HttpMessageNotReadableException.class })
+    protected ResponseEntity<String> handle(HttpMessageNotReadableException exception) {
+        logger.error("Error reading HTTP message", exception);
+        Throwable cause = exception.getCause();
+        if (cause instanceof JsonProcessingException jpe) {
+            return handle(jpe.getOriginalMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @ExceptionHandler({ InvalidReportParametersException.class })
+    protected ResponseEntity<String> handle(InvalidReportParametersException exception) {
+        return handle(exception, HttpStatus.BAD_REQUEST);
+    }
+
     private ResponseEntity<String> handle(Throwable exception, HttpStatus status) {
         logger.error("Error handling request", exception);
-        return ResponseEntity.status(status).body(exception.getMessage());
+        return handle(exception.getMessage(), status);
+    }
+
+    private ResponseEntity<String> handle(String responseText, HttpStatus status) {
+        return ResponseEntity.status(status).body(responseText);
     }
 }

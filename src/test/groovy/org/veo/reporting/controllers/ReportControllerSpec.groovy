@@ -107,10 +107,8 @@ public class ReportControllerSpec extends Specification {
         ])
         then:
         response.status == 400
+        response.contentAsString == '''targets: Targets not specified.'''
     }
-
-
-
 
     def "try to create a report with empty targets parameter"(){
         when:
@@ -119,6 +117,7 @@ public class ReportControllerSpec extends Specification {
             targets: []])
         then:
         response.status == 400
+        response.contentAsString == '''targets: size must be between 1 and 1'''
     }
 
     def "try to create a report with invalid target type"(){
@@ -133,6 +132,7 @@ public class ReportControllerSpec extends Specification {
             ]])
         then:
         response.status == 400
+        response.contentAsString == '''Cannot deserialize value of type `org.veo.reporting.EntityType` from String "chocolate": not one of the values accepted for Enum class: [scenario, incident, unit, person, document, control, process, asset, scope, client]'''
     }
 
     def "try to create a report with unsupported target type"(){
@@ -147,6 +147,7 @@ public class ReportControllerSpec extends Specification {
             ]])
         then:
         response.status == 400
+        response.contentAsString == '''Target type control not supported by report processing-activities'''
     }
 
 
@@ -169,6 +170,7 @@ public class ReportControllerSpec extends Specification {
         ])
         then:
         response.status == 400
+        response.contentAsString == '''targets: size must be between 1 and 1'''
     }
 
     def "try to create a report with missing authentication header"(){
@@ -185,6 +187,23 @@ public class ReportControllerSpec extends Specification {
         then:
         response.status == 401
     }
+
+    def "try to create a report with an unsupported locale"(){
+        when:
+        def response = POST("/reports/processing-activities", 'abc', 'en', [
+            outputType:'application/pdf',
+            targets: [
+                [
+                    type: 'scope',
+                    id: '1'
+                ]
+            ]
+        ])
+        then:
+        response.status == 400
+        response.contentAsString == '''Language en not supported by report processing-activities, supported languages: [de]'''
+    }
+
 
     def "create a report with different locales"(){
         when:
