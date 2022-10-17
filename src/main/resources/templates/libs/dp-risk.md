@@ -12,10 +12,9 @@
 
 <#macro probabilitydisplay riskDefinition value><#if value?has_content><span style="color:${riskDefinition.getProbability(value).color}">${riskDefinition.getProbability(value).label}</span></#if></#macro>
 
-<#macro cellStyle color>
-  style="background-color:${color};color:${colorContrast(color, '#e3e3e3', '#767676', '#929292', '#ffffff')}"
+<#macro riskCell color text>
+  <td style="background-image: linear-gradient(to right, ${color} 0mm, ${color} 5mm, white 5mm, white);padding-left: 7mm;">${text}</td>
 </#macro>
-
 
 <#macro riskdisplay headinglevel risk domain riskDefinition={}>
 <div class="risk">
@@ -70,7 +69,7 @@ ${category.id}:
 <#assign maxInherent = riskDefinition.categories?map(c->(riskValues[c.id].inherentRisk)!-1)?max />
 <#if (maxInherent > -1)>
 <#assign maxInherentData = riskDefinition.getRisk(maxInherent) />
-<td <@dpRisk.cellStyle maxInherentData.color />>${maxInherentData.label}</td>
+<@riskCell maxInherentData.color maxInherentData.label/>
 <#else/>
 <td />
 </#if>
@@ -91,7 +90,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <#assign maxResidual = riskDefinition.categories?map(c->(riskValues[c.id].residualRisk)!-1)?max />
 <#if (maxResidual > -1)>
 <#assign maxResidualData = riskDefinition.getRisk(maxResidual) />
-<td <@dpRisk.cellStyle maxResidualData.color />>${maxResidualData.label}</td>
+<@riskCell maxResidualData.color maxResidualData.label/>
 <#else/>
 <td />
 </#if>
@@ -130,7 +129,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <td>${tom.designator} ${tom.name}</td>
 <#if mitigationStatus?has_content>
 <#assign implementationStatus = riskDefinition.getImplementationStatus(mitigationStatus) />
-<td style="color:${implementationStatus.color}">${implementationStatus.label}</td>
+<@riskCell implementationStatus.color implementationStatus.label />
 <#else>
 <td></td>
 </#if>

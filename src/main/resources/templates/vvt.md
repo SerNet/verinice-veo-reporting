@@ -463,7 +463,7 @@ ${bundle.process_opinionDPO_comment}
 <#assign tomsinsection = toms?filter(t->t.control_dataProtection_objectives!?seq_contains(objective))!>
 <#if tomsinsection?has_content>
 <tbody>
-<tr class="gray tomsectiontitle">
+<tr class="dark-gray tomsectiontitle">
   <td colspan="2">${title}</td>
 </tr>
 <#list tomsinsection as t>
@@ -476,7 +476,7 @@ ${bundle.process_opinionDPO_comment}
 <#assign implementationStatus = riskDefinition.getImplementationStatus(tom_status) />
 <#assign backgroundColor=implementationStatus.color />
 <#assign color=colorContrast(backgroundColor, '#e3e3e3', '#7c7c7b', '#929292')>
-<#assign statusTdStyle="background-color:${backgroundColor};color:${color}">
+<#assign statusTdStyle="background-image: linear-gradient(to right, ${backgroundColor} 0mm, ${backgroundColor} 5mm, white 5mm, white);padding-left: 7mm;">
 <#assign tom_status_output=implementationStatus.label>
 </#if>
 </#if>

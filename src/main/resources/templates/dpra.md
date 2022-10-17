@@ -112,7 +112,6 @@ dt {
   transform-origin: 50% 50%;
   transform: rotate(-90deg) translateY(2mm);
 }
-
 </style>
 
 <#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
@@ -210,6 +209,26 @@ dt {
   <#assign processRisksInDomainWithData = processRisksInDomainWithData + process.risks?filter(it-> it.domains?keys?seq_contains(domain.id) && it.domains[domain.id].riskDefinitions?has_content) />
 </#list>
 
+<#--
+The stops should in fact all be at 3mm, but there's a bug in the HTML-PDF converter, so we have
+do use some magically calculated numbers
+https://github.com/danfickle/openhtmltopdf/issues/883
+Also, an SVG inline background would be preferable, but the HTML->PDF converter does not support that yet.
+https://github.com/danfickle/openhtmltopdf/issues/750
+-->
+<#macro matrixCellStyleProbabilityLabel color>
+  style="background-image: linear-gradient(45deg, ${color} 0%, ${color} 1.7mm, white 1.7mm, white);"
+</#macro>
+
+<#macro matrixCellStyleImpactLabel color>
+  style="background-image: linear-gradient(45deg, ${color} 0%, ${color} 4.3mm, white 4.3mm, white);"
+</#macro>
+
+<#macro matrixCell color text>
+  <td style="background-image: linear-gradient(45deg, ${color} 0%, ${color} 3mm, white 3mm, white);">${text}</td>
+</#macro>
+
+
 <table class="riskmatrix">
 <colgroup>
 <col span="1">
@@ -230,7 +249,7 @@ Eintrittswahrscheinlichkeit
 <th class="spacer"/>
 <th class="spacer"/>
 <#list riskDefinition.probability.levels as probability>
-<th class="rotate label" <@dpRisk.cellStyle probability.htmlColor />>
+<th class="rotate label" <@matrixCellStyleProbabilityLabel probability.htmlColor />>
 <div>${probability.name}</div>
 </th>
 </#list>
@@ -246,14 +265,12 @@ Eintrittswahrscheinlichkeit
 <div>Auswirkung</div>
 </td>
 </#if>
-<td class="label" <@dpRisk.cellStyle potentialImpact.htmlColor />>
+<td class="label" <@matrixCellStyleImpactLabel potentialImpact.htmlColor />>
 ${potentialImpact.name}
 </td>
 <#list riskDefinition.probability.levels as probability>
 <#assign risk=category.valueMatrix[probability.ordinalValue][potentialImpact.ordinalValue] />
-<td class="cell" <@dpRisk.cellStyle risk.htmlColor />>
-${risk.name}
-</td>
+<@matrixCell risk.htmlColor risk.name />
 </#list>
 </tr>
 </#list>
