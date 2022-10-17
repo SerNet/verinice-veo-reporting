@@ -1,7 +1,7 @@
 html, body {
     font-family: Open Sans;
     font-size: 10pt;
-    color: #7c7c7b;
+    color: #767676;
 	line-height: 1.4;
 	margin: 0;
 }
@@ -80,7 +80,7 @@ text-bottom {
 }
 
 .dark-gray {
-	background-color: #7c7c7b;
+	background-color: #767676;
 	color: #FFFFFF;
 }
 .gray {
@@ -141,7 +141,7 @@ text-bottom {
 	padding-left: 40mm;
 }
 .toc td:first-child a {
-    color: #7c7c7b;
+    color: #767676;
 	text-decoration: none;
 }
 .toc tr td:nth-child(2) {
@@ -182,7 +182,7 @@ table td.green, table th.green {
 	min-width: 8mm;
 }
 .table thead td, .table th {
-	background-color: #7c7c7b;
+	background-color: #767676;
 	color: #FFFFFF;
 	text-align: center;
 }
@@ -226,7 +226,7 @@ div.pagebreak {
 		border-top: 0.1mm solid #929292;
 		font-family: Open Sans;
 		font-size: 10pt;
-		color: #7c7c7b;
+		color: #767676;
 		padding: 15px 0;
 		content: 'powered by verinice | ' counter(page) ' von ' counter(pages);
     };

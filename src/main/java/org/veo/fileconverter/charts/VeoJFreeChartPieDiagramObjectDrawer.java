@@ -157,7 +157,7 @@ public class VeoJFreeChartPieDiagramObjectDrawer implements FSObjectDrawer {
         plot.setLabelLinkStyle(PieLabelLinkStyle.QUAD_CURVE);
         plot.setLabelShadowPaint(null);
         colors.forEach((key, value) -> plot.setSectionPaint(key, parseColor(value)));
-        Color defaultFontColor = Color.decode("#7c7c7b");
+        Color defaultFontColor = Color.decode("#767676");
         plot.setOutlinePaint(defaultFontColor);
         plot.setLabelPaint(defaultFontColor);
         chart1.getLegend().setItemPaint(defaultFontColor);

@@ -13,7 +13,7 @@
 <#macro probabilitydisplay riskDefinition value><#if value?has_content><span style="color:${riskDefinition.getProbability(value).color}">${riskDefinition.getProbability(value).label}</span></#if></#macro>
 
 <#macro cellStyle color>
-  style="background-color:${color};color:${colorContrast(color, '#e3e3e3', '#7c7c7b', '#929292', '#ffffff')}"
+  style="background-color:${color};color:${colorContrast(color, '#e3e3e3', '#767676', '#929292', '#ffffff')}"
 </#macro>
 
 
