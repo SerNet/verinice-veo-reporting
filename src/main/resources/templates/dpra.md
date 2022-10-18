@@ -33,20 +33,21 @@ dt {
   margin-bottom: 1cm;
 }
 
+.risk dl {
+  display: table;
+}
 
-.risk dl dd:after{
-  display: block;
-  content: '';
+.risk dt, .risk dd {
+  display: table-cell;
 }
 
 .risk dt {
   font-weight: normal;
-  display: inline-block;
-  min-width: 7cm;
+  min-width: 8cm;
 }
 
 .risk dd {
-  display: inline;
+  width: 100%
 }
 
 .riskmatrix {

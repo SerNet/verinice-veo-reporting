@@ -19,19 +19,21 @@ dt {
   font-weight: 600;
 }
 
-.risk dl dd:after{
-  display: block;
-  content: '';
+.risk dl {
+  display: table;
+}
+
+.risk dt, .risk dd {
+  display: table-cell;
 }
 
 .risk dt {
   font-weight: normal;
-  display: inline-block;
-  min-width: 7cm;
+  min-width: 8cm;
 }
 
 .risk dd {
-  display: inline;
+  width: 100%
 }
 </style>
 
