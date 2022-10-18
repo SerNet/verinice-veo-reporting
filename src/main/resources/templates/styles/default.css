@@ -245,3 +245,8 @@ div.pagebreak {
 	font-size: 7pt;
 	position: running(footerleft);
 }
+
+dd br {
+  display: block;
+  line-height: 0;
+}
