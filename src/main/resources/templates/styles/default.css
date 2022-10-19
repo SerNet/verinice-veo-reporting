@@ -117,32 +117,37 @@ text-bottom {
 
 .toc {
     page-break-after: always;
+	width: 100%;
 }
-.toc, .toc ul {
-	margin-left: 0;
-	padding-left: 6mm;
+.toc tr {
+	font-size: 10pt;
+	font-weight: normal;
 }
-.toc ul {
-	list-style-type: none;
-}
-.toc li {
+.toc tr.level1 {
 	line-height: 1.6;
 	font-size: 12pt;
 	font-weight: bold;
 }
-.toc li li {
-	font-size: 10pt;
-	font-weight: normal;
+.toc .level2 td:first-child a {
+	padding-left: 10mm;
 }
-.toc a {
+.toc .level3 td:first-child a {
+	padding-left: 20mm;
+}
+.toc .level4 td:first-child a {
+	padding-left: 30mm;
+}
+.toc .level5 td:first-child a {
+	padding-left: 40mm;
+}
+.toc td:first-child a {
     color: #7c7c7b;
 	text-decoration: none;
 }
-.toc span {
-	float: right;
+.toc tr td:nth-child(2) {
 	text-align: right;
 }
-.toc span::after {
+.toc tr td:nth-child(2) span::after {
 	content: target-counter(attr(href), page);
 }
 

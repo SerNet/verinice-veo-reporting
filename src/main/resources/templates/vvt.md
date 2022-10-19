@@ -82,30 +82,35 @@ dl.tom dd {
 
 
 # ${bundle.toc} {#toc}
+<#macro tocitem level target text>
+  <tr class="level${level}">
+    <td>
+      <a title="${bundle('jumpto', text)}" href="#${target}">${text}</a>
+    </td>
+    <td>
+      <span href="#${target}"/>
+    </td>
+  </tr>
+</#macro>
 
-<#macro tocitem target text><a title="${bundle('jumpto', text)}" href="#${target}">${text}</a> <span href="#${target}"></span></#macro>
-
-
-<ol class="toc">
-  <li><@tocitem "main_page" bundle.main_page /></li>
+<table class="toc">
+<tbody>
+  <@tocitem 1 "main_page" "1. ${bundle.main_page}" />
   <#list processesInScope as process>
-  <li><@tocitem "process_${process?counter}" process.name />
-    <ol>
-      <li><@tocitem "process_opinionDPO_${process?counter}" "Prüfergebnis zur materiellen Rechtmäßigkeit" /></li>
-      <li><@tocitem "process_details_${process?counter}" "Detailergebnisse" />
-        <ol>
-         <#if process.getLinks('process_dataTransmission')?has_content>
-            <li><@tocitem "process_transmissions_${process?counter}" "Art übermittelter Daten und deren Empfänger" /></li>
-         </#if>
-         <#if process.risks?map(r->r.mitigation!)?filter(it -> it??)?filter(it -> it.parts?has_content)?has_content>
-            <li><@tocitem "process_toms_${process?counter}" "Technische und organisatorische Maßnahmen" /></li>
-         </#if>
-        </ol>
-      </li>
-    </ol>
-  </li>
-</#list>
-</ol>
+    <@tocitem 1 "process_${process?counter}" "${1+process?counter}. ${process.name}" />
+    <@tocitem 2 "process_opinionDPO_${process?counter}" "1. Prüfergebnis zur materiellen Rechtmäßigkeit" />
+    <@tocitem 2 "process_details_${process?counter}" "2. Detailergebnisse" />
+    <#assign level3counter = 1>
+    <#if process.getLinks('process_dataTransmission')?has_content>
+      <@tocitem 3 "process_transmissions_${process?counter}" "${level3counter}. Art übermittelter Daten und deren Empfänger" />
+      <#assign level3counter = 2>
+    </#if>
+    <#if process.risks?map(r->r.mitigation!)?filter(it -> it??)?filter(it -> it.parts?has_content)?has_content>
+      <@tocitem 3 "process_toms_${process?counter}" "${level3counter}. Technische und organisatorische Maßnahmen" />
+    </#if>
+  </#list>
+</tbody>
+</table>
 
 # ${bundle.main_page} {#main_page}
 
