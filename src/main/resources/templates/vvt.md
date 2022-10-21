@@ -62,7 +62,7 @@ dl.tom dd {
   <bookmark name="${bundle.main_page}" href="#main_page"/>
 <#list processesInScope as process>
   <bookmark name="${process.name}" href="#process_${process?counter}">
-    <bookmark name="Prüfergebnis zur materiellen Rechtmäßigkeit" href="#process_FIXME_${process?counter}" />
+    <bookmark name="Prüfergebnis zur materiellen Rechtmäßigkeit" href="#process_opinionDPO_${process?counter}" />
     <bookmark name="Detailergebnisse" href="#process_details_${process?counter}">
       <#if process.getLinks('process_dataTransmission')?has_content>
         <bookmark name="Art übermittelter Daten und deren Empfänger" href="#process_transmissions_${process?counter}"/>
@@ -91,7 +91,7 @@ dl.tom dd {
   <#list processesInScope as process>
   <li><@tocitem "process_${process?counter}" process.name />
     <ol>
-      <li><@tocitem "process_FIXME_${process?counter}" "Prüfergebnis zur materiellen Rechtmäßigkeit" /></li>
+      <li><@tocitem "process_opinionDPO_${process?counter}" "Prüfergebnis zur materiellen Rechtmäßigkeit" /></li>
       <li><@tocitem "process_details_${process?counter}" "Detailergebnisse" />
         <ol>
          <#if process.getLinks('process_dataTransmission')?has_content>
@@ -178,7 +178,7 @@ Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO
 
 <div class="section">
 
-## Prüfergebnis zur materiellen Rechtmäßigkeit {#process_FIXME_${process?counter}}
+## Prüfergebnis zur materiellen Rechtmäßigkeit {#process_opinionDPO_${process?counter}}
 
 ### Rechtmäßigkeit der Verarbeitung
 
