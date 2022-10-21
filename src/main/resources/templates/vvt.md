@@ -92,7 +92,7 @@ dl.tom dd {
   <li><@tocitem "process_${process?counter}" process.name />
     <ol>
       <li><@tocitem "process_FIXME_${process?counter}" "Prüfergebnis zur materiellen Rechtmäßigkeit" /></li>
-      <li><@tocitem "process_FIXME_${process?counter}" "Detailergebnisse" />
+      <li><@tocitem "process_details_${process?counter}" "Detailergebnisse" />
         <ol>
          <#if process.getLinks('process_dataTransmission')?has_content>
             <li><@tocitem "process_transmissions_${process?counter}" "Art übermittelter Daten und deren Empfänger" /></li>
