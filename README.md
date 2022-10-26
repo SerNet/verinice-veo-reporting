@@ -1,6 +1,6 @@
 # veo-reporting
 
-Spring Boot microservice for veo reports. At the time of writing, its project status is "prototype".
+Spring Boot microservice for veo reports.
 
 ## Purpose
 
@@ -54,13 +54,15 @@ There is a single REST controller (`org.veo.reporting.controllers.ReportControll
 `/reports/{name}` (`POST`)
 : can be used to create a report. It accepts a JSON object that specifies the target entities and the desired output type. See `org.veo.reporting.CreateReport`.
 
-## Report developemt a.k.a. "demo mode"
+## Report development a.k.a. "demo mode"
 
-As there is no report editor yet, there is a demo mode that can be enabled via a command line switch. In that mode, the files in `src/main/resources/templates` are observed for modification, in which case the `processing-activities` and `process-list` reports are generated and written into the `/tmp` folder.
+As there is no report editor yet, there is a demo mode that can be enabled via a command line switch. In that mode, the files in `src/main/resources/templates` are observed for modification, in which case a set of reports is generated and written into the `/tmp` folder.
 
 You need to specify the UUID of the scope that should be used for testing. You can extract the UUID from the browser URL on the scope's edit page.
 
-Enable with `./gradlew bootRun --args="--spring.profiles.active=demo --veo.accesstoken=XXXX --veo.demoscopeid=9f6f0199-7a14-4a1d-8345-80a0c1b60519"` and use at your own risk.
+The impact assessment report works on a process with the subType `PRO_DPIA`. To have that report generated, you also need to specify the UUID of a matching process.
+
+Enable with `./gradlew bootRun --args="--spring.profiles.active=demo --veo.accesstoken=XXXX --veo.demoscopeid=9f6f0199-7a14-4a1d-8345-80a0c1b60519 --veo.demodpiaid=cd0e098b-d794-4e4d-8a60-e2eadd1e3eef"` and use at your own risk.
 
 See `org.veo.reporting.Demo`.
 
