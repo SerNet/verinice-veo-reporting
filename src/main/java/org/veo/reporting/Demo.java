@@ -18,7 +18,6 @@
 package org.veo.reporting;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -32,8 +31,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,52 +57,43 @@ public class Demo {
         var scopeId = ctx.getEnvironment().getRequiredProperty("veo.demoscopeid");
         var veoClient = ctx.getBean(VeoClient.class);
         var authHeader = "Bearer " + token;
-        var processes = veoClient.fetchData("/processes?size=2147483647&embedRisks=true",
-                authHeader);
-        var scope = veoClient.fetchData("/scopes/" + scopeId, authHeader);
-        var scopes = veoClient.fetchData("/scopes?size=2147483647", authHeader);
-        var persons = veoClient.fetchData("/persons?size=2147483647", authHeader);
-        var controls = veoClient.fetchData("/controls?size=2147483647", authHeader);
-        var assets = veoClient.fetchData("/assets?size=2147483647", authHeader);
-        var scenarios = veoClient.fetchData("/scenarios?size=2147483647", authHeader);
-        var domains = veoClient.fetchData("/domains", authHeader);
+
         Map<String, Object> entriesForLanguage = veoClient.fetchTranslations(Locale.GERMANY,
                 authHeader);
 
         var objectMapper = new ObjectMapper();
         var writer = objectMapper.writerWithDefaultPrettyPrinter();
-        System.out.println("Scope:");
-        System.out.println(writer.writeValueAsString(scope));
-        System.out.println("\nScopes:");
-        System.out.println(writer.writeValueAsString(scopes));
-        System.out.println("\nProcesses:");
-        System.out.println(writer.writeValueAsString(processes));
-        System.out.println("\nPersons:");
-        System.out.println(writer.writeValueAsString(persons));
-        System.out.println("\nControls:");
-        System.out.println(writer.writeValueAsString(controls));
-        System.out.println("\nAssets:");
-        System.out.println(writer.writeValueAsString(assets));
-        System.out.println("\nScenarios:");
-        System.out.println(writer.writeValueAsString(scenarios));
-        System.out.println("\nDomains:");
-        System.out.println(writer.writeValueAsString(domains));
 
-        var templateInput = Map.of("scope", scope, "scopes", scopes, "processes", processes,
-                "persons", persons, "controls", controls, "assets", assets, "scenarios", scenarios,
-                "domains", domains);
-        boolean createDPIAReports = false;
         var dpiaId = ctx.getEnvironment().getProperty("veo.demodpiaid");
+        boolean createDPIAReports = dpiaId != null;
 
-        if (dpiaId != null) {
-            var dpia = veoClient.fetchData("/processes/" + dpiaId + "?embedRisks=true", authHeader);
-            System.out.println("\nDPIA:");
-            System.out.println(writer.writeValueAsString(dpia));
-            templateInput = new HashMap<>(templateInput);
-            templateInput.put("dpia", dpia);
-            createDPIAReports = true;
-        }
-        createReports(reportEngine, templateInput, entriesForLanguage, createDPIAReports);
+        DataProvider dataProvider = new DataProvider() {
+
+            Map<String, Object> cache = new HashMap<>();
+
+            @Override
+            public Object resolve(String key, String url) {
+                if ("dpia".equals(key)) {
+                    url = url.replace("${targetId}", dpiaId);
+                } else if ("scope".equals(key)) {
+                    url = url.replace("${targetId}", scopeId);
+                } else if (url.contains("targetId")) {
+                    throw new IllegalArgumentException("Unhandled url: " + url);
+                }
+                return cache.computeIfAbsent(url, it -> {
+                    try {
+                        Object data = veoClient.fetchData(it, authHeader);
+                        System.out.println("\n" + key + ":");
+                        System.out.println(writer.writeValueAsString(data));
+                        return data;
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error fetching data from " + it, e);
+                    }
+                });
+            }
+        };
+
+        createReports(reportEngine, dataProvider, entriesForLanguage, createDPIAReports);
         Path template = Paths.get("src/main/resources/templates");
         try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 
@@ -122,7 +110,7 @@ public class Demo {
             try {
                 while ((key = watchService.take()) != null) {
                     if (!key.pollEvents().isEmpty()) {
-                        createReports(reportEngine, templateInput, entriesForLanguage,
+                        createReports(reportEngine, dataProvider, entriesForLanguage,
                                 createDPIAReports);
                     }
                     key.reset();
@@ -134,67 +122,31 @@ public class Demo {
         ctx.stop();
     }
 
-    static void createReports(ReportEngine reportEngine, Map<String, Object> templateInput,
+    static void createReports(ReportEngine reportEngine, DataProvider dataProvider,
             Map<String, Object> entriesForLanguage, boolean createDPIAReports) throws IOException {
-        ResourceBundle bundleAV;
-        ResourceBundle bundleVVT;
-        ResourceBundle bundleDPRA;
-        try (InputStream is = Files
-                .newInputStream(Paths.get("src/main/resources/templates/av_de.properties"))) {
-            bundleAV = new PropertyResourceBundle(is);
-        }
-        try (InputStream is = Files
-                .newInputStream(Paths.get("src/main/resources/templates/vvt_de.properties"))) {
-            bundleVVT = new PropertyResourceBundle(is);
-        }
-        try (InputStream is = Files
-                .newInputStream(Paths.get("src/main/resources/templates/dpra_de.properties"))) {
-            bundleDPRA = new PropertyResourceBundle(is);
-        }
-
-        HashMap<String, Object> workingCopy = new HashMap<>(templateInput);
-        MapResourceBundle mergedBundleAV = MapResourceBundle.createMergedBundle(bundleAV,
-                entriesForLanguage);
-        MapResourceBundle mergedBundleVVT = MapResourceBundle.createMergedBundle(bundleVVT,
-                entriesForLanguage);
-        MapResourceBundle mergedBundleDPRA = MapResourceBundle.createMergedBundle(bundleDPRA,
-                entriesForLanguage);
 
         ReportCreationParameters parameters = new ReportCreationParameters(Locale.GERMANY);
 
         try {
-            workingCopy.put("bundle", mergedBundleVVT);
-
-            createReport(reportEngine, "processing-activities", "/tmp/vvt.md", workingCopy,
-                    "text/markdown", parameters);
-            createReport(reportEngine, "processing-activities", "/tmp/vvt.html", workingCopy,
-                    "text/html", parameters);
-            createReport(reportEngine, "processing-activities", "/tmp/vvt.pdf", workingCopy,
-                    "application/pdf", parameters);
-            workingCopy.put("bundle", mergedBundleDPRA);
-            createReport(reportEngine, "risk-analysis", "/tmp/dpra.pdf", workingCopy,
-                    "application/pdf", parameters);
-            createReport(reportEngine, "risk-analysis", "/tmp/dpra.html", workingCopy, "text/html",
-                    parameters);
+            createReport(reportEngine, "processing-activities", "/tmp/vvt.md", dataProvider,
+                    "text/markdown", parameters, entriesForLanguage);
+            createReport(reportEngine, "processing-activities", "/tmp/vvt.html", dataProvider,
+                    "text/html", parameters, entriesForLanguage);
+            createReport(reportEngine, "processing-activities", "/tmp/vvt.pdf", dataProvider,
+                    "application/pdf", parameters, entriesForLanguage);
+            createReport(reportEngine, "risk-analysis", "/tmp/dpra.pdf", dataProvider,
+                    "application/pdf", parameters, entriesForLanguage);
+            createReport(reportEngine, "risk-analysis", "/tmp/dpra.html", dataProvider, "text/html",
+                    parameters, entriesForLanguage);
             if (createDPIAReports) {
-                try (InputStream is = Files.newInputStream(
-                        Paths.get("src/main/resources/templates/dpia_de.properties"))) {
-                    ResourceBundle bundleDPIA = new PropertyResourceBundle(is);
-                    MapResourceBundle mergedBundleDPIA = MapResourceBundle
-                            .createMergedBundle(bundleDPIA, entriesForLanguage);
 
-                    workingCopy.put("bundle", mergedBundleDPIA);
-                    createReport(reportEngine, "dp-impact-assessment", "/tmp/dpia.pdf", workingCopy,
-                            "application/pdf", parameters);
-                    createReport(reportEngine, "dp-impact-assessment", "/tmp/dpia.html",
-                            workingCopy, "text/html", parameters);
-                }
-
+                createReport(reportEngine, "dp-impact-assessment", "/tmp/dpia.pdf", dataProvider,
+                        "application/pdf", parameters, entriesForLanguage);
+                createReport(reportEngine, "dp-impact-assessment", "/tmp/dpia.html", dataProvider,
+                        "text/html", parameters, entriesForLanguage);
             }
-            workingCopy.put("bundle", mergedBundleAV);
-
-            createReport(reportEngine, "processing-on-behalf", "/tmp/av.pdf", workingCopy,
-                    "application/pdf", parameters);
+            createReport(reportEngine, "processing-on-behalf", "/tmp/av.pdf", dataProvider,
+                    "application/pdf", parameters, entriesForLanguage);
 
         } catch (IOException | TemplateException e) {
             logger.error("Error creating reports", e);
@@ -202,13 +154,12 @@ public class Demo {
     }
 
     private static void createReport(ReportEngine reportEngine, String reportId, String fileName,
-            Map<String, Object> templateInput, String outputType,
-            ReportCreationParameters parameters) throws IOException, TemplateException {
-        ReportConfiguration reportConfiguration = reportEngine.getReport(reportId).orElseThrow();
+            DataProvider dataProvider, String outputType, ReportCreationParameters parameters,
+            Map<String, Object> dynamicBundleEntries) throws IOException, TemplateException {
         try (var os = Files.newOutputStream(Paths.get(fileName))) {
-            reportEngine.generateReport(reportConfiguration, templateInput, outputType, os,
-                    parameters);
-            logger.info("Report {} created at {}", reportConfiguration.getTemplateFile(), fileName);
+            reportEngine.generateReport(reportId, outputType, parameters, os, dataProvider,
+                    dynamicBundleEntries);
+            logger.info("Report {} created at {}", reportId, fileName);
         }
     }
 
