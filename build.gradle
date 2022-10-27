@@ -4,9 +4,9 @@ plugins {
     id 'groovy'
     id 'jacoco'
     id "com.github.spotbugs" version '5.0.13'
-    id 'org.cadixdev.licenser' version '0.6.1'
     id "com.gorylenko.gradle-git-properties" version "2.4.1"
     id 'pmd'
+    id "com.diffplug.spotless" version "6.11.0"
 }
 
 version = '0.16-SNAPSHOT'
@@ -68,19 +68,6 @@ pmd {
 
 pmdTest.enabled = false
 
-license {
-    header = file("templates/licenseHeader.txt")
-    newLine = false
-    exclude "reports/**"
-    exclude "templates/*"
-    skipExistingHeaders = true
-    ext["year"] = java.util.Calendar.getInstance().get(Calendar.YEAR)
-    ext["author"] = "git config user.name".execute().text.trim() ?: "<name>"
-    style {
-        java = 'JAVADOC'
-    }
-}
-
 springBoot {
     buildInfo {
         properties {
@@ -96,4 +83,54 @@ springBoot {
 
 test {
     useJUnitPlatform()
+}
+
+def currentUserName = "git config user.name".execute().text.trim() ?: "<name>"
+
+spotless {
+    groovyGradle {
+        // https://github.com/diffplug/spotless/issues/304#issuecomment-426067801
+        target 'Jenkinsfile', '*.gradle'
+        greclipse()
+        indentWithSpaces(4)
+        trimTrailingWhitespace()
+    }
+    java {
+        target 'src/**/*.java', 'buildSrc/**/*.java'
+        googleJavaFormat()
+        importOrder('java', 'javax', 'org', 'com', 'org.veo', '')
+        addStep org.veo.LicenseHeaderStep.create(currentUserName)
+        addStep org.veo.NoWildcardImportsStep.create()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        replaceRegex('Consecutive empty block comment lines', /( *\*\n){2,}/, '*\n')
+        replaceRegex('Empty line at block comment end', / \*\n *\*\//, ' */')
+        replaceRegex('Empty comment block', /\/\*+\s+\*\//, '')
+        replaceRegex('Empty line after annotation', /(^ +@[a-zA-Z0-9]+\([^)]+\)\n)\n+/, '$1')
+        replaceRegex('Empty line inside annotation', /(^ +@[a-zA-Z0-9]+\([^)]+\n)\n+/, '$1')
+    }
+    groovy {
+        target 'src/**/*.groovy', 'buildSrc/**/*.groovy'
+        addStep org.veo.LicenseHeaderStep.create(currentUserName, 'package |runner \\{')
+        addStep org.veo.NoWildcardImportsStep.create()
+        greclipse()
+        importOrder('java', 'javax', 'org', 'com', 'org.veo', '')
+        indentWithSpaces(4)
+        trimTrailingWhitespace()
+        replaceRegex('Extra space around equals sign', /(  += )|( =  +)/, ' = ')
+        replaceRegex('Not one space between right round and left curly bracket', /\) *\{/, ') {')
+    }
+    format 'git', {
+        target '**/.gitignore'
+
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    json {
+        target '**/*.json'
+        targetExclude '**/bin/**', '**/target/**'
+        gson()
+                .indentWithSpaces(2)
+        endWithNewline()
+    }
 }

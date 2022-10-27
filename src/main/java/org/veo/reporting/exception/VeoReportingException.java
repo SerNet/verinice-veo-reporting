@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2022  Jochen Kemnade
  *
@@ -14,23 +14,22 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting.exception;
 
 public class VeoReportingException extends RuntimeException {
 
-    private static final long serialVersionUID = 2357046833247703675L;
+  private static final long serialVersionUID = 2357046833247703675L;
 
-    public VeoReportingException(String message, Exception cause) {
-        super(message, cause);
-    }
+  public VeoReportingException(String message, Exception cause) {
+    super(message, cause);
+  }
 
-    public VeoReportingException(String message) {
-        super(message);
-    }
+  public VeoReportingException(String message) {
+    super(message);
+  }
 
-    public VeoReportingException(Exception cause) {
-        super(cause);
-    }
-
+  public VeoReportingException(Exception cause) {
+    super(cause);
+  }
 }

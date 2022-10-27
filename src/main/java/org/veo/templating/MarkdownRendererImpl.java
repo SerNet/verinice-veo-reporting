@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating;
 
 import java.io.IOException;
@@ -32,24 +32,26 @@ import com.vladsch.flexmark.util.data.MutableDataSet;
 
 public class MarkdownRendererImpl implements MarkdownRenderer {
 
-    public void renderToHTML(Reader reader, Writer writer) throws IOException {
-        MutableDataSet options = new MutableDataSet();
+  public void renderToHTML(Reader reader, Writer writer) throws IOException {
+    MutableDataSet options = new MutableDataSet();
 
-        // uncomment to set optional extensions
-        options.set(Parser.EXTENSIONS, Arrays.asList(DefinitionExtension.create(),
-                TablesExtension.create(), AttributesExtension.create()));
+    // uncomment to set optional extensions
+    options.set(
+        Parser.EXTENSIONS,
+        Arrays.asList(
+            DefinitionExtension.create(), TablesExtension.create(), AttributesExtension.create()));
 
-        // uncomment to convert soft-breaks to hard breaks
-        // options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
+    // uncomment to convert soft-breaks to hard breaks
+    // options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
 
-        // Work around https://github.com/vsch/flexmark-java/issues/476
-        options.set(HtmlRenderer.RENDER_HEADER_ID, true);
+    // Work around https://github.com/vsch/flexmark-java/issues/476
+    options.set(HtmlRenderer.RENDER_HEADER_ID, true);
 
-        Parser parser = Parser.builder(options).build();
-        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+    Parser parser = Parser.builder(options).build();
+    HtmlRenderer renderer = HtmlRenderer.builder(options).build();
 
-        // You can re-use parser and renderer instances
-        Node document = parser.parseReader(reader);
-        renderer.render(document, writer);
-    }
+    // You can re-use parser and renderer instances
+    Node document = parser.parseReader(reader);
+    renderer.render(document, writer);
+  }
 }

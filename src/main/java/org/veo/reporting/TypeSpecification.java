@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting;
 
 import java.util.Optional;
@@ -29,30 +29,29 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class TypeSpecification {
 
-    @JsonCreator
-    public TypeSpecification(
-            @JsonProperty(value = "modelType", required = true) EntityType modelType,
-            @JsonProperty(value = "subTypes", required = false) Set<String> subTypes) {
-        this.modelType = modelType;
-        this.subTypes = Optional.ofNullable(subTypes).map(Set::copyOf).orElse(null);
-    }
+  @JsonCreator
+  public TypeSpecification(
+      @JsonProperty(value = "modelType", required = true) EntityType modelType,
+      @JsonProperty(value = "subTypes", required = false) Set<String> subTypes) {
+    this.modelType = modelType;
+    this.subTypes = Optional.ofNullable(subTypes).map(Set::copyOf).orElse(null);
+  }
 
-    EntityType modelType;
+  EntityType modelType;
 
-    Set<String> subTypes;
+  Set<String> subTypes;
 
-    public @NotNull(message = "Entity type not specified.") EntityType getModelType() {
-        return modelType;
-    }
+  public @NotNull(message = "Entity type not specified.") EntityType getModelType() {
+    return modelType;
+  }
 
-    @SuppressFBWarnings("EI_EXPOSE_REP")
-    public Set<String> getSubTypes() {
-        return subTypes;
-    }
+  @SuppressFBWarnings("EI_EXPOSE_REP")
+  public Set<String> getSubTypes() {
+    return subTypes;
+  }
 
-    @Override
-    public String toString() {
-        return "TypeSpecification [modelType=" + modelType + ", subTypes=" + subTypes + "]";
-    }
-
+  @Override
+  public String toString() {
+    return "TypeSpecification [modelType=" + modelType + ", subTypes=" + subTypes + "]";
+  }
 }

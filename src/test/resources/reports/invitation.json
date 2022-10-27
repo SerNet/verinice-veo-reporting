@@ -3,9 +3,7 @@
     "de": "Einladung",
     "en": "Invitation"
   },
-  "description": {
-    
-  },
+  "description": {},
   "templateFile": "invitation.txt",
   "templateType": "text/plain",
   "outputTypes": [

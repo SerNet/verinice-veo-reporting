@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2022  Jochen Kemnade
  *
@@ -14,27 +14,32 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting.exception;
 
 public class DataFetchingException extends VeoReportingException {
 
-    private static final long serialVersionUID = 4139427359351266324L;
-    private final int statusCode;
-    private final String statusText;
+  private static final long serialVersionUID = 4139427359351266324L;
+  private final int statusCode;
+  private final String statusText;
 
-    public DataFetchingException(String uri, int statusCode, String statusText) {
-        super("Failed to retrieve data from " + uri + ", status code: " + statusCode + ", message: "
-                + statusText);
-        this.statusCode = statusCode;
-        this.statusText = statusText;
-    }
+  public DataFetchingException(String uri, int statusCode, String statusText) {
+    super(
+        "Failed to retrieve data from "
+            + uri
+            + ", status code: "
+            + statusCode
+            + ", message: "
+            + statusText);
+    this.statusCode = statusCode;
+    this.statusText = statusText;
+  }
 
-    public int getStatusCode() {
-        return statusCode;
-    }
+  public int getStatusCode() {
+    return statusCode;
+  }
 
-    public String getStatusText() {
-        return statusText;
-    }
+  public String getStatusText() {
+    return statusText;
+  }
 }

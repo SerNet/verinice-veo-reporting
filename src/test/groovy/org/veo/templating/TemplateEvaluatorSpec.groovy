@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating
 
 import freemarker.cache.ClassTemplateLoader
@@ -25,17 +25,17 @@ public class TemplateEvaluatorSpec extends Specification {
 
     def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
 
-    def templateEvaluator =  new TemplateEvaluatorImpl(templateLoader, true)
+    def templateEvaluator = new TemplateEvaluatorImpl(templateLoader, true)
 
 
-    def "Test hello world template"(){
+    def "Test hello world template"() {
         when:
         def text = execute('helloworld.txt', [name: "John"])
         then:
         text == 'Hello John.'
     }
 
-    def "Test invitation template"(){
+    def "Test invitation template"() {
         given:
         def bundleDe = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_de.properties'))
         def bundleEn = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_en.properties'))
@@ -53,7 +53,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
 I'd like to invite you to my birthday party.'''
     }
 
-    def "Access custom attribute"(){
+    def "Access custom attribute"() {
         def objectData = [
             name: 'Asset',
             id: '0815',
@@ -84,7 +84,7 @@ I'd like to invite you to my birthday party.'''
         text == 'The foo is bar.\nThe other foo is baz.'
     }
 
-    def "Access linked objects"(){
+    def "Access linked objects"() {
         def persons = [
             [
                 name: 'John',
@@ -161,7 +161,7 @@ Mary is Jack's biological mother.
 Jack's children are named John and Jane.'''
     }
 
-    def "Access a scope's members"(){
+    def "Access a scope's members"() {
         def data = [
             scopes:[
                 [
@@ -192,7 +192,7 @@ Jack's children are named John and Jane.'''
         text == 'Elements in the scope: Jack.'
     }
 
-    def "Access a scope's members with specific type if other members are missing"(){
+    def "Access a scope's members with specific type if other members are missing"() {
         def data = [
             scopes:[
                 [
@@ -226,7 +226,7 @@ Jack's children are named John and Jane.'''
         text == 'Persons in the scope: Jack.'
     }
 
-    def "Access a composite person entity's parts"(){
+    def "Access a composite person entity's parts"() {
         given:
         def persons = [
             [
@@ -262,7 +262,7 @@ Jack's children are named John and Jane.'''
         text == '''Our family members are named Jack and Jane.'''
     }
 
-    def "Check an entity for a subType"(){
+    def "Check an entity for a subType"() {
         given:
         def templateLoader = new ClassTemplateLoader(TemplateEvaluatorSpec.class, "/templates")
         ByteArrayOutputStream os = new ByteArrayOutputStream()
@@ -317,7 +317,7 @@ Jack's children are named John and Jane.'''
                 '''.stripIndent()
     }
 
-    def "Access implementation status"(){
+    def "Access implementation status"() {
         def domainId = '2428ac8f-75f7-48fe-a7f1-d799b967e163'
         def objectData = [
             name: 'Control',
@@ -351,7 +351,7 @@ Jack's children are named John and Jane.'''
 
 
 
-    def "Access risk values"(){
+    def "Access risk values"() {
         def domainId = 'd4132a67-03c8-4f82-9585-6b240585c34e'
         def scenarioId = '9da57c19-8a53-4df5-aeed-86b0bfaf9399'
         def personId = 'bb60c3da-663b-42f9-baae-59abef95879c'
@@ -449,14 +449,14 @@ Jack's children are named John and Jane.'''
                 '''.stripIndent()
     }
 
-    def "HTML is escaped in Markdown templates"(){
+    def "HTML is escaped in Markdown templates"() {
         when:
         def text = execute('escape-test.md', [data: "<h1>Data</h1>"])
         then:
         text == '&#60;h1&#62;Data&#60;&#47;h1&#62;'
     }
 
-    def "Markdown is escaped in Markdown templates"(){
+    def "Markdown is escaped in Markdown templates"() {
         when:
         def text = execute('escape-test.md', [data: input])
         then:
@@ -467,14 +467,14 @@ Jack's children are named John and Jane.'''
         '![img](file:///localPath/test.pdf)' | '&#33;&#91;img&#93;&#40;file&#58;&#47;&#47;&#47;localPath&#47;test&#46;pdf&#41;'
     }
 
-    def "Line breaks are converted for Markdown output"(){
+    def "Line breaks are converted for Markdown output"() {
         when:
         def text = execute('escape-test.md', [data: 'Hello\nWorld!'])
         then:
         text == 'Hello  \nWorld&#33;'
     }
 
-    def "Emojis are left alone for Markdown output"(){
+    def "Emojis are left alone for Markdown output"() {
         when:
         def text = execute('escape-test.md', [data: "😭"])
         then:
@@ -482,14 +482,14 @@ Jack's children are named John and Jane.'''
     }
 
 
-    def "HTML is escaped in HTML templates"(){
+    def "HTML is escaped in HTML templates"() {
         when:
         def text = execute('escape-test.html', [data: "<h1>Data</h1>"])
         then:
         text == 'HTML: &lt;h1&gt;Data&lt;/h1&gt;'
     }
 
-    def "Freemarker class resolving is disabled"(){
+    def "Freemarker class resolving is disabled"() {
         when:
         def text = execute('resolver-test.txt', [data: "whatever"])
         then:

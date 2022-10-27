@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting.controllers
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -40,7 +40,7 @@ public class CORSSpec extends Specification {
         when: "the list of reports is requested from a wrong origin"
         def response = getWithOrigin('https://notreal.notverinice.example', '/reports')
         then: "the request was denied"
-        with(response){
+        with(response) {
             status == 403
             getHeaders(HttpHeaders.VARY).toSorted() == [
                 'Access-Control-Request-Headers',
@@ -57,10 +57,10 @@ public class CORSSpec extends Specification {
         def response = getWithOrigin('https://domian.verinice.example', '/reports')
 
         then: "the request was successful"
-        with(response){
+        with(response) {
             status == 200
             getHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN) == 'https://domian.verinice.example'
-            with(new JsonSlurper().parseText(contentAsString)){
+            with(new JsonSlurper().parseText(contentAsString)) {
                 !it.empty
             }
         }
@@ -71,7 +71,7 @@ public class CORSSpec extends Specification {
         def response = getWithOrigin('null', '/reports')
 
         then: "the request was denied"
-        with(response){
+        with(response) {
             status == 403
             contentAsString =~ /Invalid CORS request/
         }
@@ -87,7 +87,7 @@ public class CORSSpec extends Specification {
 
         then: "CORS is allowed"
 
-        with(response){
+        with(response) {
             status == 200
             getHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN) ==  testOrigin
             getHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS) == [
@@ -97,7 +97,7 @@ public class CORSSpec extends Specification {
                 HttpMethod.DELETE,
                 HttpMethod.OPTIONS
             ]*.name().join(',')
-            with(getHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS)){
+            with(getHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS)) {
                 contains(HttpHeaders.AUTHORIZATION)
                 contains(HttpHeaders.CONTENT_TYPE)
             }
@@ -112,7 +112,7 @@ public class CORSSpec extends Specification {
     }
 
     def preflight(String testOrigin, String relativeUri, HttpMethod method = HttpMethod.GET) {
-        def actions =  mvc.perform(MockMvcRequestBuilders.options(relativeUri)
+        def actions = mvc.perform(MockMvcRequestBuilders.options(relativeUri)
                 .header(HttpHeaders.ORIGIN, testOrigin)
                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, method.name())
                 .header(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS, HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE))

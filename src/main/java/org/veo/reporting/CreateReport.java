@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting;
 
 import java.util.List;
@@ -23,57 +23,54 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.veo.fileconverter.FileConverter;
-import org.veo.reporting.controllers.ReportController;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * The DTO for a report creation. It specifies the entities that the report is
- * run upon and the desired output format.
- * 
+ * The DTO for a report creation. It specifies the entities that the report is run upon and the
+ * desired output format.
+ *
  * @see {@link FileConverter}
  * @see {@link ReportEngine}
  * @see {@link ReportController}
  */
 public class CreateReport {
 
-    @NotEmpty(message = "Output type not specified.")
-    private String outputType;
+  @NotEmpty(message = "Output type not specified.")
+  private String outputType;
 
-    @NotNull(message = "Targets not specified.")
-    @Size(min = 1, max = 1)
-    // multiple targets are not supported yet
-    private List<TargetSpecification> targets;
+  @NotNull(message = "Targets not specified.")
+  @Size(min = 1, max = 1)
+  // multiple targets are not supported yet
+  private List<TargetSpecification> targets;
 
-    public String getOutputType() {
-        return outputType;
+  public String getOutputType() {
+    return outputType;
+  }
+
+  public void setOutputType(String outputType) {
+    this.outputType = outputType;
+  }
+
+  @SuppressFBWarnings("EI_EXPOSE_REP")
+  public List<TargetSpecification> getTargets() {
+    return targets;
+  }
+
+  public void setTargets(List<TargetSpecification> targets) {
+    this.targets = List.copyOf(targets);
+  }
+
+  public static class TargetSpecification {
+
+    public TargetSpecification(EntityType entityType, String id) {
+      this.type = entityType;
+      this.id = id;
     }
 
-    public void setOutputType(String outputType) {
-        this.outputType = outputType;
-    }
+    @NotNull(message = "Entity type not specified.")
+    public final EntityType type;
 
-    @SuppressFBWarnings("EI_EXPOSE_REP")
-    public List<TargetSpecification> getTargets() {
-        return targets;
-    }
-
-    public void setTargets(List<TargetSpecification> targets) {
-        this.targets = List.copyOf(targets);
-    }
-
-    public static class TargetSpecification {
-
-        public TargetSpecification(EntityType entityType, String id) {
-            this.type = entityType;
-            this.id = id;
-        }
-
-        @NotNull(message = "Entity type not specified.")
-        public final EntityType type;
-        @NotNull(message = "ID not specified.")
-        public final String id;
-    }
-
+    @NotNull(message = "ID not specified.")
+    public final String id;
+  }
 }

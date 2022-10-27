@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating.adapters;
 
 import java.util.HashMap;
@@ -35,81 +35,80 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.WrappingTemplateModel;
 
 public class VeoReportingRiskAdapter extends WrappingTemplateModel
-        implements TemplateHashModel, AdapterTemplateModel {
+    implements TemplateHashModel, AdapterTemplateModel {
 
-    private static final Logger logger = LoggerFactory.getLogger(VeoReportingRiskAdapter.class);
+  private static final Logger logger = LoggerFactory.getLogger(VeoReportingRiskAdapter.class);
 
-    private final Map<?, ?> m;
-    private final VeoReportingObjectWrapper ow;
+  private final Map<?, ?> m;
+  private final VeoReportingObjectWrapper ow;
 
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public VeoReportingRiskAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-        super(ow);
-        this.m = Map.copyOf(m);
-        this.ow = ow;
+  @SuppressFBWarnings("EI_EXPOSE_REP2")
+  public VeoReportingRiskAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+    super(ow);
+    this.m = Map.copyOf(m);
+    this.ow = ow;
+  }
+
+  @Override
+  @SuppressFBWarnings("EI_EXPOSE_REP")
+  public Object getAdaptedObject(Class<?> hint) {
+    return m;
+  }
+
+  @Override
+  public TemplateModel get(String key) throws TemplateModelException {
+    Object val = m.get(key);
+    if (val != null) {
+      return wrap(val);
+    }
+    if ("getRiskValues".equals(key)) {
+      return new GetRiskValues(m, ow);
+    }
+    return null;
+  }
+
+  @Override
+  public boolean isEmpty() throws TemplateModelException {
+    return false;
+  }
+
+  private static final class GetRiskValues extends VeoTemplateMethod {
+
+    public GetRiskValues(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+      super(m, ow);
     }
 
     @Override
-    @SuppressFBWarnings("EI_EXPOSE_REP")
-    public Object getAdaptedObject(Class<?> hint) {
-        return m;
+    protected Object doExec(List arguments) throws TemplateModelException {
+
+      if (arguments.size() != 2) {
+        throw new TemplateModelException("Expecting 2 arguments, domain ID and risk definition ID");
+      }
+
+      String domainId = asString(arguments.get(0));
+      String riskDefinitionId = asString(arguments.get(1));
+      Map domains = (Map) getProperty("domains");
+      Map dataForDomain = (Map) domains.get(domainId);
+      Map riskDefinitions = (Map) dataForDomain.get("riskDefinitions");
+      Map dataForRiskDefinition = (Map) riskDefinitions.get(riskDefinitionId);
+
+      Map result = new HashMap<>();
+
+      Map probability = (Map) dataForRiskDefinition.get("probability");
+      result.putAll(probability);
+      List riskValues = (List) dataForRiskDefinition.get("riskValues");
+      addCategorizedValues(result, riskValues);
+      List impactValues = (List) dataForRiskDefinition.get("impactValues");
+      addCategorizedValues(result, impactValues);
+      return result;
     }
 
-    @Override
-    public TemplateModel get(String key) throws TemplateModelException {
-        Object val = m.get(key);
-        if (val != null) {
-            return wrap(val);
-        }
-        if ("getRiskValues".equals(key)) {
-            return new GetRiskValues(m, ow);
-        }
-        return null;
+    private void addCategorizedValues(Map result, List categorizedValues) {
+      for (Object object : categorizedValues) {
+        Map r = (Map) object;
+        String category = (String) r.get("category");
+        ((Map) result.computeIfAbsent(category, (k) -> new HashMap())).putAll(r);
+      }
     }
-
-    @Override
-    public boolean isEmpty() throws TemplateModelException {
-        return false;
-    }
-
-    private static final class GetRiskValues extends VeoTemplateMethod {
-
-        public GetRiskValues(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-            super(m, ow);
-        }
-
-        @Override
-        protected Object doExec(List arguments) throws TemplateModelException {
-
-            if (arguments.size() != 2) {
-                throw new TemplateModelException(
-                        "Expecting 2 arguments, domain ID and risk definition ID");
-            }
-
-            String domainId = asString(arguments.get(0));
-            String riskDefinitionId = asString(arguments.get(1));
-            Map domains = (Map) getProperty("domains");
-            Map dataForDomain = (Map) domains.get(domainId);
-            Map riskDefinitions = (Map) dataForDomain.get("riskDefinitions");
-            Map dataForRiskDefinition = (Map) riskDefinitions.get(riskDefinitionId);
-
-            Map result = new HashMap<>();
-
-            Map probability = (Map) dataForRiskDefinition.get("probability");
-            result.putAll(probability);
-            List riskValues = (List) dataForRiskDefinition.get("riskValues");
-            addCategorizedValues(result, riskValues);
-            List impactValues = (List) dataForRiskDefinition.get("impactValues");
-            addCategorizedValues(result, impactValues);
-            return result;
-        }
-
-        private void addCategorizedValues(Map result, List categorizedValues) {
-            for (Object object : categorizedValues) {
-                Map r = (Map) object;
-                String category = (String) r.get("category");
-                ((Map) result.computeIfAbsent(category, (k) -> new HashMap())).putAll(r);
-            }
-        }
-    }
+  }
 }

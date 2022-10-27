@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating;
 
 import java.util.Map;
@@ -37,57 +37,55 @@ import freemarker.template.Version;
 
 public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
 
-    private static final Logger logger = LoggerFactory.getLogger(VeoReportingObjectWrapper.class);
+  private static final Logger logger = LoggerFactory.getLogger(VeoReportingObjectWrapper.class);
 
-    private final Map<String, Object> entitiesByUri;
+  private final Map<String, Object> entitiesByUri;
 
-    private final ResourceBundle bundle;
+  private final ResourceBundle bundle;
 
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public VeoReportingObjectWrapper(Version incompatibleImprovements,
-            Map<String, Object> entitiesByUri, ResourceBundle bundle) {
-        super(incompatibleImprovements);
-        this.bundle = bundle;
-        this.entitiesByUri = Map.copyOf(entitiesByUri);
+  @SuppressFBWarnings("EI_EXPOSE_REP2")
+  public VeoReportingObjectWrapper(
+      Version incompatibleImprovements, Map<String, Object> entitiesByUri, ResourceBundle bundle) {
+    super(incompatibleImprovements);
+    this.bundle = bundle;
+    this.entitiesByUri = Map.copyOf(entitiesByUri);
+  }
+
+  @Override
+  public TemplateModel wrap(Object obj) throws TemplateModelException {
+    if (obj instanceof Map) {
+      Map<?, ?> m = (Map<?, ?>) obj;
+      if (m.containsKey("id") && m.containsKey("type")) {
+        // this is probably an entity
+        return new VeoReportingEntityAdapter((Map<?, ?>) obj, this);
+      } else if (m.containsKey("target") && m.containsKey("attributes")) {
+        // this is probably a custom link
+        return new VeoReportingLinkAdapter((Map<?, ?>) obj, this);
+      } else if (m.containsKey("scenario") && m.containsKey("domains")) {
+        // this is probably a risk
+        return new VeoReportingRiskAdapter((Map<?, ?>) obj, this);
+      } else if (m.containsKey("probability") && m.containsKey("implementationStateDefinition")) {
+        // this is probably a risk definition
+        return new VeoReportingRiskDefinitionAdapter((Map<?, ?>) obj, this);
+      } else if (m.containsKey("targetUri")) {
+        // this is probably ref
+        return wrap(resolve((String) m.get("targetUri")));
+      }
     }
+    return super.wrap(obj);
+  }
 
-    @Override
-    public TemplateModel wrap(Object obj) throws TemplateModelException {
-        if (obj instanceof Map) {
-            Map<?, ?> m = (Map<?, ?>) obj;
-            if (m.containsKey("id") && m.containsKey("type")) {
-                // this is probably an entity
-                return new VeoReportingEntityAdapter((Map<?, ?>) obj, this);
-            } else if (m.containsKey("target") && m.containsKey("attributes")) {
-                // this is probably a custom link
-                return new VeoReportingLinkAdapter((Map<?, ?>) obj, this);
-            } else if (m.containsKey("scenario") && m.containsKey("domains")) {
-                // this is probably a risk
-                return new VeoReportingRiskAdapter((Map<?, ?>) obj, this);
-            } else if (m.containsKey("probability")
-                    && m.containsKey("implementationStateDefinition")) {
-                // this is probably a risk definition
-                return new VeoReportingRiskDefinitionAdapter((Map<?, ?>) obj, this);
-            } else if (m.containsKey("targetUri")) {
-                // this is probably ref
-                return wrap(resolve((String) m.get("targetUri")));
-            }
-        }
-        return super.wrap(obj);
+  private Object resolve(String uri) throws TemplateModelException {
+    Objects.requireNonNull(uri);
+    logger.debug("resolve uri {}", uri);
+    Object entity = entitiesByUri.get(uri);
+    if (entity == null) {
+      throw new TemplateModelException("Failed to resolve entity with targetUri " + uri);
     }
+    return entity;
+  }
 
-    private Object resolve(String uri) throws TemplateModelException {
-        Objects.requireNonNull(uri);
-        logger.debug("resolve uri {}", uri);
-        Object entity = entitiesByUri.get(uri);
-        if (entity == null) {
-            throw new TemplateModelException("Failed to resolve entity with targetUri " + uri);
-        }
-        return entity;
-    }
-
-    public String getLabel(String key) {
-        return bundle.getString(key);
-    }
-
+  public String getLabel(String key) {
+    return bundle.getString(key);
+  }
 }

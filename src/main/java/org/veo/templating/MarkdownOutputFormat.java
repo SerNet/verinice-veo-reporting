@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating;
 
 import java.io.IOException;
@@ -28,84 +28,79 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.utility.StringUtil;
 
 /**
- * Represents the Markdown output format (MIME type "text/markdown", name
- * "Markdown"). This format escapes by default (via
- * {@link StringUtil#XHTMLEnc(String)}). The {@code ?html}, {@code ?xhtml} and
- * {@code ?xml} built-ins silently bypass template output values of the type
- * produced by this output format ({@link TemplateMarkdownOutputModel}).
+ * Represents the Markdown output format (MIME type "text/markdown", name "Markdown"). This format
+ * escapes by default (via {@link StringUtil#XHTMLEnc(String)}). The {@code ?html}, {@code ?xhtml}
+ * and {@code ?xml} built-ins silently bypass template output values of the type produced by this
+ * output format ({@link TemplateMarkdownOutputModel}).
  */
 public class MarkdownOutputFormat extends CommonMarkupOutputFormat<TemplateMarkdownOutputModel> {
 
-    /**
-     * The only instance (singleton) of this {@link OutputFormat}.
-     */
-    public static final MarkdownOutputFormat INSTANCE = new MarkdownOutputFormat();
+  /** The only instance (singleton) of this {@link OutputFormat}. */
+  public static final MarkdownOutputFormat INSTANCE = new MarkdownOutputFormat();
 
-    /**
-     * @since 2.3.29
-     */
-    protected MarkdownOutputFormat() {
-        // Only to decrease visibility
+  /**
+   * @since 2.3.29
+   */
+  protected MarkdownOutputFormat() {
+    // Only to decrease visibility
+  }
+
+  @Override
+  public String getName() {
+    return "Markdown";
+  }
+
+  @Override
+  public String getMimeType() {
+    return "text/markdown";
+  }
+
+  @Override
+  public void output(String textToEsc, Writer out) throws IOException, TemplateModelException {
+    appendWithEncoding(textToEsc, out);
+  }
+
+  @Override
+  public String escapePlainText(String plainTextContent) {
+    StringBuilder sb = new StringBuilder();
+    try {
+      appendWithEncoding(plainTextContent, sb);
+    } catch (IOException e) {
+      throw new VeoReportingException(e);
     }
+    return sb.toString();
+  }
 
-    @Override
-    public String getName() {
-        return "Markdown";
-    }
-
-    @Override
-    public String getMimeType() {
-        return "text/markdown";
-    }
-
-    @Override
-    public void output(String textToEsc, Writer out) throws IOException, TemplateModelException {
-        appendWithEncoding(textToEsc, out);
-    }
-
-    @Override
-    public String escapePlainText(String plainTextContent) {
-        StringBuilder sb = new StringBuilder();
-        try {
-            appendWithEncoding(plainTextContent, sb);
-        } catch (IOException e) {
-            throw new VeoReportingException(e);
+  private static void appendWithEncoding(String text, Appendable out) throws IOException {
+    for (int cp : text.codePoints().toArray()) {
+      boolean isSafeChar = Character.isLetterOrDigit(cp);
+      if (isSafeChar) {
+        out.append((char) cp);
+      } else if (cp == '\n') {
+        out.append("  \n");
+      } else if (Character.isBmpCodePoint(cp)) {
+        // these characters might carry special meaning in Markdown,
+        // so we better escape them
+        out.append("&#");
+        out.append(Integer.toString(cp));
+        out.append(";");
+      } else {
+        char[] chars = Character.toChars(cp);
+        for (int i = 0; i < chars.length; i++) {
+          out.append(chars[i]);
         }
-        return sb.toString();
+      }
     }
+  }
 
-    private static void appendWithEncoding(String text, Appendable out) throws IOException {
-        for (int cp : text.codePoints().toArray()) {
-            boolean isSafeChar = Character.isLetterOrDigit(cp);
-            if (isSafeChar) {
-                out.append((char) cp);
-            } else if (cp == '\n') {
-                out.append("  \n");
-            } else if (Character.isBmpCodePoint(cp)) {
-                // these characters might carry special meaning in Markdown,
-                // so we better escape them
-                out.append("&#");
-                out.append(Integer.toString(cp));
-                out.append(";");
-            } else {
-                char[] chars = Character.toChars(cp);
-                for (int i = 0; i < chars.length; i++) {
-                    out.append(chars[i]);
-                }
-            }
-        }
-    }
+  @Override
+  public boolean isLegacyBuiltInBypassed(String builtInName) {
+    return builtInName.equals("html") || builtInName.equals("xml") || builtInName.equals("xhtml");
+  }
 
-    @Override
-    public boolean isLegacyBuiltInBypassed(String builtInName) {
-        return builtInName.equals("html") || builtInName.equals("xml")
-                || builtInName.equals("xhtml");
-    }
-
-    @Override
-    protected TemplateMarkdownOutputModel newTemplateMarkupOutputModel(String plainTextContent,
-            String markupContent) {
-        return new TemplateMarkdownOutputModel(plainTextContent, markupContent);
-    }
-
+  @Override
+  protected TemplateMarkdownOutputModel newTemplateMarkupOutputModel(
+      String plainTextContent, String markupContent) {
+    return new TemplateMarkdownOutputModel(plainTextContent, markupContent);
+  }
 }

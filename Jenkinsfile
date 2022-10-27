@@ -125,7 +125,7 @@ pipeline {
             agent none
             when {
                 anyOf { branch 'main'; branch 'develop' }
-           }
+            }
             steps {
                 build job: 'verinice-veo-deployment/master'
             }
@@ -133,19 +133,19 @@ pipeline {
     }
     post {
         always {
-           node('') {
+            node('') {
                 recordIssues(enabledForFailure: true, tools: [java()])
                 recordIssues(
-                  enabledForFailure: true,
-                  tools: [
-                    taskScanner(
-                      highTags: 'FIXME',
-                      ignoreCase: true,
-                      normalTags: 'TODO',
-                      excludePattern: 'Jenkinsfile, gradle-home/**, .gradle/**, build/**'
-                    )
-                  ]
-                )
+                        enabledForFailure: true,
+                        tools: [
+                            taskScanner(
+                            highTags: 'FIXME',
+                            ignoreCase: true,
+                            normalTags: 'TODO',
+                            excludePattern: 'Jenkinsfile, gradle-home/**, .gradle/**, build/**'
+                            )
+                        ]
+                        )
             }
         }
     }

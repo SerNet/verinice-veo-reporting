@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,14 +14,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating
 
 import spock.lang.Specification
 
 class MarkdownRendererSpec extends Specification {
 
-    def "Render simple HTML"(){
+    def "Render simple HTML"() {
         given:
         MarkdownRendererImpl renderer = new MarkdownRendererImpl()
         String markdown = '''\
@@ -31,7 +31,7 @@ class MarkdownRendererSpec extends Specification {
 
 ## What is Markdown?
 
-It’s a plain text format for writing structured documents, based on formatting conventions from email and usenet. 
+It’s a plain text format for writing structured documents, based on formatting conventions from email and usenet.
 '''
         def writer = new StringWriter()
         when:

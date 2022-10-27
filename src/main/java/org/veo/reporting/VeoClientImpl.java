@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting;
 
 import java.io.IOException;
@@ -38,48 +38,50 @@ import org.veo.reporting.exception.DataFetchingException;
 
 public class VeoClientImpl implements VeoClient {
 
-    private static final Logger logger = LoggerFactory.getLogger(VeoClientImpl.class);
+  private static final Logger logger = LoggerFactory.getLogger(VeoClientImpl.class);
 
-    private final ClientHttpRequestFactory httpRequestFactory;
-    private final String veoUrl;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+  private final ClientHttpRequestFactory httpRequestFactory;
+  private final String veoUrl;
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public VeoClientImpl(ClientHttpRequestFactory httpRequestFactory, String veoUrl) {
-        this.httpRequestFactory = httpRequestFactory;
-        this.veoUrl = veoUrl;
-    }
+  public VeoClientImpl(ClientHttpRequestFactory httpRequestFactory, String veoUrl) {
+    this.httpRequestFactory = httpRequestFactory;
+    this.veoUrl = veoUrl;
+  }
 
-    @Override
-    public Object fetchData(String path, String authorizationHeader) throws IOException {
-        return fetchData(URI.create(veoUrl + path), authorizationHeader);
-    }
+  @Override
+  public Object fetchData(String path, String authorizationHeader) throws IOException {
+    return fetchData(URI.create(veoUrl + path), authorizationHeader);
+  }
 
-    private Object fetchData(URI uri, String authorizationHeader) throws IOException {
-        logger.info("Requesting data from {}", uri);
-        ClientHttpRequest request = httpRequestFactory.createRequest(uri, HttpMethod.GET);
-        request.getHeaders().add(HttpHeaders.AUTHORIZATION, authorizationHeader);
-        request.getHeaders().setAccept(List.of(MediaType.APPLICATION_JSON));
-        try (ClientHttpResponse response = request.execute()) {
-            if (!response.getStatusCode().is2xxSuccessful()) {
-                logger.error("HTTP error {} for {}, message: {}", response.getRawStatusCode(), uri,
-                        response.getStatusText());
-                throw new DataFetchingException(uri.toString(), response.getRawStatusCode(),
-                        response.getStatusText());
-            }
-            try (var body = response.getBody()) {
-                JsonNode tree = objectMapper.readTree(body);
-                if (tree.isArray()) {
-                    return objectMapper.treeToValue(tree, List.class);
-                } else {
-                    Map m = objectMapper.treeToValue(tree, Map.class);
-                    // add support for paged results
-                    if (m.containsKey("items")) {
-                        return (List) m.get("items");
-                    }
-                    return m;
-                }
-            }
+  private Object fetchData(URI uri, String authorizationHeader) throws IOException {
+    logger.info("Requesting data from {}", uri);
+    ClientHttpRequest request = httpRequestFactory.createRequest(uri, HttpMethod.GET);
+    request.getHeaders().add(HttpHeaders.AUTHORIZATION, authorizationHeader);
+    request.getHeaders().setAccept(List.of(MediaType.APPLICATION_JSON));
+    try (ClientHttpResponse response = request.execute()) {
+      if (!response.getStatusCode().is2xxSuccessful()) {
+        logger.error(
+            "HTTP error {} for {}, message: {}",
+            response.getRawStatusCode(),
+            uri,
+            response.getStatusText());
+        throw new DataFetchingException(
+            uri.toString(), response.getRawStatusCode(), response.getStatusText());
+      }
+      try (var body = response.getBody()) {
+        JsonNode tree = objectMapper.readTree(body);
+        if (tree.isArray()) {
+          return objectMapper.treeToValue(tree, List.class);
+        } else {
+          Map m = objectMapper.treeToValue(tree, Map.class);
+          // add support for paged results
+          if (m.containsKey("items")) {
+            return (List) m.get("items");
+          }
+          return m;
         }
+      }
     }
-
+  }
 }

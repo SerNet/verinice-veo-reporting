@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating.methods;
 
 import java.util.List;
@@ -26,19 +26,18 @@ import freemarker.template.TemplateModelException;
 
 public abstract class NoArgumentsMethod extends VeoTemplateMethod {
 
-    protected NoArgumentsMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-        super(m, ow);
+  protected NoArgumentsMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+    super(m, ow);
+  }
+
+  @Override
+  public final Object doExec(List arguments) throws TemplateModelException {
+    if (!arguments.isEmpty()) {
+      throw new TemplateModelException("Expecting no arguments");
     }
 
-    @Override
-    public final Object doExec(List arguments) throws TemplateModelException {
-        if (!arguments.isEmpty()) {
-            throw new TemplateModelException("Expecting no arguments");
-        }
+    return doExec();
+  }
 
-        return doExec();
-    }
-
-    protected abstract Object doExec() throws TemplateModelException;
-
+  protected abstract Object doExec() throws TemplateModelException;
 }

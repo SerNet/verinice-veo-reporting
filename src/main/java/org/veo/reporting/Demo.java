@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting;
 
 import java.io.IOException;
@@ -41,129 +41,188 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import freemarker.template.TemplateException;
 
 /**
- * Runs a demo and a template editing environment that can be used to develop
- * new reports. This is only meant to be used by developers and is nowhere near
- * production quality, that's why it must be enabled via the <code>demo</code>
- * Spring Boot profile.
+ * Runs a demo and a template editing environment that can be used to develop new reports. This is
+ * only meant to be used by developers and is nowhere near production quality, that's why it must be
+ * enabled via the <code>demo</code> Spring Boot profile.
  */
 public class Demo {
 
-    private static final Logger logger = LoggerFactory.getLogger(Demo.class);
+  private static final Logger logger = LoggerFactory.getLogger(Demo.class);
 
-    static void runDemo(ConfigurableApplicationContext ctx) throws IOException {
-        logger.info("Demo mode enabled");
-        var reportEngine = ctx.getBean(ReportEngine.class);
-        var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
-        var scopeId = ctx.getEnvironment().getRequiredProperty("veo.demoscopeid");
-        var veoClient = ctx.getBean(VeoClient.class);
-        var authHeader = "Bearer " + token;
+  static void runDemo(ConfigurableApplicationContext ctx) throws IOException {
+    logger.info("Demo mode enabled");
+    var reportEngine = ctx.getBean(ReportEngine.class);
+    var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
+    var scopeId = ctx.getEnvironment().getRequiredProperty("veo.demoscopeid");
+    var veoClient = ctx.getBean(VeoClient.class);
+    var authHeader = "Bearer " + token;
 
-        Map<String, Object> entriesForLanguage = veoClient.fetchTranslations(Locale.GERMANY,
-                authHeader);
+    Map<String, Object> entriesForLanguage =
+        veoClient.fetchTranslations(Locale.GERMANY, authHeader);
 
-        var objectMapper = new ObjectMapper();
-        var writer = objectMapper.writerWithDefaultPrettyPrinter();
+    var objectMapper = new ObjectMapper();
+    var writer = objectMapper.writerWithDefaultPrettyPrinter();
 
-        var dpiaId = ctx.getEnvironment().getProperty("veo.demodpiaid");
-        boolean createDPIAReports = dpiaId != null;
+    var dpiaId = ctx.getEnvironment().getProperty("veo.demodpiaid");
+    boolean createDPIAReports = dpiaId != null;
 
-        DataProvider dataProvider = new DataProvider() {
+    DataProvider dataProvider =
+        new DataProvider() {
 
-            Map<String, Object> cache = new HashMap<>();
+          Map<String, Object> cache = new HashMap<>();
 
-            @Override
-            public Object resolve(String key, String url) {
-                if ("dpia".equals(key)) {
-                    url = url.replace("${targetId}", dpiaId);
-                } else if ("scope".equals(key)) {
-                    url = url.replace("${targetId}", scopeId);
-                } else if (url.contains("targetId")) {
-                    throw new IllegalArgumentException("Unhandled url: " + url);
-                }
-                return cache.computeIfAbsent(url, it -> {
-                    try {
-                        Object data = veoClient.fetchData(it, authHeader);
-                        System.out.println("\n" + key + ":");
-                        System.out.println(writer.writeValueAsString(data));
-                        return data;
-                    } catch (IOException e) {
-                        throw new RuntimeException("Error fetching data from " + it, e);
-                    }
-                });
+          @Override
+          public Object resolve(String key, String url) {
+            if ("dpia".equals(key)) {
+              url = url.replace("${targetId}", dpiaId);
+            } else if ("scope".equals(key)) {
+              url = url.replace("${targetId}", scopeId);
+            } else if (url.contains("targetId")) {
+              throw new IllegalArgumentException("Unhandled url: " + url);
             }
+            return cache.computeIfAbsent(
+                url,
+                it -> {
+                  try {
+                    Object data = veoClient.fetchData(it, authHeader);
+                    System.out.println("\n" + key + ":");
+                    System.out.println(writer.writeValueAsString(data));
+                    return data;
+                  } catch (IOException e) {
+                    throw new RuntimeException("Error fetching data from " + it, e);
+                  }
+                });
+          }
         };
 
-        createReports(reportEngine, dataProvider, entriesForLanguage, createDPIAReports);
-        Path template = Paths.get("src/main/resources/templates");
-        try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+    createReports(reportEngine, dataProvider, entriesForLanguage, createDPIAReports);
+    Path template = Paths.get("src/main/resources/templates");
+    try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 
-            Files.walkFileTree(template, new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
-                        throws IOException {
-                    dir.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-
-            WatchKey key;
-            try {
-                while ((key = watchService.take()) != null) {
-                    if (!key.pollEvents().isEmpty()) {
-                        createReports(reportEngine, dataProvider, entriesForLanguage,
-                                createDPIAReports);
-                    }
-                    key.reset();
-                }
-            } catch (InterruptedException e) {
-                logger.info("Exiting ...");
+      Files.walkFileTree(
+          template,
+          new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+                throws IOException {
+              dir.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+              return FileVisitResult.CONTINUE;
             }
+          });
+
+      WatchKey key;
+      try {
+        while ((key = watchService.take()) != null) {
+          if (!key.pollEvents().isEmpty()) {
+            createReports(reportEngine, dataProvider, entriesForLanguage, createDPIAReports);
+          }
+          key.reset();
         }
-        ctx.stop();
+      } catch (InterruptedException e) {
+        logger.info("Exiting ...");
+      }
     }
+    ctx.stop();
+  }
 
-    static void createReports(ReportEngine reportEngine, DataProvider dataProvider,
-            Map<String, Object> entriesForLanguage, boolean createDPIAReports) throws IOException {
+  static void createReports(
+      ReportEngine reportEngine,
+      DataProvider dataProvider,
+      Map<String, Object> entriesForLanguage,
+      boolean createDPIAReports)
+      throws IOException {
 
-        ReportCreationParameters parameters = new ReportCreationParameters(Locale.GERMANY);
+    ReportCreationParameters parameters = new ReportCreationParameters(Locale.GERMANY);
 
-        try {
-            createReport(reportEngine, "processing-activities", "/tmp/vvt.md", dataProvider,
-                    "text/markdown", parameters, entriesForLanguage);
-            createReport(reportEngine, "processing-activities", "/tmp/vvt.html", dataProvider,
-                    "text/html", parameters, entriesForLanguage);
-            createReport(reportEngine, "processing-activities", "/tmp/vvt.pdf", dataProvider,
-                    "application/pdf", parameters, entriesForLanguage);
-            createReport(reportEngine, "risk-analysis", "/tmp/dpra.pdf", dataProvider,
-                    "application/pdf", parameters, entriesForLanguage);
-            createReport(reportEngine, "risk-analysis", "/tmp/dpra.html", dataProvider, "text/html",
-                    parameters, entriesForLanguage);
-            if (createDPIAReports) {
+    try {
+      createReport(
+          reportEngine,
+          "processing-activities",
+          "/tmp/vvt.md",
+          dataProvider,
+          "text/markdown",
+          parameters,
+          entriesForLanguage);
+      createReport(
+          reportEngine,
+          "processing-activities",
+          "/tmp/vvt.html",
+          dataProvider,
+          "text/html",
+          parameters,
+          entriesForLanguage);
+      createReport(
+          reportEngine,
+          "processing-activities",
+          "/tmp/vvt.pdf",
+          dataProvider,
+          "application/pdf",
+          parameters,
+          entriesForLanguage);
+      createReport(
+          reportEngine,
+          "risk-analysis",
+          "/tmp/dpra.pdf",
+          dataProvider,
+          "application/pdf",
+          parameters,
+          entriesForLanguage);
+      createReport(
+          reportEngine,
+          "risk-analysis",
+          "/tmp/dpra.html",
+          dataProvider,
+          "text/html",
+          parameters,
+          entriesForLanguage);
+      if (createDPIAReports) {
 
-                createReport(reportEngine, "dp-impact-assessment", "/tmp/dpia.pdf", dataProvider,
-                        "application/pdf", parameters, entriesForLanguage);
-                createReport(reportEngine, "dp-impact-assessment", "/tmp/dpia.html", dataProvider,
-                        "text/html", parameters, entriesForLanguage);
-            }
-            createReport(reportEngine, "processing-on-behalf", "/tmp/av.pdf", dataProvider,
-                    "application/pdf", parameters, entriesForLanguage);
+        createReport(
+            reportEngine,
+            "dp-impact-assessment",
+            "/tmp/dpia.pdf",
+            dataProvider,
+            "application/pdf",
+            parameters,
+            entriesForLanguage);
+        createReport(
+            reportEngine,
+            "dp-impact-assessment",
+            "/tmp/dpia.html",
+            dataProvider,
+            "text/html",
+            parameters,
+            entriesForLanguage);
+      }
+      createReport(
+          reportEngine,
+          "processing-on-behalf",
+          "/tmp/av.pdf",
+          dataProvider,
+          "application/pdf",
+          parameters,
+          entriesForLanguage);
 
-        } catch (IOException | TemplateException e) {
-            logger.error("Error creating reports", e);
-        }
+    } catch (IOException | TemplateException e) {
+      logger.error("Error creating reports", e);
     }
+  }
 
-    private static void createReport(ReportEngine reportEngine, String reportId, String fileName,
-            DataProvider dataProvider, String outputType, ReportCreationParameters parameters,
-            Map<String, Object> dynamicBundleEntries) throws IOException, TemplateException {
-        try (var os = Files.newOutputStream(Paths.get(fileName))) {
-            reportEngine.generateReport(reportId, outputType, parameters, os, dataProvider,
-                    dynamicBundleEntries);
-            logger.info("Report {} created at {}", reportId, fileName);
-        }
+  private static void createReport(
+      ReportEngine reportEngine,
+      String reportId,
+      String fileName,
+      DataProvider dataProvider,
+      String outputType,
+      ReportCreationParameters parameters,
+      Map<String, Object> dynamicBundleEntries)
+      throws IOException, TemplateException {
+    try (var os = Files.newOutputStream(Paths.get(fileName))) {
+      reportEngine.generateReport(
+          reportId, outputType, parameters, os, dataProvider, dynamicBundleEntries);
+      logger.info("Report {} created at {}", reportId, fileName);
     }
+  }
 
-    private Demo() {
-    }
-
+  private Demo() {}
 }

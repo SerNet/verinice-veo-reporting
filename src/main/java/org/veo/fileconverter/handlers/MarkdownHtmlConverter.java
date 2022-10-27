@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.fileconverter.handlers;
 
 import java.io.BufferedReader;
@@ -41,51 +41,50 @@ import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
 import org.veo.templating.MarkdownRendererImpl;
 
-/**
- * Converts Markdown to HTML
- */
+/** Converts Markdown to HTML */
 public class MarkdownHtmlConverter implements ConversionHandler {
 
-    private static final Pattern TRAILING_WHITESPACE = Pattern.compile("\\p{Blank}+$",
-            Pattern.MULTILINE);
+  private static final Pattern TRAILING_WHITESPACE =
+      Pattern.compile("\\p{Blank}+$", Pattern.MULTILINE);
 
-    @Override
-    public String getInputType() {
-        return "text/markdown";
+  @Override
+  public String getInputType() {
+    return "text/markdown";
+  }
+
+  @Override
+  public String getOutputType() {
+    return "text/html";
+  }
+
+  @Override
+  public void convert(
+      InputStream input,
+      OutputStream output,
+      ReportConfiguration reportConfiguration,
+      ReportCreationParameters parameters)
+      throws IOException {
+    try (Reader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+        StringWriter intermediateWriter = new StringWriter();
+        Writer writer =
+            new BufferedWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8))) {
+      new MarkdownRendererImpl().renderToHTML(reader, intermediateWriter);
+      Document doc = Jsoup.parse(intermediateWriter.toString());
+      Element html = doc.getElementsByTag("html").first();
+      Locale locale = parameters.getLocale();
+      if (locale.getCountry().isEmpty()) {
+        html.attr("lang", locale.getLanguage());
+      } else {
+        html.attr("lang", locale.getLanguage() + "-" + locale.getCountry());
+      }
+      Element head =
+          Optional.ofNullable(html.getElementsByTag("head").first())
+              .orElseGet(() -> html.appendElement("head"));
+      if (head.getElementsByTag("title").first() == null) {
+        head.appendElement("title").text(reportConfiguration.getName().get(locale.getLanguage()));
+      }
+      // work around https://github.com/jhy/jsoup/issues/1852
+      writer.write(TRAILING_WHITESPACE.matcher(doc.toString()).replaceAll(""));
     }
-
-    @Override
-    public String getOutputType() {
-        return "text/html";
-    }
-
-    @Override
-    public void convert(InputStream input, OutputStream output,
-            ReportConfiguration reportConfiguration, ReportCreationParameters parameters)
-            throws IOException {
-        try (Reader reader = new BufferedReader(
-                new InputStreamReader(input, StandardCharsets.UTF_8));
-                StringWriter intermediateWriter = new StringWriter();
-                Writer writer = new BufferedWriter(
-                        new OutputStreamWriter(output, StandardCharsets.UTF_8))) {
-            new MarkdownRendererImpl().renderToHTML(reader, intermediateWriter);
-            Document doc = Jsoup.parse(intermediateWriter.toString());
-            Element html = doc.getElementsByTag("html").first();
-            Locale locale = parameters.getLocale();
-            if (locale.getCountry().isEmpty()) {
-                html.attr("lang", locale.getLanguage());
-            } else {
-                html.attr("lang", locale.getLanguage() + "-" + locale.getCountry());
-            }
-            Element head = Optional.ofNullable(html.getElementsByTag("head").first())
-                    .orElseGet(() -> html.appendElement("head"));
-            if (head.getElementsByTag("title").first() == null) {
-                head.appendElement("title")
-                        .text(reportConfiguration.getName().get(locale.getLanguage()));
-            }
-            // work around https://github.com/jhy/jsoup/issues/1852
-            writer.write(TRAILING_WHITESPACE.matcher(doc.toString()).replaceAll(""));
-        }
-    }
-
+  }
 }

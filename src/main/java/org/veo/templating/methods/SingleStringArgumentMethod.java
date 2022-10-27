@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating.methods;
 
 import java.util.List;
@@ -26,18 +26,17 @@ import freemarker.template.TemplateModelException;
 
 public abstract class SingleStringArgumentMethod extends VeoTemplateMethod {
 
-    protected SingleStringArgumentMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-        super(m, ow);
+  protected SingleStringArgumentMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+    super(m, ow);
+  }
+
+  @Override
+  public final Object doExec(List arguments) throws TemplateModelException {
+    if (arguments.size() != 1) {
+      throw new TemplateModelException("Expecting exactly 1 argument");
     }
+    return doExec(asString(arguments.get(0)));
+  }
 
-    @Override
-    public final Object doExec(List arguments) throws TemplateModelException {
-        if (arguments.size() != 1) {
-            throw new TemplateModelException("Expecting exactly 1 argument");
-        }
-        return doExec(asString(arguments.get(0)));
-    }
-
-    protected abstract Object doExec(String arg) throws TemplateModelException;
-
+  protected abstract Object doExec(String arg) throws TemplateModelException;
 }

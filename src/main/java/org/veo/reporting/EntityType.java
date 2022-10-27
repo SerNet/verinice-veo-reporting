@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,16 +14,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting;
 
 /**
  * An entity type that can be used as the input for a report
- * 
+ *
  * @see {@link CreateReport}
  */
 public enum EntityType {
-
-    asset, client, control, document, incident, person, process, scenario, scope, unit
-
+  asset,
+  client,
+  control,
+  document,
+  incident,
+  person,
+  process,
+  scenario,
+  scope,
+  unit
 }

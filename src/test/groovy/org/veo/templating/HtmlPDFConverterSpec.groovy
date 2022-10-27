@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating
 
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -28,7 +28,7 @@ import spock.lang.Specification
 
 class HtmlPDFConverterSpec extends Specification {
 
-    def "Convert HTML with bookmarks to PDF"(){
+    def "Convert HTML with bookmarks to PDF"() {
         given:
         HtmlPDFConverter converter = new HtmlPDFConverter()
         def html = new StringWriter().withCloseable {

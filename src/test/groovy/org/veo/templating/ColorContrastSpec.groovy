@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating
 
 import org.veo.templating.methods.ColorContrast
@@ -31,7 +31,7 @@ public class ColorContrastSpec extends Specification {
     ColorContrast colorContrast = ColorContrast.INSTANCE
 
     @Unroll
-    def "The most contrasting color for #color vs #options is #match"(){
+    def "The most contrasting color for #color vs #options is #match"() {
         expect:
         colorContrast.exec([ow.wrap(color)]+options.collect{ow.wrap(it)}).asString == match
         where:

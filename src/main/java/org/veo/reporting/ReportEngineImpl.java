@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting;
 
 import java.io.IOException;
@@ -48,127 +48,149 @@ import freemarker.template.TemplateException;
 
 public class ReportEngineImpl implements ReportEngine {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReportEngineImpl.class);
+  private static final Logger logger = LoggerFactory.getLogger(ReportEngineImpl.class);
 
-    private final TemplateEvaluator templateEvaluator;
-    private final FileConverter converter;
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final ResourcePatternResolver resourcePatternResolver;
-    private final ExecutorService executorService;
+  private final TemplateEvaluator templateEvaluator;
+  private final FileConverter converter;
+  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final ResourcePatternResolver resourcePatternResolver;
+  private final ExecutorService executorService;
 
-    public ReportEngineImpl(TemplateEvaluator templateEvaluator, FileConverter converter,
-            ResourcePatternResolver resourcePatternResolver, ExecutorService executorService) {
-        this.templateEvaluator = templateEvaluator;
-        this.converter = converter;
-        this.resourcePatternResolver = resourcePatternResolver;
-        this.executorService = executorService;
+  public ReportEngineImpl(
+      TemplateEvaluator templateEvaluator,
+      FileConverter converter,
+      ResourcePatternResolver resourcePatternResolver,
+      ExecutorService executorService) {
+    this.templateEvaluator = templateEvaluator;
+    this.converter = converter;
+    this.resourcePatternResolver = resourcePatternResolver;
+    this.executorService = executorService;
+  }
+
+  @Override
+  public void generateReport(
+      String reportName,
+      String outputType,
+      ReportCreationParameters parameters,
+      OutputStream outputStream,
+      DataProvider dataProvider,
+      Map<String, Object> dynamicBundleEntries)
+      throws IOException, TemplateException {
+
+    ReportConfiguration config =
+        getReport(reportName)
+            .orElseThrow(() -> new IllegalArgumentException("Unknown report " + reportName));
+
+    Map<String, Object> data = new HashMap<>();
+
+    String templateName = config.getTemplateFile();
+
+    config.getData().forEach((key, value) -> data.put(key, dataProvider.resolve(key, value)));
+
+    String templateBaseName = templateName.split("\\.")[0];
+    String bundleName = "templates." + templateBaseName;
+    logger.info(
+        "Loading resourceBundle for template {}, locale {} from {}",
+        templateName,
+        parameters.getLocale(),
+        bundleName);
+    try {
+      ResourceBundle reportBundle = ResourceBundle.getBundle(bundleName, parameters.getLocale());
+      logger.info("Bundle loaded, locale: {}", reportBundle.getLocale());
+      data.put("bundle", MapResourceBundle.createMergedBundle(reportBundle, dynamicBundleEntries));
+    } catch (MissingResourceException e) {
+      logger.warn("No resource bundle found for template {}", templateName);
+      data.put("bundle", new MapResourceBundle(dynamicBundleEntries));
     }
+    generateReport(config, data, outputType, outputStream, parameters);
+  }
 
-    @Override
-    public void generateReport(String reportName, String outputType,
-            ReportCreationParameters parameters, OutputStream outputStream,
-            DataProvider dataProvider, Map<String, Object> dynamicBundleEntries)
-            throws IOException, TemplateException {
-
-        ReportConfiguration config = getReport(reportName)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown report " + reportName));
-
-        Map<String, Object> data = new HashMap<>();
-
-        String templateName = config.getTemplateFile();
-
-        config.getData().forEach((key, value) -> data.put(key, dataProvider.resolve(key, value)));
-
-        String templateBaseName = templateName.split("\\.")[0];
-        String bundleName = "templates." + templateBaseName;
-        logger.info("Loading resourceBundle for template {}, locale {} from {}", templateName,
-                parameters.getLocale(), bundleName);
-        try {
-            ResourceBundle reportBundle = ResourceBundle.getBundle(bundleName,
-                    parameters.getLocale());
-            logger.info("Bundle loaded, locale: {}", reportBundle.getLocale());
-            data.put("bundle",
-                    MapResourceBundle.createMergedBundle(reportBundle, dynamicBundleEntries));
-        } catch (MissingResourceException e) {
-            logger.warn("No resource bundle found for template {}", templateName);
-            data.put("bundle", new MapResourceBundle(dynamicBundleEntries));
-        }
-        generateReport(config, data, outputType, outputStream, parameters);
-
-    }
-
-    @Override
-    public void generateReport(ReportConfiguration reportConfiguration, Map<String, Object> data,
-            String outputType, OutputStream output, ReportCreationParameters parameters)
-            throws IOException, TemplateException {
-        if (outputType.equals(reportConfiguration.getTemplateType())) {
-            templateEvaluator.executeTemplate(reportConfiguration.getTemplateFile(), data, output);
-        } else {
-            try (PipedInputStream pipedInputStream = new PipedInputStream();
-                    PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
-                // start async conversion of the template output
-                Future<Void> future = executorService.submit(() -> {
-                    converter.convert(pipedInputStream, reportConfiguration.getTemplateType(),
-                            output, outputType, reportConfiguration, parameters);
-                    return null;
+  @Override
+  public void generateReport(
+      ReportConfiguration reportConfiguration,
+      Map<String, Object> data,
+      String outputType,
+      OutputStream output,
+      ReportCreationParameters parameters)
+      throws IOException, TemplateException {
+    if (outputType.equals(reportConfiguration.getTemplateType())) {
+      templateEvaluator.executeTemplate(reportConfiguration.getTemplateFile(), data, output);
+    } else {
+      try (PipedInputStream pipedInputStream = new PipedInputStream();
+          PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
+        // start async conversion of the template output
+        Future<Void> future =
+            executorService.submit(
+                () -> {
+                  converter.convert(
+                      pipedInputStream,
+                      reportConfiguration.getTemplateType(),
+                      output,
+                      outputType,
+                      reportConfiguration,
+                      parameters);
+                  return null;
                 });
-                try {
-                    templateEvaluator.executeTemplate(reportConfiguration.getTemplateFile(), data,
-                            pipedOutputStream);
-                } catch (TemplateException | IOException e) {
-                    // template evaluation failed, cancel the conversion task
-                    future.cancel(true);
-                    throw e;
-                }
-                try {
-                    // wait for the conversion to finish
-                    future.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    throw new VeoReportingException("Error running conversion", e);
-                }
-            }
-        }
-    }
-
-    @Override
-    public Map<String, ReportConfiguration> getReports() {
         try {
-            Resource[] resources = resourcePatternResolver
-                    .getResources("classpath*:/reports/*.json");
-            return Arrays.stream(resources).collect(Collectors.toMap(resource -> {
-                String fileName = resource.getFilename();
-                if (fileName == null) {
-                    throw new IllegalStateException("File name is null for " + resource);
-                }
-                return fileName.substring(0, fileName.length() - 5);
-            }, resource -> {
-                try (var is = resource.getInputStream()) {
-                    ReportConfiguration reportConfiguration = objectMapper.readValue(is,
-                            ReportConfiguration.class);
-                    logger.info("Read report {} from {}", reportConfiguration.getName(), resource);
-                    return reportConfiguration;
-                } catch (IOException e) {
-                    throw new VeoReportingException("Error loading report configurations", e);
-                }
-            }));
-
-        } catch (IOException e) {
-            throw new VeoReportingException("Error loading report configurations", e);
+          templateEvaluator.executeTemplate(
+              reportConfiguration.getTemplateFile(), data, pipedOutputStream);
+        } catch (TemplateException | IOException e) {
+          // template evaluation failed, cancel the conversion task
+          future.cancel(true);
+          throw e;
         }
-
+        try {
+          // wait for the conversion to finish
+          future.get();
+        } catch (InterruptedException | ExecutionException e) {
+          throw new VeoReportingException("Error running conversion", e);
+        }
+      }
     }
+  }
 
-    @Override
-    public Optional<ReportConfiguration> getReport(String id) {
-        var resource = resourcePatternResolver.getResource("classpath:/reports/" + id + ".json");
-        if (!resource.exists()) {
-            return Optional.empty();
-        }
-        try (InputStream is = resource.getInputStream()) {
-            var config = objectMapper.readValue(is, ReportConfiguration.class);
-            return Optional.of(config);
-        } catch (IOException e) {
-            throw new VeoReportingException("Error loading report configuration", e);
-        }
+  @Override
+  public Map<String, ReportConfiguration> getReports() {
+    try {
+      Resource[] resources = resourcePatternResolver.getResources("classpath*:/reports/*.json");
+      return Arrays.stream(resources)
+          .collect(
+              Collectors.toMap(
+                  resource -> {
+                    String fileName = resource.getFilename();
+                    if (fileName == null) {
+                      throw new IllegalStateException("File name is null for " + resource);
+                    }
+                    return fileName.substring(0, fileName.length() - 5);
+                  },
+                  resource -> {
+                    try (var is = resource.getInputStream()) {
+                      ReportConfiguration reportConfiguration =
+                          objectMapper.readValue(is, ReportConfiguration.class);
+                      logger.info(
+                          "Read report {} from {}", reportConfiguration.getName(), resource);
+                      return reportConfiguration;
+                    } catch (IOException e) {
+                      throw new VeoReportingException("Error loading report configurations", e);
+                    }
+                  }));
+
+    } catch (IOException e) {
+      throw new VeoReportingException("Error loading report configurations", e);
     }
+  }
+
+  @Override
+  public Optional<ReportConfiguration> getReport(String id) {
+    var resource = resourcePatternResolver.getResource("classpath:/reports/" + id + ".json");
+    if (!resource.exists()) {
+      return Optional.empty();
+    }
+    try (InputStream is = resource.getInputStream()) {
+      var config = objectMapper.readValue(is, ReportConfiguration.class);
+      return Optional.of(config);
+    } catch (IOException e) {
+      throw new VeoReportingException("Error loading report configuration", e);
+    }
+  }
 }

@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,16 +14,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
-/**
- * Renders Markdown to HTML
- */
+/** Renders Markdown to HTML */
 public interface MarkdownRenderer {
-    void renderToHTML(Reader reader, Writer writer) throws IOException;
+  void renderToHTML(Reader reader, Writer writer) throws IOException;
 }

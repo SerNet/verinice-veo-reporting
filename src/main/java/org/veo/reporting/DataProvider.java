@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,13 +14,13 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting;
 
 /**
- * Resolves an entry from a {@link ReportConfiguration}'s <code>data</code>
- * specification to the real value
+ * Resolves an entry from a {@link ReportConfiguration}'s <code>data</code> specification to the
+ * real value
  */
 public interface DataProvider {
-    Object resolve(String key, String value);
+  Object resolve(String key, String value);
 }

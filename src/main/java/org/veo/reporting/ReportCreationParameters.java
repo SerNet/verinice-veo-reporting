@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2022  Jochen Kemnade
  *
@@ -14,26 +14,25 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting;
 
 import java.util.Locale;
 
 public class ReportCreationParameters {
 
-    public ReportCreationParameters(Locale locale) {
-        this.locale = locale;
-    }
+  public ReportCreationParameters(Locale locale) {
+    this.locale = locale;
+  }
 
-    private final Locale locale;
+  private final Locale locale;
 
-    public Locale getLocale() {
-        return locale;
-    }
+  public Locale getLocale() {
+    return locale;
+  }
 
-    @Override
-    public String toString() {
-        return "ReportCreationParameters [locale=" + locale + "]";
-    }
-
+  @Override
+  public String toString() {
+    return "ReportCreationParameters [locale=" + locale + "]";
+  }
 }

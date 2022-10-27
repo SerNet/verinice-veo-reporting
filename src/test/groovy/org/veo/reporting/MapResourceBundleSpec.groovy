@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,14 +14,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting
 
 import spock.lang.Specification
 
 class MapResourceBundleSpec extends Specification {
 
-    def 'create bundle from a map'(){
+    def 'create bundle from a map'() {
         given:
         def map = ['hello': 'Hallo']
         when:
@@ -30,7 +30,7 @@ class MapResourceBundleSpec extends Specification {
         bundle.getString('hello') == 'Hallo'
     }
 
-    def 'create merged bundle from a base bundle and a map'(){
+    def 'create merged bundle from a base bundle and a map'() {
         given:
         ResourceBundle base = new ResourceBundle() {
                     @Override

@@ -1,6 +1,6 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
- * Copyright (C) 2022 Jochen Kemnade
+ * Copyright (C) 2022  Jochen Kemnade
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.fileconverter.charts;
 
 import java.awt.Color;
@@ -51,129 +51,139 @@ import org.veo.reporting.exception.VeoReportingException;
 
 public class VeoJFreeChartPieDiagramObjectDrawer implements FSObjectDrawer {
 
-    static {
-        var openSansFontResources = FontResourceManager.getAllResourcesOfFontType("Open Sans");
-        openSansRegular = loadFont(openSansFontResources, 400);
-        openSansBold = loadFont(openSansFontResources, 700);
+  static {
+    var openSansFontResources = FontResourceManager.getAllResourcesOfFontType("Open Sans");
+    openSansRegular = loadFont(openSansFontResources, 400);
+    openSansBold = loadFont(openSansFontResources, 700);
+  }
+
+  private static final Pattern PATTERN_RGB =
+      Pattern.compile("rgb *\\( *([0-9]+), *([0-9]+), *([0-9]+) *\\)");
+
+  private static final Pattern PATTERN_HTML =
+      Pattern.compile("#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})", Pattern.CASE_INSENSITIVE);
+
+  private static final Font openSansRegular;
+  private static final Font openSansBold;
+
+  static Map<Shape, String> buildShapeLinkMap(ChartRenderingInfo renderingInfo, int dotsPerPixel) {
+    Map<Shape, String> linkShapes = null;
+    AffineTransform scaleTransform = new AffineTransform();
+    scaleTransform.scale(dotsPerPixel, dotsPerPixel);
+    for (Object entity : renderingInfo.getEntityCollection().getEntities()) {
+      if (!(entity instanceof ChartEntity)) continue;
+      ChartEntity chartEntity = (ChartEntity) entity;
+      Shape shape = chartEntity.getArea();
+      String url = chartEntity.getURLText();
+      if (url != null) {
+        if (linkShapes == null) linkShapes = new HashMap<>();
+        linkShapes.put(scaleTransform.createTransformedShape(shape), url);
+      }
+    }
+    return linkShapes;
+  }
+
+  private static Font loadFont(
+      ICommonsOrderedSet<IFontResource> openSansFontResources, int weight) {
+    IFontResource resource =
+        openSansFontResources.findFirst(
+            f -> f.getFontWeight().getWeight() == weight && f.getFontStyle().isRegular());
+    try (InputStream is = resource.getBufferedInputStream()) {
+      return Font.createFont(Font.TRUETYPE_FONT, is);
+    } catch (Exception e1) {
+      throw new VeoReportingException("Error initializing chart font", e1);
+    }
+  }
+
+  public static Color parseColor(String input) {
+    Matcher m = PATTERN_RGB.matcher(input);
+    if (m.matches()) {
+      return new Color(
+          Integer.parseInt(m.group(1)), // r
+          Integer.parseInt(m.group(2)), // g
+          Integer.parseInt(m.group(3))); // b
+    }
+    m = PATTERN_HTML.matcher(input);
+    if (m.matches()) {
+      return new Color(
+          Integer.parseInt(m.group(1), 16), // r
+          Integer.parseInt(m.group(2), 16), // g
+          Integer.parseInt(m.group(3), 16)); // b
+    }
+    return null;
+  }
+
+  @Override
+  public Map<Shape, String> drawObject(
+      Element e,
+      final double x,
+      final double y,
+      final double width,
+      final double height,
+      OutputDevice outputDevice,
+      RenderingContext ctx,
+      final int dotsPerPixel) {
+    DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
+    NodeList childNodes = e.getChildNodes();
+    final Map<String, String> urls = new HashMap<>();
+    final Map<String, String> colors = new HashMap<>();
+    for (int i = 0; i < childNodes.getLength(); i++) {
+      Node item = childNodes.item(i);
+      if (!(item instanceof Element)) continue;
+      Element childElement = (Element) item;
+      String tagName = ((Element) item).getTagName();
+      if (!tagName.equals("data") && !tagName.equals("td")) continue;
+      String name = childElement.getAttribute("name");
+      double value = Double.parseDouble(childElement.getAttribute("value"));
+      String url = childElement.getAttribute("url");
+      String color = childElement.getAttribute("color");
+      dataset.setValue(name, value);
+      if (!url.isEmpty()) {
+        urls.put(name, url);
+      }
+      if (!color.isEmpty()) {
+        colors.put(name, color);
+      }
     }
 
-    private static final Pattern PATTERN_RGB = Pattern
-            .compile("rgb *\\( *([0-9]+), *([0-9]+), *([0-9]+) *\\)");
+    final JFreeChart chart1 =
+        ChartFactory.createPieChart(e.getAttribute("title"), dataset, true, false, true);
+    PiePlot<String> plot = (PiePlot<String>) chart1.getPlot();
+    plot.setBackgroundPaint(null);
+    plot.setURLGenerator((dataset1, key, pieIndex) -> urls.get(key.toString()));
+    plot.setShadowPaint(null);
+    plot.setShadowGenerator(null);
+    plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}\n{1} ({2})"));
+    plot.setLegendLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {2}"));
 
-    private static final Pattern PATTERN_HTML = Pattern
-            .compile("#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})", Pattern.CASE_INSENSITIVE);
+    plot.setLabelOutlinePaint(null);
+    plot.setLabelBackgroundPaint(new Color(255, 255, 255, 130));
+    plot.setLabelLinkStyle(PieLabelLinkStyle.QUAD_CURVE);
+    plot.setLabelShadowPaint(null);
+    colors.forEach((key, value) -> plot.setSectionPaint(key, parseColor(value)));
+    Color defaultFontColor = Color.decode("#767676");
+    plot.setOutlinePaint(defaultFontColor);
+    plot.setLabelPaint(defaultFontColor);
+    chart1.getLegend().setItemPaint(defaultFontColor);
 
-    private static final Font openSansRegular;
-    private static final Font openSansBold;
+    chart1.getTitle().setPaint(defaultFontColor);
+    chart1.getTitle().setFont(openSansBold.deriveFont(Font.BOLD, 20f));
+    chart1.getLegend().setItemFont(openSansRegular.deriveFont(Font.PLAIN, 12f));
+    plot.setLabelFont(openSansRegular.deriveFont(Font.PLAIN, 12f));
 
-    static Map<Shape, String> buildShapeLinkMap(ChartRenderingInfo renderingInfo,
-            int dotsPerPixel) {
-        Map<Shape, String> linkShapes = null;
-        AffineTransform scaleTransform = new AffineTransform();
-        scaleTransform.scale(dotsPerPixel, dotsPerPixel);
-        for (Object entity : renderingInfo.getEntityCollection().getEntities()) {
-            if (!(entity instanceof ChartEntity))
-                continue;
-            ChartEntity chartEntity = (ChartEntity) entity;
-            Shape shape = chartEntity.getArea();
-            String url = chartEntity.getURLText();
-            if (url != null) {
-                if (linkShapes == null)
-                    linkShapes = new HashMap<>();
-                linkShapes.put(scaleTransform.createTransformedShape(shape), url);
-            }
-        }
-        return linkShapes;
-    }
+    final ChartRenderingInfo renderingInfo = new ChartRenderingInfo();
+    outputDevice.drawWithGraphics(
+        (float) x,
+        (float) y,
+        (float) width / dotsPerPixel,
+        (float) height / dotsPerPixel,
+        graphics2D ->
+            chart1.draw(
+                graphics2D,
+                new Rectangle2D.Float(
+                    0, 0, (float) (width / dotsPerPixel), (float) (height / dotsPerPixel)),
+                renderingInfo));
 
-    private static Font loadFont(ICommonsOrderedSet<IFontResource> openSansFontResources,
-            int weight) {
-        IFontResource resource = openSansFontResources.findFirst(
-                f -> f.getFontWeight().getWeight() == weight && f.getFontStyle().isRegular());
-        try (InputStream is = resource.getBufferedInputStream()) {
-            return Font.createFont(Font.TRUETYPE_FONT, is);
-        } catch (Exception e1) {
-            throw new VeoReportingException("Error initializing chart font", e1);
-        }
-    }
-
-    public static Color parseColor(String input) {
-        Matcher m = PATTERN_RGB.matcher(input);
-        if (m.matches()) {
-            return new Color(Integer.parseInt(m.group(1)), // r
-                    Integer.parseInt(m.group(2)), // g
-                    Integer.parseInt(m.group(3))); // b
-        }
-        m = PATTERN_HTML.matcher(input);
-        if (m.matches()) {
-            return new Color(Integer.parseInt(m.group(1), 16), // r
-                    Integer.parseInt(m.group(2), 16), // g
-                    Integer.parseInt(m.group(3), 16)); // b
-        }
-        return null;
-    }
-
-    @Override
-    public Map<Shape, String> drawObject(Element e, final double x, final double y,
-            final double width, final double height, OutputDevice outputDevice,
-            RenderingContext ctx, final int dotsPerPixel) {
-        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
-        NodeList childNodes = e.getChildNodes();
-        final Map<String, String> urls = new HashMap<>();
-        final Map<String, String> colors = new HashMap<>();
-        for (int i = 0; i < childNodes.getLength(); i++) {
-            Node item = childNodes.item(i);
-            if (!(item instanceof Element))
-                continue;
-            Element childElement = (Element) item;
-            String tagName = ((Element) item).getTagName();
-            if (!tagName.equals("data") && !tagName.equals("td"))
-                continue;
-            String name = childElement.getAttribute("name");
-            double value = Double.parseDouble(childElement.getAttribute("value"));
-            String url = childElement.getAttribute("url");
-            String color = childElement.getAttribute("color");
-            dataset.setValue(name, value);
-            if (!url.isEmpty()) {
-                urls.put(name, url);
-            }
-            if (!color.isEmpty()) {
-                colors.put(name, color);
-            }
-        }
-
-        final JFreeChart chart1 = ChartFactory.createPieChart(e.getAttribute("title"), dataset,
-                true, false, true);
-        PiePlot<String> plot = (PiePlot<String>) chart1.getPlot();
-        plot.setBackgroundPaint(null);
-        plot.setURLGenerator((dataset1, key, pieIndex) -> urls.get(key.toString()));
-        plot.setShadowPaint(null);
-        plot.setShadowGenerator(null);
-        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0}\n{1} ({2})"));
-        plot.setLegendLabelGenerator(new StandardPieSectionLabelGenerator("{0}: {2}"));
-
-        plot.setLabelOutlinePaint(null);
-        plot.setLabelBackgroundPaint(new Color(255, 255, 255, 130));
-        plot.setLabelLinkStyle(PieLabelLinkStyle.QUAD_CURVE);
-        plot.setLabelShadowPaint(null);
-        colors.forEach((key, value) -> plot.setSectionPaint(key, parseColor(value)));
-        Color defaultFontColor = Color.decode("#767676");
-        plot.setOutlinePaint(defaultFontColor);
-        plot.setLabelPaint(defaultFontColor);
-        chart1.getLegend().setItemPaint(defaultFontColor);
-
-        chart1.getTitle().setPaint(defaultFontColor);
-        chart1.getTitle().setFont(openSansBold.deriveFont(Font.BOLD, 20f));
-        chart1.getLegend().setItemFont(openSansRegular.deriveFont(Font.PLAIN, 12f));
-        plot.setLabelFont(openSansRegular.deriveFont(Font.PLAIN, 12f));
-
-        final ChartRenderingInfo renderingInfo = new ChartRenderingInfo();
-        outputDevice.drawWithGraphics((float) x, (float) y, (float) width / dotsPerPixel,
-                (float) height / dotsPerPixel,
-                graphics2D -> chart1.draw(graphics2D, new Rectangle2D.Float(0, 0,
-                        (float) (width / dotsPerPixel), (float) (height / dotsPerPixel)),
-                        renderingInfo));
-
-        return buildShapeLinkMap(renderingInfo, dotsPerPixel);
-    }
+    return buildShapeLinkMap(renderingInfo, dotsPerPixel);
+  }
 }

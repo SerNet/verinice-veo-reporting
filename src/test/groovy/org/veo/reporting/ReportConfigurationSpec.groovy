@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -25,7 +25,7 @@ class ReportConfigurationSpec extends Specification {
 
     def objectMapper = new ObjectMapper()
 
-    def "#f can be read as a ReportConfiguration"(){
+    def "#f can be read as a ReportConfiguration"() {
 
         when:
         def reportConfiguration = objectMapper.readValue(f, ReportConfiguration)
@@ -35,12 +35,12 @@ class ReportConfigurationSpec extends Specification {
         f << new File('src/main/resources/reports/').listFiles()
     }
 
-    def "read ReportConfiguration from processing-activities.json"(){
+    def "read ReportConfiguration from processing-activities.json"() {
 
         when:
         def reportConfiguration = objectMapper.readValue(new File('src/main/resources/reports/processing-activities.json'), ReportConfiguration)
         then:
-        with(reportConfiguration){
+        with(reportConfiguration) {
             name.de == 'Verzeichnis der Verarbeitungstätigkeiten'
             description.de == 'Eine detaillierte Übersicht über die in einem Scope durchgeführten Verarbeitungstätigkeiten'
             targetTypes.size() == 1

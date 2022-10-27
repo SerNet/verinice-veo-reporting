@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating;
 
 import java.io.IOException;
@@ -52,86 +52,86 @@ import freemarker.template.TemplateModelException;
 
 public class TemplateEvaluatorImpl implements TemplateEvaluator {
 
-    private static final Logger logger = LoggerFactory.getLogger(TemplateEvaluatorImpl.class);
+  private static final Logger logger = LoggerFactory.getLogger(TemplateEvaluatorImpl.class);
 
-    private final Configuration cfg;
+  private final Configuration cfg;
 
-    public TemplateEvaluatorImpl(TemplateLoader templateLoader, boolean useCache) {
-        cfg = new Configuration(Configuration.VERSION_2_3_29);
-        cfg.setTemplateLoader(templateLoader);
-        // Recommended settings for new projects:
-        cfg.setDefaultEncoding("UTF-8");
-        cfg.setNewBuiltinClassResolver(TemplateClassResolver.ALLOWS_NOTHING_RESOLVER);
-        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        cfg.setLogTemplateExceptions(false);
-        cfg.setWrapUncheckedExceptions(true);
-        cfg.setFallbackOnNullLoopVariable(false);
-        if (!useCache) {
-            logger.info("Caching disabled");
-            cfg.setCacheStorage(NullCacheStorage.INSTANCE);
-        }
-        cfg.setSharedVariable("colorContrast", ColorContrast.INSTANCE);
-
-        TemplateConfiguration tcMD = new TemplateConfiguration();
-        tcMD.setOutputFormat(MarkdownOutputFormat.INSTANCE);
-        TemplateConfiguration tcHTML = new TemplateConfiguration();
-        tcHTML.setOutputFormat(HTMLOutputFormat.INSTANCE);
-        TemplateConfiguration tcXML = new TemplateConfiguration();
-        tcXML.setOutputFormat(XMLOutputFormat.INSTANCE);
-
-        cfg.setTemplateConfigurations(new MergingTemplateConfigurationFactory(
-                new ConditionalTemplateConfigurationFactory(new FileExtensionMatcher("xml"), tcXML),
-                new ConditionalTemplateConfigurationFactory(new OrMatcher(
-                        new FileExtensionMatcher("html"), new FileExtensionMatcher("htm")), tcHTML),
-                new ConditionalTemplateConfigurationFactory(new FileExtensionMatcher("md"), tcMD)));
-
+  public TemplateEvaluatorImpl(TemplateLoader templateLoader, boolean useCache) {
+    cfg = new Configuration(Configuration.VERSION_2_3_29);
+    cfg.setTemplateLoader(templateLoader);
+    // Recommended settings for new projects:
+    cfg.setDefaultEncoding("UTF-8");
+    cfg.setNewBuiltinClassResolver(TemplateClassResolver.ALLOWS_NOTHING_RESOLVER);
+    cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+    cfg.setLogTemplateExceptions(false);
+    cfg.setWrapUncheckedExceptions(true);
+    cfg.setFallbackOnNullLoopVariable(false);
+    if (!useCache) {
+      logger.info("Caching disabled");
+      cfg.setCacheStorage(NullCacheStorage.INSTANCE);
     }
+    cfg.setSharedVariable("colorContrast", ColorContrast.INSTANCE);
 
-    public void executeTemplate(String templateName, Map data, OutputStream out)
-            throws TemplateException, IOException {
-        Template template = cfg.getTemplate(templateName);
-        logger.info("Evaluating template {}", templateName);
+    TemplateConfiguration tcMD = new TemplateConfiguration();
+    tcMD.setOutputFormat(MarkdownOutputFormat.INSTANCE);
+    TemplateConfiguration tcHTML = new TemplateConfiguration();
+    tcHTML.setOutputFormat(HTMLOutputFormat.INSTANCE);
+    TemplateConfiguration tcXML = new TemplateConfiguration();
+    tcXML.setOutputFormat(XMLOutputFormat.INSTANCE);
 
-        try (Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
+    cfg.setTemplateConfigurations(
+        new MergingTemplateConfigurationFactory(
+            new ConditionalTemplateConfigurationFactory(new FileExtensionMatcher("xml"), tcXML),
+            new ConditionalTemplateConfigurationFactory(
+                new OrMatcher(new FileExtensionMatcher("html"), new FileExtensionMatcher("htm")),
+                tcHTML),
+            new ConditionalTemplateConfigurationFactory(new FileExtensionMatcher("md"), tcMD)));
+  }
 
-            Map<String, Object> entitiesByUri = new HashMap<>();
-            addRecursively(entitiesByUri, data);
+  public void executeTemplate(String templateName, Map data, OutputStream out)
+      throws TemplateException, IOException {
+    Template template = cfg.getTemplate(templateName);
+    logger.info("Evaluating template {}", templateName);
 
-            VeoReportingObjectWrapper objectWrapper = new VeoReportingObjectWrapper(
-                    cfg.getIncompatibleImprovements(), entitiesByUri,
-                    (ResourceBundle) data.get("bundle"));
-            Environment env = template.createProcessingEnvironment(data, writer, objectWrapper);
-            logger.info("Building entity lookup map");
+    try (Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
 
-            env.process();
-        }
+      Map<String, Object> entitiesByUri = new HashMap<>();
+      addRecursively(entitiesByUri, data);
+
+      VeoReportingObjectWrapper objectWrapper =
+          new VeoReportingObjectWrapper(
+              cfg.getIncompatibleImprovements(),
+              entitiesByUri,
+              (ResourceBundle) data.get("bundle"));
+      Environment env = template.createProcessingEnvironment(data, writer, objectWrapper);
+      logger.info("Building entity lookup map");
+
+      env.process();
     }
+  }
 
-    private void addRecursively(Map<String, Object> entitiesByUri, Object data)
-            throws TemplateModelException {
-        logger.debug("adding entities from {}", data);
-        if (data instanceof Map) {
-            Map<?, ?> map = (Map<?, ?>) data;
-            String selfUri = (String) map.get("_self");
-            if (selfUri != null) {
-                logger.debug("adding {}: {}", selfUri, map);
-                entitiesByUri.put(selfUri, map);
-            } else {
-                for (Entry<?, ?> e : map.entrySet()) {
-                    logger.debug("Found key {}", e.getKey());
-                    addRecursively(entitiesByUri, e.getValue());
-                }
-            }
-
-        } else if (data instanceof Collection) {
-            Collection<?> list = (Collection<?>) data;
-            for (Object object : list) {
-                logger.debug(" found item: {}", object);
-                addRecursively(entitiesByUri, object);
-            }
-
+  private void addRecursively(Map<String, Object> entitiesByUri, Object data)
+      throws TemplateModelException {
+    logger.debug("adding entities from {}", data);
+    if (data instanceof Map) {
+      Map<?, ?> map = (Map<?, ?>) data;
+      String selfUri = (String) map.get("_self");
+      if (selfUri != null) {
+        logger.debug("adding {}: {}", selfUri, map);
+        entitiesByUri.put(selfUri, map);
+      } else {
+        for (Entry<?, ?> e : map.entrySet()) {
+          logger.debug("Found key {}", e.getKey());
+          addRecursively(entitiesByUri, e.getValue());
         }
+      }
 
+    } else if (data instanceof Collection) {
+      Collection<?> list = (Collection<?>) data;
+      for (Object object : list) {
+        logger.debug(" found item: {}", object);
+        addRecursively(entitiesByUri, object);
+      }
     }
-
+  }
 }

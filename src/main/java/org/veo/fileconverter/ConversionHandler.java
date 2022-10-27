@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.fileconverter;
 
 import java.io.IOException;
@@ -25,28 +25,26 @@ import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
 
 /**
- * A handler that can convert data from one format to another one, e.g.
- * text/markdown to text/html. This is not meant to be used directly. See
- * {@link FileConverter}.
+ * A handler that can convert data from one format to another one, e.g. text/markdown to text/html.
+ * This is not meant to be used directly. See {@link FileConverter}.
  */
 public interface ConversionHandler {
 
-    /**
-     * @return the handler's input type. Must be a valid MIME type, such as
-     *         <code>text/html</code>.
-     */
-    String getInputType();
+  /**
+   * @return the handler's input type. Must be a valid MIME type, such as <code>text/html</code>.
+   */
+  String getInputType();
 
-    /**
-     * @return the handler's output type. Must be a valid MIME type, such as
-     *         <code>text/html</code>.
-     */
-    String getOutputType();
+  /**
+   * @return the handler's output type. Must be a valid MIME type, such as <code>text/html</code>.
+   */
+  String getOutputType();
 
-    /**
-     * performs the actual conversion
-     */
-    void convert(InputStream input, OutputStream output, ReportConfiguration reportConfiguration,
-            ReportCreationParameters parameters) throws IOException;
-
+  /** performs the actual conversion */
+  void convert(
+      InputStream input,
+      OutputStream output,
+      ReportConfiguration reportConfiguration,
+      ReportCreationParameters parameters)
+      throws IOException;
 }

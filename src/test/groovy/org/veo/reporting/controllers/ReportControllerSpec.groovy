@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting.controllers
 import java.nio.charset.StandardCharsets
 
@@ -48,7 +48,7 @@ public class ReportControllerSpec extends Specification {
     @SpringBean
     private VeoClient veoClient = Mock()
 
-    def "retrieve a list of reports"(){
+    def "retrieve a list of reports"() {
         when:
         def response = GET("/reports")
         then:
@@ -66,7 +66,7 @@ public class ReportControllerSpec extends Specification {
         ]
     }
 
-    def "Report configuration has the expected format"(){
+    def "Report configuration has the expected format"() {
         when:
         def response = GET("/reports")
         def config = new JsonSlurper().parseText(response.getContentAsString(StandardCharsets.UTF_8)).'processing-activities'
@@ -86,7 +86,7 @@ public class ReportControllerSpec extends Specification {
         ]
     }
 
-    def "try to create an unknown report"(){
+    def "try to create an unknown report"() {
         when:
         def response = POST("/reports/invalid", 'abc', [
             outputType:'text/plain',
@@ -100,7 +100,7 @@ public class ReportControllerSpec extends Specification {
         response.status == 404
     }
 
-    def "try to create a report with missing targets parameter"(){
+    def "try to create a report with missing targets parameter"() {
         when:
         def response = POST("/reports/processing-activities", 'abc', [
             outputType:'application/pdf'
@@ -110,7 +110,7 @@ public class ReportControllerSpec extends Specification {
         response.contentAsString == '''targets: Targets not specified.'''
     }
 
-    def "try to create a report with empty targets parameter"(){
+    def "try to create a report with empty targets parameter"() {
         when:
         def response = POST("/reports/processing-activities",'abc', [
             outputType:'application/pdf',
@@ -120,7 +120,7 @@ public class ReportControllerSpec extends Specification {
         response.contentAsString == '''targets: size must be between 1 and 1'''
     }
 
-    def "try to create a report with invalid target type"(){
+    def "try to create a report with invalid target type"() {
         when:
         def response = POST("/reports/processing-activities",'abc',[
             outputType:'application/pdf',
@@ -135,7 +135,7 @@ public class ReportControllerSpec extends Specification {
         response.contentAsString == '''Cannot deserialize value of type `org.veo.reporting.EntityType` from String "chocolate": not one of the values accepted for Enum class: [scenario, incident, unit, person, document, control, process, asset, scope, client]'''
     }
 
-    def "try to create a report with unsupported target type"(){
+    def "try to create a report with unsupported target type"() {
         when:
         def response = POST("/reports/processing-activities", 'abc',[
             outputType:'application/pdf',
@@ -153,7 +153,7 @@ public class ReportControllerSpec extends Specification {
 
 
 
-    def "try to create a report with multiple targets"(){
+    def "try to create a report with multiple targets"() {
         when:
         def response = POST("/reports/processing-activities",'abc', [
             outputType:'application/pdf',
@@ -173,7 +173,7 @@ public class ReportControllerSpec extends Specification {
         response.contentAsString == '''targets: size must be between 1 and 1'''
     }
 
-    def "try to create a report with missing authentication header"(){
+    def "try to create a report with missing authentication header"() {
         when:
         def response = POST("/reports/processing-activities", [
             outputType:'application/pdf',
@@ -188,7 +188,7 @@ public class ReportControllerSpec extends Specification {
         response.status == 401
     }
 
-    def "try to create a report with an unsupported locale"(){
+    def "try to create a report with an unsupported locale"() {
         when:
         def response = POST("/reports/processing-activities", 'abc', 'en', [
             outputType:'application/pdf',
@@ -205,7 +205,7 @@ public class ReportControllerSpec extends Specification {
     }
 
 
-    def "create a report with different locales"(){
+    def "create a report with different locales"() {
         when:
         def response = POST("/reports/invitation",'abc','en', [
             outputType:'text/plain',
@@ -257,9 +257,9 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
     }
 
 
-    def "try to create a report with unsupported output type"(){
+    def "try to create a report with unsupported output type"() {
         when:
-        def response =  POST("/reports/invitation",'abc', [
+        def response = POST("/reports/invitation",'abc', [
             outputType:'animal/elephant',
             targets: [
                 [
@@ -272,9 +272,9 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
         response.status == 400
     }
 
-    def "try to create a report with unsupported locale"(){
+    def "try to create a report with unsupported locale"() {
         when:
-        def response =  POST("/reports/invitation",'abc', 'pt', [
+        def response = POST("/reports/invitation",'abc', 'pt', [
             outputType:'text/plain',
             targets: [
                 [
@@ -287,7 +287,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
         response.status == 400
     }
 
-    def "create a PDF report"(){
+    def "create a PDF report"() {
         when:
         def response = POST("/reports/processing-on-behalf", 'abc', 'de',[
             outputType:'application/pdf',
@@ -475,7 +475,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
 gemäß Art. 30 II DS-GVO''')
     }
 
-    def "Status 401 from data backend results in status 401"(){
+    def "Status 401 from data backend results in status 401"() {
         when:
         def response = POST("/reports/processing-on-behalf", 'abc', 'de', [
             outputType:'application/pdf',

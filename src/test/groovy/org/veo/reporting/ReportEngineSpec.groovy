@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting
 
 import org.apache.pdfbox.pdmodel.PDDocument
@@ -30,7 +30,7 @@ class ReportEngineSpec extends Specification {
     @Autowired
     ReportEngine reportEngine
 
-    def "Render a simple Markdown report"(){
+    def "Render a simple Markdown report"() {
         given:
         def data = [givenName: 'Guybrush',
             familyName: 'Threepwood',
@@ -73,7 +73,7 @@ Favorite drink
 </bookmarks>'''
     }
 
-    def "Render a simple HTML report"(){
+    def "Render a simple HTML report"() {
         given:
         def data = [givenName: 'Guybrush',
             familyName: 'Threepwood',
@@ -131,7 +131,7 @@ Favorite drink
     }
 
 
-    def "Render a simple PDF report"(){
+    def "Render a simple PDF report"() {
         given:
         def data = [givenName: 'Guybrush',
             familyName: 'Threepwood',
@@ -156,7 +156,7 @@ Favorite drink
         doc.documentCatalog.language == 'de-DE'
     }
 
-    def "Render report with different locales"(){
+    def "Render report with different locales"() {
         when:
         String text = new ByteArrayOutputStream().withCloseable {
             reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.GERMANY), it,{key, url->[name: 'Max']}, [:])
@@ -178,7 +178,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
 I'd like to invite you to my birthday party.'''
     }
 
-    def "List of reports can be retrieved"(){
+    def "List of reports can be retrieved"() {
         when:
         def configs = reportEngine.getReports()
         then:
@@ -192,7 +192,7 @@ I'd like to invite you to my birthday party.'''
         ]
     }
 
-    def "Special content is preserved (Markdown template, PDF output)"(){
+    def "Special content is preserved (Markdown template, PDF output)"() {
         when:
         PDDocument doc = renderPDF('escape-test.md','text/markdown', [data: input])
         def text = new PDFTextStripper().getText(doc)
@@ -205,7 +205,7 @@ I'd like to invite you to my birthday party.'''
         '![img](file:///localPath/test.pdf)' | '![img](file:///localPath/test.pdf)'
     }
 
-    def "Special content is preserved (Markdown template, HTML output)"(){
+    def "Special content is preserved (Markdown template, HTML output)"() {
         when:
         String text = renderHTML('escape-test.md','text/markdown', [data: input])
         then:
@@ -217,7 +217,7 @@ I'd like to invite you to my birthday party.'''
         '![img](file:///localPath/test.pdf)' | '<p>![img](file:///localPath/test.pdf)</p>'
     }
 
-    def "Meaningful Markdown characters end up properly in the final document"(){
+    def "Meaningful Markdown characters end up properly in the final document"() {
         given:
         def text = 'Auftragsverarbeitungen gemäß Art. 30 II DS-GVO'
         when:

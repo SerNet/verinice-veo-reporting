@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating.adapters;
 
 import java.util.Map;
@@ -30,44 +30,43 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.WrappingTemplateModel;
 
 public class VeoReportingLinkAdapter extends WrappingTemplateModel
-        implements TemplateHashModel, AdapterTemplateModel {
+    implements TemplateHashModel, AdapterTemplateModel {
 
-    private final Map<?, ?> m;
+  private final Map<?, ?> m;
 
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public VeoReportingLinkAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-        super(ow);
-        this.m = Map.copyOf(m);
+  @SuppressFBWarnings("EI_EXPOSE_REP2")
+  public VeoReportingLinkAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+    super(ow);
+    this.m = Map.copyOf(m);
+  }
+
+  @Override
+  @SuppressFBWarnings("EI_EXPOSE_REP")
+  public Object getAdaptedObject(Class<?> hint) {
+    return m;
+  }
+
+  @Override
+  public TemplateModel get(String key) throws TemplateModelException {
+    Object val = m.get(key);
+    if (val != null) {
+      return wrap(val);
     }
 
-    @Override
-    @SuppressFBWarnings("EI_EXPOSE_REP")
-    public Object getAdaptedObject(Class<?> hint) {
-        return m;
-    }
-
-    @Override
-    public TemplateModel get(String key) throws TemplateModelException {
-        Object val = m.get(key);
-        if (val != null) {
-            return wrap(val);
+    @SuppressWarnings("unchecked")
+    Map<String, ?> attributes = (Map<String, ?>) m.get("attributes");
+    if (attributes != null) {
+      for (Entry<String, ?> a : attributes.entrySet()) {
+        if (key.equals(a.getKey())) {
+          return wrap(a.getValue());
         }
-
-        @SuppressWarnings("unchecked")
-        Map<String, ?> attributes = (Map<String, ?>) m.get("attributes");
-        if (attributes != null) {
-            for (Entry<String, ?> a : attributes.entrySet()) {
-                if (key.equals(a.getKey())) {
-                    return wrap(a.getValue());
-                }
-            }
-        }
-        return null;
+      }
     }
+    return null;
+  }
 
-    @Override
-    public boolean isEmpty() throws TemplateModelException {
-        return false;
-    }
-
+  @Override
+  public boolean isEmpty() throws TemplateModelException {
+    return false;
+  }
 }

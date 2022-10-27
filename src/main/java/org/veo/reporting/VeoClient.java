@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting;
 
 import java.io.IOException;
@@ -24,23 +24,23 @@ import java.util.Objects;
 
 /**
  * Fetches data from a veo instance.
- * 
+ *
  * @see org.veo.reporting.ReportConfiguration.data
  */
 public interface VeoClient {
 
-    Object fetchData(String path, String authorizationHeader) throws IOException;
+  Object fetchData(String path, String authorizationHeader) throws IOException;
 
-    public default Map<String, Object> fetchTranslations(Locale locale, String authorizationHeader)
-            throws IOException {
-        String language = locale.getLanguage();
-        String translationsUrl = "/translations?languages=" + language;
-        Map<String, Map<String, Map<String, Object>>> lang = (Map<String, Map<String, Map<String, Object>>>) fetchData(
-                translationsUrl, authorizationHeader);
-        Map<String, Object> entriesForLanguage = lang.get("lang").get(language);
-        Objects.requireNonNull(entriesForLanguage,
-                "Failed to load translations for language " + language);
-        return entriesForLanguage;
-    }
-
+  public default Map<String, Object> fetchTranslations(Locale locale, String authorizationHeader)
+      throws IOException {
+    String language = locale.getLanguage();
+    String translationsUrl = "/translations?languages=" + language;
+    Map<String, Map<String, Map<String, Object>>> lang =
+        (Map<String, Map<String, Map<String, Object>>>)
+            fetchData(translationsUrl, authorizationHeader);
+    Map<String, Object> entriesForLanguage = lang.get("lang").get(language);
+    Objects.requireNonNull(
+        entriesForLanguage, "Failed to load translations for language " + language);
+    return entriesForLanguage;
+  }
 }

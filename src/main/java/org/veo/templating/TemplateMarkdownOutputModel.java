@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,30 +14,26 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating;
 
 import freemarker.core.CommonTemplateMarkupOutputModel;
 
-/**
- * Stores Markdown markup to be printed; used with {@link MarkdownOutputFormat}.
- */
+/** Stores Markdown markup to be printed; used with {@link MarkdownOutputFormat}. */
 public class TemplateMarkdownOutputModel
-        extends CommonTemplateMarkupOutputModel<TemplateMarkdownOutputModel> {
+    extends CommonTemplateMarkupOutputModel<TemplateMarkdownOutputModel> {
 
-    /**
-     * See
-     * {@link CommonTemplateMarkupOutputModel#CommonTemplateMarkupOutputModel(String, String)}.
-     * 
-     * @since 2.3.29
-     */
-    protected TemplateMarkdownOutputModel(String plainTextContent, String markupContent) {
-        super(plainTextContent, markupContent);
-    }
+  /**
+   * See {@link CommonTemplateMarkupOutputModel#CommonTemplateMarkupOutputModel(String, String)}.
+   *
+   * @since 2.3.29
+   */
+  protected TemplateMarkdownOutputModel(String plainTextContent, String markupContent) {
+    super(plainTextContent, markupContent);
+  }
 
-    @Override
-    public MarkdownOutputFormat getOutputFormat() {
-        return MarkdownOutputFormat.INSTANCE;
-    }
-
+  @Override
+  public MarkdownOutputFormat getOutputFormat() {
+    return MarkdownOutputFormat.INSTANCE;
+  }
 }

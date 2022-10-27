@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting.controllers;
 
 import java.io.IOException;
@@ -59,9 +59,9 @@ import org.veo.reporting.exception.InvalidReportParametersException;
 import freemarker.template.TemplateException;
 
 /**
- * The REST controller that serves as the API. Can be used to retrieve the
- * available reports and execute them.
- * 
+ * The REST controller that serves as the API. Can be used to retrieve the available reports and
+ * execute them.
+ *
  * @see ReportConfiguration
  * @see CreateReport
  */
@@ -69,117 +69,131 @@ import freemarker.template.TemplateException;
 @RequestMapping("/reports")
 public class ReportController {
 
-    private static final String TARGET_ID = "targetId";
-    private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+  private static final String TARGET_ID = "targetId";
+  private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
 
-    private final ReportEngine reportEngine;
-    private final VeoClient veoClient;
+  private final ReportEngine reportEngine;
+  private final VeoClient veoClient;
 
-    public ReportController(ReportEngine reportEngine, VeoClient veoClient) {
-        this.reportEngine = reportEngine;
-        this.veoClient = veoClient;
+  public ReportController(ReportEngine reportEngine, VeoClient veoClient) {
+    this.reportEngine = reportEngine;
+    this.veoClient = veoClient;
+  }
+
+  /**
+   * @return the available reports
+   */
+  @GetMapping
+  public Map<String, ReportConfiguration> getReports() {
+    return reportEngine.getReports();
+  }
+
+  /**
+   * Creates a report
+   *
+   * @param id the report id
+   * @param createReport the report creation parameters, see {@link CreateReport}
+   * @param authorizationHeader the <code>Authorization</code> request header
+   * @param request the servlet request
+   * @return the report
+   */
+  @PostMapping("/{id}")
+  public ResponseEntity<StreamingResponseBody> generateReport(
+      @PathVariable String id,
+      @Valid @RequestBody CreateReport createReport,
+      @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false)
+          String authorizationHeader,
+      HttpServletRequest request) {
+    if (authorizationHeader == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+    String outputType = createReport.getOutputType();
+    logger.info("Create report {}, outputType {}", id, outputType);
+    Optional<ReportConfiguration> configuration = reportEngine.getReport(id);
+    if (!configuration.isPresent()) {
+      return ResponseEntity.notFound().build();
+    }
+    List<String> supportedOutputTypes = configuration.get().getOutputTypes();
+    if (!supportedOutputTypes.contains(outputType)) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST,
+          "Output type "
+              + outputType
+              + " not supported by report "
+              + id
+              + ", supported output types: "
+              + supportedOutputTypes);
     }
 
-    /**
-     * @return the available reports
-     */
-    @GetMapping
-    public Map<String, ReportConfiguration> getReports() {
-        return reportEngine.getReports();
+    // exactly one target entity is supported at the moment
+    TargetSpecification target = createReport.getTargets().get(0);
+    Set<TypeSpecification> supportedTargetTypes = configuration.get().getTargetTypes();
+    if (supportedTargetTypes.stream()
+        .noneMatch(typeSpecification -> typeSpecification.getModelType() == target.type)) {
+      throw new InvalidReportParametersException(
+          "Target type " + target.type + " not supported by report " + id);
+    }
+    Locale locale = RequestContextUtils.getLocale(request);
+    logger.info("Request locale = {}", locale);
+
+    String desiredLanguage = locale.getLanguage();
+    Set<String> supportedLanguages = configuration.get().getName().keySet();
+    if (!supportedLanguages.contains(desiredLanguage)) {
+      throw new InvalidReportParametersException(
+          "Language "
+              + desiredLanguage
+              + " not supported by report "
+              + id
+              + ", supported languages: "
+              + supportedLanguages);
     }
 
-    /**
-     * Creates a report
-     *
-     * @param id
-     *            the report id
-     * @param createReport
-     *            the report creation parameters, see {@link CreateReport}
-     * @param authorizationHeader
-     *            the <code>Authorization</code> request header
-     * @param request
-     *            the servlet request
-     * @return the report
-     */
-    @PostMapping("/{id}")
-    public ResponseEntity<StreamingResponseBody> generateReport(@PathVariable String id,
-            @Valid @RequestBody CreateReport createReport,
-            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
-            HttpServletRequest request) {
-        if (authorizationHeader == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        String outputType = createReport.getOutputType();
-        logger.info("Create report {}, outputType {}", id, outputType);
-        Optional<ReportConfiguration> configuration = reportEngine.getReport(id);
-        if (!configuration.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        List<String> supportedOutputTypes = configuration.get().getOutputTypes();
-        if (!supportedOutputTypes.contains(outputType)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Output type " + outputType + " not supported by report " + id
-                            + ", supported output types: " + supportedOutputTypes);
-        }
-
-        // exactly one target entity is supported at the moment
-        TargetSpecification target = createReport.getTargets().get(0);
-        Set<TypeSpecification> supportedTargetTypes = configuration.get().getTargetTypes();
-        if (supportedTargetTypes.stream()
-                .noneMatch(typeSpecification -> typeSpecification.getModelType() == target.type)) {
-            throw new InvalidReportParametersException(
-                    "Target type " + target.type + " not supported by report " + id);
-        }
-        Locale locale = RequestContextUtils.getLocale(request);
-        logger.info("Request locale = {}", locale);
-
-        String desiredLanguage = locale.getLanguage();
-        Set<String> supportedLanguages = configuration.get().getName().keySet();
-        if (!supportedLanguages.contains(desiredLanguage)) {
-            throw new InvalidReportParametersException(
-                    "Language " + desiredLanguage + " not supported by report " + id
-                            + ", supported languages: " + supportedLanguages);
-        }
-
-        Map<String, Object> entriesForLanguage;
-        try {
-            entriesForLanguage = veoClient.fetchTranslations(locale, authorizationHeader);
-        } catch (IOException e) {
-            throw new ServerErrorException("Failed to fetch translations for " + locale, e);
-        }
-        DataProvider dataProvider = (key, url) -> {
-            String expandedUrl = expandUrl(key, url, target);
-            try {
-                return veoClient.fetchData(expandedUrl, authorizationHeader);
-            } catch (IOException e) {
-                throw new ServerErrorException("Failed to fetch report data from " + expandedUrl,
-                        e);
-            }
+    Map<String, Object> entriesForLanguage;
+    try {
+      entriesForLanguage = veoClient.fetchTranslations(locale, authorizationHeader);
+    } catch (IOException e) {
+      throw new ServerErrorException("Failed to fetch translations for " + locale, e);
+    }
+    DataProvider dataProvider =
+        (key, url) -> {
+          String expandedUrl = expandUrl(key, url, target);
+          try {
+            return veoClient.fetchData(expandedUrl, authorizationHeader);
+          } catch (IOException e) {
+            throw new ServerErrorException("Failed to fetch report data from " + expandedUrl, e);
+          }
         };
 
-        StreamingResponseBody stream = out -> {
-            try {
-                reportEngine.generateReport(id, outputType, new ReportCreationParameters(locale),
-                        out, dataProvider, entriesForLanguage);
-                logger.info("Report generated");
-            } catch (TemplateException e) {
-                logger.error("Error creating report", e);
-                throw new ServerErrorException("Error creating report", e);
-            }
+    StreamingResponseBody stream =
+        out -> {
+          try {
+            reportEngine.generateReport(
+                id,
+                outputType,
+                new ReportCreationParameters(locale),
+                out,
+                dataProvider,
+                entriesForLanguage);
+            logger.info("Report generated");
+          } catch (TemplateException e) {
+            logger.error("Error creating report", e);
+            throw new ServerErrorException("Error creating report", e);
+          }
         };
-        return ResponseEntity.ok().contentType(MediaType.valueOf(outputType)).body(stream);
-    }
+    return ResponseEntity.ok().contentType(MediaType.valueOf(outputType)).body(stream);
+  }
 
-    private static String expandUrl(String key, String url, TargetSpecification target) {
-        PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${", "}");
-        return helper.replacePlaceholders(url, placeholderName -> {
-            if (TARGET_ID.equals(placeholderName)) {
-                return target.id;
-            } else {
-                throw new IllegalArgumentException(
-                        "Unsupported placeholder in url " + key + ": " + placeholderName);
-            }
+  private static String expandUrl(String key, String url, TargetSpecification target) {
+    PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${", "}");
+    return helper.replacePlaceholders(
+        url,
+        placeholderName -> {
+          if (TARGET_ID.equals(placeholderName)) {
+            return target.id;
+          } else {
+            throw new IllegalArgumentException(
+                "Unsupported placeholder in url " + key + ": " + placeholderName);
+          }
         });
-    }
-
+  }
 }

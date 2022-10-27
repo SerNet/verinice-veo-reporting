@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating.methods;
 
 import java.util.List;
@@ -31,45 +31,43 @@ import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
 
 public abstract class VeoTemplateMethod implements TemplateMethodModelEx {
-    private final Map<?, ?> m;
-    private final VeoReportingObjectWrapper ow;
+  private final Map<?, ?> m;
+  private final VeoReportingObjectWrapper ow;
 
-    protected static final Logger logger = LoggerFactory.getLogger(VeoTemplateMethod.class);
+  protected static final Logger logger = LoggerFactory.getLogger(VeoTemplateMethod.class);
 
-    protected VeoTemplateMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-        this.m = m;
-        this.ow = ow;
+  protected VeoTemplateMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+    this.m = m;
+    this.ow = ow;
+  }
+
+  protected Object getProperty(String name) {
+    return m.get(name);
+  }
+
+  protected String getLabel(String key) {
+    return ow.getLabel(key);
+  }
+
+  @Override
+  public final Object exec(List arguments) throws TemplateModelException {
+    logger.debug("execute {} with arguments {}", getClass().getName(), arguments);
+    return ow.wrap(doExec(arguments));
+  }
+
+  protected abstract Object doExec(List arguments) throws TemplateModelException;
+
+  protected String asString(Object arg) throws TemplateModelException {
+    if (!(arg instanceof SimpleScalar)) {
+      throw new TemplateModelException("Expecting a String argument but got " + arg.getClass());
     }
+    return ((SimpleScalar) arg).getAsString();
+  }
 
-    protected Object getProperty(String name) {
-        return m.get(name);
+  protected Number asNumber(Object arg) throws TemplateModelException {
+    if (!(arg instanceof SimpleNumber)) {
+      throw new TemplateModelException("Expecting a Number argument but got " + arg.getClass());
     }
-
-    protected String getLabel(String key) {
-        return ow.getLabel(key);
-    }
-
-    @Override
-    public final Object exec(List arguments) throws TemplateModelException {
-        logger.debug("execute {} with arguments {}", getClass().getName(), arguments);
-        return ow.wrap(doExec(arguments));
-    }
-
-    protected abstract Object doExec(List arguments) throws TemplateModelException;
-
-    protected String asString(Object arg) throws TemplateModelException {
-        if (!(arg instanceof SimpleScalar)) {
-            throw new TemplateModelException(
-                    "Expecting a String argument but got " + arg.getClass());
-        }
-        return ((SimpleScalar) arg).getAsString();
-    }
-
-    protected Number asNumber(Object arg) throws TemplateModelException {
-        if (!(arg instanceof SimpleNumber)) {
-            throw new TemplateModelException(
-                    "Expecting a Number argument but got " + arg.getClass());
-        }
-        return ((SimpleNumber) arg).getAsNumber();
-    }
+    return ((SimpleNumber) arg).getAsNumber();
+  }
 }

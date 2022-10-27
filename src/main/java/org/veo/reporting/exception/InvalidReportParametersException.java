@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2022  Jochen Kemnade
  *
@@ -14,14 +14,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting.exception;
 
 public class InvalidReportParametersException extends VeoReportingException {
 
-    private static final long serialVersionUID = 140321956675801959L;
+  private static final long serialVersionUID = 140321956675801959L;
 
-    public InvalidReportParametersException(String message) {
-        super(message);
-    }
+  public InvalidReportParametersException(String message) {
+    super(message);
+  }
 }

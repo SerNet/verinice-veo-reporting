@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting;
 
 import java.util.Collections;
@@ -25,49 +25,45 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-/**
- * A {@link ResourceBundle} implementation that is backed by a {@link Map}.
- */
+/** A {@link ResourceBundle} implementation that is backed by a {@link Map}. */
 public class MapResourceBundle extends ResourceBundle {
 
-    private final Map<String, Object> map;
+  private final Map<String, Object> map;
 
-    public MapResourceBundle(Map<String, Object> map) {
-        this.map = new HashMap<>(map);
+  public MapResourceBundle(Map<String, Object> map) {
+    this.map = new HashMap<>(map);
+  }
+
+  @Override
+  protected Object handleGetObject(String key) {
+    return map.get(key);
+  }
+
+  @Override
+  public Enumeration<String> getKeys() {
+    return Collections.enumeration(map.keySet());
+  }
+
+  /**
+   * Creates a merged bundle from a base bundle and a set of additional entries. This can be used to
+   * dynamically overlay a set of translations over an existing bundle.
+   */
+  public static MapResourceBundle createMergedBundle(
+      ResourceBundle base, Map<String, Object> dynamicAdditions) {
+    Set<String> baseKeys = base.keySet();
+
+    Map<String, Object> mergedBundleContent =
+        new HashMap<>(baseKeys.size() + dynamicAdditions.size());
+    for (String key : base.keySet()) {
+      mergedBundleContent.put(key, base.getObject(key));
     }
 
-    @Override
-    protected Object handleGetObject(String key) {
-        return map.get(key);
+    for (Entry<String, ?> e : dynamicAdditions.entrySet()) {
+      Object prev = mergedBundleContent.put(e.getKey(), e.getValue());
+      if (prev != null) {
+        throw new IllegalStateException("Conflicting entries for " + e.getKey());
+      }
     }
-
-    @Override
-    public Enumeration<String> getKeys() {
-        return Collections.enumeration(map.keySet());
-    }
-
-    /**
-     * Creates a merged bundle from a base bundle and a set of additional
-     * entries. This can be used to dynamically overlay a set of translations
-     * over an existing bundle.
-     */
-    public static MapResourceBundle createMergedBundle(ResourceBundle base,
-            Map<String, Object> dynamicAdditions) {
-        Set<String> baseKeys = base.keySet();
-
-        Map<String, Object> mergedBundleContent = new HashMap<>(
-                baseKeys.size() + dynamicAdditions.size());
-        for (String key : base.keySet()) {
-            mergedBundleContent.put(key, base.getObject(key));
-        }
-
-        for (Entry<String, ?> e : dynamicAdditions.entrySet()) {
-            Object prev = mergedBundleContent.put(e.getKey(), e.getValue());
-            if (prev != null) {
-                throw new IllegalStateException("Conflicting entries for " + e.getKey());
-            }
-        }
-        return new MapResourceBundle(mergedBundleContent);
-
-    }
+    return new MapResourceBundle(mergedBundleContent);
+  }
 }

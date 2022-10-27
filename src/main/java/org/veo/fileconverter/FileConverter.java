@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.fileconverter;
 
 import java.io.IOException;
@@ -25,14 +25,18 @@ import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
 
 /**
- * A service that can convert a file from one format to another. It uses a set
- * of handlers, each of which supports the conversion from a single format to a
- * single other one. See {@link ConversionHandler}.
+ * A service that can convert a file from one format to another. It uses a set of handlers, each of
+ * which supports the conversion from a single format to a single other one. See {@link
+ * ConversionHandler}.
  */
 public interface FileConverter {
 
-    void convert(InputStream input, String inputType, OutputStream output, String outputType,
-            ReportConfiguration reportConfiguration, ReportCreationParameters parameters)
-            throws IOException;
-
+  void convert(
+      InputStream input,
+      String inputType,
+      OutputStream output,
+      String outputType,
+      ReportConfiguration reportConfiguration,
+      ReportCreationParameters parameters)
+      throws IOException;
 }

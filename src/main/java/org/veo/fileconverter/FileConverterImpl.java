@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.fileconverter;
 
 import java.io.IOException;
@@ -35,72 +35,79 @@ import org.veo.reporting.exception.VeoReportingException;
 
 public class FileConverterImpl implements FileConverter {
 
-    private static final Logger logger = LoggerFactory.getLogger(FileConverterImpl.class);
-    private final Map<String, Map<String, ConversionHandler>> handlerRegistry = new ConcurrentHashMap<>();
-    private final ExecutorService executorService;
+  private static final Logger logger = LoggerFactory.getLogger(FileConverterImpl.class);
+  private final Map<String, Map<String, ConversionHandler>> handlerRegistry =
+      new ConcurrentHashMap<>();
+  private final ExecutorService executorService;
 
-    public FileConverterImpl(ExecutorService executorService) {
-        this.executorService = executorService;
-        addHandler(new MarkdownHtmlConverter());
-        addHandler(new HtmlPDFConverter());
+  public FileConverterImpl(ExecutorService executorService) {
+    this.executorService = executorService;
+    addHandler(new MarkdownHtmlConverter());
+    addHandler(new HtmlPDFConverter());
+  }
+
+  private void addHandler(ConversionHandler converter) {
+    String inputType = converter.getInputType();
+    String outputType = converter.getOutputType();
+
+    ConversionHandler entry =
+        handlerRegistry
+            .computeIfAbsent(inputType, key -> new ConcurrentHashMap<>())
+            .put(outputType, converter);
+    if (entry != null) {
+      throw new VeoReportingException(
+          "Conflicting converters found for " + inputType + " -> " + outputType);
     }
+  }
 
-    private void addHandler(ConversionHandler converter) {
-        String inputType = converter.getInputType();
-        String outputType = converter.getOutputType();
-
-        ConversionHandler entry = handlerRegistry
-                .computeIfAbsent(inputType, key -> new ConcurrentHashMap<>())
-                .put(outputType, converter);
-        if (entry != null) {
-            throw new VeoReportingException(
-                    "Conflicting converters found for " + inputType + " -> " + outputType);
-        }
+  /*
+   * @see org.veo.fileconverter.FileConverter#convert(java.io.InputStream,
+   * java.lang.String, java.io.OutputStream, java.lang.String)
+   */
+  @Override
+  public void convert(
+      InputStream input,
+      String inputType,
+      OutputStream output,
+      String outputType,
+      ReportConfiguration reportConfiguration,
+      ReportCreationParameters parameters)
+      throws IOException {
+    if (inputType.equals(outputType)) {
+      input.transferTo(output);
+    } else {
+      logger.info("Converting from {} to {}", inputType, outputType);
+      ConversionHandler converter = getHandler(inputType, outputType);
+      if (converter == null) {
+        throw new IllegalArgumentException("Cannot convert " + inputType + " to " + outputType);
+      }
+      converter.convert(input, output, reportConfiguration, parameters);
     }
+  }
 
-    /*
-     * @see org.veo.fileconverter.FileConverter#convert(java.io.InputStream,
-     * java.lang.String, java.io.OutputStream, java.lang.String)
-     */
-    @Override
-    public void convert(InputStream input, String inputType, OutputStream output, String outputType,
-            ReportConfiguration reportConfiguration, ReportCreationParameters parameters)
-            throws IOException {
-        if (inputType.equals(outputType)) {
-            input.transferTo(output);
-        } else {
-            logger.info("Converting from {} to {}", inputType, outputType);
-            ConversionHandler converter = getHandler(inputType, outputType);
-            if (converter == null) {
-                throw new IllegalArgumentException(
-                        "Cannot convert " + inputType + " to " + outputType);
-            }
-            converter.convert(input, output, reportConfiguration, parameters);
-        }
+  private ConversionHandler getHandler(String inputType, String outputType) {
+    Map<String, ConversionHandler> handlersFromInputType =
+        handlerRegistry.computeIfAbsent(inputType, key -> new ConcurrentHashMap<>());
+    ConversionHandler handler = handlersFromInputType.get(outputType);
+    if (handler != null) {
+      return handler;
     }
-
-    private ConversionHandler getHandler(String inputType, String outputType) {
-        Map<String, ConversionHandler> handlersFromInputType = handlerRegistry
-                .computeIfAbsent(inputType, key -> new ConcurrentHashMap<>());
-        ConversionHandler handler = handlersFromInputType.get(outputType);
-        if (handler != null) {
-            return handler;
-        }
-        // try a two-step conversion
-        // TODO: add recursion?
-        for (var entry : handlersFromInputType.entrySet()) {
-            String targetType = entry.getKey();
-            ConversionHandler intermediateHandler = entry.getValue();
-            ConversionHandler targetHandler = handlerRegistry
-                    .computeIfAbsent(targetType, key -> new ConcurrentHashMap<>()).get(outputType);
-            if (targetHandler != null) {
-                ConversionHandler combinedHandler = new ComposedConversionHandler(
-                        intermediateHandler, targetHandler, executorService);
-                handlersFromInputType.put(outputType, combinedHandler);
-                return combinedHandler;
-            }
-        }
-        return null;
+    // try a two-step conversion
+    // TODO: add recursion?
+    for (var entry : handlersFromInputType.entrySet()) {
+      String targetType = entry.getKey();
+      ConversionHandler intermediateHandler = entry.getValue();
+      ConversionHandler targetHandler =
+          handlerRegistry
+              .computeIfAbsent(targetType, key -> new ConcurrentHashMap<>())
+              .get(outputType);
+      if (targetHandler != null) {
+        ConversionHandler combinedHandler =
+            new ComposedConversionHandler(intermediateHandler, targetHandler, executorService);
+        handlersFromInputType.put(outputType, combinedHandler);
+        return combinedHandler;
+      }
     }
-
+    return null;
+  }
 }

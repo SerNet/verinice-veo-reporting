@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.templating;
 
 import java.io.IOException;
@@ -26,10 +26,10 @@ import freemarker.template.TemplateException;
 
 /**
  * Evaluates a template with given data
- * 
+ *
  * @see TemplateLoader
  */
 public interface TemplateEvaluator {
-    void executeTemplate(String templateName, Map<String, Object> data, OutputStream out)
-            throws TemplateException, IOException;
+  void executeTemplate(String templateName, Map<String, Object> data, OutputStream out)
+      throws TemplateException, IOException;
 }

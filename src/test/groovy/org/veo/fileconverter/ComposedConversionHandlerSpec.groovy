@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.fileconverter
 
 import java.nio.charset.StandardCharsets
@@ -27,7 +27,7 @@ import spock.lang.Specification
 
 class ComposedConversionHandlerSpec extends Specification {
 
-    def "reverse and uppercase"(){
+    def "reverse and uppercase"() {
         given:
         def data = 'hello world'
         ConversionHandler reverseHandler = new ReverseText()

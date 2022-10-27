@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.fileconverter.handlers;
 
 import java.io.IOException;
@@ -43,72 +43,82 @@ import org.veo.fileconverter.charts.VeoJFreeChartPieDiagramObjectDrawer;
 import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
 
-/**
- * Converts HTML to PDF
- */
+/** Converts HTML to PDF */
 public class HtmlPDFConverter implements ConversionHandler {
 
-    @Override
-    public String getInputType() {
-        return "text/html";
+  @Override
+  public String getInputType() {
+    return "text/html";
+  }
+
+  @Override
+  public String getOutputType() {
+    return "application/pdf";
+  }
+
+  @Override
+  public void convert(
+      InputStream input,
+      OutputStream output,
+      ReportConfiguration reportConfiguration,
+      ReportCreationParameters parameters)
+      throws IOException {
+
+    // uncomment to set optional extensions
+    // options.set(TocExtension.LIST_CLASS,
+    // PdfConverterExtension.DEFAULT_TOC_LIST_CLASS);
+
+    try (Scanner s = new Scanner(input, StandardCharsets.UTF_8).useDelimiter("\\A")) {
+      String html = s.hasNext() ? s.next() : "";
+
+      // There are more options on the builder than shown below.
+      PdfRendererBuilder builder = new PdfRendererBuilder();
+
+      addFonts(builder);
+      DefaultObjectDrawerFactory factory = new DefaultObjectDrawerFactory();
+      factory.registerDrawer("jfreechart/pie", new JFreeChartPieDiagramObjectDrawer());
+      factory.registerDrawer("jfreechart/bar", new JFreeChartBarDiagramObjectDrawer());
+      factory.registerDrawer("jfreechart/veo-pie", new VeoJFreeChartPieDiagramObjectDrawer());
+      builder.useObjectDrawerFactory(factory);
+
+      org.jsoup.nodes.Document doc;
+      doc = Jsoup.parse(html);
+
+      Document dom = new W3CDom().fromJsoup(doc);
+      builder.withW3cDocument(dom, "");
+      builder.usePdfUaAccessbility(true);
+      builder.toStream(output);
+      try (PdfBoxRenderer renderer = builder.buildPdfRenderer()) {
+        renderer.layout();
+        renderer.createPDF();
+      }
     }
+  }
 
-    @Override
-    public String getOutputType() {
-        return "application/pdf";
+  protected static void addFonts(PdfRendererBuilder builder) {
+    FontResourceManager.getAllResourcesOfFontType("Open Sans")
+        .forEach(
+            font -> {
+              builder.useFont(
+                  font::getBufferedInputStream,
+                  font.getFontName(),
+                  font.getFontWeight().getWeight(),
+                  convertFontStyle(font.getFontStyle()),
+                  true);
+              builder.useFont(
+                  font::getBufferedInputStream,
+                  font.getFontName(),
+                  font.getFontWeight().getWeight(),
+                  convertFontStyle(font.getFontStyle()),
+                  true,
+                  EnumSet.of(FSFontUseCase.FALLBACK_PRE));
+            });
+  }
+
+  private static FontStyle convertFontStyle(IFontStyle fontStyle) {
+    if (fontStyle.isItalic()) {
+      return FontStyle.ITALIC;
     }
-
-    @Override
-    public void convert(InputStream input, OutputStream output,
-            ReportConfiguration reportConfiguration, ReportCreationParameters parameters)
-            throws IOException {
-
-        // uncomment to set optional extensions
-        // options.set(TocExtension.LIST_CLASS,
-        // PdfConverterExtension.DEFAULT_TOC_LIST_CLASS);
-
-        try (Scanner s = new Scanner(input, StandardCharsets.UTF_8).useDelimiter("\\A")) {
-            String html = s.hasNext() ? s.next() : "";
-
-            // There are more options on the builder than shown below.
-            PdfRendererBuilder builder = new PdfRendererBuilder();
-
-            addFonts(builder);
-            DefaultObjectDrawerFactory factory = new DefaultObjectDrawerFactory();
-            factory.registerDrawer("jfreechart/pie", new JFreeChartPieDiagramObjectDrawer());
-            factory.registerDrawer("jfreechart/bar", new JFreeChartBarDiagramObjectDrawer());
-            factory.registerDrawer("jfreechart/veo-pie", new VeoJFreeChartPieDiagramObjectDrawer());
-            builder.useObjectDrawerFactory(factory);
-
-            org.jsoup.nodes.Document doc;
-            doc = Jsoup.parse(html);
-
-            Document dom = new W3CDom().fromJsoup(doc);
-            builder.withW3cDocument(dom, "");
-            builder.usePdfUaAccessbility(true);
-            builder.toStream(output);
-            try (PdfBoxRenderer renderer = builder.buildPdfRenderer()) {
-                renderer.layout();
-                renderer.createPDF();
-            }
-        }
-    }
-
-    protected static void addFonts(PdfRendererBuilder builder) {
-        FontResourceManager.getAllResourcesOfFontType("Open Sans").forEach(font -> {
-            builder.useFont(font::getBufferedInputStream, font.getFontName(),
-                    font.getFontWeight().getWeight(), convertFontStyle(font.getFontStyle()), true);
-            builder.useFont(font::getBufferedInputStream, font.getFontName(),
-                    font.getFontWeight().getWeight(), convertFontStyle(font.getFontStyle()), true,
-                    EnumSet.of(FSFontUseCase.FALLBACK_PRE));
-        });
-    }
-
-    private static FontStyle convertFontStyle(IFontStyle fontStyle) {
-        if (fontStyle.isItalic()) {
-            return FontStyle.ITALIC;
-        }
-        return FontStyle.NORMAL;
-    }
-
+    return FontStyle.NORMAL;
+  }
 }

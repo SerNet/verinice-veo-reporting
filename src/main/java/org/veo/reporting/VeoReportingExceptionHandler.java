@@ -1,4 +1,4 @@
-/**
+/*******************************************************************************
  * verinice.veo reporting
  * Copyright (C) 2021  Jochen Kemnade
  *
@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ ******************************************************************************/
 package org.veo.reporting;
 
 import java.util.stream.Collectors;
@@ -38,44 +38,45 @@ import org.veo.reporting.exception.InvalidReportParametersException;
 @ControllerAdvice
 public class VeoReportingExceptionHandler {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(VeoReportingExceptionHandler.class);
+  private static final Logger logger = LoggerFactory.getLogger(VeoReportingExceptionHandler.class);
 
-    @ExceptionHandler({ DataFetchingException.class })
-    protected ResponseEntity<String> handle(DataFetchingException exception) {
-        return handle(exception, HttpStatus.valueOf(exception.getStatusCode()));
-    }
+  @ExceptionHandler({DataFetchingException.class})
+  protected ResponseEntity<String> handle(DataFetchingException exception) {
+    return handle(exception, HttpStatus.valueOf(exception.getStatusCode()));
+  }
 
-    @ExceptionHandler({ MethodArgumentNotValidException.class })
-    protected ResponseEntity<String> handle(MethodArgumentNotValidException exception) {
-        logger.error("Error invoking method", exception);
-        return handle(exception.getBindingResult().getAllErrors().stream()
-                .map(er -> er.unwrap(ConstraintViolation.class))
-                .map(v -> v.getPropertyPath() + ": " + v.getMessage())
-                .collect(Collectors.joining(" ")), HttpStatus.BAD_REQUEST);
-    }
+  @ExceptionHandler({MethodArgumentNotValidException.class})
+  protected ResponseEntity<String> handle(MethodArgumentNotValidException exception) {
+    logger.error("Error invoking method", exception);
+    return handle(
+        exception.getBindingResult().getAllErrors().stream()
+            .map(er -> er.unwrap(ConstraintViolation.class))
+            .map(v -> v.getPropertyPath() + ": " + v.getMessage())
+            .collect(Collectors.joining(" ")),
+        HttpStatus.BAD_REQUEST);
+  }
 
-    @ExceptionHandler({ HttpMessageNotReadableException.class })
-    protected ResponseEntity<String> handle(HttpMessageNotReadableException exception) {
-        logger.error("Error reading HTTP message", exception);
-        Throwable cause = exception.getCause();
-        if (cause instanceof JsonProcessingException jpe) {
-            return handle(jpe.getOriginalMessage(), HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+  @ExceptionHandler({HttpMessageNotReadableException.class})
+  protected ResponseEntity<String> handle(HttpMessageNotReadableException exception) {
+    logger.error("Error reading HTTP message", exception);
+    Throwable cause = exception.getCause();
+    if (cause instanceof JsonProcessingException jpe) {
+      return handle(jpe.getOriginalMessage(), HttpStatus.BAD_REQUEST);
     }
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+  }
 
-    @ExceptionHandler({ InvalidReportParametersException.class })
-    protected ResponseEntity<String> handle(InvalidReportParametersException exception) {
-        return handle(exception, HttpStatus.BAD_REQUEST);
-    }
+  @ExceptionHandler({InvalidReportParametersException.class})
+  protected ResponseEntity<String> handle(InvalidReportParametersException exception) {
+    return handle(exception, HttpStatus.BAD_REQUEST);
+  }
 
-    private ResponseEntity<String> handle(Throwable exception, HttpStatus status) {
-        logger.error("Error handling request", exception);
-        return handle(exception.getMessage(), status);
-    }
+  private ResponseEntity<String> handle(Throwable exception, HttpStatus status) {
+    logger.error("Error handling request", exception);
+    return handle(exception.getMessage(), status);
+  }
 
-    private ResponseEntity<String> handle(String responseText, HttpStatus status) {
-        return ResponseEntity.status(status).body(responseText);
-    }
+  private ResponseEntity<String> handle(String responseText, HttpStatus status) {
+    return ResponseEntity.status(status).body(responseText);
+  }
 }

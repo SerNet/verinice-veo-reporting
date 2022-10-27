@@ -1,18 +1,30 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "bbUseDefaultReviewers": false,
-  "reviewers": ["jk"],
+  "reviewers": [
+    "jk"
+  ],
   "automerge": true,
   "automergeType": "pr",
   "assignAutomerge": true,
   "packageRules": [
     {
-      "matchPackagePatterns": ["^com.openhtmltopdf:"],
+      "matchPackagePatterns": [
+        "^com.openhtmltopdf:"
+      ],
       "groupName": "OpenHTMLtoPDF"
     },
-        {
-    "matchPackagePatterns": ["^com.helger.font:"],
+    {
+      "matchPackagePatterns": [
+        "^com.helger.font:"
+      ],
       "groupName": "ph-fonts"
+    },
+    {
+      "matchPackagePatterns": [
+        "^com.diffplug.spotless"
+      ],
+      "groupName": "Spotless"
     }
   ]
 }
