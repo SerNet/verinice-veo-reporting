@@ -30,6 +30,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -44,6 +45,9 @@ import org.veo.templating.MarkdownRendererImpl;
  * Converts Markdown to HTML
  */
 public class MarkdownHtmlConverter implements ConversionHandler {
+
+    private static final Pattern TRAILING_WHITESPACE = Pattern.compile("\\p{Blank}+$",
+            Pattern.MULTILINE);
 
     @Override
     public String getInputType() {
@@ -79,8 +83,8 @@ public class MarkdownHtmlConverter implements ConversionHandler {
                 head.appendElement("title")
                         .text(reportConfiguration.getName().get(locale.getLanguage()));
             }
-
-            writer.write(doc.toString());
+            // work around https://github.com/jhy/jsoup/issues/1852
+            writer.write(TRAILING_WHITESPACE.matcher(doc.toString()).replaceAll(""));
         }
     }
 

@@ -124,7 +124,7 @@ Favorite drink
   </dl> <bookmarks>
    <bookmark name="Basic attributes" href="#basic-attributes" />
    <bookmark name="Work life" href="#work-life" />
-   <bookmark name="Private life" href="#private-life" /> 
+   <bookmark name="Private life" href="#private-life" />
   </bookmarks>
  </body>
 </html>'''
