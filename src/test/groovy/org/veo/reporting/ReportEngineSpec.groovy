@@ -56,7 +56,6 @@ Age
 Height
 : 5&#39;8&#34;
 
-
 ## Work life
 Profession
 : Pirate
@@ -64,7 +63,6 @@ Profession
 ## Private life
 Favorite drink
 : Rum
-
 
 <bookmarks>
   <bookmark name="Basic attributes" href="#basic-attributes" />
@@ -129,7 +127,6 @@ Favorite drink
  </body>
 </html>'''
     }
-
 
     def "Render a simple PDF report"() {
         given:
@@ -230,7 +227,6 @@ I'd like to invite you to my birthday party.'''
         then:
         pdfText == 'Auftragsverarbeitungen gemäß Art. 30 II \nDS-GVO\n'
     }
-
 
     private PDDocument renderPDF(String templateName, String templateType, Map data, Locale locale = Locale.US) {
         ReportConfiguration reportConfiguration = Stub {

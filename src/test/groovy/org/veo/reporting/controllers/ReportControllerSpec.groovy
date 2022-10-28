@@ -150,9 +150,6 @@ public class ReportControllerSpec extends Specification {
         response.contentAsString == '''Target type control not supported by report processing-activities'''
     }
 
-
-
-
     def "try to create a report with multiple targets"() {
         when:
         def response = POST("/reports/processing-activities",'abc', [
@@ -204,7 +201,6 @@ public class ReportControllerSpec extends Specification {
         response.contentAsString == '''Language en not supported by report processing-activities, supported languages: [de]'''
     }
 
-
     def "create a report with different locales"() {
         when:
         def response = POST("/reports/invitation",'abc','en', [
@@ -255,7 +251,6 @@ I'd like to invite you to my birthday party.'''
 
 Hiermit lade ich Dich zu meinem Geburtstag ein.'''
     }
-
 
     def "try to create a report with unsupported output type"() {
         when:

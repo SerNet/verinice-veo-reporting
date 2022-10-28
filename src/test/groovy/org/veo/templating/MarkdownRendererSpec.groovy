@@ -28,7 +28,6 @@ class MarkdownRendererSpec extends Specification {
 # CommonMark {#commonmark}
 ## A strongly defined, highly compatible specification of Markdown
 
-
 ## What is Markdown?
 
 It’s a plain text format for writing structured documents, based on formatting conventions from email and usenet.

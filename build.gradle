@@ -97,6 +97,7 @@ spotless {
         target 'Jenkinsfile', '*.gradle'
         greclipse()
         indentWithSpaces(4)
+        replaceRegex('Excessive line breaks', /\n{3,}/, '\n\n')
         trimTrailingWhitespace()
     }
     java {
@@ -121,6 +122,7 @@ spotless {
         importOrder('java', 'javax', 'org', 'com', 'org.veo', '')
         indentWithSpaces(4)
         trimTrailingWhitespace()
+        replaceRegex('Excessive line breaks', /\n{3,}/, '\n\n')
         replaceRegex('Extra space around equals sign', /(  += )|( =  +)/, ' = ')
         replaceRegex('Not one space between right round and left curly bracket', /\) *\{/, ') {')
     }

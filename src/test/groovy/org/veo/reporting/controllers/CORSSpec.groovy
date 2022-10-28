@@ -35,7 +35,6 @@ public class CORSSpec extends Specification {
     @Autowired
     private MockMvc mvc
 
-
     def "get reports with wrong origin header"() {
         when: "the list of reports is requested from a wrong origin"
         def response = getWithOrigin('https://notreal.notverinice.example', '/reports')

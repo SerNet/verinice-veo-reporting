@@ -7,7 +7,6 @@ Age
 Height
 : ${height}
 
-
 ## Work life
 Profession
 : Pirate
@@ -15,7 +14,6 @@ Profession
 ## Private life
 Favorite drink
 : ${favorites.drink}
-
 
 <bookmarks>
   <bookmark name="Basic attributes" href="#basic-attributes" />

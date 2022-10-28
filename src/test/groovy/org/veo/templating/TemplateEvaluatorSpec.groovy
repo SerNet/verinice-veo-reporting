@@ -27,7 +27,6 @@ public class TemplateEvaluatorSpec extends Specification {
 
     def templateEvaluator = new TemplateEvaluatorImpl(templateLoader, true)
 
-
     def "Test hello world template"() {
         when:
         def text = execute('helloworld.txt', [name: "John"])
@@ -349,8 +348,6 @@ Jack's children are named John and Jane.'''
                 Color code: #12AE0F'''.stripIndent()
     }
 
-
-
     def "Access risk values"() {
         def domainId = 'd4132a67-03c8-4f82-9585-6b240585c34e'
         def scenarioId = '9da57c19-8a53-4df5-aeed-86b0bfaf9399'
@@ -480,7 +477,6 @@ Jack's children are named John and Jane.'''
         then:
         text == '😭'
     }
-
 
     def "HTML is escaped in HTML templates"() {
         when:
