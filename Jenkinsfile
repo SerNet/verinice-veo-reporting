@@ -73,8 +73,29 @@ pipeline {
                 }
             }
             steps {
-                sh './gradlew -PciBuildNumer=$BUILD_NUMBER -PciJobName=$JOB_NAME --no-daemon build -x test'
+                sh './gradlew -PciBuildNumer=$BUILD_NUMBER -PciJobName=$JOB_NAME --no-daemon build -x check'
                 archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+            }
+        }
+        stage('Analyze') {
+            agent {
+                docker {
+                    image imageForGradleStages
+                    args dockerArgsForGradleStages
+                }
+            }
+            steps {
+                sh './gradlew -PciBuildNumer=$BUILD_NUMBER -PciJobName=$JOB_NAME --no-daemon check -x test'
+            }
+            post {
+                failure {
+                    recordIssues(enabledForFailure: true, tools: [
+                        spotBugs(pattern: 'build/reports/spotbugs/main.xml', useRankAsPriority: true, trendChartType: 'NONE')
+                    ])
+                    recordIssues(enabledForFailure: true, tools: [
+                        pmdParser(pattern: 'build/reports/pmd/main.xml', trendChartType: 'NONE')
+                    ])
+                }
             }
         }
         stage('Dockerimage') {
@@ -114,8 +135,6 @@ pipeline {
         always {
            node('') {
                 recordIssues(enabledForFailure: true, tools: [java()])
-                recordIssues(enabledForFailure: true, tools: [spotBugs(pattern: 'build/reports/spotbugs/main.xml', useRankAsPriority: true, trendChartType: 'NONE')])
-                recordIssues(enabledForFailure: true, tools: [pmdParser(pattern: 'build/reports/pmd/main.xml', trendChartType: 'NONE')])
                 recordIssues(
                   enabledForFailure: true,
                   tools: [
