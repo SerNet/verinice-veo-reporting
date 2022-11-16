@@ -89,8 +89,6 @@ test {
     useJUnitPlatform()
 }
 
-def currentUserName = "git config user.name".execute().text.trim() ?: "<name>"
-
 spotless {
     groovyGradle {
         // https://github.com/diffplug/spotless/issues/304#issuecomment-426067801
@@ -104,7 +102,7 @@ spotless {
         target 'src/**/*.java', 'buildSrc/**/*.java'
         googleJavaFormat()
         importOrder('java', 'javax', 'org', 'com', 'org.veo', '')
-        addStep org.veo.LicenseHeaderStep.create(currentUserName)
+        addStep org.veo.LicenseHeaderStep.create(project.rootDir)
         addStep org.veo.NoWildcardImportsStep.create()
         removeUnusedImports()
         trimTrailingWhitespace()
@@ -116,7 +114,7 @@ spotless {
     }
     groovy {
         target 'src/**/*.groovy', 'buildSrc/**/*.groovy'
-        addStep org.veo.LicenseHeaderStep.create(currentUserName, 'package |runner \\{')
+        addStep org.veo.LicenseHeaderStep.create(project.rootDir, 'package |runner \\{')
         addStep org.veo.NoWildcardImportsStep.create()
         greclipse()
         importOrder('java', 'javax', 'org', 'com', 'org.veo', '')
