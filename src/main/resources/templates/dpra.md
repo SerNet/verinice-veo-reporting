@@ -57,7 +57,6 @@ dt {
   page-break-inside: avoid;
   margin: auto;
   table-layout: fixed;
-  font-size: 60%;
 }
 
 .riskmatrix td, .riskmatrix th {
@@ -70,9 +69,9 @@ dt {
   font-weight: bold;
 }
 
-<#assign cellSize="1.2cm"?no_esc />
-<#assign labelSize="3cm"?no_esc />
-<#assign captionSize="0.6cm"?no_esc />
+<#assign cellSize="1.8cm"?no_esc />
+<#assign labelSize="4cm"?no_esc />
+<#assign captionSize="0.9cm"?no_esc />
 
 .riskmatrix .cell,
 .riskmatrix tbody .label {
@@ -111,7 +110,7 @@ dt {
 .riskmatrix td.rotate div {
   width: 0;
   transform-origin: 50% 50%;
-  transform: rotate(-90deg) translateY(1mm);
+  transform: rotate(-90deg) translateY(2mm);
 }
 
 </style>
