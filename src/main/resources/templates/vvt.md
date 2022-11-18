@@ -440,7 +440,7 @@ Rechtsgrundlage für Datenübertragung
 <#assign domain=domains?filter(it->it.name == 'DS-GVO')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 
 <@section 'Datenschutz-Folgenabschätzung'>
-${bundle.process_opinionDPO_privacyImpactAssessment}
+${bundle.piaMandatory}
 : ${(process.domains[domain.id].decisionResults.piaMandatory.value?string(bundle.yes, bundle.no))!""}
 
 <#if ((process.domains[domain.id].decisionResults.piaMandatory.value)!false) && process.process_opinionDPO_comment?has_content>
