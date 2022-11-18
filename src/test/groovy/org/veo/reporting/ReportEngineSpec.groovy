@@ -162,7 +162,9 @@ Favorite drink
         then:
         text == '''Hallo Max,
 
-Hiermit lade ich Dich zu meinem Geburtstag ein.'''
+Hiermit lade ich Dich zu meinem Geburtstag ein.
+
+Tschüß'''
         when:
 
         text = new ByteArrayOutputStream().withCloseable {
@@ -172,7 +174,9 @@ Hiermit lade ich Dich zu meinem Geburtstag ein.'''
         then:
         text == '''Hi Jack,
 
-I'd like to invite you to my birthday party.'''
+I'd like to invite you to my birthday party.
+
+Cheers'''
     }
 
     def "List of reports can be retrieved"() {

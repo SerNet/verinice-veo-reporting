@@ -1,3 +1,5 @@
 ${bundle('hello', person.name)},
 
 ${bundle.invitationText}
+
+${bundle.complimentary_close}

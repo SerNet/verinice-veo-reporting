@@ -20,6 +20,7 @@ package org.veo.reporting;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
@@ -62,6 +63,7 @@ public class VeoReportingApplication {
   public static void main(String[] args) throws IOException {
     XRLog.setLoggerImpl(new Slf4jLogger());
     FontResourceManager.reInit(null);
+    System.setProperty("java.util.PropertyResourceBundle.encoding", StandardCharsets.UTF_8.name());
     ConfigurableApplicationContext ctx = SpringApplication.run(VeoReportingApplication.class, args);
     if (Stream.of(ctx.getEnvironment().getActiveProfiles()).anyMatch("demo"::equals)) {
       Demo.runDemo(ctx);

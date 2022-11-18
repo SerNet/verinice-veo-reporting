@@ -43,13 +43,17 @@ public class TemplateEvaluatorSpec extends Specification {
         then:
         text == '''Hallo Johannes,
 
-Hiermit lade ich Dich zu meinem Geburtstag ein.'''
+Hiermit lade ich Dich zu meinem Geburtstag ein.
+
+Tschüß'''
         when:
         text = execute('invitation.txt',  [person:[name: "John"], bundle: bundleEn])
         then:
         text == '''Hi John,
 
-I'd like to invite you to my birthday party.'''
+I'd like to invite you to my birthday party.
+
+Cheers'''
     }
 
     def "Access custom attribute"() {

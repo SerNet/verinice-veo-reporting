@@ -225,7 +225,9 @@ public class ReportControllerSpec extends Specification {
         ]
         response.contentAsString == '''Hi Mary,
 
-I'd like to invite you to my birthday party.'''
+I'd like to invite you to my birthday party.
+
+Cheers'''
         when:
         response = POST("/reports/invitation",'abc','de', [
             outputType:'text/plain',
@@ -249,7 +251,9 @@ I'd like to invite you to my birthday party.'''
         ]
         response.contentAsString == '''Hallo Maria,
 
-Hiermit lade ich Dich zu meinem Geburtstag ein.'''
+Hiermit lade ich Dich zu meinem Geburtstag ein.
+
+Tschüß'''
     }
 
     def "try to create a report with unsupported output type"() {
