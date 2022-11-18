@@ -18,6 +18,7 @@
 package org.veo.reporting.controllers;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -180,7 +181,11 @@ public class ReportController {
             throw new ServerErrorException("Error creating report", e);
           }
         };
-    return ResponseEntity.ok().contentType(MediaType.valueOf(outputType)).body(stream);
+    MediaType mediaType = MediaType.valueOf(outputType);
+    if (mediaType.getType().equals("text") && mediaType.getCharset() == null) {
+      mediaType = new MediaType(mediaType, StandardCharsets.UTF_8);
+    }
+    return ResponseEntity.ok().contentType(mediaType).body(stream);
   }
 
   private static String expandUrl(String key, String url, TargetSpecification target) {
