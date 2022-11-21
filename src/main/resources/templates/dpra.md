@@ -209,23 +209,13 @@ dt {
   <#assign processRisksInDomainWithData = processRisksInDomainWithData + process.risks?filter(it-> it.domains?keys?seq_contains(domain.id) && it.domains[domain.id].riskDefinitions?has_content) />
 </#list>
 
-<#--
-The stops should in fact all be at 3mm, but there's a bug in the HTML-PDF converter, so we have
-do use some magically calculated numbers
-https://github.com/danfickle/openhtmltopdf/issues/883
-Also, an SVG inline background would be preferable, but the HTML->PDF converter does not support that yet.
-https://github.com/danfickle/openhtmltopdf/issues/750
--->
-<#macro matrixCellStyleProbabilityLabel color>
-  style="background-image: linear-gradient(45deg, ${color} 0%, ${color} 1.7mm, white 1.7mm, white);"
-</#macro>
-
-<#macro matrixCellStyleImpactLabel color>
-  style="background-image: linear-gradient(45deg, ${color} 0%, ${color} 4.3mm, white 4.3mm, white);"
-</#macro>
+<#macro cellStyle color>
+<#assign svg='<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100"><polygon points="0,0 0,100 100,100" style="fill:${color};" /></svg>' />
+  style="background-size:7mm;background-repeat:no-repeat;background-position:bottom left;background-image: url('data:image/svg+xml;base64,${base64(svg)}');"
+</</#macro>
 
 <#macro matrixCell color text>
-  <td style="background-image: linear-gradient(45deg, ${color} 0%, ${color} 3mm, white 3mm, white);">${text}</td>
+  <td <@cellStyle color />>${text}</td>
 </#macro>
 
 
@@ -249,7 +239,7 @@ Eintrittswahrscheinlichkeit
 <th class="spacer"/>
 <th class="spacer"/>
 <#list riskDefinition.probability.levels as probability>
-<th class="rotate label" <@matrixCellStyleProbabilityLabel probability.htmlColor />>
+<th class="rotate label" <@cellStyle probability.htmlColor />>
 <div>${probability.name}</div>
 </th>
 </#list>
@@ -265,7 +255,7 @@ Eintrittswahrscheinlichkeit
 <div>Auswirkung</div>
 </td>
 </#if>
-<td class="label" <@matrixCellStyleImpactLabel potentialImpact.htmlColor />>
+<td class="label" <@cellStyle potentialImpact.htmlColor />>
 ${potentialImpact.name}
 </td>
 <#list riskDefinition.probability.levels as probability>

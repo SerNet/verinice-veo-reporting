@@ -475,8 +475,8 @@ ${bundle.process_opinionDPO_comment}
 <#assign riskDefinition=domain.riskDefinitions[riskDefinitionId] />
 <#assign implementationStatus = riskDefinition.getImplementationStatus(tom_status) />
 <#assign backgroundColor=implementationStatus.color />
-<#assign color=colorContrast(backgroundColor, '#e3e3e3', '#7c7c7b', '#929292')>
-<#assign statusTdStyle="background-image: linear-gradient(to right, ${backgroundColor} 0mm, ${backgroundColor} 5mm, white 5mm, white);padding-left: 7mm;">
+<#assign statusTdStyleSvg='<svg xmlns="http://www.w3.org/2000/svg" height="1" width="1"><polygon points="0,0 0,1 1,1 1,0" style="fill:${backgroundColor};" /></svg>' />
+<#assign statusTdStyle="background-repeat:no-repeat;background-size:5mm 100%;background-position:bottom left;background-image: url('data:image/svg+xml;base64,${base64(statusTdStyleSvg)}');padding-left: 7mm;">
 <#assign tom_status_output=implementationStatus.label>
 </#if>
 </#if>
