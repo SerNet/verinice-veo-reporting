@@ -25,6 +25,12 @@
         "^com.diffplug.spotless"
       ],
       "groupName": "Spotless"
+    },
+    {
+      "matchPackagePatterns": [
+        "^org.apache.xmlgraphics:batik"
+      ],
+      "groupName": "Batik"
     }
   ]
 }

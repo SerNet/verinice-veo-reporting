@@ -18,6 +18,7 @@
 package org.veo.templating
 
 import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.text.PDFTextStripper
 
 import org.veo.fileconverter.handlers.HtmlPDFConverter
 import org.veo.reporting.ReportConfiguration
@@ -28,9 +29,10 @@ import spock.lang.Specification
 
 class HtmlPDFConverterSpec extends Specification {
 
+    HtmlPDFConverter converter = new HtmlPDFConverter()
+
     def "Convert HTML with bookmarks to PDF"() {
         given:
-        HtmlPDFConverter converter = new HtmlPDFConverter()
         def html = new StringWriter().withCloseable {
             MarkupBuilder builder = new MarkupBuilder(it)
             builder.html {
@@ -48,13 +50,40 @@ class HtmlPDFConverterSpec extends Specification {
         }
         ReportConfiguration reportConfiguration = Mock()
         when:
-        PDDocument doc = new ByteArrayOutputStream().withCloseable {
-            converter.convert(new ByteArrayInputStream(html.bytes), it, reportConfiguration, new ReportCreationParameters(Locale.US))
-            PDDocument.load(it.toByteArray())
-        }
+        PDDocument doc = createDocument(html, reportConfiguration)
         then:
         doc.documentCatalog.documentOutline != null
         doc.documentCatalog.documentOutline.children().size() == 1
         doc.documentCatalog.documentOutline.children().first().title == 'Foo'
+        cleanup:
+        doc?.close()
+    }
+
+    def "SVG URL is not transformed in regular text"() {
+        given:
+        def html = '''
+<html>
+<head>
+</head>
+<body>
+     &lt;div class="cover"&gt;<br> &lt;h1&gt;Datenschutz-Folgenabschätzung&lt;br&gt;url('data:image/svg+xml;base64,dirty')&lt;/h1&gt;<br> &lt;p&gt;powered by verinice&lt;/p&gt;<br> &lt;/div&gt;
+</body>
+</html>
+'''
+        ReportConfiguration reportConfiguration = Mock()
+        when:
+        PDDocument doc = createDocument(html, reportConfiguration)
+        def text = new PDFTextStripper().getText(doc)
+        then:
+        text.contains('''url('data:image/svg+xml;base64,dirty')''')
+        cleanup:
+        doc?.close()
+    }
+
+    PDDocument createDocument(String html, ReportConfiguration reportConfiguration) {
+        new ByteArrayOutputStream().withCloseable {
+            converter.convert(new ByteArrayInputStream(html.bytes), it, reportConfiguration, new ReportCreationParameters(Locale.US))
+            PDDocument.load(it.toByteArray())
+        }
     }
 }

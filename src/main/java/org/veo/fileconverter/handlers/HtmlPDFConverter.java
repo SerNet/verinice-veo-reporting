@@ -17,13 +17,24 @@
  ******************************************************************************/
 package org.veo.fileconverter.handlers;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.EnumSet;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.batik.transcoder.SVGAbstractTranscoder;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.TranscodingHints;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
 import org.w3c.dom.Document;
@@ -45,6 +56,11 @@ import org.veo.reporting.ReportCreationParameters;
 
 /** Converts HTML to PDF */
 public class HtmlPDFConverter implements ConversionHandler {
+
+  private static final String STYLE = "style";
+
+  private static final Pattern SVG_BASE_64 =
+      Pattern.compile("url\\('data:image/svg\\+xml;base64,(.+)'\\)");
 
   @Override
   public String getInputType() {
@@ -81,10 +97,16 @@ public class HtmlPDFConverter implements ConversionHandler {
       factory.registerDrawer("jfreechart/veo-pie", new VeoJFreeChartPieDiagramObjectDrawer());
       builder.useObjectDrawerFactory(factory);
 
-      org.jsoup.nodes.Document doc;
-      doc = Jsoup.parse(html);
-
+      org.jsoup.nodes.Document doc = Jsoup.parse(html);
+      doc.forEach(
+          el -> {
+            String style = el.attr(STYLE);
+            if (style != null && !style.isEmpty()) {
+              el.attr(STYLE, replaceSvgBackgrounds(style));
+            }
+          });
       Document dom = new W3CDom().fromJsoup(doc);
+
       builder.withW3cDocument(dom, "");
       builder.usePdfUaAccessbility(true);
       builder.toStream(output);
@@ -93,6 +115,37 @@ public class HtmlPDFConverter implements ConversionHandler {
         renderer.createPDF();
       }
     }
+  }
+
+  // replace inline SVG backgrounds by PNG images to work around
+  // https://github.com/danfickle/openhtmltopdf/issues/750
+  private static String replaceSvgBackgrounds(String str) {
+    Matcher m = SVG_BASE_64.matcher(str);
+    return m.replaceAll(
+        r -> {
+          String svgText =
+              new String(
+                  Base64.getDecoder().decode(r.group(1).getBytes(StandardCharsets.UTF_8)),
+                  StandardCharsets.UTF_8);
+
+          PNGTranscoder pngTranscoder = new PNGTranscoder();
+          TranscodingHints transcodingHints = pngTranscoder.getTranscodingHints();
+          transcodingHints.put(SVGAbstractTranscoder.KEY_ALLOW_EXTERNAL_RESOURCES, Boolean.FALSE);
+          transcodingHints.remove(SVGAbstractTranscoder.KEY_ALLOWED_SCRIPT_TYPES);
+          ByteArrayOutputStream os = new ByteArrayOutputStream();
+          try {
+            pngTranscoder.transcode(
+                new TranscoderInput(new StringReader(svgText)), new TranscoderOutput(os));
+            byte[] bytes = os.toByteArray();
+            String encoded = Base64.getEncoder().encodeToString(bytes);
+            String newUrl = "data:image/png;base64," + encoded;
+
+            return "url('" + newUrl + "')";
+
+          } catch (TranscoderException ex) {
+            throw new RuntimeException(ex);
+          }
+        });
   }
 
   protected static void addFonts(PdfRendererBuilder builder) {
