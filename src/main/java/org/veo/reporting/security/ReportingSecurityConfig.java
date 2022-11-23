@@ -60,7 +60,6 @@ public class ReportingSecurityConfig {
     // anonymous user!
     // .anonymous()
     // .disable()
-    http.authorizeRequests().antMatchers("/actuator/**").permitAll();
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     return http.build();
   }
