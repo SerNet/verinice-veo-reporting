@@ -19,7 +19,7 @@ package org.veo.reporting;
 
 import java.util.stream.Collectors;
 
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
