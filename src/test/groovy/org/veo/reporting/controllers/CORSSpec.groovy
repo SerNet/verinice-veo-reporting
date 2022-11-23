@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 
@@ -30,6 +31,7 @@ import spock.lang.Specification
 
 @AutoConfigureMockMvc
 @WebMvcTest(properties=["veo.reporting.cors.origins=https://*.verinice.example, https://frontend.somewhereelse.example"])
+@ContextConfiguration
 public class CORSSpec extends Specification {
 
     @Autowired

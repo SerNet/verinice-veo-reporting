@@ -21,10 +21,12 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ContextConfiguration
 
 import spock.lang.Specification
 
 @SpringBootTest
+@ContextConfiguration
 class ReportEngineSpec extends Specification {
 
     @Autowired
