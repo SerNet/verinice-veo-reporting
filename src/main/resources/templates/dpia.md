@@ -122,8 +122,8 @@ Angaben zu gemeinsam Verantwortlichen
 ## Projektverantwortliche
 
 |:------------|:-----|
-| Name, Vorname | ${person.person_generalInformation_familyName}, ${person.person_generalInformation_givenName} |  
-| Rolle bei der Durchführung der DSFA | ${personLink.process_PIAProcessOwner_role} |
+| Name, Vorname | ${person.person_generalInformation_familyName!}, ${person.person_generalInformation_givenName!} |  
+| Rolle bei der Durchführung der DSFA | ${personLink.process_PIAProcessOwner_role!} |
 </#list>
 </#if>
 
@@ -132,7 +132,7 @@ Angaben zu gemeinsam Verantwortlichen
 ## Datenschutzbeauftragte
 
 |:------------|:-----|
-| Name, Vorname | ${dataProtectionOfficer.person_generalInformation_familyName}, ${dataProtectionOfficer.person_generalInformation_givenName} |
+| Name, Vorname | ${dataProtectionOfficer.person_generalInformation_familyName!}, ${dataProtectionOfficer.person_generalInformation_givenName!} |
 
 <#assign representativesLinks=dpia.getLinks('process_PIARepresentatives')!>
 <#if representativesLinks?has_content>
@@ -141,7 +141,7 @@ Angaben zu gemeinsam Verantwortlichen
 <#list representativesLinks as personLink>
 <#assign person=personLink.target />
 | Name, Vorname | ${person.person_generalInformation_familyName!}, ${person.person_generalInformation_givenName!} |  
-| Rolle bei der Durchführung der DSFA | ${personLink.process_PIARepresentatives_role} |
+| Rolle bei der Durchführung der DSFA | ${personLink.process_PIARepresentatives_role!} |
 </#list>
 </#if>
 
@@ -191,7 +191,7 @@ Angaben zu gemeinsam Verantwortlichen
 
 <@def "Anlass der DSFA" dpia.process_PIADetails_reason?has_content?then(bundle[dpia.process_PIADetails_reason], "") />
 
-<@def bundle.process_PIADetails_date dpia.process_PIADetails_date?date.iso />
+<@def bundle.process_PIADetails_date, (dpia.process_PIADetails_date?date.iso)! />
 
 <@def "Prüfer", (dpia.findFirstLinked('process_PIAAuditor').name)!"" />
 
@@ -294,7 +294,7 @@ Angaben zu gemeinsam Verantwortlichen
 | Hohes Risiko | ${(dpia.process_PIAResult_risk?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_comment?has_content><br/>${dpia.process_PIAResult_comment}</#if> |  
 | Konsultation der Aufsichtsbehörde erforderlich | ${(dpia.process_PIAResult_consultationRequired?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_consultationJustification?has_content><br/>${dpia.process_PIAResult_consultationJustification}</#if> |
 | Konsultation durchgeführt | ${(dpia.process_PIAResult_consultationConducted?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_consultationDate?has_content><br/>Datum ${dpia.process_PIAResult_consultationDate?date.iso } <br/>Ergebnis der Konsultation ${dpia.process_PIAResult_consultationResult!}</#if>|
-| Bemerkungen DSB | ${dpia.process_PIAResult_commentsPIO} |
+| Bemerkungen DSB | ${dpia.process_PIAResult_commentsPIO!} |
 
 </#list>
 </#if>
