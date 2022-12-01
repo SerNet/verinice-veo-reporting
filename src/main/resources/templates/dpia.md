@@ -141,7 +141,7 @@ Angaben zu gemeinsam Verantwortlichen
 <#list representativesLinks as personLink>
 <#assign person=personLink.target />
 | Name, Vorname | ${person.person_generalInformation_familyName!}, ${person.person_generalInformation_givenName!} |  
-| Rolle bei der Durchführung der DSFA | ${personLink.process_PIARepresentatives_role} |
+| Rolle bei der Durchführung der DSFA | ${personLink.process_PIARepresentatives_role!} |
 </#list>
 </#if>
 
