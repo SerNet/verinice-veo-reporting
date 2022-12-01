@@ -8,9 +8,9 @@
       "RISK_TREATMENT_TRANSFER": "Risikotransfer"}[raw] />
 </#function>
 
-<#macro impactdisplay riskDefinition category value><#if value?has_content><span style="color:${riskDefinition.getImpact(category.id, value).color}">${riskDefinition.getImpact(category.id, value).label}</span></#if></#macro>
+<#macro impactdisplay riskDefinition category value=""><#if value?has_content><span style="color:${riskDefinition.getImpact(category.id, value).color}">${riskDefinition.getImpact(category.id, value).label}</span></#if></#macro>
 
-<#macro probabilitydisplay riskDefinition value><#if value?has_content><span style="color:${riskDefinition.getProbability(value).color}">${riskDefinition.getProbability(value).label}</span></#if></#macro>
+<#macro probabilitydisplay riskDefinition value=""><#if value?has_content><span style="color:${riskDefinition.getProbability(value).color}">${riskDefinition.getProbability(value).label}</span></#if></#macro>
 
 <#macro riskCell color text>
   <#assign svg='<svg xmlns="http://www.w3.org/2000/svg" height="1" width="1"><polygon points="0,0 0,1 1,1 1,0" style="fill:${color};" /></svg>' />
@@ -66,7 +66,7 @@ ${category.id}:
 <br/>
 </#list>
 </td>
-<td><@probabilitydisplay riskDefinition, (riskValues.effectiveProbability)!/></td>
+<td><@probabilitydisplay riskDefinition, riskValues.effectiveProbability/></td>
 <#assign maxInherent = riskDefinition.categories?map(c->(riskValues[c.id].inherentRisk)!-1)?max />
 <#if (maxInherent > -1)>
 <#assign maxInherentData = riskDefinition.getRisk(maxInherent) />
