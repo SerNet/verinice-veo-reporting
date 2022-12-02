@@ -17,6 +17,7 @@
  ******************************************************************************/
 package org.veo.templating.adapters;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -80,8 +81,8 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     switch (key) {
       case "getLinks":
         return new GetLinks(m, ow);
-      case "getLinked":
-        return new GetLinked(m, ow);
+      case "findLinked":
+        return new FindLinked(m, ow);
       case "findFirstLinked":
         return new FindFirstLinked(m, ow);
       case "hasSubType":
@@ -165,9 +166,9 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     }
   }
 
-  private static final class GetLinked extends SingleStringArgumentMethod {
+  private static final class FindLinked extends SingleStringArgumentMethod {
 
-    public GetLinked(Map<?, ?> m, VeoReportingObjectWrapper ow) {
+    public FindLinked(Map<?, ?> m, VeoReportingObjectWrapper ow) {
       super(m, ow);
     }
 
@@ -179,7 +180,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
         return ((List) linksOfType)
             .stream().map(m -> ((Map) m).get("target")).collect(Collectors.toList());
       }
-      return null;
+      return Collections.emptyList();
     }
   }
 

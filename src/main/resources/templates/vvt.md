@@ -171,8 +171,8 @@ dl.tom dd {
 <#list processesInScope as process>
 
 <#assign controller=process.findFirstLinked('process_controller')! />
-<#assign jointControllership=process.getLinked('process_jointControllership')! />
-<#assign transmissions=process.getLinked('process_dataTransmission')! />
+<#assign jointControllership=process.findLinked('process_jointControllership') />
+<#assign transmissions=process.findLinked('process_dataTransmission') />
 
 # ${process.name} {#process_${process?counter}}
 <#if process.process_processing_asProcessor!false>
@@ -334,7 +334,7 @@ ${(process.process_informationsObligations_status?string(bundle.yes, bundle.no))
 <#list transmissions as transmission>
 
 <#assign recipientType=transmission.process_recipient_type! />
-<#assign transmissionDataTypes=transmission.getLinked('process_dataType')! />
+<#assign transmissionDataTypes=transmission.findLinked('process_dataType') />
 
 <#assign dataTransferLegalBasis=transmission.process_dataTransfer_legalBasis! />
 <#assign hasOtherLegalBasis=transmission.process_dataTransfer_otherLegalBasis?has_content />
@@ -424,7 +424,7 @@ Rechtsgrundlage für Datenübertragung
 </#if>
 </@section>
 
-<#assign relatedAssets=(process.getLinked('process_requiredApplications')![]) + (process.getLinked('process_requiredITSystems')![]) />
+<#assign relatedAssets=process.findLinked('process_requiredApplications') + process.findLinked('process_requiredITSystems') />
 <#if relatedAssets?has_content>
 
 <@section 'Systeminformationen über Hard- und Software'>

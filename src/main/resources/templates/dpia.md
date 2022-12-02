@@ -195,7 +195,7 @@ Angaben zu gemeinsam Verantwortlichen
 
 <@def "Prüfer", (dpia.findFirstLinked('process_PIAAuditor').name)!"" />
 
-<@def "Betroffenen Verarbeitungstätigkeit(en)", dpia.getLinked('process_PIADataProcessing')?map(it->it.name)?join(", ") />
+<@def "Betroffenen Verarbeitungstätigkeit(en)", dpia.findLinked('process_PIADataProcessing')?map(it->it.name)?join(", ") />
 
 <@def "Rat des Datenschutzbeauftragten wurde eingeholt", (dpia.process_PIADPO_advice?string(bundle.yes, bundle.no))! />
 
@@ -216,8 +216,8 @@ Angaben zu gemeinsam Verantwortlichen
 
 </#if>
 
-<#assign addidionalApplications=dpia.getLinked('process_PIADescriptionAdditionalApplications')![] />
-<#assign addidionalITSystems=dpia.getLinked('process_PIADescriptionAdditionalITSystems')![] />
+<#assign addidionalApplications=dpia.findLinked('process_PIADescriptionAdditionalApplications') />
+<#assign addidionalITSystems=dpia.findLinked('process_PIADescriptionAdditionalITSystems') />
 <#assign additionalApplicationsAndITSystems = addidionalApplications+addidionalITSystems>
 
 # Systematische Beschreibung der Verarbeitungsvorgänge und Zwecke
@@ -274,7 +274,7 @@ Angaben zu gemeinsam Verantwortlichen
 
 </#if>
 
-<#list dpia.getLinked('process_PIADataProcessing') as affectedPA>
+<#list dpia.findLinked('process_PIADataProcessing') as affectedPA>
 
 <#assign processRisksInDomain = (affectedPA.risks?filter(it-> it.domains?keys?seq_contains(domain.id)))![] />
 

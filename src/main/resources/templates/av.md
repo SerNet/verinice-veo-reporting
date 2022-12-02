@@ -90,7 +90,7 @@ ${processing.description!}
 
 ### ${bundle.controllers}
 
-<#assign controllers=processing.getLinked('process_controller')!>
+<#assign controllers=processing.findLinked('process_controller')>
 <#list controllers as controller>
 <#assign managementController=(controller.findFirstLinked('scope_management'))!>
 <#assign dataProtectionOfficerController=(controller.findFirstLinked('scope_dataProtectionOfficer'))!>
@@ -153,7 +153,7 @@ ${bundle.scope_dataProtectionOfficer}
 </#if>
 </#macro>
 
-<#assign transmissions=processing.getLinked('process_dataTransmission')! />
+<#assign transmissions=processing.findLinked('process_dataTransmission') />
 
 <#assign relevantTransmissionsExternal=transmissions?filter(t-> 
   (t.getLinks('process_externalRecipient')![])?filter(l->l.process_externalRecipient_thirdCountryProcessing!false)?has_content) />
