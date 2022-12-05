@@ -26,6 +26,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
 import org.veo.reporting.exception.VeoReportingException;
@@ -41,6 +44,8 @@ public class ComposedConversionHandler implements ConversionHandler {
   private final String inputType;
   private final String outputType;
   private final ExecutorService executorService;
+
+  private static final Logger logger = LoggerFactory.getLogger(ComposedConversionHandler.class);
 
   public ComposedConversionHandler(
       ConversionHandler firstHandler,
@@ -77,11 +82,27 @@ public class ComposedConversionHandler implements ConversionHandler {
       Future<Void> future =
           executorService.submit(
               () -> {
+                logger.debug(
+                    "Starting conversion from {} to {}",
+                    secondHandler.getInputType(),
+                    secondHandler.getOutputType());
                 secondHandler.convert(pipedInputStream, output, reportConfiguration, parameters);
+                logger.debug(
+                    "Finished conversion from {} to {}",
+                    secondHandler.getInputType(),
+                    secondHandler.getOutputType());
                 return null;
               });
       try {
+        logger.debug(
+            "Starting conversion from {} to {}",
+            firstHandler.getInputType(),
+            firstHandler.getOutputType());
         firstHandler.convert(input, pipedOutputStream, reportConfiguration, parameters);
+        logger.debug(
+            "Finished conversion from {} to {}",
+            firstHandler.getInputType(),
+            firstHandler.getOutputType());
       } catch (IOException e) {
         // first handler failed, cancel the second handler task
         future.cancel(true);
