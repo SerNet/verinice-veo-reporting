@@ -92,12 +92,13 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
 
   public void executeTemplate(String templateName, Map data, OutputStream out)
       throws TemplateException, IOException {
-    Template template = cfg.getTemplate(templateName);
     logger.info("Evaluating template {}", templateName);
+    Template template = cfg.getTemplate(templateName);
 
     try (Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
 
       Map<String, Object> entitiesByUri = new HashMap<>();
+      logger.info("Building entity lookup map");
       addRecursively(entitiesByUri, data);
 
       VeoReportingObjectWrapper objectWrapper =
@@ -106,9 +107,9 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
               entitiesByUri,
               (ResourceBundle) data.get("bundle"));
       Environment env = template.createProcessingEnvironment(data, writer, objectWrapper);
-      logger.info("Building entity lookup map");
-
+      logger.info("Processing template");
       env.process();
+      logger.info("Template processed");
     }
   }
 
