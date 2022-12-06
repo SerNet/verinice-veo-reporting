@@ -63,11 +63,11 @@ public class VeoClientImpl implements VeoClient {
       if (!response.getStatusCode().is2xxSuccessful()) {
         logger.error(
             "HTTP error {} for {}, message: {}",
-            response.getRawStatusCode(),
+            response.getStatusCode().value(),
             uri,
             response.getStatusText());
         throw new DataFetchingException(
-            uri.toString(), response.getRawStatusCode(), response.getStatusText());
+            uri.toString(), response.getStatusCode().value(), response.getStatusText());
       }
       try (var body = response.getBody()) {
         JsonNode tree = objectMapper.readTree(body);
