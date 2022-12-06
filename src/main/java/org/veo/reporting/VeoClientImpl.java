@@ -17,6 +17,7 @@
  ******************************************************************************/
 package org.veo.reporting;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -31,7 +32,6 @@ import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.veo.reporting.exception.DataFetchingException;
@@ -56,6 +56,7 @@ public class VeoClientImpl implements VeoClient {
 
   private Object fetchData(URI uri, String authorizationHeader) throws IOException {
     logger.info("Requesting data from {}", uri);
+
     ClientHttpRequest request = httpRequestFactory.createRequest(uri, HttpMethod.GET);
     request.getHeaders().add(HttpHeaders.AUTHORIZATION, authorizationHeader);
     request.getHeaders().setAccept(List.of(MediaType.APPLICATION_JSON));
@@ -69,12 +70,19 @@ public class VeoClientImpl implements VeoClient {
         throw new DataFetchingException(
             uri.toString(), response.getStatusCode().value(), response.getStatusText());
       }
-      try (var body = response.getBody()) {
-        JsonNode tree = objectMapper.readTree(body);
-        if (tree.isArray()) {
-          return objectMapper.treeToValue(tree, List.class);
+      try (var body = new BufferedInputStream(response.getBody())) {
+        body.mark(1);
+        char c = (char) body.read();
+        Class<?> resultClass = Map.class;
+        if (c == '[') {
+          resultClass = List.class;
+        }
+        body.reset();
+        Object value = objectMapper.readValue(body, resultClass);
+        if (resultClass.equals(List.class)) {
+          return value;
         } else {
-          Map m = objectMapper.treeToValue(tree, Map.class);
+          Map m = (Map) value;
           // add support for paged results
           if (m.containsKey("items")) {
             return (List) m.get("items");
