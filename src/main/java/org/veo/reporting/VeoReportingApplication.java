@@ -113,7 +113,8 @@ public class VeoReportingApplication {
       TemplateEvaluator templateEvaluator,
       FileConverter fileConverter,
       ResourcePatternResolver resourcePatternResolver,
-      @Value("${veo.reporting.report_engine_pool_size:4}") int reportEnginePoolSize) {
+      @Value("${veo.reporting.report_engine_pool_size:4}") int reportEnginePoolSize)
+      throws IOException {
     ExecutorService pool =
         Executors.newFixedThreadPool(
             reportEnginePoolSize, new CustomizableThreadFactory("report-engine-pool-thread-"));

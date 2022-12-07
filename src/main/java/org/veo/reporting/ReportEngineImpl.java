@@ -45,6 +45,7 @@ import org.veo.fileconverter.FileConverter;
 import org.veo.reporting.exception.VeoReportingException;
 import org.veo.templating.TemplateEvaluator;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import freemarker.template.TemplateException;
 
 public class ReportEngineImpl implements ReportEngine {
@@ -57,15 +58,42 @@ public class ReportEngineImpl implements ReportEngine {
   private final ResourcePatternResolver resourcePatternResolver;
   private final ExecutorService executorService;
 
+  private final Map<String, ReportConfiguration> reports;
+
   public ReportEngineImpl(
       TemplateEvaluator templateEvaluator,
       FileConverter converter,
       ResourcePatternResolver resourcePatternResolver,
-      ExecutorService executorService) {
+      ExecutorService executorService)
+      throws IOException {
     this.templateEvaluator = templateEvaluator;
     this.converter = converter;
     this.resourcePatternResolver = resourcePatternResolver;
     this.executorService = executorService;
+
+    Resource[] resources = resourcePatternResolver.getResources("classpath*:/reports/*.json");
+    reports =
+        Arrays.stream(resources)
+            .collect(
+                Collectors.toUnmodifiableMap(
+                    resource -> {
+                      String fileName = resource.getFilename();
+                      if (fileName == null) {
+                        throw new IllegalStateException("File name is null for " + resource);
+                      }
+                      return fileName.substring(0, fileName.length() - 5);
+                    },
+                    resource -> {
+                      try (var is = resource.getInputStream()) {
+                        ReportConfiguration reportConfiguration =
+                            objectMapper.readValue(is, ReportConfiguration.class);
+                        logger.info(
+                            "Read report {} from {}", reportConfiguration.getName(), resource);
+                        return reportConfiguration;
+                      } catch (IOException e) {
+                        throw new VeoReportingException("Error loading report configurations", e);
+                      }
+                    }));
   }
 
   @Override
@@ -153,34 +181,9 @@ public class ReportEngineImpl implements ReportEngine {
   }
 
   @Override
+  @SuppressFBWarnings("EI_EXPOSE_REP")
   public Map<String, ReportConfiguration> getReports() {
-    try {
-      Resource[] resources = resourcePatternResolver.getResources("classpath*:/reports/*.json");
-      return Arrays.stream(resources)
-          .collect(
-              Collectors.toMap(
-                  resource -> {
-                    String fileName = resource.getFilename();
-                    if (fileName == null) {
-                      throw new IllegalStateException("File name is null for " + resource);
-                    }
-                    return fileName.substring(0, fileName.length() - 5);
-                  },
-                  resource -> {
-                    try (var is = resource.getInputStream()) {
-                      ReportConfiguration reportConfiguration =
-                          objectMapper.readValue(is, ReportConfiguration.class);
-                      logger.info(
-                          "Read report {} from {}", reportConfiguration.getName(), resource);
-                      return reportConfiguration;
-                    } catch (IOException e) {
-                      throw new VeoReportingException("Error loading report configurations", e);
-                    }
-                  }));
-
-    } catch (IOException e) {
-      throw new VeoReportingException("Error loading report configurations", e);
-    }
+    return reports;
   }
 
   @Override
