@@ -17,6 +17,7 @@
  ******************************************************************************/
 package org.veo.reporting;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -113,37 +114,39 @@ public class ReportEngineImpl implements ReportEngine {
       OutputStream output,
       ReportCreationParameters parameters)
       throws IOException, TemplateException {
-    if (outputType.equals(reportConfiguration.getTemplateType())) {
-      templateEvaluator.executeTemplate(reportConfiguration.getTemplateFile(), data, output);
-    } else {
-      try (PipedInputStream pipedInputStream = new PipedInputStream();
-          PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
-        // start async conversion of the template output
-        Future<Void> future =
-            executorService.submit(
-                () -> {
-                  converter.convert(
-                      pipedInputStream,
-                      reportConfiguration.getTemplateType(),
-                      output,
-                      outputType,
-                      reportConfiguration,
-                      parameters);
-                  return null;
-                });
-        try {
-          templateEvaluator.executeTemplate(
-              reportConfiguration.getTemplateFile(), data, pipedOutputStream);
-        } catch (TemplateException | IOException e) {
-          // template evaluation failed, cancel the conversion task
-          future.cancel(true);
-          throw e;
-        }
-        try {
-          // wait for the conversion to finish
-          future.get();
-        } catch (InterruptedException | ExecutionException e) {
-          throw new VeoReportingException("Error running conversion", e);
+    try (BufferedOutputStream os = new BufferedOutputStream(output)) {
+      if (outputType.equals(reportConfiguration.getTemplateType())) {
+        templateEvaluator.executeTemplate(reportConfiguration.getTemplateFile(), data, os);
+      } else {
+        try (PipedInputStream pipedInputStream = new PipedInputStream();
+            PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
+          // start async conversion of the template output
+          Future<Void> future =
+              executorService.submit(
+                  () -> {
+                    converter.convert(
+                        pipedInputStream,
+                        reportConfiguration.getTemplateType(),
+                        os,
+                        outputType,
+                        reportConfiguration,
+                        parameters);
+                    return null;
+                  });
+          try {
+            templateEvaluator.executeTemplate(
+                reportConfiguration.getTemplateFile(), data, pipedOutputStream);
+          } catch (TemplateException | IOException e) {
+            // template evaluation failed, cancel the conversion task
+            future.cancel(true);
+            throw e;
+          }
+          try {
+            // wait for the conversion to finish
+            future.get();
+          } catch (InterruptedException | ExecutionException e) {
+            throw new VeoReportingException("Error running conversion", e);
+          }
         }
       }
     }
