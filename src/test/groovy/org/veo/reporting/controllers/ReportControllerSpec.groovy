@@ -32,17 +32,17 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 
+import org.veo.reporting.ReportingTest
 import org.veo.reporting.VeoClient
 import org.veo.reporting.exception.DataFetchingException
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
-import spock.lang.Specification
 
 @AutoConfigureMockMvc
 @WebMvcTest
 @ContextConfiguration
-public class ReportControllerSpec extends Specification {
+public class ReportControllerSpec extends ReportingTest {
 
     @Autowired
     private MockMvc mvc
@@ -54,7 +54,11 @@ public class ReportControllerSpec extends Specification {
         when:
         def response = GET("/reports")
         then:
-        response.status == 200
+        with(response) {
+            it.status == 200
+            it.getHeader(HttpHeaders.CACHE_CONTROL) == 'no-cache'
+            it.getHeader(HttpHeaders.LAST_MODIFIED) == 'Wed, 01 Jan 2020 00:00:00 GMT'
+        }
         when:
         def reports = new JsonSlurper().parseText(response.contentAsString)
         then:

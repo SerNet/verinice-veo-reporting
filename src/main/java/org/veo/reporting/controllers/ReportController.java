@@ -30,6 +30,8 @@ import jakarta.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.info.BuildProperties;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerErrorException;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -75,18 +78,24 @@ public class ReportController {
 
   private final ReportEngine reportEngine;
   private final VeoClient veoClient;
+  private final long buildTime;
 
-  public ReportController(ReportEngine reportEngine, VeoClient veoClient) {
+  public ReportController(
+      ReportEngine reportEngine, VeoClient veoClient, BuildProperties buildProperties) {
     this.reportEngine = reportEngine;
     this.veoClient = veoClient;
+    buildTime = buildProperties.getTime().toEpochMilli();
   }
 
   /**
    * @return the available reports
    */
   @GetMapping
-  public Map<String, ReportConfiguration> getReports() {
-    return reportEngine.getReports();
+  public ResponseEntity<Map<String, ReportConfiguration>> getReports(WebRequest request) {
+    if (request.checkNotModified(buildTime)) {
+      return null;
+    }
+    return ResponseEntity.ok().cacheControl(CacheControl.noCache()).body(reportEngine.getReports());
   }
 
   /**

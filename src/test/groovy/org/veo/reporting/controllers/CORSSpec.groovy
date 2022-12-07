@@ -26,13 +26,14 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 
+import org.veo.reporting.ReportingTest
+
 import groovy.json.JsonSlurper
-import spock.lang.Specification
 
 @AutoConfigureMockMvc
 @WebMvcTest(properties=["veo.reporting.cors.origins=https://*.verinice.example, https://frontend.somewhereelse.example"])
 @ContextConfiguration
-public class CORSSpec extends Specification {
+public class CORSSpec extends ReportingTest {
 
     @Autowired
     private MockMvc mvc
