@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,7 @@ public class VeoClientImpl implements VeoClient {
     ClientHttpRequest request = httpRequestFactory.createRequest(uri, HttpMethod.GET);
     request.getHeaders().add(HttpHeaders.AUTHORIZATION, authorizationHeader);
     request.getHeaders().setAccept(List.of(MediaType.APPLICATION_JSON));
+    request.getHeaders().add(HttpHeaders.ACCEPT_ENCODING, "gzip");
     try (ClientHttpResponse response = request.execute()) {
       if (!response.getStatusCode().is2xxSuccessful()) {
         logger.error(
@@ -76,7 +78,11 @@ public class VeoClientImpl implements VeoClient {
         throw new DataFetchingException(
             uri.toString(), response.getStatusCode().value(), response.getStatusText());
       }
-      try (var body = new BufferedInputStream(response.getBody())) {
+      boolean gzip =
+          response.getHeaders().getOrEmpty(HttpHeaders.CONTENT_ENCODING).contains("gzip");
+      try (var s = response.getBody();
+          var body =
+              gzip ? new BufferedInputStream(new GZIPInputStream(s)) : new BufferedInputStream(s)) {
         body.mark(1);
         char c = (char) body.read();
         body.reset();
