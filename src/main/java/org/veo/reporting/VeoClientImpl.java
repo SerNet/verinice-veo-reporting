@@ -24,6 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 import org.slf4j.Logger;
@@ -40,6 +44,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.module.blackbird.BlackbirdModule;
 
 import org.veo.reporting.exception.DataFetchingException;
+import org.veo.reporting.exception.VeoReportingException;
 
 public class VeoClientImpl implements VeoClient {
 
@@ -49,10 +54,13 @@ public class VeoClientImpl implements VeoClient {
   private final String veoUrl;
   private final ObjectReader objectReader;
   private final ObjectReader arrayReader;
+  private final ExecutorService executorService;
 
-  public VeoClientImpl(ClientHttpRequestFactory httpRequestFactory, String veoUrl) {
+  public VeoClientImpl(
+      ClientHttpRequestFactory httpRequestFactory, String veoUrl, ExecutorService executorService) {
     this.httpRequestFactory = httpRequestFactory;
     this.veoUrl = veoUrl;
+    this.executorService = executorService;
     ObjectMapper objectMapper = new ObjectMapper().registerModule(new BlackbirdModule());
     objectReader = objectMapper.readerFor(Map.class);
     arrayReader = objectMapper.readerFor(List.class);
@@ -62,11 +70,26 @@ public class VeoClientImpl implements VeoClient {
   public Map<String, Object> fetchData(
       ReportDataSpecification reportDataSpecification, String authorizationHeader)
       throws IOException {
-    Map<String, Object> result = new HashMap<>(reportDataSpecification.size());
-    for (Entry<String, String> e : reportDataSpecification.entrySet()) {
-      result.put(e.getKey(), fetchData(URI.create(veoUrl + e.getValue()), authorizationHeader));
+
+    Map<String, Future<Object>> futuresByKey =
+        reportDataSpecification.entrySet().stream()
+            .collect(
+                Collectors.toMap(
+                    Entry::getKey,
+                    (e) ->
+                        executorService.submit(
+                            () ->
+                                fetchData(
+                                    URI.create(veoUrl + e.getValue()), authorizationHeader))));
+    try {
+      Map<String, Object> result = new HashMap<>(reportDataSpecification.size());
+      for (Entry<String, Future<Object>> e : futuresByKey.entrySet()) {
+        result.put(e.getKey(), e.getValue().get());
+      }
+      return result;
+    } catch (InterruptedException | ExecutionException e1) {
+      throw new VeoReportingException(e1);
     }
-    return result;
   }
 
   private Object fetchData(URI uri, String authorizationHeader) throws IOException {

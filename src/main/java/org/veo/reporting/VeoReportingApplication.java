@@ -104,8 +104,12 @@ public class VeoReportingApplication {
   @Bean
   public VeoClient createVeoClient(
       ClientHttpRequestFactory httpRequestFactory,
-      @Value("${veo.reporting.veo_url}") String veoUrl) {
-    return new VeoClientImpl(httpRequestFactory, veoUrl);
+      @Value("${veo.reporting.veo_url}") String veoUrl,
+      @Value("${veo.reporting.veo_client_pool_size:8}") int veoClientPoolSize) {
+    ExecutorService pool =
+        Executors.newFixedThreadPool(
+            veoClientPoolSize, new CustomizableThreadFactory("veo-client-pool-thread-"));
+    return new VeoClientImpl(httpRequestFactory, veoUrl, pool);
   }
 
   @Bean
