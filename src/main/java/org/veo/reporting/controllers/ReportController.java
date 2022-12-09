@@ -22,8 +22,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -55,6 +57,7 @@ import org.veo.reporting.CreateReport.TargetSpecification;
 import org.veo.reporting.DataProvider;
 import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
+import org.veo.reporting.ReportDataSpecification;
 import org.veo.reporting.ReportEngine;
 import org.veo.reporting.TypeSpecification;
 import org.veo.reporting.VeoClient;
@@ -165,12 +168,18 @@ public class ReportController {
       throw new ServerErrorException("Failed to fetch translations for " + locale, e);
     }
     DataProvider dataProvider =
-        (key, url) -> {
-          String expandedUrl = expandUrl(key, url, target);
+        keysAndUrls -> {
+          ReportDataSpecification reportDataSpecification =
+              new ReportDataSpecification(
+                  keysAndUrls.entrySet().stream()
+                      .collect(
+                          Collectors.toMap(
+                              Entry::getKey, e -> expandUrl(e.getKey(), e.getValue(), target))));
+
           try {
-            return veoClient.fetchData(expandedUrl, authorizationHeader);
+            return veoClient.fetchData(reportDataSpecification, authorizationHeader);
           } catch (IOException e) {
-            throw new ServerErrorException("Failed to fetch report data from " + expandedUrl, e);
+            throw new ServerErrorException("Failed to fetch report data", e);
           }
         };
 

@@ -158,7 +158,7 @@ Favorite drink
     def "Render report with different locales"() {
         when:
         String text = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.GERMANY), it,{key, url->[name: 'Max']}, [:])
+            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.GERMANY), it,{m->[person:[name: 'Max']]}, [:])
             it.toString()
         }
         then:
@@ -170,7 +170,7 @@ Tschüß'''
         when:
 
         text = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.US), it,{key, url->[name: 'Jack']}, [:])
+            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.US), it,{m->[person:[name: 'Jack']]}, [:])
             it.toString()
         }
         then:

@@ -221,8 +221,10 @@ public class ReportControllerSpec extends ReportingTest {
         then:
         response.status == 200
 
-        1 * veoClient.fetchData('/persons/1', 'Bearer: abc') >> [
-            name: 'Mary'
+        1 * veoClient.fetchData([person:'/persons/1'], 'Bearer: abc') >> [
+            person : [
+                name: 'Mary'
+            ]
         ]
         1 * veoClient.fetchTranslations(Locale.ENGLISH, 'Bearer: abc') >> [
             lang: [
@@ -247,8 +249,10 @@ Cheers'''
         then:
         response.status == 200
 
-        1 * veoClient.fetchData('/persons/1', 'Bearer: abc') >> [
-            name: 'Maria'
+        1 * veoClient.fetchData([person:'/persons/1'], 'Bearer: abc') >> [
+            person : [
+                name: 'Maria'
+            ]
         ]
         1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
             lang: [
@@ -306,139 +310,23 @@ Tschüß'''
         then:
         response.status == 200
 
-        1 * veoClient.fetchData('/scopes/0815', 'Bearer: abc') >> [
-            name: 'My Scope',
-            id: '0815',
-            _self: 'http://example.org/scopes/0815',
-            type: 'scope',
-            links:[
-                scope_management: [
-                    [
-                        target: [
-                            displayName: 'Foo',
-                            targetUri: 'http://example.org/persons/1'
-                        ],
-                        attributes: [:]
-                    ]
-                ],
-                scope_dataProtectionOfficer: [
-                    [
-                        target: [
-                            displayName: 'Foo',
-                            targetUri: 'http://example.org/persons/2'
-                        ],
-                        attributes: [:]
-                    ]
-                ]
-            ],
-            members: [
-                [
-                    targetUri: 'http://example.org/processes/1'
-                ]
-            ]
-        ]
-        1 * veoClient.fetchData('/processes?size=2147483647', 'Bearer: abc') >> [
-            [
-                id: '1',
-                name: 'Verarbeitungstätigkeit 1',
-                description: 'Hier wird etwas verarbeitet',
-                _self: 'http://example.org/processes/1',
-                type: 'process',
-                domains: [
-                    'fd672b7d-7e22-4c71-992c-76b59c0d4ee8':[
-                        subType: 'PRO_DataProcessing'
-                    ]
-                ],
-                customAspects: [
-                    process_processing: [
-                        attributes: [
-                            process_processing_asProcessor : false
-                        ]
-                    ]
-                ],
-                links:[
-                    process_controller : [
-                        [
-                            target: [
-                                displayName: 'Foo',
-                                targetUri: 'http://example.org/scopes/1'
-                            ],
-                            attributes: [:]
-                        ]
-                    ]
-                ]
-            ]
-        ]
-        1 * veoClient.fetchData('/persons?size=2147483647', 'Bearer: abc') >> [
-            [
-                id: '1',
-                type:'person',
-                name: 'John Doe',
-                _self: 'http://example.org/persons/1',
-                customAspects: [
-                    person_generalInformation: [
-                        attributes: [
-                            person_generalInformation_familyName : 'Doe',
-                            person_generalInformation_givenName: 'John'
-                        ]
-                    ]
-                ],
-            ],
-            [
-                id: '2',
-                type:'person',
-                name: 'Jane Doe',
-                _self: 'http://example.org/persons/2',
-                customAspects: [
-                    person_generalInformation: [
-                        attributes: [
-                            person_generalInformation_familyName : 'Doe',
-                            person_generalInformation_givenName: 'Jane'
-                        ]
-                    ]
-                ],
-            ],
-            [
-                id: '3',
-                type:'person',
-                name: 'Jack Doe',
-                _self: 'http://example.org/persons/3',
-                customAspects: [
-                    person_generalInformation: [
-                        attributes: [
-                            person_generalInformation_familyName : 'Doe',
-                            person_generalInformation_givenName: 'Jack'
-                        ]
-                    ]
-                ],
-            ],
-            [
-                id: '4',
-                type:'person',
-                name: 'June Doe',
-                _self: 'http://example.org/persons/4',
-                customAspects: [
-                    person_generalInformation: [
-                        attributes: [
-                            person_generalInformation_familyName : 'Doe',
-                            person_generalInformation_givenName: 'June'
-                        ]
-                    ]
-                ],
-            ]
-        ]
-        1 * veoClient.fetchData('/scopes?size=2147483647', 'Bearer: abc') >> [
-            [
-                name: 'Their Scope',
-                id: '1',
+        1 * veoClient.fetchData([
+            scope: '/scopes/0815',
+            processes: '/processes?size=2147483647',
+            persons: '/persons?size=2147483647',
+            scopes: '/scopes?size=2147483647'
+        ], 'Bearer: abc') >> [
+            scope:[
+                name: 'My Scope',
+                id: '0815',
+                _self: 'http://example.org/scopes/0815',
                 type: 'scope',
-                _self: 'http://example.org/scopes/1',
                 links:[
                     scope_management: [
                         [
                             target: [
                                 displayName: 'Foo',
-                                targetUri: 'http://example.org/persons/3'
+                                targetUri: 'http://example.org/persons/1'
                             ],
                             attributes: [:]
                         ]
@@ -447,7 +335,7 @@ Tschüß'''
                         [
                             target: [
                                 displayName: 'Foo',
-                                targetUri: 'http://example.org/persons/4'
+                                targetUri: 'http://example.org/persons/2'
                             ],
                             attributes: [:]
                         ]
@@ -456,6 +344,129 @@ Tschüß'''
                 members: [
                     [
                         targetUri: 'http://example.org/processes/1'
+                    ]
+                ]
+            ],
+            processes: [
+                [
+                    id: '1',
+                    name: 'Verarbeitungstätigkeit 1',
+                    description: 'Hier wird etwas verarbeitet',
+                    _self: 'http://example.org/processes/1',
+                    type: 'process',
+                    domains: [
+                        'fd672b7d-7e22-4c71-992c-76b59c0d4ee8':[
+                            subType: 'PRO_DataProcessing'
+                        ]
+                    ],
+                    customAspects: [
+                        process_processing: [
+                            attributes: [
+                                process_processing_asProcessor : false
+                            ]
+                        ]
+                    ],
+                    links:[
+                        process_controller : [
+                            [
+                                target: [
+                                    displayName: 'Foo',
+                                    targetUri: 'http://example.org/scopes/1'
+                                ],
+                                attributes: [:]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            persons:  [
+                [
+                    id: '1',
+                    type:'person',
+                    name: 'John Doe',
+                    _self: 'http://example.org/persons/1',
+                    customAspects: [
+                        person_generalInformation: [
+                            attributes: [
+                                person_generalInformation_familyName : 'Doe',
+                                person_generalInformation_givenName: 'John'
+                            ]
+                        ]
+                    ],
+                ],
+                [
+                    id: '2',
+                    type:'person',
+                    name: 'Jane Doe',
+                    _self: 'http://example.org/persons/2',
+                    customAspects: [
+                        person_generalInformation: [
+                            attributes: [
+                                person_generalInformation_familyName : 'Doe',
+                                person_generalInformation_givenName: 'Jane'
+                            ]
+                        ]
+                    ],
+                ],
+                [
+                    id: '3',
+                    type:'person',
+                    name: 'Jack Doe',
+                    _self: 'http://example.org/persons/3',
+                    customAspects: [
+                        person_generalInformation: [
+                            attributes: [
+                                person_generalInformation_familyName : 'Doe',
+                                person_generalInformation_givenName: 'Jack'
+                            ]
+                        ]
+                    ],
+                ],
+                [
+                    id: '4',
+                    type:'person',
+                    name: 'June Doe',
+                    _self: 'http://example.org/persons/4',
+                    customAspects: [
+                        person_generalInformation: [
+                            attributes: [
+                                person_generalInformation_familyName : 'Doe',
+                                person_generalInformation_givenName: 'June'
+                            ]
+                        ]
+                    ],
+                ]
+            ],
+            scopes:[
+                [
+                    name: 'Their Scope',
+                    id: '1',
+                    type: 'scope',
+                    _self: 'http://example.org/scopes/1',
+                    links:[
+                        scope_management: [
+                            [
+                                target: [
+                                    displayName: 'Foo',
+                                    targetUri: 'http://example.org/persons/3'
+                                ],
+                                attributes: [:]
+                            ]
+                        ],
+                        scope_dataProtectionOfficer: [
+                            [
+                                target: [
+                                    displayName: 'Foo',
+                                    targetUri: 'http://example.org/persons/4'
+                                ],
+                                attributes: [:]
+                            ]
+                        ]
+                    ],
+                    members: [
+                        [
+                            targetUri: 'http://example.org/processes/1'
+                        ]
                     ]
                 ]
             ]
@@ -495,7 +506,7 @@ gemäß Art. 30 II DS-GVO''')
         response.status == 401
         response.contentAsString == 'Failed to retrieve data from http://localhost/scopes/0815, status code: 401, message: Invalid token'
 
-        1 * veoClient.fetchData('/scopes/0815', 'Bearer: abc') >> {
+        1 * veoClient.fetchData(_, 'Bearer: abc') >> {
             throw new DataFetchingException('http://localhost/scopes/0815', 401, 'Invalid token')
         }
     }

@@ -31,6 +31,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,26 +75,47 @@ public class Demo {
           Map<String, Object> cache = new HashMap<>();
 
           @Override
-          public Object resolve(String key, String url) {
-            if ("dpia".equals(key)) {
-              url = url.replace("${targetId}", dpiaId);
-            } else if ("scope".equals(key)) {
-              url = url.replace("${targetId}", scopeId);
-            } else if (url.contains("targetId")) {
-              throw new IllegalArgumentException("Unhandled url: " + url);
+          public Map<String, Object> resolve(Map<String, String> dataSpec) {
+
+            ReportDataSpecification reportDataSpecification =
+                new ReportDataSpecification(
+                    dataSpec.entrySet().stream()
+                        .filter(e -> !cache.containsKey(e.getKey()))
+                        .collect(
+                            Collectors.toMap(
+                                Entry::getKey,
+                                e -> {
+                                  String key = e.getKey();
+                                  String url = e.getValue();
+                                  if ("dpia".equals(key)) {
+                                    url = url.replace("${targetId}", dpiaId);
+                                  } else if ("scope".equals(key)) {
+                                    url = url.replace("${targetId}", scopeId);
+                                  } else if (url.contains("targetId")) {
+                                    throw new IllegalArgumentException("Unhandled url: " + url);
+                                  }
+
+                                  return url;
+                                })));
+            try {
+              if (!reportDataSpecification.isEmpty()) {
+                Map<String, Object> data = veoClient.fetchData(reportDataSpecification, authHeader);
+                for (Entry<String, Object> e : data.entrySet()) {
+                  System.out.println("\n" + e.getKey() + ":");
+                  System.out.println(writer.writeValueAsString(e.getValue()));
+                }
+
+                cache.putAll(data);
+              }
+              Map<String, Object> result = new HashMap<>(dataSpec.size());
+              result.putAll(
+                  dataSpec.keySet().stream()
+                      .collect(Collectors.toMap(Function.identity(), cache::get)));
+
+              return result;
+            } catch (IOException e) {
+              throw new RuntimeException("Error fetching data", e);
             }
-            return cache.computeIfAbsent(
-                url,
-                it -> {
-                  try {
-                    Object data = veoClient.fetchData(it, authHeader);
-                    System.out.println("\n" + key + ":");
-                    System.out.println(writer.writeValueAsString(data));
-                    return data;
-                  } catch (IOException e) {
-                    throw new RuntimeException("Error fetching data from " + it, e);
-                  }
-                });
           }
         };
 

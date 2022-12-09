@@ -20,8 +20,10 @@ package org.veo.reporting;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 
 import org.slf4j.Logger;
@@ -57,8 +59,14 @@ public class VeoClientImpl implements VeoClient {
   }
 
   @Override
-  public Object fetchData(String path, String authorizationHeader) throws IOException {
-    return fetchData(URI.create(veoUrl + path), authorizationHeader);
+  public Map<String, Object> fetchData(
+      ReportDataSpecification reportDataSpecification, String authorizationHeader)
+      throws IOException {
+    Map<String, Object> result = new HashMap<>(reportDataSpecification.size());
+    for (Entry<String, String> e : reportDataSpecification.entrySet()) {
+      result.put(e.getKey(), fetchData(URI.create(veoUrl + e.getValue()), authorizationHeader));
+    }
+    return result;
   }
 
   private Object fetchData(URI uri, String authorizationHeader) throws IOException {

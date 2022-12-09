@@ -1,6 +1,6 @@
 /*******************************************************************************
  * verinice.veo reporting
- * Copyright (C) 2021  Jochen Kemnade
+ * Copyright (C) 2022  Jochen Kemnade
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,13 +17,17 @@
  ******************************************************************************/
 package org.veo.reporting;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Resolves an entry from a {@link ReportConfiguration}'s <code>data</code> specification to the
- * real value
+ * This defines the data that the report requires. The keys are the variable names under which the
+ * data is addressed in the report template, the values are the url fragments from where the data
+ * should be retrieved.
  */
-public interface DataProvider {
+public class ReportDataSpecification extends HashMap<String, String> {
 
-  Map<String, Object> resolve(Map<String, String> data);
+  public ReportDataSpecification(Map<String, String> keysAndUrls) {
+    super(keysAndUrls);
+  }
 }

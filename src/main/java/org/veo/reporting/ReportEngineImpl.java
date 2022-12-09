@@ -24,7 +24,6 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Optional;
@@ -110,12 +109,9 @@ public class ReportEngineImpl implements ReportEngine {
         getReport(reportName)
             .orElseThrow(() -> new IllegalArgumentException("Unknown report " + reportName));
 
-    Map<String, Object> data = new HashMap<>();
+    Map<String, Object> data = dataProvider.resolve(config.getData());
 
     String templateName = config.getTemplateFile();
-
-    config.getData().forEach((key, value) -> data.put(key, dataProvider.resolve(key, value)));
-
     String templateBaseName = templateName.split("\\.")[0];
     String bundleName = "templates." + templateBaseName;
     logger.info(

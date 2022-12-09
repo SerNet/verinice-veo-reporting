@@ -29,7 +29,8 @@ import java.util.Objects;
  */
 public interface VeoClient {
 
-  Object fetchData(String path, String authorizationHeader) throws IOException;
+  Map<String, Object> fetchData(
+      ReportDataSpecification dataSpecification, String authorizationHeader) throws IOException;
 
   public default Map<String, Object> fetchTranslations(Locale locale, String authorizationHeader)
       throws IOException {
@@ -37,7 +38,12 @@ public interface VeoClient {
     String translationsUrl = "/translations?languages=" + language;
     Map<String, Map<String, Map<String, Object>>> lang =
         (Map<String, Map<String, Map<String, Object>>>)
-            fetchData(translationsUrl, authorizationHeader);
+            fetchData(
+                    new ReportDataSpecification(Map.of(translationsUrl, translationsUrl)),
+                    authorizationHeader)
+                .values()
+                .iterator()
+                .next();
     Map<String, Object> entriesForLanguage = lang.get("lang").get(language);
     Objects.requireNonNull(
         entriesForLanguage, "Failed to load translations for language " + language);
