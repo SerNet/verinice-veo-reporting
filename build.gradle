@@ -26,6 +26,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    implementation 'com.fasterxml.jackson.module:jackson-module-blackbird'
     implementation 'jakarta.validation:jakarta.validation-api'
     implementation 'org.freemarker:freemarker:2.3.31'
     implementation 'com.vladsch.flexmark:flexmark:0.64.0'

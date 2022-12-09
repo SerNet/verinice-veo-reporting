@@ -34,6 +34,7 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.module.blackbird.BlackbirdModule;
 
 import org.veo.reporting.exception.DataFetchingException;
 
@@ -49,7 +50,7 @@ public class VeoClientImpl implements VeoClient {
   public VeoClientImpl(ClientHttpRequestFactory httpRequestFactory, String veoUrl) {
     this.httpRequestFactory = httpRequestFactory;
     this.veoUrl = veoUrl;
-    ObjectMapper objectMapper = new ObjectMapper();
+    ObjectMapper objectMapper = new ObjectMapper().registerModule(new BlackbirdModule());
     objectReader = objectMapper.readerFor(Map.class);
     arrayReader = objectMapper.readerFor(List.class);
   }
