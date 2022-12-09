@@ -33,6 +33,7 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 import org.veo.reporting.exception.DataFetchingException;
 
@@ -42,11 +43,15 @@ public class VeoClientImpl implements VeoClient {
 
   private final ClientHttpRequestFactory httpRequestFactory;
   private final String veoUrl;
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectReader objectReader;
+  private final ObjectReader arrayReader;
 
   public VeoClientImpl(ClientHttpRequestFactory httpRequestFactory, String veoUrl) {
     this.httpRequestFactory = httpRequestFactory;
     this.veoUrl = veoUrl;
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectReader = objectMapper.readerFor(Map.class);
+    arrayReader = objectMapper.readerFor(List.class);
   }
 
   @Override
@@ -73,15 +78,11 @@ public class VeoClientImpl implements VeoClient {
       try (var body = new BufferedInputStream(response.getBody())) {
         body.mark(1);
         char c = (char) body.read();
-        Class<?> resultClass = Map.class;
-        if (c == '[') {
-          resultClass = List.class;
-        }
         body.reset();
-        Object value = objectMapper.readValue(body, resultClass);
-        if (resultClass.equals(List.class)) {
-          return value;
+        if (c == '[') {
+          return arrayReader.readValue(body);
         } else {
+          Object value = objectReader.readValue(body);
           Map m = (Map) value;
           // add support for paged results
           if (m.containsKey("items")) {
