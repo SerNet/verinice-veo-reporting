@@ -42,6 +42,9 @@ management:
       enabled: true
     readinessstate:
       enabled: true
+server:
+  compression:
+    enabled: true
 spring:
   jndi:
     ignore: true
