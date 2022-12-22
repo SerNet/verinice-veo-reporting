@@ -191,7 +191,8 @@ Cheers'''
             'processing-activities',
             'processing-on-behalf',
             'risk-analysis',
-            'dp-impact-assessment'
+            'dp-impact-assessment',
+            'dp-privacy-incident'
         ]
     }
 

@@ -61,15 +61,17 @@ public class Demo {
     var scopeId = ctx.getEnvironment().getRequiredProperty("veo.demoscopeid");
     var veoClient = ctx.getBean(VeoClient.class);
     var authHeader = "Bearer " + token;
-
-    Map<String, Object> entriesForLanguage =
-        veoClient.fetchTranslations(Locale.GERMANY, authHeader);
+    Map<Locale, Map<String, Object>> entriesForLanguage = new HashMap<>();
+    entriesForLanguage.put(Locale.GERMANY, veoClient.fetchTranslations(Locale.GERMANY, authHeader));
+    entriesForLanguage.put(Locale.US, veoClient.fetchTranslations(Locale.US, authHeader));
 
     var objectMapper = new ObjectMapper();
     var writer = objectMapper.writerWithDefaultPrettyPrinter();
 
     var dpiaId = ctx.getEnvironment().getProperty("veo.demodpiaid");
+    var privacyIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentid");
     boolean createDPIAReports = dpiaId != null;
+    boolean createDPIncidentReports = privacyIncidentId != null;
 
     DataProvider dataProvider =
         new DataProvider() {
@@ -91,6 +93,8 @@ public class Demo {
                                   String url = e.getValue();
                                   if ("dpia".equals(key)) {
                                     url = url.replace("${targetId}", dpiaId);
+                                  } else if ("incident".equals(key)) {
+                                    url = url.replace("${targetId}", privacyIncidentId);
                                   } else if ("scope".equals(key)) {
                                     url = url.replace("${targetId}", scopeId);
                                   } else if (url.contains("targetId")) {
@@ -121,7 +125,8 @@ public class Demo {
           }
         };
 
-    createReports(reportEngine, dataProvider, entriesForLanguage, createDPIAReports);
+    createReports(
+        reportEngine, dataProvider, entriesForLanguage, createDPIAReports, createDPIncidentReports);
     Path template = Paths.get("src/main/resources/templates");
     try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 
@@ -140,7 +145,12 @@ public class Demo {
       try {
         while ((key = watchService.take()) != null) {
           if (!key.pollEvents().isEmpty()) {
-            createReports(reportEngine, dataProvider, entriesForLanguage, createDPIAReports);
+            createReports(
+                reportEngine,
+                dataProvider,
+                entriesForLanguage,
+                createDPIAReports,
+                createDPIncidentReports);
           }
           key.reset();
         }
@@ -154,11 +164,13 @@ public class Demo {
   static void createReports(
       ReportEngine reportEngine,
       DataProvider dataProvider,
-      Map<String, Object> entriesForLanguage,
-      boolean createDPIAReports)
+      Map<Locale, Map<String, Object>> entriesForLanguage,
+      boolean createDPIAReports,
+      boolean createDPIncidentReports)
       throws IOException {
 
-    ReportCreationParameters parameters = new ReportCreationParameters(Locale.GERMANY);
+    ReportCreationParameters parametersGermany = new ReportCreationParameters(Locale.GERMANY);
+    ReportCreationParameters parametersUS = new ReportCreationParameters(Locale.US);
 
     try {
       createReport(
@@ -167,40 +179,40 @@ public class Demo {
           "/tmp/vvt.md",
           dataProvider,
           "text/markdown",
-          parameters,
-          entriesForLanguage);
+          parametersGermany,
+          entriesForLanguage.get(Locale.GERMANY));
       createReport(
           reportEngine,
           "processing-activities",
           "/tmp/vvt.html",
           dataProvider,
-          "text/html",
-          parameters,
-          entriesForLanguage);
+          MediaType.TEXT_HTML_VALUE,
+          parametersGermany,
+          entriesForLanguage.get(Locale.GERMANY));
       createReport(
           reportEngine,
           "processing-activities",
           "/tmp/vvt.pdf",
           dataProvider,
           MediaType.APPLICATION_PDF_VALUE,
-          parameters,
-          entriesForLanguage);
+          parametersGermany,
+          entriesForLanguage.get(Locale.GERMANY));
       createReport(
           reportEngine,
           "risk-analysis",
           "/tmp/dpra.pdf",
           dataProvider,
           MediaType.APPLICATION_PDF_VALUE,
-          parameters,
-          entriesForLanguage);
+          parametersGermany,
+          entriesForLanguage.get(Locale.GERMANY));
       createReport(
           reportEngine,
           "risk-analysis",
           "/tmp/dpra.html",
           dataProvider,
-          "text/html",
-          parameters,
-          entriesForLanguage);
+          MediaType.TEXT_HTML_VALUE,
+          parametersGermany,
+          entriesForLanguage.get(Locale.GERMANY));
       if (createDPIAReports) {
 
         createReport(
@@ -209,16 +221,42 @@ public class Demo {
             "/tmp/dpia.pdf",
             dataProvider,
             MediaType.APPLICATION_PDF_VALUE,
-            parameters,
-            entriesForLanguage);
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
         createReport(
             reportEngine,
             "dp-impact-assessment",
             "/tmp/dpia.html",
             dataProvider,
-            "text/html",
-            parameters,
-            entriesForLanguage);
+            MediaType.TEXT_HTML_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+      }
+      if (createDPIncidentReports) {
+        createReport(
+            reportEngine,
+            "dp-privacy-incident",
+            "/tmp/privacy-incident.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+        createReport(
+            reportEngine,
+            "dp-privacy-incident",
+            "/tmp/privacy-incident-en.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersUS,
+            entriesForLanguage.get(Locale.US));
+        createReport(
+            reportEngine,
+            "dp-privacy-incident",
+            "/tmp/privacy-incident.html",
+            dataProvider,
+            MediaType.TEXT_HTML_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
       }
       createReport(
           reportEngine,
@@ -226,8 +264,8 @@ public class Demo {
           "/tmp/av.pdf",
           dataProvider,
           MediaType.APPLICATION_PDF_VALUE,
-          parameters,
-          entriesForLanguage);
+          parametersGermany,
+          entriesForLanguage.get(Locale.GERMANY));
 
     } catch (IOException | TemplateException e) {
       logger.error("Error creating reports", e);
