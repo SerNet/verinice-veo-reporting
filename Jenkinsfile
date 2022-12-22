@@ -46,7 +46,12 @@ pipeline {
                 }
             }
             steps {
-                sh './gradlew --no-daemon classes'
+                sh './gradlew --no-daemon classes generateLicenseReport'
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'build/reports/dependency-license/*.*', allowEmptyArchive: true
+                }
             }
         }
         stage('Test') {
@@ -85,6 +90,16 @@ pipeline {
                 }
             }
             steps {
+                unarchive mapping: ['build/reports/dependency-license/LICENSE-3RD-PARTY.txt': 'build/reports/dependency-license/LICENSE-3RD-PARTY.txt']
+                script {
+                    def repositoryFileContent = readFile('LICENSE-3RD-PARTY.txt')
+                    def generatedFileContent = readFile('build/reports/dependency-license/LICENSE-3RD-PARTY.txt')
+                    def repositoryFileContentWithoutDate = repositoryFileContent.replaceAll(/\RThis report was generated at .+\R/, '')
+                    def generatedFileContentWithoutDate = generatedFileContent.replaceAll(/\RThis report was generated at .+\R/, '')
+                    if (repositoryFileContentWithoutDate != generatedFileContentWithoutDate){
+                        error 'LICENSE-3RD-PARTY.txt is not up to date, please re-run ./gradlew generateLicenseReport'
+                    }
+                }
                 sh './gradlew -PciBuildNumer=$BUILD_NUMBER -PciJobName=$JOB_NAME --no-daemon check -x test'
             }
             post {
