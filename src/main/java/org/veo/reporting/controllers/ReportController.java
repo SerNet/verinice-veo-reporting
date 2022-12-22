@@ -206,7 +206,8 @@ public class ReportController {
             return target.id;
           } else {
             throw new IllegalArgumentException(
-                "Unsupported placeholder in url " + key + ": " + placeholderName);
+                "Unsupported placeholder \"%s\" in url for %s (%s)"
+                    .formatted(placeholderName, key, url));
           }
         });
   }
