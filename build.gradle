@@ -48,7 +48,7 @@ dependencies {
         exclude group: "xml-apis", module: "xml-apis"
     }
     implementation 'org.apache.pdfbox:pdfbox:2.0.27'
-    implementation 'de.rototor.pdfbox:graphics2d:0.41'
+    implementation 'de.rototor.pdfbox:graphics2d:0.42'
     implementation 'org.jfree:jfreechart:1.5.3'
     implementation 'org.jsoup:jsoup:1.15.3'
     implementation 'com.helger.font:ph-fonts-api:5.0.0'
