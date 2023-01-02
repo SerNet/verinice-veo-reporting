@@ -407,7 +407,7 @@ Tschüß'''
                     person_generalInformation: [
                         attributes: [
                             person_generalInformation_familyName : 'Doe',
-                            person_generalInformation_givenName: 'John'
+                            person_generalInformation_givenName: 'Jack'
                         ]
                     ]
                 ],
@@ -421,7 +421,7 @@ Tschüß'''
                     person_generalInformation: [
                         attributes: [
                             person_generalInformation_familyName : 'Doe',
-                            person_generalInformation_givenName: 'Jane'
+                            person_generalInformation_givenName: 'June'
                         ]
                     ]
                 ],
