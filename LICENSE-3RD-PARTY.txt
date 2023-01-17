@@ -12287,7 +12287,7 @@ POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICEN
 
 --------------------------------------------------------------------------------
 
-76. Group: org.jfree  Name: jfreechart  Version: 1.5.3
+76. Group: org.jfree  Name: jfreechart  Version: 1.5.4
 
 POM Project URL: http://www.jfree.org/jfreechart/
 
@@ -17944,5 +17944,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Mon Jan 16 06:06:51 UTC 2023.
+This report was generated at Tue Jan 17 08:03:01 UTC 2023.
 
