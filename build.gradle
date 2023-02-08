@@ -10,7 +10,7 @@ plugins {
     id 'com.github.jk1.dependency-license-report' version '2.1'
 }
 
-version = '0.19.0'
+version = '0.20.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
