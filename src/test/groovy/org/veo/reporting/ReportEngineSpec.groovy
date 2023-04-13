@@ -121,7 +121,7 @@ Favorite drink
    <dd>
     Rum
    </dd>
-  </dl> <bookmarks>
+  </dl><bookmarks>
    <bookmark name="Basic attributes" href="#basic-attributes" />
    <bookmark name="Work life" href="#work-life" />
    <bookmark name="Private life" href="#private-life" />
@@ -215,7 +215,7 @@ Cheers'''
         text.contains(output)
         where:
         input                                | output
-        'Hello\nWorld'                       | '<p>Hello<br> World</p>'
+        'Hello\nWorld'                       | '<p>Hello<br>\n    World</p>'
         'foo*bar*'                           | '<p>foo*bar*</p>'
         '![img](file:///localPath/test.pdf)' | '<p>![img](file:///localPath/test.pdf)</p>'
     }
