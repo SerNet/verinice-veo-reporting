@@ -47,7 +47,7 @@ dependencies {
         // work around https://issues.apache.org/jira/browse/BATIK-1289
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.pdfbox:pdfbox:2.0.27'
+    implementation 'org.apache.pdfbox:pdfbox:2.0.28'
     implementation 'de.rototor.pdfbox:graphics2d:0.42'
     implementation 'org.jfree:jfreechart:1.5.4'
     implementation 'org.jsoup:jsoup:1.15.4'
