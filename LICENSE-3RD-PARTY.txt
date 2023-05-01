@@ -12418,7 +12418,7 @@ POM License: GNU LESSER GENERAL PUBLIC LICENSE, Version 3 - https://www.gnu.org/
 
 --------------------------------------------------------------------------------
 
-77. Group: org.jsoup  Name: jsoup  Version: 1.15.4
+77. Group: org.jsoup  Name: jsoup  Version: 1.16.1
 
 Project URL: https://jsoup.org/
 
@@ -18124,5 +18124,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Thu Apr 27 14:37:47 UTC 2023.
+This report was generated at Mon May 01 06:06:19 UTC 2023.
 
