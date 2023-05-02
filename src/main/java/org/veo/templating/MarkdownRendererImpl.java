@@ -45,7 +45,6 @@ public class MarkdownRendererImpl implements MarkdownRenderer {
     // uncomment to convert soft-breaks to hard breaks
     // options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
 
-    // Work around https://github.com/vsch/flexmark-java/issues/476
     options.set(HtmlRenderer.RENDER_HEADER_ID, true);
 
     Parser parser = Parser.builder(options).build();
