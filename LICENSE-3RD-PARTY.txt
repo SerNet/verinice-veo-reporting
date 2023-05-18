@@ -1753,97 +1753,97 @@ using any of those jars.
 
 --------------------------------------------------------------------------------
 
-20. Group: com.vladsch.flexmark  Name: flexmark  Version: 0.64.4
+20. Group: com.vladsch.flexmark  Name: flexmark  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-21. Group: com.vladsch.flexmark  Name: flexmark-ext-attributes  Version: 0.64.4
+21. Group: com.vladsch.flexmark  Name: flexmark-ext-attributes  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-22. Group: com.vladsch.flexmark  Name: flexmark-ext-definition  Version: 0.64.4
+22. Group: com.vladsch.flexmark  Name: flexmark-ext-definition  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-23. Group: com.vladsch.flexmark  Name: flexmark-ext-tables  Version: 0.64.4
+23. Group: com.vladsch.flexmark  Name: flexmark-ext-tables  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-24. Group: com.vladsch.flexmark  Name: flexmark-util  Version: 0.64.4
+24. Group: com.vladsch.flexmark  Name: flexmark-util  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-25. Group: com.vladsch.flexmark  Name: flexmark-util-ast  Version: 0.64.4
+25. Group: com.vladsch.flexmark  Name: flexmark-util-ast  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-26. Group: com.vladsch.flexmark  Name: flexmark-util-builder  Version: 0.64.4
+26. Group: com.vladsch.flexmark  Name: flexmark-util-builder  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-27. Group: com.vladsch.flexmark  Name: flexmark-util-collection  Version: 0.64.4
+27. Group: com.vladsch.flexmark  Name: flexmark-util-collection  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-28. Group: com.vladsch.flexmark  Name: flexmark-util-data  Version: 0.64.4
+28. Group: com.vladsch.flexmark  Name: flexmark-util-data  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-29. Group: com.vladsch.flexmark  Name: flexmark-util-dependency  Version: 0.64.4
+29. Group: com.vladsch.flexmark  Name: flexmark-util-dependency  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-30. Group: com.vladsch.flexmark  Name: flexmark-util-format  Version: 0.64.4
+30. Group: com.vladsch.flexmark  Name: flexmark-util-format  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-31. Group: com.vladsch.flexmark  Name: flexmark-util-html  Version: 0.64.4
+31. Group: com.vladsch.flexmark  Name: flexmark-util-html  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-32. Group: com.vladsch.flexmark  Name: flexmark-util-misc  Version: 0.64.4
+32. Group: com.vladsch.flexmark  Name: flexmark-util-misc  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-33. Group: com.vladsch.flexmark  Name: flexmark-util-options  Version: 0.64.4
+33. Group: com.vladsch.flexmark  Name: flexmark-util-options  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-34. Group: com.vladsch.flexmark  Name: flexmark-util-sequence  Version: 0.64.4
+34. Group: com.vladsch.flexmark  Name: flexmark-util-sequence  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-35. Group: com.vladsch.flexmark  Name: flexmark-util-visitor  Version: 0.64.4
+35. Group: com.vladsch.flexmark  Name: flexmark-util-visitor  Version: 0.64.6
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
@@ -18124,5 +18124,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Tue May 16 14:03:09 UTC 2023.
+This report was generated at Thu May 18 05:04:20 UTC 2023.
 
