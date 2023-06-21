@@ -61,7 +61,7 @@
         "^com.github.spotbugs$",
         "^org.eclipse.jgit:",
         "^gradle$",
-        "^gcr.io/kaniko-project/executor:"
+        "^gcr.io/kaniko-project/executor$"
       ],
       "postUpgradeTasks": {}
     }
