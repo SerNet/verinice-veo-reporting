@@ -1,4 +1,4 @@
-image: gradle:8.1.1-jdk17-alpine
+image: eclipse-temurin:17-jdk
 
 variables:
   ORG_GRADLE_PROJECT_ci: 'true'
@@ -17,7 +17,7 @@ build:
   stage: build
   script:
     - env
-    - gradle -i -PciBuildNumer=$CI_PIPELINE_ID -PciJobName=$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME build -x check
+    - ./gradlew -i -PciBuildNumer=$CI_PIPELINE_ID -PciJobName=$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME build -x check
     - echo "PROJECT_VERSION=$(./gradlew -q properties --property version| awk '/^version:/ {print $2}')" >> variables.env
   artifacts:
     expire_in: 1 week
@@ -36,7 +36,7 @@ build:
 
 test:
   stage: check
-  script: gradle -i test
+  script: ./gradlew -i test
   artifacts:
     when: always
     reports:
@@ -53,7 +53,7 @@ test:
 check:
   stage: check
   script:
-    - gradle -i check -x test
+    - ./gradlew -i check -x test
   cache:
     - key: gradle
       paths:
@@ -67,8 +67,9 @@ check:
 check_license:
   stage: check
   script:
-    - gradle -i generateLicenseReport
-    - git diff --exit-code --ignore-matching-lines='This report was generated at'
+    - cp LICENSE-3RD-PARTY.txt LICENSE-3RD-PARTY.txt.orig
+    - ./gradlew -i generateLicenseReport
+    - diff --ignore-matching-lines='This report was generated at' LICENSE-3RD-PARTY.txt LICENSE-3RD-PARTY.txt.orig
     - if [ $? -ne 0 ]; then echo "LICENSE-3RD-PARTY.txt is not up to date, please re-run ./gradlew generateLicenseReport"; exit 1; fi
   cache:
     - key: gradle
