@@ -17,6 +17,8 @@
  ******************************************************************************/
 package org.veo.templating
 
+import org.veo.reporting.ReportCreationParameters
+
 import freemarker.cache.ClassTemplateLoader
 import groovy.json.JsonSlurper
 import spock.lang.Specification
@@ -497,9 +499,20 @@ Jack's children are named John and Jane.'''
         e.message =~ /Instantiating freemarker.template.utility.Execute is not allowed in the template for security reasons/
     }
 
-    String execute(String templateName, data) {
+    def "Date format fits locale"() {
+        when:
+        def text = execute('date-test.txt', [date: "2020-01-01"], new ReportCreationParameters(locale))
+        then:
+        text == expectedOutput
+        where:
+        locale          | expectedOutput
+        Locale.GERMANY  | '01.01.2020'
+        Locale.US       | 'Jan 1, 2020'
+    }
+
+    String execute(String templateName, data, ReportCreationParameters parameters = new ReportCreationParameters(Locale.US)) {
         new ByteArrayOutputStream().withCloseable {
-            templateEvaluator.executeTemplate(templateName, data, it)
+            templateEvaluator.executeTemplate(templateName, data, it, parameters)
             it.toString()
         }
     }

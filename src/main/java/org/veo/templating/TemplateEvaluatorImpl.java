@@ -31,6 +31,7 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.veo.reporting.ReportCreationParameters;
 import org.veo.templating.methods.Base64Encode;
 import org.veo.templating.methods.ColorContrast;
 
@@ -91,7 +92,8 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
   }
 
   @Override
-  public void executeTemplate(String templateName, Map data, OutputStream out)
+  public void executeTemplate(
+      String templateName, Map data, OutputStream out, ReportCreationParameters parameters)
       throws TemplateException, IOException {
     logger.info("Evaluating template {}", templateName);
     Template template = cfg.getTemplate(templateName);
@@ -108,6 +110,7 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
               entitiesByUri,
               (ResourceBundle) data.get("bundle"));
       Environment env = template.createProcessingEnvironment(data, writer, objectWrapper);
+      env.setLocale(parameters.getLocale());
       logger.info("Processing template");
       env.process();
       logger.info("Template processed");

@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
+import org.veo.reporting.ReportCreationParameters;
+
 import freemarker.cache.TemplateLoader;
 import freemarker.template.TemplateException;
 
@@ -30,6 +32,10 @@ import freemarker.template.TemplateException;
  * @see TemplateLoader
  */
 public interface TemplateEvaluator {
-  void executeTemplate(String templateName, Map<String, Object> data, OutputStream out)
+  void executeTemplate(
+      String templateName,
+      Map<String, Object> data,
+      OutputStream out,
+      ReportCreationParameters parameters)
       throws TemplateException, IOException;
 }

@@ -140,7 +140,8 @@ public class ReportEngineImpl implements ReportEngine {
       throws IOException, TemplateException {
     try (BufferedOutputStream os = new BufferedOutputStream(output)) {
       if (outputType.equals(reportConfiguration.getTemplateType())) {
-        templateEvaluator.executeTemplate(reportConfiguration.getTemplateFile(), data, os);
+        templateEvaluator.executeTemplate(
+            reportConfiguration.getTemplateFile(), data, os, parameters);
       } else {
         try (PipedInputStream pipedInputStream = new PipedInputStream();
             PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
@@ -159,7 +160,7 @@ public class ReportEngineImpl implements ReportEngine {
                   });
           try {
             templateEvaluator.executeTemplate(
-                reportConfiguration.getTemplateFile(), data, pipedOutputStream);
+                reportConfiguration.getTemplateFile(), data, pipedOutputStream, parameters);
           } catch (TemplateException | IOException e) {
             // template evaluation failed, cancel the conversion task
             future.cancel(true);
