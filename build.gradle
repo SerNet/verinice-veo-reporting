@@ -131,6 +131,7 @@ spotless {
         replaceRegex('Excessive line breaks', /\n{3,}/, '\n\n')
         replaceRegex('Extra space around equals sign', /(  += )|( =  +)/, ' = ')
         replaceRegex('Not one space between right round and left curly bracket', /\) *\{/, ') {')
+        toggleOffOn()
     }
     format 'git', {
         target '**/.gitignore'

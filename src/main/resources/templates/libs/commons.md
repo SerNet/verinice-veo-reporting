@@ -28,7 +28,7 @@
 <#if definition?has_content || alwaysShow>
 ${term}
 <#if definition?has_content>
-: ${definition}
+: ${definition?replace("\n", "\n ")}
 <#else>
 : &nbsp;
 </#if>
