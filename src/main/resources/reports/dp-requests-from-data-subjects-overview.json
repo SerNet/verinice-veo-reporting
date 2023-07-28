@@ -1,0 +1,28 @@
+{
+  "name": {
+    "de": "Übersicht Betroffenenanfragen",
+    "en": "Overview of requests from data subjects"
+  },
+  "description": {
+    "de": "Eine Übersicht über die dokumentierten Betroffenenanfragen einer Verantwortlichen",
+    "en": "An overview of a controller’s documented requests from data subjects"
+  },
+  "templateFile": "dp-requests-overview.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_ResponsibleBody"
+      ]
+    }
+  ],
+  "data": {
+    "scope": "/scopes/${targetId}",
+    "persons": "/persons?size=2147483647",
+    "documents": "/documents?size=2147483647"
+  }
+}

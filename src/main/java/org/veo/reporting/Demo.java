@@ -267,6 +267,15 @@ public class Demo {
           parametersGermany,
           entriesForLanguage.get(Locale.GERMANY));
 
+      createReport(
+          reportEngine,
+          "dp-requests-from-data-subjects-overview",
+          "/tmp/request-overview.pdf",
+          dataProvider,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersUS,
+          entriesForLanguage.get(Locale.US));
+
     } catch (IOException | TemplateException e) {
       logger.error("Error creating reports", e);
     }
