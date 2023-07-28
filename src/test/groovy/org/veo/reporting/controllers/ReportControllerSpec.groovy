@@ -70,7 +70,8 @@ public class ReportControllerSpec extends ReportingTest {
             'risk-analysis',
             'dp-impact-assessment',
             'dp-privacy-incident',
-            'dp-requests-from-data-subjects-overview'
+            'dp-requests-from-data-subjects-overview',
+            'dp-request-from-data-subject'
         ]
     }
 

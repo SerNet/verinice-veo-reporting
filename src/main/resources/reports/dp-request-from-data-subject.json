@@ -1,0 +1,31 @@
+{
+  "name": {
+    "de": "Betroffenenanfrage",
+    "en": "Request from data subject"
+  },
+  "description": {
+    "de": "Eine detaillierte Darstellung einrr dokumentierten Betroffenenanfrage",
+    "en": "A detailed view of a documented request from a data subject"
+  },
+  "templateFile": "dp-request.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "document",
+      "subTypes": [
+        "DOC_RequestDataSubject"
+      ]
+    }
+  ],
+  "data": {
+    "request": "/documents/${targetId}",
+    "scopes": "/scopes?size=2147483647",
+    "persons": "/persons?size=2147483647",
+    "documents": "/documents?size=2147483647",
+    "domains": "/domains",
+    "processes": "/processes?size=2147483647"
+  }
+}

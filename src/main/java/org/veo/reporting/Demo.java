@@ -60,6 +60,7 @@ public class Demo {
     var reportEngine = ctx.getBean(ReportEngine.class);
     var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
     var scopeId = ctx.getEnvironment().getRequiredProperty("veo.demoscopeid");
+    var requestId = ctx.getEnvironment().getRequiredProperty("veo.demorequestid");
     var veoClient = ctx.getBean(VeoClient.class);
     var authHeader = "Bearer " + token;
     Map<Locale, Map<String, Object>> entriesForLanguage = new HashMap<>();
@@ -73,6 +74,7 @@ public class Demo {
     var privacyIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentid");
     boolean createDPIAReports = dpiaId != null;
     boolean createDPIncidentReports = privacyIncidentId != null;
+    boolean createRequestReports = requestId != null;
 
     DataProvider dataProvider =
         new DataProvider() {
@@ -98,6 +100,8 @@ public class Demo {
                                     url = url.replace(TARGET_ID_PLACEHOLDER, privacyIncidentId);
                                   } else if ("scope".equals(key)) {
                                     url = url.replace(TARGET_ID_PLACEHOLDER, scopeId);
+                                  } else if ("request".equals(key)) {
+                                    url = url.replace(TARGET_ID_PLACEHOLDER, requestId);
                                   } else if (url.contains("targetId")) {
                                     throw new IllegalArgumentException("Unhandled url: " + url);
                                   }
@@ -127,7 +131,12 @@ public class Demo {
         };
 
     createReports(
-        reportEngine, dataProvider, entriesForLanguage, createDPIAReports, createDPIncidentReports);
+        reportEngine,
+        dataProvider,
+        entriesForLanguage,
+        createDPIAReports,
+        createDPIncidentReports,
+        createRequestReports);
     Path template = Paths.get("src/main/resources/templates");
     try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 
@@ -151,7 +160,8 @@ public class Demo {
                 dataProvider,
                 entriesForLanguage,
                 createDPIAReports,
-                createDPIncidentReports);
+                createDPIncidentReports,
+                createRequestReports);
           }
           key.reset();
         }
@@ -167,7 +177,8 @@ public class Demo {
       DataProvider dataProvider,
       Map<Locale, Map<String, Object>> entriesForLanguage,
       boolean createDPIAReports,
-      boolean createDPIncidentReports)
+      boolean createDPIncidentReports,
+      boolean createRequestReports)
       throws IOException {
 
     ReportCreationParameters parametersGermany = new ReportCreationParameters(Locale.GERMANY);
@@ -276,7 +287,24 @@ public class Demo {
           MediaType.APPLICATION_PDF_VALUE,
           parametersUS,
           entriesForLanguage.get(Locale.US));
-
+      if (createRequestReports) {
+        createReport(
+            reportEngine,
+            "dp-request-from-data-subject",
+            "/tmp/request.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+        createReport(
+            reportEngine,
+            "dp-request-from-data-subject",
+            "/tmp/request-en.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersUS,
+            entriesForLanguage.get(Locale.US));
+      }
     } catch (IOException | TemplateException e) {
       logger.error("Error creating reports", e);
     }
