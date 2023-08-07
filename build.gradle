@@ -10,6 +10,14 @@ plugins {
     id 'com.github.jk1.dependency-license-report' version '2.5'
 }
 
+// work around
+// https://github.com/diffplug/spotless/issues/1772
+// https://github.com/spring-gradle-plugins/dependency-management-plugin/issues/365
+// https://github.com/eclipse-platform/eclipse.platform/issues/180
+dependencyManagement {
+    applyMavenExclusions = false
+}
+
 version = '0.25.0-SNAPSHOT'
 
 repositories {
