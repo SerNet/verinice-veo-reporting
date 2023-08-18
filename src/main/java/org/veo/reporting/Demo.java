@@ -61,6 +61,7 @@ public class Demo {
     var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
     var scopeId = ctx.getEnvironment().getRequiredProperty("veo.demoscopeid");
     var requestId = ctx.getEnvironment().getRequiredProperty("veo.demorequestid");
+    var scopeIdItgs = ctx.getEnvironment().getRequiredProperty("veo.demoscopeiditbp");
     var veoClient = ctx.getBean(VeoClient.class);
     var authHeader = "Bearer " + token;
     Map<Locale, Map<String, Object>> entriesForLanguage = new HashMap<>();
@@ -75,6 +76,7 @@ public class Demo {
     boolean createDPIAReports = dpiaId != null;
     boolean createDPIncidentReports = privacyIncidentId != null;
     boolean createRequestReports = requestId != null;
+    boolean createItgsReports = scopeIdItgs != null;
 
     DataProvider dataProvider =
         new DataProvider() {
@@ -102,6 +104,8 @@ public class Demo {
                                     url = url.replace(TARGET_ID_PLACEHOLDER, scopeId);
                                   } else if ("request".equals(key)) {
                                     url = url.replace(TARGET_ID_PLACEHOLDER, requestId);
+                                  } else if ("informationDomain".equals(key)) {
+                                    url = url.replace(TARGET_ID_PLACEHOLDER, scopeIdItgs);
                                   } else if (url.contains("targetId")) {
                                     throw new IllegalArgumentException("Unhandled url: " + url);
                                   }
@@ -136,7 +140,8 @@ public class Demo {
         entriesForLanguage,
         createDPIAReports,
         createDPIncidentReports,
-        createRequestReports);
+        createRequestReports,
+        createItgsReports);
     Path template = Paths.get("src/main/resources/templates");
     try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 
@@ -161,7 +166,8 @@ public class Demo {
                 entriesForLanguage,
                 createDPIAReports,
                 createDPIncidentReports,
-                createRequestReports);
+                createRequestReports,
+                createItgsReports);
           }
           key.reset();
         }
@@ -178,7 +184,8 @@ public class Demo {
       Map<Locale, Map<String, Object>> entriesForLanguage,
       boolean createDPIAReports,
       boolean createDPIncidentReports,
-      boolean createRequestReports)
+      boolean createRequestReports,
+      boolean createItgsReports)
       throws IOException {
 
     ReportCreationParameters parametersGermany = new ReportCreationParameters(Locale.GERMANY);
@@ -304,6 +311,16 @@ public class Demo {
             MediaType.APPLICATION_PDF_VALUE,
             parametersUS,
             entriesForLanguage.get(Locale.US));
+      }
+      if (createItgsReports) {
+        createReport(
+            reportEngine,
+            "itbp-a3",
+            "/tmp/itbp-a3.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
       }
     } catch (IOException | TemplateException e) {
       logger.error("Error creating reports", e);

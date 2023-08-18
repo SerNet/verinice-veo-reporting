@@ -194,7 +194,8 @@ Cheers'''
             'dp-impact-assessment',
             'dp-privacy-incident',
             'dp-requests-from-data-subjects-overview',
-            'dp-request-from-data-subject'
+            'dp-request-from-data-subject',
+            'itbp-a3'
         ]
     }
 

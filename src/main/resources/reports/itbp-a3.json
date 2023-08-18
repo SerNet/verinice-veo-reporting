@@ -1,0 +1,30 @@
+{
+  "name": {
+    "de": "A.3 Modellierung"
+  },
+  "description": {
+    "de": "Eine Übersicht über die Zielobjekte und modellierten Bausteine"
+  },
+  "templateFile": "itbp-a3.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_InformationDomain"
+      ]
+    }
+  ],
+  "data": {
+    "informationDomain": "/scopes/${targetId}",
+    "scopes": "/scopes?size=2147483647",
+    "assets": "/assets?size=2147483647",
+    "processes": "/processes?size=2147483647&embedRisks=true",
+    "persons": "/persons?size=2147483647",
+    "controls": "/controls?size=2147483647",
+    "domains": "/domains"
+  }
+}
