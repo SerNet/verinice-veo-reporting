@@ -1958,9 +1958,11 @@ POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Cl
 
 --------------------------------------------------------------------------------
 
-36. Group: commons-io  Name: commons-io  Version: 1.3.1
+36. Group: commons-io  Name: commons-io  Version: 2.11.0
 
-POM Project URL: http://jakarta.apache.org/commons/io/
+Project URL: https://commons.apache.org/proper/commons-io/
+
+Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -2174,12 +2176,11 @@ Embedded license:
 
                     ****************************************                    
 
-Apache Jakarta Commons IO
-Copyright 2001-2007 The Apache Software Foundation
+Apache Commons IO
+Copyright 2002-2021 The Apache Software Foundation
 
-This product includes software developed by
-The Apache Software Foundation (http://www.apache.org/).
-
+This product includes software developed at
+The Apache Software Foundation (https://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
@@ -7654,7 +7655,7 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-52. Group: org.apache.xmlgraphics  Name: batik-anim  Version: 1.16
+52. Group: org.apache.xmlgraphics  Name: batik-anim  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -7866,7 +7867,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -7886,7 +7887,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-53. Group: org.apache.xmlgraphics  Name: batik-awt-util  Version: 1.16
+53. Group: org.apache.xmlgraphics  Name: batik-awt-util  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -8098,7 +8099,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -8118,7 +8119,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-54. Group: org.apache.xmlgraphics  Name: batik-bridge  Version: 1.16
+54. Group: org.apache.xmlgraphics  Name: batik-bridge  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -8330,7 +8331,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -8350,7 +8351,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-55. Group: org.apache.xmlgraphics  Name: batik-codec  Version: 1.16
+55. Group: org.apache.xmlgraphics  Name: batik-codec  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -8562,7 +8563,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -8582,7 +8583,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-56. Group: org.apache.xmlgraphics  Name: batik-constants  Version: 1.16
+56. Group: org.apache.xmlgraphics  Name: batik-constants  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -8794,7 +8795,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -8814,7 +8815,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-57. Group: org.apache.xmlgraphics  Name: batik-css  Version: 1.16
+57. Group: org.apache.xmlgraphics  Name: batik-css  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -9026,7 +9027,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -9046,7 +9047,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-58. Group: org.apache.xmlgraphics  Name: batik-dom  Version: 1.16
+58. Group: org.apache.xmlgraphics  Name: batik-dom  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -9258,7 +9259,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -9278,7 +9279,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-59. Group: org.apache.xmlgraphics  Name: batik-ext  Version: 1.16
+59. Group: org.apache.xmlgraphics  Name: batik-ext  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -9490,7 +9491,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -9510,7 +9511,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-60. Group: org.apache.xmlgraphics  Name: batik-gvt  Version: 1.16
+60. Group: org.apache.xmlgraphics  Name: batik-gvt  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -9722,7 +9723,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -9742,7 +9743,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-61. Group: org.apache.xmlgraphics  Name: batik-i18n  Version: 1.16
+61. Group: org.apache.xmlgraphics  Name: batik-i18n  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -9954,7 +9955,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -9974,7 +9975,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-62. Group: org.apache.xmlgraphics  Name: batik-parser  Version: 1.16
+62. Group: org.apache.xmlgraphics  Name: batik-parser  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -10186,7 +10187,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -10206,7 +10207,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-63. Group: org.apache.xmlgraphics  Name: batik-script  Version: 1.16
+63. Group: org.apache.xmlgraphics  Name: batik-script  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -10418,7 +10419,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -10438,7 +10439,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-64. Group: org.apache.xmlgraphics  Name: batik-shared-resources  Version: 1.16
+64. Group: org.apache.xmlgraphics  Name: batik-shared-resources  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -10650,7 +10651,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -10670,7 +10671,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-65. Group: org.apache.xmlgraphics  Name: batik-svg-dom  Version: 1.16
+65. Group: org.apache.xmlgraphics  Name: batik-svg-dom  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -10882,7 +10883,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -10902,7 +10903,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-66. Group: org.apache.xmlgraphics  Name: batik-svggen  Version: 1.16
+66. Group: org.apache.xmlgraphics  Name: batik-svggen  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -11114,7 +11115,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -11134,7 +11135,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-67. Group: org.apache.xmlgraphics  Name: batik-transcoder  Version: 1.16
+67. Group: org.apache.xmlgraphics  Name: batik-transcoder  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -11346,7 +11347,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -11366,7 +11367,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-68. Group: org.apache.xmlgraphics  Name: batik-util  Version: 1.16
+68. Group: org.apache.xmlgraphics  Name: batik-util  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -11578,7 +11579,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -11598,7 +11599,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-69. Group: org.apache.xmlgraphics  Name: batik-xml  Version: 1.16
+69. Group: org.apache.xmlgraphics  Name: batik-xml  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -11810,7 +11811,7 @@ Embedded license:
                     ****************************************                    
 
 Apache Batik
-Copyright 1999-2022 The Apache Software Foundation
+Copyright 1999-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -11830,7 +11831,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-70. Group: org.apache.xmlgraphics  Name: xmlgraphics-commons  Version: 2.7
+70. Group: org.apache.xmlgraphics  Name: xmlgraphics-commons  Version: 2.9
 
 POM Project URL: http://xmlgraphics.apache.org/commons/
 
@@ -12046,7 +12047,7 @@ Embedded license:
                     ****************************************                    
 
 Apache XML Graphics Commons
-Copyright 2006-2022 The Apache Software Foundation
+Copyright 2006-2023 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -18024,5 +18025,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Wed Aug 16 15:24:38 CEST 2023.
+This report was generated at Mon Aug 21 14:55:34 UTC 2023.
 
