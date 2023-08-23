@@ -68,6 +68,7 @@ h1, h2, h3, h4 {
 
 <#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')! />
 
+<#if dataProtectionOfficer?has_content>
 <@table bundle.data_protection_officer,
   dataProtectionOfficer,
   [
@@ -75,7 +76,7 @@ h1, h2, h3, h4 {
    'person_contactInformation_office',
    'person_contactInformation_email'
   ]/>
-
+</#if>>
 </div>
 
 <div class="pagebreak"></div>

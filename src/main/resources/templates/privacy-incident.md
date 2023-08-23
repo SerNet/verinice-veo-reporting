@@ -56,7 +56,7 @@ dl {
 <#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
 <#assign domain=domains?filter(it->it.name == 'DS-GVO')?filter(it->incident.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 
-
+<#if scope?has_content>
 <@table bundle.controller_information,
   scope,
   ['name',
@@ -71,15 +71,16 @@ dl {
 <#assign management=scope.findFirstLinked('scope_management')! />
 <#assign headOfDataProcessing=scope.findFirstLinked('scope_headOfDataProcessing')! />
 
-
+<#if management?has_content && headOfDataProcessing?has_content>
 | ${bundle.representation}  ||
 |:---|:---|
 | ${bundle.scope_management} | ${management.name!} |
 | ${bundle.scope_headOfDataProcessing}  |  ${headOfDataProcessing.name!} |
-
+</#if>
 
 <#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')! />
 
+<#if dataProtectionOfficer?has_content>
 <@table bundle.data_protection_officer,
   dataProtectionOfficer,
   [
@@ -88,9 +89,11 @@ dl {
    'person_contactInformation_office / person_contactInformation_fax',
    'person_contactInformation_email'
   ]/>
+</#if>
   
 <#assign informationSecurityOfficer=scope.findFirstLinked('scope_informationSecurityOfficer')! />
 
+<#if informationSecurityOfficer?has_content>
 <@table bundle.information_security_officer,
   informationSecurityOfficer,
   [
@@ -99,7 +102,8 @@ dl {
    'person_contactInformation_office / person_contactInformation_fax',
    'person_contactInformation_email'
   ]/>
-
+</#if>
+</#if>
 <div class="pagebreak"/>
 
 # ${bundle.overview_data_breach}
@@ -341,7 +345,7 @@ ${bundle.incident_generalInformation_notificationType}
 
 <#if dataSubjectsInformed>
 
-<@def bundle.incident_notificationAffectedPersons_timeOfNotification incident.incident_notificationAffectedPersons_timeOfNotification?date.iso />
+<@def bundle.incident_notificationAffectedPersons_timeOfNotification, (incident.incident_notificationAffectedPersons_timeOfNotification?date.iso)! />
 
 <@def bundle.incident_notificationAffectedPersons_formOfNotification incident.incident_notificationAffectedPersons_formOfNotification />
 
