@@ -381,9 +381,10 @@ ${bundle.incident_generalInformation_notificationType}
 ### ${bundle.incident_measuresPlaned} <#--  sic -->
 <#list measuresPlannedLinks as measuresPlannedLink>
 <#assign measuresPlanned=measuresPlannedLink.target />
-#### ${measuresPlanned.name}
-
-<@def bundle.incident_measuresPlaned_comment, measuresPlannedLink.incident_measuresPlaned_comment /> <#--  sic -->
+- ${measuresPlanned.name}
+<#if measuresPlannedLink.incident_measuresPlaned_comment?has_content><#--  sic -->
+  <br/>${bundle.incident_measuresPlaned_comment}: ${measuresPlannedLink.incident_measuresPlaned_comment} <#--  sic -->
+</#if>
 </#list>
 
 <#assign privacyRiskLinks=incident.getLinks('incident_privacyRisk')!>
