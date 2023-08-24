@@ -68,6 +68,7 @@ h1, h2, h3, h4 {
 
 <#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')! />
 
+<#if dataProtectionOfficer?has_content>
 <@table bundle.data_protection_officer,
   dataProtectionOfficer,
   [
@@ -75,7 +76,7 @@ h1, h2, h3, h4 {
    'person_contactInformation_office',
    'person_contactInformation_email'
   ]/>
-
+</#if>>
 </div>
 
 <div class="pagebreak"></div>
@@ -83,6 +84,6 @@ h1, h2, h3, h4 {
 | ${bundle.request} | ${bundle.document_dataSubjectRight_rightType} | ${bundle.document_dataSubjectRight_dateOfReceipt} | ${bundle.date_of_response} | ${bundle.result_of_request} |
 |:---|:---|:---|:---|:---|
 <#list requests as request>
-| ${request.name} | ${(request.document_dataSubjectRight_rightType?map(item->bundle[item])?join(', '))!} | ${(request.document_dataSubjectRight_dateOfReceipt?date.iso)!} | ${(request.date_of_response?date.iso)!} | ${bundle.document_decisionRequest_requestRejection}<br/>${(request.document_decisionRequest_requestRejection?string(bundle.yes, bundle.no))!}<br/><br/>${bundle.document_decisionRequest_negativeMessage}<br/>${(request.document_decisionRequest_negativeMessage?string(bundle.yes, bundle.no))!}<br/><br/>${bundle.document_decisionRequest_grantingOfRequest}<br/>${(request.document_decisionRequest_grantingOfRequest?string(bundle.yes, bundle.no))!} |
+| ${request.name} | ${(request.document_dataSubjectRight_rightType?map(item->bundle[item])?join(', '))!} | ${(request.document_dataSubjectRight_dateOfReceipt?date.iso)!} | ${(request.document_decisionRequest_requestAnswered?date.iso)!} | ${bundle.document_decisionRequest_requestRejection}<br/>${(request.document_decisionRequest_requestRejection?string(bundle.yes, bundle.no))!}<br/><br/>${bundle.document_decisionRequest_negativeMessage}<br/>${(request.document_decisionRequest_negativeMessage?string(bundle.yes, bundle.no))!}<br/><br/>${bundle.document_decisionRequest_grantingOfRequest}<br/>${(request.document_decisionRequest_grantingOfRequest?string(bundle.yes, bundle.no))!} |
 </#list>
 {.table .simple .fullwidth}

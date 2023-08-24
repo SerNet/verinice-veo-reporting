@@ -56,7 +56,7 @@ dl {
 <#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
 <#assign domain=domains?filter(it->it.name == 'DS-GVO')?filter(it->incident.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 
-
+<#if scope?has_content>
 <@table bundle.controller_information,
   scope,
   ['name',
@@ -71,15 +71,16 @@ dl {
 <#assign management=scope.findFirstLinked('scope_management')! />
 <#assign headOfDataProcessing=scope.findFirstLinked('scope_headOfDataProcessing')! />
 
-
+<#if management?has_content && headOfDataProcessing?has_content>
 | ${bundle.representation}  ||
 |:---|:---|
 | ${bundle.scope_management} | ${management.name!} |
 | ${bundle.scope_headOfDataProcessing}  |  ${headOfDataProcessing.name!} |
-
+</#if>
 
 <#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')! />
 
+<#if dataProtectionOfficer?has_content>
 <@table bundle.data_protection_officer,
   dataProtectionOfficer,
   [
@@ -88,9 +89,11 @@ dl {
    'person_contactInformation_office / person_contactInformation_fax',
    'person_contactInformation_email'
   ]/>
+</#if>
   
 <#assign informationSecurityOfficer=scope.findFirstLinked('scope_informationSecurityOfficer')! />
 
+<#if informationSecurityOfficer?has_content>
 <@table bundle.information_security_officer,
   informationSecurityOfficer,
   [
@@ -99,7 +102,8 @@ dl {
    'person_contactInformation_office / person_contactInformation_fax',
    'person_contactInformation_email'
   ]/>
-
+</#if>
+</#if>
 <div class="pagebreak"/>
 
 # ${bundle.overview_data_breach}
@@ -155,7 +159,7 @@ ${bundle.incident_generalInformation_notificationType}
 <#list processorLinks as processorLink>
 <#assign scope=processorLink.target />
 | ${bundle.incident_processor_name} | ${scope.name} |
-| ${bundle.incident_processor_comment} | ${processorLink.incident_processor_comment} |  
+| ${bundle.incident_processor_comments} | ${processorLink.incident_processor_comments} |
 </#list>
 </#if>
 
@@ -165,7 +169,7 @@ ${bundle.incident_generalInformation_notificationType}
 <#list jointControllerLinks as jointControllerLink>
 <#assign jointController=jointControllerLink.target />
 | ${bundle.incident_organization_name} | ${jointController.name} |
-| ${bundle.incident_jointControllership_comment} | ${jointControllerLink.incident_jointControllership_comment} |  
+| ${bundle.incident_jointControllership_comments} | ${jointControllerLink.incident_jointControllership_comments} |
 </#list>
 
 </#if>
@@ -341,7 +345,7 @@ ${bundle.incident_generalInformation_notificationType}
 
 <#if dataSubjectsInformed>
 
-<@def bundle.incident_notificationAffectedPersons_timeOfNotification incident.incident_notificationAffectedPersons_timeOfNotification?date.iso />
+<@def bundle.incident_notificationAffectedPersons_timeOfNotification, (incident.incident_notificationAffectedPersons_timeOfNotification?date.iso)! />
 
 <@def bundle.incident_notificationAffectedPersons_formOfNotification incident.incident_notificationAffectedPersons_formOfNotification />
 
@@ -377,9 +381,10 @@ ${bundle.incident_generalInformation_notificationType}
 ### ${bundle.incident_measuresPlaned} <#--  sic -->
 <#list measuresPlannedLinks as measuresPlannedLink>
 <#assign measuresPlanned=measuresPlannedLink.target />
-#### ${measuresPlanned.name}
-
-<@def bundle.incident_measuresPlaned_comment, measuresPlannedLink.incident_measuresPlaned_comment /> <#--  sic -->
+- ${measuresPlanned.name}
+<#if measuresPlannedLink.incident_measuresPlaned_comment?has_content><#--  sic -->
+  <br/>${bundle.incident_measuresPlaned_comment}: ${measuresPlannedLink.incident_measuresPlaned_comment} <#--  sic -->
+</#if>
 </#list>
 
 <#assign privacyRiskLinks=incident.getLinks('incident_privacyRisk')!>
