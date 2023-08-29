@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -38,20 +39,41 @@ import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.WrappingTemplateModel;
+import freemarker.template.utility.StringUtil;
 
 public class VeoReportingEntityAdapter extends WrappingTemplateModel
     implements TemplateHashModel, AdapterTemplateModel {
 
   private static final Logger logger = LoggerFactory.getLogger(VeoReportingEntityAdapter.class);
 
+  private static final Pattern NUMERIC_PART = Pattern.compile("\\d+");
+
   private final Map<?, ?> m;
   private final VeoReportingObjectWrapper ow;
+
+  // TODO remove once the backend gives us these!
+  private final String nameNaturalized;
+  private final String abbreviationNaturalized;
+  private final String designatorNaturalized;
 
   @SuppressFBWarnings("EI_EXPOSE_REP2")
   public VeoReportingEntityAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
     super(ow);
     this.m = Map.copyOf(m);
+    String name = (String) m.get("name");
+    String abbreviation = (String) m.get("abbreviation");
+    String designator = (String) m.get("designator");
+
+    nameNaturalized = naturalize(name);
+    abbreviationNaturalized =
+        Optional.ofNullable(abbreviation).map(VeoReportingEntityAdapter::naturalize).orElse("");
+    designatorNaturalized =
+        Optional.ofNullable(designator).map(VeoReportingEntityAdapter::naturalize).orElse("");
     this.ow = ow;
+  }
+
+  private static String naturalize(String s) {
+    return NUMERIC_PART.matcher(s).replaceAll(match -> StringUtil.leftPad(match.group(), 10, '0'));
   }
 
   @Override
@@ -68,6 +90,15 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     }
 
     Object type = m.get("type");
+    if ("abbreviation_naturalized".equals(key)) {
+      return wrap(abbreviationNaturalized);
+    }
+    if ("name_naturalized".equals(key)) {
+      return wrap(nameNaturalized);
+    }
+    if ("designator_naturalized".equals(key)) {
+      return wrap(designatorNaturalized);
+    }
     if ("scope".equals(type)) {
       if ("getMembersWithType".equals(key)) {
         return new GetMembersWithType(m, ow);

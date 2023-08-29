@@ -89,6 +89,36 @@ Cheers'''
         text == 'The foo is bar.\nThe other foo is baz.'
     }
 
+    def "Sort naturally by name, abbreviation and designator"() {
+        def objects = [
+            [
+                id: '1',
+                type: 'asset',
+                name: 'Asset 1',
+                abbreviation: '1 of 12',
+                designator: 'AST-234'
+            ],
+            [
+                id: '2',
+                type: 'asset',
+                name: 'Asset 10',
+                abbreviation: '10 of 12'
+            ],
+            [
+                id: '3',
+                type: 'asset',
+                name: 'Asset 12',
+                designator: 'AST-9'
+            ]
+        ]
+        when:
+        def text = execute('natural-sort-test.txt', [input: objects])
+        then:
+        text == '''Sort by name: Asset 1, Asset 10, Asset 12
+Sort by abbreviation: Asset 12, Asset 1, Asset 10
+Sort by designator: Asset 10, Asset 12, Asset 1'''
+    }
+
     def "Access linked objects"() {
         def persons = [
             [

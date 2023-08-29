@@ -1,0 +1,3 @@
+Sort by name: ${input?sort_by('name_naturalized')?map(it->it.name)?join(', ')}
+Sort by abbreviation: ${input?sort_by('abbreviation_naturalized')?map(it->it.name)?join(', ')}
+Sort by designator: ${input?sort_by('designator_naturalized')?map(it->it.name)?join(', ')}
