@@ -52,6 +52,7 @@ import freemarker.template.TemplateException;
 @SuppressWarnings("PMD.SystemPrintln")
 public class Demo {
 
+  private static final String TARGET_ID_PLACEHOLDER = "${targetId}";
   private static final Logger logger = LoggerFactory.getLogger(Demo.class);
 
   static void runDemo(ConfigurableApplicationContext ctx) throws IOException {
@@ -92,11 +93,11 @@ public class Demo {
                                   String key = e.getKey();
                                   String url = e.getValue();
                                   if ("dpia".equals(key)) {
-                                    url = url.replace("${targetId}", dpiaId);
+                                    url = url.replace(TARGET_ID_PLACEHOLDER, dpiaId);
                                   } else if ("incident".equals(key)) {
-                                    url = url.replace("${targetId}", privacyIncidentId);
+                                    url = url.replace(TARGET_ID_PLACEHOLDER, privacyIncidentId);
                                   } else if ("scope".equals(key)) {
-                                    url = url.replace("${targetId}", scopeId);
+                                    url = url.replace(TARGET_ID_PLACEHOLDER, scopeId);
                                   } else if (url.contains("targetId")) {
                                     throw new IllegalArgumentException("Unhandled url: " + url);
                                   }
