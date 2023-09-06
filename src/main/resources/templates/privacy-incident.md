@@ -159,7 +159,7 @@ ${bundle.incident_generalInformation_notificationType}
 <#list processorLinks as processorLink>
 <#assign scope=processorLink.target />
 | ${bundle.incident_processor_name} | ${scope.name} |
-| ${bundle.incident_processor_comments} | ${processorLink.incident_processor_comments} |
+| ${bundle.incident_processor_comments} | ${processorLink.incident_processor_comments!} |
 </#list>
 </#if>
 
@@ -169,7 +169,7 @@ ${bundle.incident_generalInformation_notificationType}
 <#list jointControllerLinks as jointControllerLink>
 <#assign jointController=jointControllerLink.target />
 | ${bundle.incident_organization_name} | ${jointController.name} |
-| ${bundle.incident_jointControllership_comments} | ${jointControllerLink.incident_jointControllership_comments} |
+| ${bundle.incident_jointControllership_comments} | ${jointControllerLink.incident_jointControllership_comments!} |
 </#list>
 
 </#if>

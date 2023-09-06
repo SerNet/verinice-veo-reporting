@@ -107,7 +107,7 @@ h1, h2, h3, h4 {
 
 <@def bundle.document_dataSubjectRight_extensionOfDeadline request.document_dataSubjectRight_extensionOfDeadline />
 
-<#if request.document_dataSubjectRight_extensionOfDeadline!>
+<#if request.document_dataSubjectRight_extensionOfDeadline!false>
 
 <@def bundle.document_dataSubjectRight_extendedUntil request.document_dataSubjectRight_extendedUntil />
 
@@ -129,11 +129,11 @@ h1, h2, h3, h4 {
 
 # ${bundle.document_contactDetailsOfRequester}
 
-<@def "${bundle.requester_surname}, ${bundle.document_contactDetailsOfRequester_givenName}" "${request.document_contactDetailsOfRequester_familyName} ${request.document_contactDetailsOfRequester_givenName}" />
+<@def "${bundle.requester_surname}, ${bundle.document_contactDetailsOfRequester_givenName}" "${request.document_contactDetailsOfRequester_familyName!} ${request.document_contactDetailsOfRequester_givenName!}" />
 
 <@def bundle.document_contactDetailsOfRequester_address request.document_contactDetailsOfRequester_address />
 
-<@def "${bundle.document_contactDetailsOfRequester_postcode}, ${bundle.document_contactDetailsOfRequester_city}" "${request.document_contactDetailsOfRequester_postcode} ${request.document_contactDetailsOfRequester_city}" />
+<@def "${bundle.document_contactDetailsOfRequester_postcode}, ${bundle.document_contactDetailsOfRequester_city}" "${request.document_contactDetailsOfRequester_postcode!} ${request.document_contactDetailsOfRequester_city!}" />
 
 <@def bundle.document_contactDetailsOfRequester_country request.document_contactDetailsOfRequester_country />
 
@@ -190,7 +190,7 @@ h1, h2, h3, h4 {
 
 <@def bundle.document_decisionRequest_grantingOfRequest request.document_decisionRequest_grantingOfRequest />
 
-<#assign approvalEffected=request.document_decisionRequest_approvaleffected!>
+<#assign approvalEffected=request.document_decisionRequest_approvaleffected!false>
 
 <@def bundle.document_decisionRequest_approvaleffected approvalEffected />
 
