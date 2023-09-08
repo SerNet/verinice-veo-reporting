@@ -515,6 +515,32 @@ gemäß Art. 30 II DS-GVO''')
         }
     }
 
+    def "report errors lead to an unsuccessful response"() {
+        when:
+        def response = POST("/reports/processing-on-behalf", 'abc', 'de',[
+            outputType:'application/pdf',
+            targets: [
+                [
+                    type: 'scope',
+                    id: '0815'
+                ]
+            ]
+        ])
+        then:
+        response.status != 200
+
+        _ * veoClient.fetchData(_, 'Bearer: abc') >> [:]
+        1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
+            name: 'Name',
+            scope_contactInformation_email: 'E-Mail',
+            scope_contactInformation_phone: 'Telefon',
+            scope_contactInformation_fax: 'Fax',
+            scope_dataProtectionOfficer: 'Datenschutzbeauftragte',
+            scope_management: 'Leitung der Verantwortlichen Stelle',
+            description: 'Beschreibung'
+        ]
+    }
+
     MockHttpServletResponse GET(url) {
         mvc.perform(MockMvcRequestBuilders.get(url)).andReturn().response
     }
