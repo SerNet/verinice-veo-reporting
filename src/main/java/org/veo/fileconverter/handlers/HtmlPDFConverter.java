@@ -85,7 +85,7 @@ public class HtmlPDFConverter implements ConversionHandler {
     // PdfConverterExtension.DEFAULT_TOC_LIST_CLASS);
 
     try (Scanner s = new Scanner(input, StandardCharsets.UTF_8).useDelimiter("\\A")) {
-      String html = s.hasNext() ? s.next() : "";
+      String html = s.next();
 
       // There are more options on the builder than shown below.
       PdfRendererBuilder builder = new PdfRendererBuilder();

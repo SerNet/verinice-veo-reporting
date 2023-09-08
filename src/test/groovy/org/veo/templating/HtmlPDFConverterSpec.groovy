@@ -80,6 +80,22 @@ class HtmlPDFConverterSpec extends Specification {
         doc?.close()
     }
 
+    def "No output is created for a closed input stream"() {
+        given:
+
+        ReportConfiguration reportConfiguration = Mock()
+        InputStream is = Mock()
+        OutputStream out = Mock()
+        when:
+        converter.convert(is, out, reportConfiguration, new ReportCreationParameters(Locale.US))
+        then:
+        0 * out.write(_)
+        thrown(NoSuchElementException)
+        0 * is.read(_)>> {
+            throw new IOException("Closed")
+        }
+    }
+
     PDDocument createDocument(String html, ReportConfiguration reportConfiguration) {
         new ByteArrayOutputStream().withCloseable {
             converter.convert(new ByteArrayInputStream(html.bytes), it, reportConfiguration, new ReportCreationParameters(Locale.US))
