@@ -53,17 +53,6 @@
         "^com.vladsch.flexmark:"
       ],
       "groupName": "flexmark-java"
-    },
-    {
-      "matchPackagePatterns": [
-        "^org.spockframework:",
-        "^com.github.jk1.dependency-license-report$",
-        "^com.github.spotbugs$",
-        "^org.eclipse.jgit:",
-        "^gradle$",
-        "^gcr.io/kaniko-project/executor$"
-      ],
-      "postUpgradeTasks": {}
     }
   ]
 }
