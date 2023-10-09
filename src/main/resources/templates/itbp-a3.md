@@ -53,8 +53,12 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 </#function>
 
 
-<#assign assetsBySubType = groupBySubType(scope.getMembersWithType('asset'), assetTypes)/>
-<#assign processesBySubType = groupBySubType(scope.getMembersWithType('process'), processTypes)/>
+<#assign assetsInScope = scope.getMembersWithType('asset')/>
+<#assign processesInScope = scope.getMembersWithType('process')/>
+
+<#assign assetsBySubType = groupBySubType(assetsInScope, assetTypes)/>
+<#assign processesBySubType = groupBySubType(processesInScope, processTypes)/>
+
 
 <#function title element>
 <#if element.abbreviation?has_content>
@@ -69,7 +73,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
   <bookmark name="${bundle.main_page}" href="#main_page"/>
   <bookmark name="${bundle.used_modules}" href="#used_modules"/>
   <bookmark name="${bundle.information_domain}" href="#information_domain"/>
-<#if assets?has_content>
+<#if assetsInScope?has_content>
   <bookmark name="${bundle.assets}" href="#assets">
     <#list assetsBySubType as assetType, assetsWithType>
       <bookmark name="${bundle[assetType]}" href="#${assetType}">
@@ -81,7 +85,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
     </#list>
   </bookmark>    
 </#if>
-<#if processes?has_content>
+<#if processesInScope?has_content>
   <bookmark name="${bundle.processes}" href="#processes">
     <#list processesBySubType as processType, processesWithType>
       <bookmark name="${bundle[processType]}" href="#${processType}">
@@ -133,7 +137,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
   <@tocitem 1 "used_modules" "2. ${bundle.used_modules}" />
   <@tocitem 1 "information_domain" "3. ${bundle.information_domain}" />
   <#assign level2counter = 4>
-  <#if assets?has_content>
+  <#if assetsInScope?has_content>
     <@tocitem 1 "assets" "${level2counter}. ${bundle.assets}" />
     <#list assetsBySubType as assetType, assetsWithType>
       <@tocitem 2 assetType "${assetType?counter}. ${bundle[assetType]}" />
@@ -143,7 +147,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
      </#list>
     <#assign level2counter = 5>
   </#if>
-  <#if processes?has_content>
+  <#if processesInScope?has_content>
     <@tocitem 1 "processes" "${level2counter}. ${bundle.processes}" />
     <#list processesBySubType as processType, processesWithType>
       <@tocitem 2 processType "${processType?counter}. ${bundle[processType]}" />
@@ -199,7 +203,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 
 # ${bundle.used_modules} {#used_modules}
 
-<#assign targetObjects = [scope]+assets+processes>
+<#assign targetObjects = [scope]+assetsInScope+processesInScope>
 
 <#assign relevantControlImplementations = []>
 <#list targetObjects as item>
@@ -319,7 +323,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 
 <div class="pagebreak"></div>
 
-<#if assets?has_content>
+<#if assetsInScope?has_content>
 # ${bundle.assets} {#assets}
 <#list assetsBySubType as assetType, assetsWithType>
 
@@ -335,7 +339,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 </#list>
 </#if>
 
-<#if processes?has_content>
+<#if processesInScope?has_content>
 # ${bundle.processes} {#processes}
 <#list processesBySubType as processType, processesWithType>
 
