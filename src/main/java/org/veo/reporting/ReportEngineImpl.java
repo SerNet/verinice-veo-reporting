@@ -47,7 +47,7 @@ import org.veo.templating.TemplateEvaluator;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import freemarker.template.TemplateException;
 
-public class ReportEngineImpl implements ReportEngine {
+public final class ReportEngineImpl implements ReportEngine {
 
   private static final Logger logger = LoggerFactory.getLogger(ReportEngineImpl.class);
 
