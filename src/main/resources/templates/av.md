@@ -119,6 +119,8 @@ ${bundle.scope_dataProtectionOfficer}
 
 </div>
 
+</#list>
+
 <#macro transmissions_section title transmissions recipientLinkType thirdCountryFilterAttribute thirdCountryNameAttribute thirdCountryGuaranteesAttribute>
 
 <#if transmissions?has_content>
@@ -177,6 +179,5 @@ ${bundle.scope_dataProtectionOfficer}
   'process_processor_thirdCountryName'
   'process_processor_thirdCountryGuarantees' />
 
-</#list>
 </div>
 </#list>
