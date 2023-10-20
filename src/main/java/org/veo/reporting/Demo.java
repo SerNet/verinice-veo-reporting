@@ -60,8 +60,8 @@ public class Demo {
     var reportEngine = ctx.getBean(ReportEngine.class);
     var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
     var scopeId = ctx.getEnvironment().getRequiredProperty("veo.demoscopeid");
-    var requestId = ctx.getEnvironment().getRequiredProperty("veo.demorequestid");
-    var scopeIdItgs = ctx.getEnvironment().getRequiredProperty("veo.demoscopeiditbp");
+    var requestId = ctx.getEnvironment().getProperty("veo.demorequestid");
+    var scopeIdItgs = ctx.getEnvironment().getProperty("veo.demoscopeiditbp");
     var veoClient = ctx.getBean(VeoClient.class);
     var authHeader = "Bearer " + token;
     Map<Locale, Map<String, Object>> entriesForLanguage = new HashMap<>();
