@@ -133,6 +133,8 @@ ${bundle.scope_dataProtectionOfficer}
 
 #### ${transmission.name}
 
+${transmission.description}
+
 <#local recipientLinks=(transmission.getLinks(recipientLinkType))![] />
 <#local recipientLinksThirdCountry=recipientLinks?filter(l->l[thirdCountryFilterAttribute]!false) />
 
