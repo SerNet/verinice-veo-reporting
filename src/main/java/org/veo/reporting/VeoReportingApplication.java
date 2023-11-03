@@ -32,13 +32,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomizer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.core.task.support.TaskExecutorAdapter;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
 import com.helger.font.api.FontResourceManager;
 import com.openhtmltopdf.slf4j.Slf4jLogger;
@@ -93,23 +95,20 @@ public class VeoReportingApplication {
   }
 
   @Bean
-  public FileConverter createFileConverter(
-      @Value("${veo.reporting.conversion_handler_pool_size:8}") int conversionHandlerPoolSize) {
+  public FileConverter createFileConverter() {
     ExecutorService pool =
-        Executors.newFixedThreadPool(
-            conversionHandlerPoolSize,
-            new CustomizableThreadFactory("conversion-handler-pool-thread-"));
+        Executors.newThreadPerTaskExecutor(
+            Thread.ofVirtual().name("conversion-handler-pool-thread-", 0).factory());
     return new FileConverterImpl(pool);
   }
 
   @Bean
   public VeoClient createVeoClient(
       ClientHttpRequestFactory httpRequestFactory,
-      @Value("${veo.reporting.veo_url}") String veoUrl,
-      @Value("${veo.reporting.veo_client_pool_size:8}") int veoClientPoolSize) {
+      @Value("${veo.reporting.veo_url}") String veoUrl) {
     ExecutorService pool =
-        Executors.newFixedThreadPool(
-            veoClientPoolSize, new CustomizableThreadFactory("veo-client-pool-thread-"));
+        Executors.newThreadPerTaskExecutor(
+            Thread.ofVirtual().name("veo-client-pool-thread-", 0).factory());
     return new VeoClientImpl(httpRequestFactory, veoUrl, pool);
   }
 
@@ -117,12 +116,11 @@ public class VeoReportingApplication {
   public ReportEngine createReportEngine(
       TemplateEvaluator templateEvaluator,
       FileConverter fileConverter,
-      ResourcePatternResolver resourcePatternResolver,
-      @Value("${veo.reporting.report_engine_pool_size:4}") int reportEnginePoolSize)
+      ResourcePatternResolver resourcePatternResolver)
       throws IOException {
     ExecutorService pool =
-        Executors.newFixedThreadPool(
-            reportEnginePoolSize, new CustomizableThreadFactory("report-engine-pool-thread-"));
+        Executors.newThreadPerTaskExecutor(
+            Thread.ofVirtual().name("report-engine-pool-thread-", 0).factory());
     return new ReportEngineImpl(templateEvaluator, fileConverter, resourcePatternResolver, pool);
   }
 
@@ -140,5 +138,17 @@ public class VeoReportingApplication {
       logger.info("Not using proxy");
     }
     return factory;
+  }
+
+  @Bean
+  public AsyncTaskExecutor applicationTaskExecutor() {
+    return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor());
+  }
+
+  @Bean
+  @SuppressWarnings("rawtypes")
+  public TomcatProtocolHandlerCustomizer protocolHandlerVirtualThreadExecutorCustomizer() {
+    return protocolHandler ->
+        protocolHandler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
   }
 }
