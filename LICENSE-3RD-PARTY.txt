@@ -4371,9 +4371,9 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-46. Group: org.apache.pdfbox  Name: fontbox  Version: 2.0.29
+46. Group: org.apache.pdfbox  Name: fontbox  Version: 2.0.30
 
-Manifest Project URL: http://pdfbox.apache.org
+Manifest Project URL: https://pdfbox.apache.org
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -4735,9 +4735,9 @@ Copyright 2017 Unicode, Inc.
 
 --------------------------------------------------------------------------------
 
-47. Group: org.apache.pdfbox  Name: pdfbox  Version: 2.0.29
+47. Group: org.apache.pdfbox  Name: pdfbox  Version: 2.0.30
 
-Manifest Project URL: http://pdfbox.apache.org
+Manifest Project URL: https://pdfbox.apache.org
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -18031,5 +18031,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Mon Oct 23 08:53:02 UTC 2023.
+This report was generated at Mon Nov 06 10:38:59 UTC 2023.
 
