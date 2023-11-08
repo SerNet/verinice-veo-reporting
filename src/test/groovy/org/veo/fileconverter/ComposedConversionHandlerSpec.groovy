@@ -18,7 +18,8 @@
 package org.veo.fileconverter
 
 import java.nio.charset.StandardCharsets
-import java.util.concurrent.Executors
+
+import org.springframework.core.task.VirtualThreadTaskExecutor
 
 import org.veo.reporting.ReportConfiguration
 import org.veo.reporting.ReportCreationParameters
@@ -32,7 +33,7 @@ class ComposedConversionHandlerSpec extends Specification {
         def data = 'hello world'
         ConversionHandler reverseHandler = new ReverseText()
         ConversionHandler upperCaseHandler = new UpperCaseText()
-        def executor = Executors.newSingleThreadExecutor()
+        def executor = new VirtualThreadTaskExecutor()
         ReportConfiguration reportConfiguration = Mock()
         when:
         def compositeHandler = new ComposedConversionHandler(reverseHandler, upperCaseHandler, executor)

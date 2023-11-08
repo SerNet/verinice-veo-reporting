@@ -46,3 +46,6 @@ server:
 spring:
   jndi:
     ignore: true
+  threads:
+    virtual:
+      enabled: true

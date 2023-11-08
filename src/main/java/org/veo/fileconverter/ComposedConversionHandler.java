@@ -23,11 +23,11 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.task.AsyncTaskExecutor;
 
 import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
@@ -43,17 +43,17 @@ public class ComposedConversionHandler implements ConversionHandler {
   private final ConversionHandler secondHandler;
   private final String inputType;
   private final String outputType;
-  private final ExecutorService executorService;
+  private final AsyncTaskExecutor asyncTaskExecutor;
 
   private static final Logger logger = LoggerFactory.getLogger(ComposedConversionHandler.class);
 
   public ComposedConversionHandler(
       ConversionHandler firstHandler,
       ConversionHandler secondHandler,
-      ExecutorService executorService) {
+      AsyncTaskExecutor asyncTaskExecutor) {
     this.firstHandler = firstHandler;
     this.secondHandler = secondHandler;
-    this.executorService = executorService;
+    this.asyncTaskExecutor = asyncTaskExecutor;
     this.inputType = firstHandler.getInputType();
     this.outputType = secondHandler.getOutputType();
   }
@@ -80,7 +80,7 @@ public class ComposedConversionHandler implements ConversionHandler {
       // start async conversion of the first
       // handler's output with the second handler
       Future<Void> future =
-          executorService.submit(
+          asyncTaskExecutor.submit(
               () -> {
                 logger.debug(
                     "Starting conversion from {} to {}",

@@ -22,10 +22,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.task.AsyncTaskExecutor;
 
 import org.veo.fileconverter.handlers.HtmlPDFConverter;
 import org.veo.fileconverter.handlers.MarkdownHtmlConverter;
@@ -38,10 +38,10 @@ public class FileConverterImpl implements FileConverter {
   private static final Logger logger = LoggerFactory.getLogger(FileConverterImpl.class);
   private final Map<String, Map<String, ConversionHandler>> handlerRegistry =
       new ConcurrentHashMap<>();
-  private final ExecutorService executorService;
+  private final AsyncTaskExecutor asyncTaskExecutor;
 
-  public FileConverterImpl(ExecutorService executorService) {
-    this.executorService = executorService;
+  public FileConverterImpl(AsyncTaskExecutor asyncTaskExecutor) {
+    this.asyncTaskExecutor = asyncTaskExecutor;
     addHandler(new MarkdownHtmlConverter());
     addHandler(new HtmlPDFConverter());
   }
@@ -103,7 +103,7 @@ public class FileConverterImpl implements FileConverter {
               .get(outputType);
       if (targetHandler != null) {
         ConversionHandler combinedHandler =
-            new ComposedConversionHandler(intermediateHandler, targetHandler, executorService);
+            new ComposedConversionHandler(intermediateHandler, targetHandler, asyncTaskExecutor);
         handlersFromInputType.put(outputType, combinedHandler);
         return combinedHandler;
       }

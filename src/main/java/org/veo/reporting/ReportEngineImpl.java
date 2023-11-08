@@ -29,7 +29,6 @@ import java.util.MissingResourceException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
@@ -37,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.task.AsyncTaskExecutor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -55,7 +55,7 @@ public final class ReportEngineImpl implements ReportEngine {
   private final FileConverter converter;
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final ResourcePatternResolver resourcePatternResolver;
-  private final ExecutorService executorService;
+  private final AsyncTaskExecutor asyncTaskExecutor;
 
   private final Map<String, ReportConfiguration> reports;
 
@@ -63,12 +63,12 @@ public final class ReportEngineImpl implements ReportEngine {
       TemplateEvaluator templateEvaluator,
       FileConverter converter,
       ResourcePatternResolver resourcePatternResolver,
-      ExecutorService executorService)
+      AsyncTaskExecutor asyncTaskExecutor)
       throws IOException {
     this.templateEvaluator = templateEvaluator;
     this.converter = converter;
     this.resourcePatternResolver = resourcePatternResolver;
-    this.executorService = executorService;
+    this.asyncTaskExecutor = asyncTaskExecutor;
 
     Resource[] resources = resourcePatternResolver.getResources("classpath*:/reports/*.json");
     reports =
@@ -148,7 +148,7 @@ public final class ReportEngineImpl implements ReportEngine {
           PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
         // start async conversion of the template output
         Future<Void> future =
-            executorService.submit(
+            asyncTaskExecutor.submit(
                 () -> {
                   converter.convert(
                       pipedInputStream,

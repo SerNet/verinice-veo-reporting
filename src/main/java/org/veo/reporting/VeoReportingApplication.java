@@ -23,8 +23,6 @@ import java.net.Proxy;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -32,13 +30,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.embedded.tomcat.TomcatProtocolHandlerCustomizer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.task.AsyncTaskExecutor;
-import org.springframework.core.task.support.TaskExecutorAdapter;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 
@@ -95,11 +91,8 @@ public class VeoReportingApplication {
   }
 
   @Bean
-  public FileConverter createFileConverter() {
-    ExecutorService pool =
-        Executors.newThreadPerTaskExecutor(
-            Thread.ofVirtual().name("conversion-handler-pool-thread-", 0).factory());
-    return new FileConverterImpl(pool);
+  public FileConverter createFileConverter(AsyncTaskExecutor asyncTaskExecutor) {
+    return new FileConverterImpl(asyncTaskExecutor);
   }
 
   @Bean
@@ -114,12 +107,11 @@ public class VeoReportingApplication {
   public ReportEngine createReportEngine(
       TemplateEvaluator templateEvaluator,
       FileConverter fileConverter,
-      ResourcePatternResolver resourcePatternResolver)
+      ResourcePatternResolver resourcePatternResolver,
+      AsyncTaskExecutor asyncTaskExecutor)
       throws IOException {
-    ExecutorService pool =
-        Executors.newThreadPerTaskExecutor(
-            Thread.ofVirtual().name("report-engine-pool-thread-", 0).factory());
-    return new ReportEngineImpl(templateEvaluator, fileConverter, resourcePatternResolver, pool);
+    return new ReportEngineImpl(
+        templateEvaluator, fileConverter, resourcePatternResolver, asyncTaskExecutor);
   }
 
   @Bean
@@ -136,17 +128,5 @@ public class VeoReportingApplication {
       logger.info("Not using proxy");
     }
     return factory;
-  }
-
-  @Bean
-  public AsyncTaskExecutor applicationTaskExecutor() {
-    return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor());
-  }
-
-  @Bean
-  @SuppressWarnings("rawtypes")
-  public TomcatProtocolHandlerCustomizer protocolHandlerVirtualThreadExecutorCustomizer() {
-    return protocolHandler ->
-        protocolHandler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
   }
 }
