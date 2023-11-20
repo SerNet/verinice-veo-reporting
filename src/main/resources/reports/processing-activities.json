@@ -19,12 +19,6 @@
     }
   ],
   "data": {
-    "scope": "/scopes/${targetId}",
-    "scopes": "/scopes?size=2147483647",
-    "processes": "/processes?size=2147483647&embedRisks=true",
-    "persons": "/persons?size=2147483647",
-    "controls": "/controls?size=2147483647",
-    "assets": "/assets?size=2147483647",
-    "domains": "/domains"
+    "scope": "/scopes/${targetId}"
   }
 }

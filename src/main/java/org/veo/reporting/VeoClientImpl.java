@@ -24,10 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 import org.slf4j.Logger;
@@ -49,22 +46,18 @@ import org.veo.reporting.exception.VeoReportingException;
 public class VeoClientImpl implements VeoClient {
 
   private static final Logger logger = LoggerFactory.getLogger(VeoClientImpl.class);
+  private static final Set<String> RISK_AFFECTED_TYPES = Set.of("asset", "process", "scope");
 
   private final ClientHttpRequestFactory httpRequestFactory;
   private final String veoUrl;
   private final ObjectReader objectReader;
   private final ObjectReader arrayReader;
-  private final ExecutorService executorService;
   private final Map<String, Object> cache;
 
   public VeoClientImpl(
-      ClientHttpRequestFactory httpRequestFactory,
-      String veoUrl,
-      ExecutorService executorService,
-      boolean cacheResults) {
+      ClientHttpRequestFactory httpRequestFactory, String veoUrl, boolean cacheResults) {
     this.httpRequestFactory = httpRequestFactory;
     this.veoUrl = veoUrl;
-    this.executorService = executorService;
     ObjectMapper objectMapper = new ObjectMapper().registerModule(new BlackbirdModule());
     objectReader = objectMapper.readerFor(Map.class);
     arrayReader = objectMapper.readerFor(List.class);
@@ -79,24 +72,71 @@ public class VeoClientImpl implements VeoClient {
   public Map<String, Object> fetchData(
       ReportDataSpecification reportDataSpecification, String authorizationHeader)
       throws IOException {
-    Map<String, Future<Object>> futuresByKey =
-        reportDataSpecification.entrySet().stream()
-            .collect(
-                Collectors.toMap(
-                    Entry::getKey,
-                    (e) ->
-                        executorService.submit(
-                            () ->
-                                fetchData(
-                                    URI.create(veoUrl + e.getValue()), authorizationHeader))));
-    try {
-      Map<String, Object> result = new HashMap<>(reportDataSpecification.size());
-      for (Entry<String, Future<Object>> e : futuresByKey.entrySet()) {
-        result.put(e.getKey(), e.getValue().get());
+
+    Map<String, Object> result = new HashMap<>();
+    for (Entry<String, String> e : reportDataSpecification.entrySet()) {
+      Object v = fetchData(URI.create(veoUrl + e.getValue()), authorizationHeader);
+      result.put(e.getKey(), v);
+      if (v instanceof Map m) {
+        @SuppressWarnings("unchecked")
+        Map<String, Object> owner = (Map<String, Object>) m.get("owner");
+        if (owner != null) {
+          String ownerId = (String) owner.get("id");
+          addDataForOwner(result, ownerId, authorizationHeader);
+        }
+
+      } else {
+        throw new VeoReportingException("List-valued targets are not supported." + v);
       }
-      return result;
-    } catch (InterruptedException | ExecutionException e1) {
-      throw new VeoReportingException(e1);
+    }
+    return result;
+  }
+
+  private void addDataForOwner(
+      Map<String, Object> result, String ownerId, String authorizationHeader) throws IOException {
+    @SuppressWarnings("unchecked")
+    Map<String, Object> export =
+        (Map<String, Object>)
+            fetchData(URI.create(veoUrl + "/units/" + ownerId + "/export"), authorizationHeader);
+    @SuppressWarnings("unchecked")
+    List<Map<String, Object>> elements = (List<Map<String, Object>>) export.get("elements");
+    @SuppressWarnings("unchecked")
+    List<Map<String, Object>> risks = (List<Map<String, Object>>) export.get("risks");
+    applyRisks(elements, risks);
+
+    result.put("domains", export.get("domains"));
+    result.put("unit", export.get("unit"));
+    result.put("assets", filterElements(elements, "asset"));
+    result.put("controls", filterElements(elements, "control"));
+    result.put("documents", filterElements(elements, "document"));
+    result.put("incidents", filterElements(elements, "incident"));
+    result.put("persons", filterElements(elements, "person"));
+    result.put("processes", filterElements(elements, "process"));
+    result.put("scenarios", filterElements(elements, "scenario"));
+    result.put("scopes", filterElements(elements, "scope"));
+  }
+
+  private static List<Map<String, Object>> filterElements(
+      List<Map<String, Object>> elements, String type) {
+    return elements.stream().filter(it -> it.get("type").equals(type)).toList();
+  }
+
+  private static void applyRisks(
+      List<Map<String, Object>> elements, List<Map<String, Object>> risks) {
+    for (Map<String, Object> element : elements) {
+      String type = (String) element.get("type");
+      if (RISK_AFFECTED_TYPES.contains(type)) {
+        element.put(
+            "risks",
+            risks.stream()
+                .filter(
+                    r -> {
+                      @SuppressWarnings("unchecked")
+                      Map<String, Object> ref = (Map<String, Object>) r.get(type);
+                      return ref != null && ref.get("targetUri").equals(element.get("_self"));
+                    })
+                .toList());
+      }
     }
   }
 

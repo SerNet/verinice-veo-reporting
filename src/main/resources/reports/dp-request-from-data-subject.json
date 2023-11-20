@@ -21,11 +21,6 @@
     }
   ],
   "data": {
-    "request": "/documents/${targetId}",
-    "scopes": "/scopes?size=2147483647",
-    "persons": "/persons?size=2147483647",
-    "documents": "/documents?size=2147483647",
-    "domains": "/domains",
-    "processes": "/processes?size=2147483647"
+    "request": "/documents/${targetId}"
   }
 }

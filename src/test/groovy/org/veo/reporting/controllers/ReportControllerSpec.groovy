@@ -315,10 +315,7 @@ Tschüß'''
         response.status == 200
 
         1 * veoClient.fetchData([
-            scope: '/scopes/0815',
-            processes: '/processes?size=2147483647',
-            persons: '/persons?size=2147483647',
-            scopes: '/scopes?size=2147483647'
+            scope: '/scopes/0815'
         ], 'Bearer: abc') >> [
             scope:[
                 name: 'My Scope',

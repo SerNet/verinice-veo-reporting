@@ -21,8 +21,6 @@
     }
   ],
   "data": {
-    "scope": "/scopes/${targetId}",
-    "persons": "/persons?size=2147483647",
-    "documents": "/documents?size=2147483647"
+    "scope": "/scopes/${targetId}"
   }
 }
