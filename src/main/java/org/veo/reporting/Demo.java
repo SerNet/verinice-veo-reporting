@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -79,58 +78,40 @@ public class Demo {
     boolean createItgsReports = scopeIdItgs != null;
 
     DataProvider dataProvider =
-        new DataProvider() {
-
-          Map<String, Object> cache = new HashMap<>();
-
-          @Override
-          public Map<String, Object> resolve(Map<String, String> dataSpec) {
-
-            ReportDataSpecification reportDataSpecification =
-                new ReportDataSpecification(
-                    dataSpec.entrySet().stream()
-                        .filter(e -> !cache.containsKey(e.getKey()))
-                        .collect(
-                            Collectors.toMap(
-                                Entry::getKey,
-                                e -> {
-                                  String key = e.getKey();
-                                  String url = e.getValue();
-                                  if ("dpia".equals(key)) {
-                                    url = url.replace(TARGET_ID_PLACEHOLDER, dpiaId);
-                                  } else if ("incident".equals(key)) {
-                                    url = url.replace(TARGET_ID_PLACEHOLDER, privacyIncidentId);
-                                  } else if ("scope".equals(key)) {
-                                    url = url.replace(TARGET_ID_PLACEHOLDER, scopeId);
-                                  } else if ("request".equals(key)) {
-                                    url = url.replace(TARGET_ID_PLACEHOLDER, requestId);
-                                  } else if ("informationDomain".equals(key)) {
-                                    url = url.replace(TARGET_ID_PLACEHOLDER, scopeIdItgs);
-                                  } else if (url.contains("targetId")) {
-                                    throw new IllegalArgumentException("Unhandled url: " + url);
-                                  }
-
-                                  return url;
-                                })));
-            try {
-              if (!reportDataSpecification.isEmpty()) {
-                Map<String, Object> data = veoClient.fetchData(reportDataSpecification, authHeader);
-                for (Entry<String, Object> e : data.entrySet()) {
-                  System.out.println("\n" + e.getKey() + ":");
-                  System.out.println(writer.writeValueAsString(e.getValue()));
-                }
-
-                cache.putAll(data);
-              }
-              Map<String, Object> result = new HashMap<>(dataSpec.size());
-              result.putAll(
-                  dataSpec.keySet().stream()
-                      .collect(Collectors.toMap(Function.identity(), cache::get)));
-
-              return result;
-            } catch (IOException e) {
-              throw new RuntimeException("Error fetching data", e);
+        dataSpec -> {
+          ReportDataSpecification reportDataSpecification =
+              new ReportDataSpecification(
+                  dataSpec.entrySet().stream()
+                      .collect(
+                          Collectors.toMap(
+                              Entry::getKey,
+                              e -> {
+                                String key = e.getKey();
+                                String url = e.getValue();
+                                if ("dpia".equals(key)) {
+                                  url = url.replace(TARGET_ID_PLACEHOLDER, dpiaId);
+                                } else if ("incident".equals(key)) {
+                                  url = url.replace(TARGET_ID_PLACEHOLDER, privacyIncidentId);
+                                } else if ("scope".equals(key)) {
+                                  url = url.replace(TARGET_ID_PLACEHOLDER, scopeId);
+                                } else if ("request".equals(key)) {
+                                  url = url.replace(TARGET_ID_PLACEHOLDER, requestId);
+                                } else if ("informationDomain".equals(key)) {
+                                  url = url.replace(TARGET_ID_PLACEHOLDER, scopeIdItgs);
+                                } else if (url.contains("targetId")) {
+                                  throw new IllegalArgumentException("Unhandled url: " + url);
+                                }
+                                return url;
+                              })));
+          try {
+            Map<String, Object> data = veoClient.fetchData(reportDataSpecification, authHeader);
+            for (Entry<String, Object> e : data.entrySet()) {
+              System.out.println("\n" + e.getKey() + ":");
+              System.out.println(writer.writeValueAsString(e.getValue()));
             }
+            return data;
+          } catch (IOException e) {
+            throw new RuntimeException("Error fetching data", e);
           }
         };
 

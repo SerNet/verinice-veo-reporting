@@ -105,11 +105,12 @@ public class VeoReportingApplication {
   @Bean
   public VeoClient createVeoClient(
       ClientHttpRequestFactory httpRequestFactory,
-      @Value("${veo.reporting.veo_url}") String veoUrl) {
+      @Value("${veo.reporting.veo_url}") String veoUrl,
+      @Value("${veo.reporting.veo_client_use_cache:false}") boolean useCache) {
     ExecutorService pool =
         Executors.newThreadPerTaskExecutor(
             Thread.ofVirtual().name("veo-client-pool-thread-", 0).factory());
-    return new VeoClientImpl(httpRequestFactory, veoUrl, pool);
+    return new VeoClientImpl(httpRequestFactory, veoUrl, pool, useCache);
   }
 
   @Bean

@@ -55,22 +55,30 @@ public class VeoClientImpl implements VeoClient {
   private final ObjectReader objectReader;
   private final ObjectReader arrayReader;
   private final ExecutorService executorService;
+  private final Map<String, Object> cache;
 
   public VeoClientImpl(
-      ClientHttpRequestFactory httpRequestFactory, String veoUrl, ExecutorService executorService) {
+      ClientHttpRequestFactory httpRequestFactory,
+      String veoUrl,
+      ExecutorService executorService,
+      boolean cacheResults) {
     this.httpRequestFactory = httpRequestFactory;
     this.veoUrl = veoUrl;
     this.executorService = executorService;
     ObjectMapper objectMapper = new ObjectMapper().registerModule(new BlackbirdModule());
     objectReader = objectMapper.readerFor(Map.class);
     arrayReader = objectMapper.readerFor(List.class);
+    if (cacheResults) {
+      cache = new HashMap<>();
+    } else {
+      cache = null;
+    }
   }
 
   @Override
   public Map<String, Object> fetchData(
       ReportDataSpecification reportDataSpecification, String authorizationHeader)
       throws IOException {
-
     Map<String, Future<Object>> futuresByKey =
         reportDataSpecification.entrySet().stream()
             .collect(
@@ -93,6 +101,16 @@ public class VeoClientImpl implements VeoClient {
   }
 
   private Object fetchData(URI uri, String authorizationHeader) throws IOException {
+    Object result;
+    String cacheKey = uri.toString();
+    if (cache != null) {
+      result = cache.get(cacheKey);
+      if (result != null) {
+        logger.info("Returning cached result for {}", uri);
+        return result;
+      }
+    }
+
     logger.info("Requesting data from {}", uri);
 
     ClientHttpRequest request = httpRequestFactory.createRequest(uri, HttpMethod.GET);
@@ -118,7 +136,7 @@ public class VeoClientImpl implements VeoClient {
         char c = (char) body.read();
         body.reset();
         if (c == '[') {
-          return arrayReader.readValue(body);
+          result = arrayReader.readValue(body);
         } else {
           Object value = objectReader.readValue(body);
           Map m = (Map) value;
@@ -126,8 +144,12 @@ public class VeoClientImpl implements VeoClient {
           if (m.containsKey("items")) {
             return (List) m.get("items");
           }
-          return m;
+          result = m;
         }
+        if (cache != null) {
+          cache.put(cacheKey, result);
+        }
+        return result;
       }
     }
   }
