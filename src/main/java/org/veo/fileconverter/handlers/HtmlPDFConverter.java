@@ -37,6 +37,8 @@ import org.apache.batik.transcoder.TranscodingHints;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import com.helger.font.api.FontResourceManager;
@@ -58,6 +60,8 @@ import org.veo.reporting.ReportCreationParameters;
 public class HtmlPDFConverter implements ConversionHandler {
 
   private static final String STYLE = "style";
+
+  private static final Logger logger = LoggerFactory.getLogger(HtmlPDFConverter.class);
 
   private static final Pattern SVG_BASE_64 =
       Pattern.compile("url\\('data:image/svg\\+xml;base64,(.+)'\\)");
@@ -84,9 +88,13 @@ public class HtmlPDFConverter implements ConversionHandler {
     // options.set(TocExtension.LIST_CLASS,
     // PdfConverterExtension.DEFAULT_TOC_LIST_CLASS);
 
-    try (Scanner s = new Scanner(input, StandardCharsets.UTF_8).useDelimiter("\\A")) {
+    try (Scanner s = new Scanner(input, StandardCharsets.UTF_8).useDelimiter("\\Z")) {
       String html = s.next();
 
+      if (html.isEmpty()) {
+        logger.info("HTML input is empty, skipping PDF creation");
+        return;
+      }
       // There are more options on the builder than shown below.
       PdfRendererBuilder builder = new PdfRendererBuilder();
 
