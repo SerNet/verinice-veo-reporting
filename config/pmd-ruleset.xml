@@ -14,6 +14,12 @@
         <exclude name="GuardLogStatement" />
     </rule>
 
+    <rule ref="category/java/bestpractices.xml/LooseCoupling">
+        <properties>
+            <property name="allowedTypes" value="org.apache.batik.transcoder.TranscodingHints,org.veo.reporting.ReportDataSpecification" />
+        </properties>
+    </rule>
+
     <!-- <rule ref="category/java/codestyle.xml"> -->
     <!-- </rule> -->
 

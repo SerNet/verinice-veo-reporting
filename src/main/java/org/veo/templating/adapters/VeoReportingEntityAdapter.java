@@ -26,9 +26,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.veo.templating.VeoReportingObjectWrapper;
 import org.veo.templating.methods.SingleStringArgumentMethod;
 import org.veo.templating.methods.VeoTemplateMethod;
@@ -43,8 +40,6 @@ import freemarker.template.utility.StringUtil;
 
 public class VeoReportingEntityAdapter extends WrappingTemplateModel
     implements TemplateHashModel, AdapterTemplateModel {
-
-  private static final Logger logger = LoggerFactory.getLogger(VeoReportingEntityAdapter.class);
 
   private static final Pattern NUMERIC_PART = Pattern.compile("\\d+");
 

@@ -92,15 +92,13 @@ public class VeoClientImpl implements VeoClient {
     return result;
   }
 
+  @SuppressWarnings("unchecked")
   private void addDataForOwner(
       Map<String, Object> result, String ownerId, String authorizationHeader) throws IOException {
-    @SuppressWarnings("unchecked")
     Map<String, Object> export =
         (Map<String, Object>)
             fetchData(URI.create(veoUrl + "/units/" + ownerId + "/export"), authorizationHeader);
-    @SuppressWarnings("unchecked")
     List<Map<String, Object>> elements = (List<Map<String, Object>>) export.get("elements");
-    @SuppressWarnings("unchecked")
     List<Map<String, Object>> risks = (List<Map<String, Object>>) export.get("risks");
     applyRisks(elements, risks);
 
