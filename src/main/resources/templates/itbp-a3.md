@@ -2,7 +2,8 @@
 <#import "/libs/dp-risk.md" as dpRisk>
 
 <#assign table = com.table
-         def = com.def />
+         def = com.def
+         groupBySubType = com.groupBySubType />
 
 
 <style>
@@ -40,18 +41,6 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 
 <#assign assetTypes= ['AST_Application', 'AST_IT-System', 'AST_Room', 'AST_Network', 'AST_ICS-System', 'AST_Device']>
 <#assign processTypes= ['PRO_BusinessProcess', 'PRO_SpecialistMethodologies']>
-
-<#function groupBySubType elements subTypes>
-  <#assign elementsBySubType = {}/>
-  <#list subTypes as subType>
-    <#assign elementsWithSubType = elements?filter(it->it.hasSubType(subType))?sort_by('name_naturalized')>
-    <#if elementsWithSubType?has_content>
-      <#assign elementsBySubType = elementsBySubType + {subType: elementsWithSubType} />
-    </#if>
-  </#list>
-  <#return elementsBySubType>
-</#function>
-
 
 <#assign assetsInScope = scope.getMembersWithType('asset')/>
 <#assign processesInScope = scope.getMembersWithType('process')/>

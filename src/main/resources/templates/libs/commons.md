@@ -34,3 +34,14 @@ ${term}
 </#if>
 </#if>
 </#macro>
+
+<#function groupBySubType elements subTypes>
+<#assign elementsBySubType = {}/>
+<#list subTypes as subType>
+<#assign elementsWithSubType = elements?filter(it->it.hasSubType(subType))?sort_by('name_naturalized')>
+<#if elementsWithSubType?has_content>
+<#assign elementsBySubType = elementsBySubType + {subType: elementsWithSubType} />
+</#if>
+</#list>
+<#return elementsBySubType>
+</#function>
