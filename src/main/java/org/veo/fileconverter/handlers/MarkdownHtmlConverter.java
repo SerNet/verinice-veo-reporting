@@ -34,6 +34,8 @@ import java.util.Optional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.veo.fileconverter.ConversionHandler;
 import org.veo.reporting.ReportConfiguration;
@@ -42,6 +44,8 @@ import org.veo.templating.MarkdownRendererImpl;
 
 /** Converts Markdown to HTML */
 public class MarkdownHtmlConverter implements ConversionHandler {
+
+  private static final Logger logger = LoggerFactory.getLogger(MarkdownHtmlConverter.class);
 
   @Override
   public String getInputType() {
@@ -65,7 +69,12 @@ public class MarkdownHtmlConverter implements ConversionHandler {
         Writer writer =
             new BufferedWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8))) {
       new MarkdownRendererImpl().renderToHTML(reader, intermediateWriter);
-      Document doc = Jsoup.parse(intermediateWriter.toString());
+      String md = intermediateWriter.toString();
+      if (md.isEmpty()) {
+        logger.info("Markdown input is empty, skipping HTML creation");
+        return;
+      }
+      Document doc = Jsoup.parse(md);
       Element html = doc.getElementsByTag("html").first();
       Locale locale = parameters.getLocale();
       if (locale.getCountry().isEmpty()) {
