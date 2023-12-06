@@ -296,6 +296,14 @@ public class Demo {
       if (createItgsReports) {
         createReport(
             reportEngine,
+            "itbp-a1",
+            "/tmp/itbp-a1.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+        createReport(
+            reportEngine,
             "itbp-a3",
             "/tmp/itbp-a3.pdf",
             dataProvider,

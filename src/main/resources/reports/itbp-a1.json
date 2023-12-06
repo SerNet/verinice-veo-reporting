@@ -1,0 +1,24 @@
+{
+  "name": {
+    "de": "A.1 Strukturanalyse"
+  },
+  "description": {
+    "de": "Eine Übersicht über die Geschäftsprozesse und die verschiedenen Assets"
+  },
+  "templateFile": "itbp-a1.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_InformationDomain"
+      ]
+    }
+  ],
+  "data": {
+    "informationDomain": "/scopes/${targetId}"
+  }
+}

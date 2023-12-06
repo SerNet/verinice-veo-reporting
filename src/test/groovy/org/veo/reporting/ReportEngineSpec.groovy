@@ -195,6 +195,7 @@ Cheers'''
             'dp-privacy-incident',
             'dp-requests-from-data-subjects-overview',
             'dp-request-from-data-subject',
+            'itbp-a1',
             'itbp-a3'
         ]
     }
