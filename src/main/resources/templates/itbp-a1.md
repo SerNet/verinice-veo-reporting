@@ -210,7 +210,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <@row asset, 'abbreviation'/>
 <@row asset, 'name'/>
 <@row asset, 'description'/>
-<@row asset, 'asset_details_platform'/>
+<@row asset, 'asset_bpDetails_platform'/>
 <@row asset, 'asset_details_number'/>
 | ${bundle.status} | ${status(asset)} |
 
