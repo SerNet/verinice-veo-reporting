@@ -49,7 +49,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 </#function>
 
 <#assign businessProcesses = findBySubType(scope.getMembersWithType('process'), 'PRO_BusinessProcess', domain)/>
-<#assign externalContractors = findBySubType(scope.getMembersWithType('scope'), 'SCP_OutsourcingProvider', domain)/>
+<#assign externalServiceProviders = findBySubType(scope.getMembersWithType('scope'), 'SCP_ExternalServiceProvider', domain)/>
 
 
 <#function title element>
@@ -83,10 +83,10 @@ table.used_modules th:last-child, table.used_modules td:last-child {
     </#list>
   </bookmark>    
 </#if>
-<#if externalContractors?has_content>
-  <bookmark name="${bundle.external_contractors}" href="#externalContractors">
-    <#list externalContractors as externalContractor>
-      <bookmark name="${title(externalContractor)}" href="#externalContractor_${externalContractor?counter}">
+<#if externalServiceProviders?has_content>
+  <bookmark name="${bundle.external_service_providers}" href="#externalServiceProviders">
+    <#list externalServiceProviders as externalServiceProvider>
+      <bookmark name="${title(externalServiceProvider)}" href="#externalServiceProvider_${externalServiceProvider?counter}">
       </bookmark>
     </#list>
   </bookmark>    
@@ -146,10 +146,10 @@ table.used_modules th:last-child, table.used_modules td:last-child {
     </#list>
     <#assign level2counter = 4>
   </#if>
-  <#if externalContractors?has_content>
-    <@tocitem 1 "externalContractors" "${level2counter}. ${bundle.external_contractors}" />
-    <#list externalContractors as externalContractor>
-      <@tocitem 2 "externalContractor_${externalContractor?counter}" "${externalContractor?counter}. ${title(externalContractor)}" />
+  <#if externalServiceProviders?has_content>
+    <@tocitem 1 "externalServiceProviders" "${level2counter}. ${bundle.external_service_providers}" />
+    <#list externalServiceProviders as externalServiceProvider>
+      <@tocitem 2 "externalServiceProvider_${externalServiceProvider?counter}" "${externalServiceProvider?counter}. ${title(externalServiceProvider)}" />
      </#list>
     <#assign level2counter = 3>
   </#if>   
@@ -219,14 +219,14 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 </#list>
 </#if>
 
-<#if externalContractors?has_content>
-# ${bundle.external_contractors} {#externalContractors}
+<#if externalServiceProviders?has_content>
+# ${bundle.external_service_providers} {#externalServiceProviders}
 
-<#list externalContractors as externalContractor>
-## ${title(externalContractor)} {#externalContractor_${externalContractor?counter}}
+<#list externalServiceProviders as externalServiceProvider>
+## ${title(externalServiceProvider)} {#externalServiceProvider_${externalServiceProvider?counter}}
 
 <@table '',
-externalContractor,
+externalServiceProvider,
 ['name',
 'description',
 'scope_address_address1',
