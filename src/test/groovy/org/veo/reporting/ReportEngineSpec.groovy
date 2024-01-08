@@ -196,6 +196,7 @@ Cheers'''
             'dp-requests-from-data-subjects-overview',
             'dp-request-from-data-subject',
             'itbp-a1',
+            'itbp-a2',
             'itbp-a3'
         ]
     }

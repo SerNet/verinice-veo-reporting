@@ -1,0 +1,24 @@
+{
+  "name": {
+    "de": "A.2 Schutzbedarfsfeststellung"
+  },
+  "description": {
+    "de": "BSI IT-Grundschutz Referenzdokument"
+  },
+  "templateFile": "itbp-a2.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_InformationDomain"
+      ]
+    }
+  ],
+  "data": {
+    "informationDomain": "/scopes/${targetId}"
+  }
+}

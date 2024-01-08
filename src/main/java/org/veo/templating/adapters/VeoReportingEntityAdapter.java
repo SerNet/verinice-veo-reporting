@@ -99,6 +99,9 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     if ("designator_naturalized".equals(key)) {
       return wrap(designatorNaturalized);
     }
+    if (("scopes").equals(key)) {
+      return wrap(ow.getScopes(m));
+    }
     if ("scope".equals(type)) {
       if ("getMembersWithType".equals(key)) {
         return new GetMembersWithType(m, ow);

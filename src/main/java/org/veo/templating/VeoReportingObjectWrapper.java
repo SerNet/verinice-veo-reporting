@@ -17,6 +17,7 @@
  ******************************************************************************/
 package org.veo.templating;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -73,6 +74,18 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
       }
     }
     return super.wrap(obj);
+  }
+
+  public Collection<Map> getScopes(Object arg) {
+    var memberUri = ((Map) arg).get("_self");
+    return entitiesByUri.values().stream()
+        .map(Map.class::cast)
+        .filter(s -> "scope".equals(s.get("type")))
+        .filter(
+            s ->
+                ((Collection<Map<String, ?>>) s.get("members"))
+                    .stream().map(m -> m.get("targetUri")).anyMatch(memberUri::equals))
+        .toList();
   }
 
   private Object resolve(String uri) throws TemplateModelException {
