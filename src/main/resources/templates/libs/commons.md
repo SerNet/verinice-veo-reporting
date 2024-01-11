@@ -35,13 +35,15 @@ ${term}
 </#if>
 </#macro>
 
-<#function groupBySubType elements subTypes>
+<#function groupBySubType elements domain>
 <#assign elementsBySubType = {}/>
-<#list subTypes as subType>
-<#assign elementsWithSubType = elements?filter(it->it.hasSubType(subType))?sort_by('name_naturalized')>
+<#list domain.elementTypeDefinitions?values as elementTypeDefinition>
+<#list elementTypeDefinition.subTypes?keys as subType>
+<#assign elementsWithSubType = elements?filter(it->it.domains[domain.id]?? && it.domains[domain.id].subType == subType)?sort_by('name_naturalized')>
 <#if elementsWithSubType?has_content>
 <#assign elementsBySubType = elementsBySubType + {subType: elementsWithSubType} />
 </#if>
+</#list>
 </#list>
 <#return elementsBySubType>
 </#function>

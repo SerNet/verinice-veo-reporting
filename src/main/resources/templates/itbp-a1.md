@@ -40,9 +40,8 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <#assign scope = informationDomain/>
 <#assign domain=domains?filter(it->it.name == 'IT-Grundschutz')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 
-<#assign assetTypes= ['AST_Application', 'AST_IT-System', 'AST_Room', 'AST_Network', 'AST_ICS-System', 'AST_Device']>
 <#assign assetsInScope = scope.getMembersWithType('asset')/>
-<#assign assetsBySubType = groupBySubType(assetsInScope, assetTypes)/>
+<#assign assetsBySubType = groupBySubType(assetsInScope, domain)/>
 
 <#function findBySubType elements subType domain>
 <#return elements?filter(it -> it.domains[domain.id].subType == subType)?sort_by('name_naturalized')>

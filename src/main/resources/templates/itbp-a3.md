@@ -38,15 +38,13 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 </style>
 
 <#assign scope = informationDomain/>
-
-<#assign assetTypes= ['AST_Application', 'AST_IT-System', 'AST_Room', 'AST_Network', 'AST_ICS-System', 'AST_Device']>
-<#assign processTypes= ['PRO_BusinessProcess', 'PRO_SpecialistMethodologies']>
+<#assign domain=domains?filter(it->it.name == 'IT-Grundschutz')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 
 <#assign assetsInScope = scope.getMembersWithType('asset')/>
 <#assign processesInScope = scope.getMembersWithType('process')/>
 
-<#assign assetsBySubType = groupBySubType(assetsInScope, assetTypes)/>
-<#assign processesBySubType = groupBySubType(processesInScope, processTypes)/>
+<#assign assetsBySubType = groupBySubType(assetsInScope, domain)/>
+<#assign processesBySubType = groupBySubType(processesInScope, domain)/>
 
 
 <#function title element>
