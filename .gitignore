@@ -11,3 +11,8 @@ bin/
 .settings/
 
 .idea
+
+application-local.properties
+application-local.yaml
+application-local.yml
+application-local.json

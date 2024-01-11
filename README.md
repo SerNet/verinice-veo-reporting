@@ -62,7 +62,7 @@ You need to specify the UUID of the scope that should be used for testing. You c
 
 The impact assessment report works on a process with the subType `PRO_DPIA`. To have that report generated, you also need to specify the UUID of a matching process.
 
-Enable with `./gradlew bootRun --args="--spring.profiles.active=demo --veo.accesstoken=XXXX --veo.demoscopeid=9f6f0199-7a14-4a1d-8345-80a0c1b60519 --veo.demodpiaid=cd0e098b-d794-4e4d-8a60-e2eadd1e3eef"` and use at your own risk.
+Enable with `./gradlew bootRun --args="--spring.profiles.active=demo,local --veo.accesstoken=XXXX --veo.demoscopeid=9f6f0199-7a14-4a1d-8345-80a0c1b60519 --veo.demodpiaid=cd0e098b-d794-4e4d-8a60-e2eadd1e3eef"` and use at your own risk.
 
 See `org.veo.reporting.Demo`.
 
