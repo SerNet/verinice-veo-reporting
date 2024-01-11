@@ -59,6 +59,7 @@ public class Demo {
     var reportEngine = ctx.getBean(ReportEngine.class);
     var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
     var scopeId = ctx.getEnvironment().getRequiredProperty("veo.demoscopeid");
+    var printInputData = "true".equals(ctx.getEnvironment().getProperty("veo.print_report_data"));
     var requestId = ctx.getEnvironment().getProperty("veo.demorequestid");
     var scopeIdItgs = ctx.getEnvironment().getProperty("veo.demoscopeiditbp");
     var veoClient = ctx.getBean(VeoClient.class);
@@ -105,9 +106,11 @@ public class Demo {
                               })));
           try {
             Map<String, Object> data = veoClient.fetchData(reportDataSpecification, authHeader);
-            for (Entry<String, Object> e : data.entrySet()) {
-              System.out.println("\n" + e.getKey() + ":");
-              System.out.println(writer.writeValueAsString(e.getValue()));
+            if (printInputData) {
+              for (Entry<String, Object> e : data.entrySet()) {
+                System.out.println("\n" + e.getKey() + ":");
+                System.out.println(writer.writeValueAsString(e.getValue()));
+              }
             }
             return data;
           } catch (IOException e) {
