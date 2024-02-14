@@ -59,11 +59,11 @@ table.used_modules th:last-child, table.used_modules td:last-child {
   <bookmark name="${bundle.toc}" href="#toc"/>
   <bookmark name="${bundle.main_page}" href="#main_page"/>
   <bookmark name="${bundle.used_modules}" href="#used_modules"/>
-  <bookmark name="${bundle.information_domain}" href="#information_domain"/>
+  <bookmark name="${bundle.scope_SCP_InformationDomain_singular}" href="#information_domain"/>
 <#if assetsInScope?has_content>
   <bookmark name="${bundle.assets}" href="#assets">
     <#list assetsBySubType as assetType, assetsWithType>
-      <bookmark name="${bundle[assetType]}" href="#${assetType}">
+      <bookmark name="${bundle['asset_'+assetType+'_plural']}" href="#${assetType}">
         <#list assetsWithType as asset>
           <bookmark name="${title(asset)}" href="#asset_${assetType}_${asset?counter}">
           </bookmark>
@@ -75,7 +75,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <#if processesInScope?has_content>
   <bookmark name="${bundle.processes}" href="#processes">
     <#list processesBySubType as processType, processesWithType>
-      <bookmark name="${bundle[processType]}" href="#${processType}">
+      <bookmark name="${bundle['process_'+processType+'_plural']}" href="#${processType}">
         <#list processesWithType as process>
           <bookmark name="${title(process)}" href="#process_${processType}_${process?counter}">
           </bookmark>
@@ -122,12 +122,12 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <tbody>
   <@tocitem 1 "main_page" "1. ${bundle.main_page}" />
   <@tocitem 1 "used_modules" "2. ${bundle.used_modules}" />
-  <@tocitem 1 "information_domain" "3. ${bundle.information_domain}" />
+  <@tocitem 1 "information_domain" "3. ${bundle.scope_SCP_InformationDomain_singular}" />
   <#assign level2counter = 4>
   <#if assetsInScope?has_content>
     <@tocitem 1 "assets" "${level2counter}. ${bundle.assets}" />
     <#list assetsBySubType as assetType, assetsWithType>
-      <@tocitem 2 assetType "${assetType?counter}. ${bundle[assetType]}" />
+      <@tocitem 2 assetType "${assetType?counter}. ${bundle['asset_'+assetType+'_plural']}" />
       <#list assetsWithType as asset>
         <@tocitem 3 "asset_${assetType}_${asset?counter}" "${asset?counter}. ${title(asset)}" />
       </#list>
@@ -137,7 +137,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
   <#if processesInScope?has_content>
     <@tocitem 1 "processes" "${level2counter}. ${bundle.processes}" />
     <#list processesBySubType as processType, processesWithType>
-      <@tocitem 2 processType "${processType?counter}. ${bundle[processType]}" />
+      <@tocitem 2 processType "${processType?counter}. ${bundle['process_'+processType+'_plural']}" />
       <#list processesWithType as process>
         <@tocitem 3 "process_${processType}_${process?counter}" "${process?counter}. ${title(process)}" />
       </#list>
@@ -314,7 +314,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 # ${bundle.assets} {#assets}
 <#list assetsBySubType as assetType, assetsWithType>
 
-## ${bundle[assetType]} {#${assetType}}
+## ${bundle['asset_'+assetType+'_plural']} {#${assetType}}
 
 <#list assetsWithType as asset>
 ### ${title(asset)} {#asset_${assetType}_${asset?counter}}
@@ -330,7 +330,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 # ${bundle.processes} {#processes}
 <#list processesBySubType as processType, processesWithType>
 
-## ${bundle[processType]} {#${processType}}
+## ${bundle['process_'+processType+'_plural']} {#${processType}}
 
 <#list processesWithType as process>
 ### ${title(process)} {#process_${processType}_${process?counter}}
