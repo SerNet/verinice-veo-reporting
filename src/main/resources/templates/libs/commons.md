@@ -8,19 +8,29 @@
   <#return val>
 </#function>
 
-<#macro row object aspectDef>
+<#macro row object aspectDef domain = "">
   <#local labelDef = aspectDef?is_string?then(aspectDef, aspectDef?keys?first) />
   <#local valueDef = aspectDef?is_string?then(aspectDef, aspectDef?values?first) />
   <#local label =  labelDef?split('\\b', 'r')?map(v-> v?matches("[\\w]+")?then(bundle[v], v))?join('') />
-  <#local val = valueDef?switch('name', object.name, valueDef?split('\\b', 'r')?map(v-> v?matches("[\\w]+")?then(to_user_presentable(object[v]), v))?join(''))/>
+  <#local val = getValue(valueDef, object, domain)/>
   | ${label} | ${val} |
 </#macro>
 
-<#macro table header object aspectDefs>
+<#function getValue valueDef element domain>
+    <#if valueDef == 'name'>
+        <#return element.name/>
+    </#if>
+    <#if valueDef == 'status'>
+        <#return status(element, domain)/>
+    </#if>
+  <#return valueDef?split('\\b', 'r')?map(v-> v?matches("[\\w]+")?then(to_user_presentable(element[v]), v))?join('')/>
+</#function>
+
+<#macro table header object aspectDefs domain="">
 | ${header}  ||
 |:------------|:-----|
 <#list aspectDefs as aspectDef>
-<@row object,aspectDef />
+<@row object,aspectDef,domain />
 </#list>
 </#macro>
 

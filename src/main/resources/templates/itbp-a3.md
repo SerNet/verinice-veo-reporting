@@ -39,6 +39,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 
 <#assign scope = informationDomain/>
 <#assign domain=domains?filter(it->it.name == 'IT-Grundschutz')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
+<#assign institutions=scope.scopes?filter(it->it.hasSubType('SCP_Institution')) />
 
 <#assign assetsInScope = scope.getMembersWithType('asset')/>
 <#assign processesInScope = scope.getMembersWithType('process')/>
@@ -150,17 +151,33 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 
 <div class="main_page">
 
+<#if institutions?has_content>
 
+<#list institutions as institution>
+    <@table bundle.scope_SCP_Institution_singular,
+    institution,
+    ['name',
+    'scope_address_address1',
+    {'scope_address_postcode, scope_address_city' : 'scope_address_postcode scope_address_city'},
+    'scope_contactInformation_phone',
+    'scope_contactInformation_email',
+    'scope_contactInformation_website'
+    ]/>
+</#list>
+<#else>
+${bundle.no_institutions}
+</#if>
 
-<@table bundle.controller_information,
-  scope,
-  ['name',
-   'scope_address_address1',
-   {'scope_address_postcode, scope_address_city' : 'scope_address_postcode scope_address_city'},
-   'scope_contactInformation_phone',
-   'scope_contactInformation_email',
-   'scope_contactInformation_website'
-  ]/>
+<@table bundle.scope_SCP_InformationDomain_singular,
+scope,
+['name',
+'description',
+'scope_protection_approach',
+'status'
+],
+domain/>
+
+</div>
 
 <#assign management=scope.findFirstLinked('scope_management')! />
 <#assign headOfDataProcessing=scope.findFirstLinked('scope_headOfDataProcessing')! />
@@ -169,22 +186,6 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 |:---|:---|
 | ${bundle.scope_management} | ${management.name!} |
 | ${bundle.scope_headOfDataProcessing}  |  ${headOfDataProcessing.name!} |
-
-
-<#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')! />
-
-<#--
-<@table bundle.data_protection_officer,
-  dataProtectionOfficer,
-  [
-   'name',
-   'person_contactInformation_office',
-   'person_contactInformation_email'
-  ]/>
-
-</div>
--->
-
 
 <div class="pagebreak"></div>
 
