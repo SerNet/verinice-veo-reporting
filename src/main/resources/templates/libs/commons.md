@@ -47,3 +47,7 @@ ${term}
 </#list>
 <#return elementsBySubType>
 </#function>
+
+<#function status element domain>
+  <#return bundle[element.type+'_'+element.domains[domain.id].subType+'_status_'+element.domains[domain.id].status] />
+</#function>

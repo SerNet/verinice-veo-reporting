@@ -3,6 +3,7 @@
 <#assign table = com.table
         row = com.row
          def = com.def
+         status = com.status
          groupBySubType = com.groupBySubType />
 
 
@@ -171,11 +172,6 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 
 <div class="pagebreak"></div>
 
-<#function status element>
-<#return bundle[element.type+'_'+element.domains[domain.id].subType+'_status_'+element.domains[domain.id].status] />
-</#function>
-
-
 <#if businessProcesses?has_content>
 # ${bundle.PRO_BusinessProcess} {#businessProcesses}
 
@@ -188,8 +184,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <@row process, 'name'/>
 <@row process, 'description'/>
 | ${bundle.process_details_processType} | ${(bundle[process.process_details_processType])!}
-| ${bundle.status} | ${status(process)} |
-
+| ${bundle.status} | ${status(process, domain)} |
 
 </#list>
 <div class="pagebreak"></div>
@@ -211,7 +206,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <@row asset, 'description'/>
 <@row asset, 'asset_bpDetails_platform'/>
 <@row asset, 'asset_details_number'/>
-| ${bundle.status} | ${status(asset)} |
+| ${bundle.status} | ${status(asset, domain)} |
 
 </#list>
 <div class="pagebreak"></div>
