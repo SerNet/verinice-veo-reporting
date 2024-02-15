@@ -40,6 +40,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 
 <#assign scope = informationDomain/>
 <#assign domain=domains?filter(it->it.name == 'IT-Grundschutz')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
+<#assign institutions=scope.scopes?filter(it->it.hasSubType('SCP_Institution')) />
 
 <#assign assetsInScope = scope.getMembersWithType('asset')/>
 <#assign assetsBySubType = groupBySubType(assetsInScope, domain)/>
@@ -159,18 +160,33 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 # ${bundle.main_page} {#main_page}
 
 <div class="main_page">
+    <#if institutions?has_content>
 
-<@table bundle.information_domain_information,
-  scope,
-  ['name',
-   'scope_address_address1',
-   {'scope_address_postcode, scope_address_city' : 'scope_address_postcode scope_address_city'},
-   'scope_contactInformation_phone',
-   'scope_contactInformation_email',
-   'scope_contactInformation_website'
-  ]/>
+        <#list institutions as institution>
+            <@table bundle.scope_SCP_Institution_singular,
+            institution,
+            ['name',
+            'scope_address_address1',
+            {'scope_address_postcode, scope_address_city' : 'scope_address_postcode scope_address_city'},
+            'scope_contactInformation_phone',
+            'scope_contactInformation_email',
+            'scope_contactInformation_website'
+            ]/>
+        </#list>
+    <#else>
+        ${bundle.no_institutions}
+    </#if>
 
-<div class="pagebreak"></div>
+    <@table bundle.scope_SCP_InformationDomain_singular,
+    scope,
+    ['name',
+    'description',
+    'scope_protection_approach',
+    'status'
+    ],
+    domain/>
+
+</div>
 
 <#if businessProcesses?has_content>
 # ${bundle.PRO_BusinessProcess} {#businessProcesses}
