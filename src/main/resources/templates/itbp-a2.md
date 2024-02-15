@@ -140,12 +140,11 @@ ${bundle.no_institutions}
 <@table bundle.information_domain_information,
   scope,
   ['name',
-   'scope_address_address1',
-   {'scope_address_postcode, scope_address_city' : 'scope_address_postcode scope_address_city'},
-   'scope_contactInformation_phone',
-   'scope_contactInformation_email',
-   'scope_contactInformation_website'
-  ]/>
+  'description',
+  'scope_protection_approach',
+  'status'
+  ],
+  domain/>
 
 </div>
 
