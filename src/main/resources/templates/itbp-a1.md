@@ -65,32 +65,32 @@ table.used_modules th:last-child, table.used_modules td:last-child {
   <bookmark name="${bundle.toc}" href="#toc"/>
   <bookmark name="${bundle.main_page}" href="#main_page"/>
 <#if businessProcesses?has_content>
-  <bookmark name="${bundle.PRO_BusinessProcess}" href="#businessProcesses">
+  <bookmark name="${bundle.process_PRO_BusinessProcess_plural}" href="#businessProcesses">
     <#list businessProcesses as process>
       <bookmark name="${title(process)}" href="#process_${process?counter}">
       </bookmark>
     </#list>
-  </bookmark>    
-</#if>    
+  </bookmark>
+</#if>
 <#if assetsInScope?has_content>
   <bookmark name="${bundle.assets}" href="#assets">
     <#list assetsBySubType as assetType, assetsWithType>
-      <bookmark name="${bundle[assetType]}" href="#${assetType}">
+      <bookmark name="${bundle['asset_'+assetType+'_plural']}" href="#${assetType}">
         <#list assetsWithType as asset>
           <bookmark name="${title(asset)}" href="#asset_${assetType}_${asset?counter}">
           </bookmark>
         </#list>
       </bookmark>
     </#list>
-  </bookmark>    
+  </bookmark>
 </#if>
 <#if externalServiceProviders?has_content>
-  <bookmark name="${bundle.external_service_providers}" href="#externalServiceProviders">
+  <bookmark name="${bundle.scope_SCP_ExternalServiceProvider_plural}" href="#externalServiceProviders">
     <#list externalServiceProviders as externalServiceProvider>
       <bookmark name="${title(externalServiceProvider)}" href="#externalServiceProvider_${externalServiceProvider?counter}">
       </bookmark>
     </#list>
-  </bookmark>    
+  </bookmark>
 </#if>
 </bookmarks>
 
@@ -131,16 +131,16 @@ table.used_modules th:last-child, table.used_modules td:last-child {
   <@tocitem 1 "main_page" "1. ${bundle.main_page}" />
   <#assign level2counter = 2>
   <#if businessProcesses?has_content>
-    <@tocitem 1 "businessProcesses" "${level2counter}. ${bundle.PRO_BusinessProcess}" />
+    <@tocitem 1 "businessProcesses" "${level2counter}. ${bundle.process_PRO_BusinessProcess_plural}" />
     <#list businessProcesses as process>
       <@tocitem 2 "process_${process?counter}" "${process?counter}. ${title(process)}" />
      </#list>
     <#assign level2counter = 3>
-  </#if>   
+  </#if>
   <#if assetsInScope?has_content>
     <@tocitem 1 "assets" "${level2counter}. ${bundle.assets}" />
     <#list assetsBySubType as assetType, assetsWithType>
-      <@tocitem 2 assetType "${assetType?counter}. ${bundle[assetType]}" />
+      <@tocitem 2 assetType "${assetType?counter}. ${bundle['asset_'+assetType+'_plural']}" />
       <#list assetsWithType as asset>
         <@tocitem 3 "asset_${assetType}_${asset?counter}" "${asset?counter}. ${title(asset)}" />
       </#list>
@@ -148,12 +148,12 @@ table.used_modules th:last-child, table.used_modules td:last-child {
     <#assign level2counter = 4>
   </#if>
   <#if externalServiceProviders?has_content>
-    <@tocitem 1 "externalServiceProviders" "${level2counter}. ${bundle.external_service_providers}" />
+    <@tocitem 1 "externalServiceProviders" "${level2counter}. ${bundle.scope_SCP_ExternalServiceProvider_plural}" />
     <#list externalServiceProviders as externalServiceProvider>
       <@tocitem 2 "externalServiceProvider_${externalServiceProvider?counter}" "${externalServiceProvider?counter}. ${title(externalServiceProvider)}" />
      </#list>
     <#assign level2counter = 3>
-  </#if>   
+  </#if>
 </tbody>
 </table>
 
@@ -189,7 +189,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 </div>
 
 <#if businessProcesses?has_content>
-# ${bundle.PRO_BusinessProcess} {#businessProcesses}
+# ${bundle.process_PRO_BusinessProcess_plural} {#businessProcesses}
 
 <#list businessProcesses as process>
 ## ${title(process)} {#process_${process?counter}}
@@ -210,7 +210,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 # ${bundle.assets} {#assets}
 <#list assetsBySubType as assetType, assetsWithType>
 
-## ${bundle[assetType]} {#${assetType}}
+## ${bundle['asset_'+assetType+'_plural']} {#${assetType}}
 
 <#list assetsWithType as asset>
 ### ${title(asset)} {#asset_${assetType}_${asset?counter}}
@@ -230,7 +230,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 </#if>
 
 <#if externalServiceProviders?has_content>
-# ${bundle.external_service_providers} {#externalServiceProviders}
+# ${bundle.scope_SCP_ExternalServiceProvider_plural} {#externalServiceProviders}
 
 <#list externalServiceProviders as externalServiceProvider>
 ## ${title(externalServiceProvider)} {#externalServiceProvider_${externalServiceProvider?counter}}
