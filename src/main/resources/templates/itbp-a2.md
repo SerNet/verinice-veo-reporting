@@ -41,10 +41,8 @@ td {
 <#assign impacts=riskDefinitionId?has_content?then(domain.riskDefinitions[riskDefinitionId].categories[0].potentialImpacts,[])/>
 <#assign institutions=scope.scopes?filter(it->it.hasSubType('SCP_Institution')) />
 
-<#assign targetElementsByTypeAndSubType={
-    'asset': groupBySubType(scope.getMembersWithType('asset'), domain),
-    'process': groupBySubType(scope.getMembersWithType('process'), domain)
-} />
+<#assign elementSubTypeGroups =
+groupBySubType(scope.members, 'asset', domain) + groupBySubType(scope.members, 'process', domain)/>
 
 <#function title element>
 <#if element.abbreviation?has_content>
@@ -63,10 +61,8 @@ td {
     </#list>
     <bookmark name="${bundle.targets}" href="#targets"/>
     <bookmark name="${bundle.legend}" href="#targets_legend"/>
-    <#list targetElementsByTypeAndSubType as elementType, targetElementsBySubType>
-        <#list targetElementsBySubType as subType, targetElements>
-            <bookmark name="${bundle[elementType+'_'+subType+'_plural']}" href="#targets_${elementType}_${subType}"/>
-        </#list>
+    <#list elementSubTypeGroups as group>
+        <bookmark name="${group.subTypePlural}" href="#targets_${group.elementType}_${group.subType}"/>
     </#list>
 </bookmarks>
 
@@ -112,11 +108,9 @@ td {
   <@tocitem 1 "targets" "3. ${bundle.targets}" />
   <#assign level2Counter=1/>
   <@tocitem 2 "targets_legend" "${level2Counter} ${bundle.legend}"/>
-  <#list targetElementsByTypeAndSubType as elementType, targetElementsBySubType>
-      <#list targetElementsBySubType as subType, targetElements>
-          <#assign level2Counter++/>
-          <@tocitem 2 "targets_${elementType}_${subType}" "${level2Counter}. ${bundle[elementType+'_'+subType+'_plural']}"/>
-      </#list>
+  <#list elementSubTypeGroups as group>
+      <#assign level2Counter++/>
+      <@tocitem 2 "targets_${group.elementType}_${group.subType}" "${level2Counter}. ${group.subTypePlural}"/>
   </#list>
 </tbody>
 </table>
@@ -212,10 +206,9 @@ ${bundle.impactReasons}:
 | (${bundle[abbreviation]}) | ${bundle[abbreviation?remove_ending("_abbreviation")]} |
 </#list>
 
-<#list targetElementsByTypeAndSubType as elementType, targetElementsBySubType>
-<#list targetElementsBySubType as subType, targetElements>
+<#list elementSubTypeGroups as group>
 
-### ${bundle[elementType+'_'+subType+'_plural']} {#targets_${elementType}_${subType}}
+### ${group.subTypePlural} {#targets_${group.elementType}_${group.subType}}
 <!-- Use separate table for head and one table per target, so there can be a page break before each target. -->
 <table class="table">
 <thead class="dark-gray">
@@ -229,7 +222,7 @@ ${category.translations.de.name}
 </thead>
 </table>
 
-<#list targetElements as targetElement>
+<#list group.elements as targetElement>
 <table class="table">
 <tr class="dark-gray">
 <td colspan="${categories?size}"> ${title(targetElement)} </td>
@@ -249,5 +242,4 @@ ${getImpactExplanation(targetElement,category)}
 </tr>
 </#list>
 </table>
-</#list>
 </#list>

@@ -46,12 +46,8 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <#assign domain=domains?filter(it->it.name == 'IT-Grundschutz')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 <#assign institutions=scope.scopes?filter(it->it.hasSubType('SCP_Institution')) />
 
-<#assign assetsInScope = scope.getMembersWithType('asset')/>
-<#assign processesInScope = scope.getMembersWithType('process')/>
-
-<#assign assetsBySubType = groupBySubType(assetsInScope, domain)/>
-<#assign processesBySubType = groupBySubType(processesInScope, domain)/>
-
+<#assign elementSubTypeGroups = groupBySubType(scope.members, 'process', domain)
++ groupBySubType(scope.members, 'asset', domain) />
 
 <#function title element>
 <#if element.abbreviation?has_content>
@@ -66,30 +62,12 @@ table.used_modules th:last-child, table.used_modules td:last-child {
   <bookmark name="${bundle.main_page}" href="#main_page"/>
   <bookmark name="${bundle.used_modules}" href="#used_modules"/>
   <bookmark name="${bundle.scope_SCP_InformationDomain_singular}" href="#information_domain"/>
-<#if assetsInScope?has_content>
-  <bookmark name="${bundle.assets}" href="#assets">
-    <#list assetsBySubType as assetType, assetsWithType>
-      <bookmark name="${bundle['asset_'+assetType+'_plural']}" href="#${assetType}">
-        <#list assetsWithType as asset>
-          <bookmark name="${title(asset)}" href="#asset_${assetType}_${asset?counter}">
-          </bookmark>
-        </#list>
-      </bookmark>
+  <#list elementSubTypeGroups as group>
+    <bookmark name="${group.subTypePlural}" href="#${group.elementType}_${group.subType}"/>
+    <#list group.elements as element>
+      <bookmark name="${title(element)}" href="#${group.elementType}_${group.subType}_${element?counter}"/>
     </#list>
-  </bookmark>    
-</#if>
-<#if processesInScope?has_content>
-  <bookmark name="${bundle.processes}" href="#processes">
-    <#list processesBySubType as processType, processesWithType>
-      <bookmark name="${bundle['process_'+processType+'_plural']}" href="#${processType}">
-        <#list processesWithType as process>
-          <bookmark name="${title(process)}" href="#process_${processType}_${process?counter}">
-          </bookmark>
-        </#list>
-      </bookmark>
-    </#list>
-  </bookmark>    
-</#if>    
+  </#list>
 </bookmarks>
 
 
@@ -129,26 +107,12 @@ table.used_modules th:last-child, table.used_modules td:last-child {
   <@tocitem 1 "main_page" "1. ${bundle.main_page}" />
   <@tocitem 1 "used_modules" "2. ${bundle.used_modules}" />
   <@tocitem 1 "information_domain" "3. ${bundle.scope_SCP_InformationDomain_singular}" />
-  <#assign level2counter = 4>
-  <#if assetsInScope?has_content>
-    <@tocitem 1 "assets" "${level2counter}. ${bundle.assets}" />
-    <#list assetsBySubType as assetType, assetsWithType>
-      <@tocitem 2 assetType "${assetType?counter}. ${bundle['asset_'+assetType+'_plural']}" />
-      <#list assetsWithType as asset>
-        <@tocitem 3 "asset_${assetType}_${asset?counter}" "${asset?counter}. ${title(asset)}" />
+  <#list elementSubTypeGroups as group>
+      <@tocitem 1 "${group.elementType}_${group.subType}" "${group?counter+3}. ${group.subTypePlural}"/>
+      <#list group.elements as element>
+          <@tocitem 2 "${group.elementType}_${group.subType}_${element?counter}" "${element?counter}. ${title(element)}"/>
       </#list>
-     </#list>
-    <#assign level2counter = 5>
-  </#if>
-  <#if processesInScope?has_content>
-    <@tocitem 1 "processes" "${level2counter}. ${bundle.processes}" />
-    <#list processesBySubType as processType, processesWithType>
-      <@tocitem 2 processType "${processType?counter}. ${bundle['process_'+processType+'_plural']}" />
-      <#list processesWithType as process>
-        <@tocitem 3 "process_${processType}_${process?counter}" "${process?counter}. ${title(process)}" />
-      </#list>
-     </#list>
-   </#if>   
+  </#list>
 </tbody>
 </table>
 
@@ -186,12 +150,12 @@ domain/>
 
 # ${bundle.used_modules} {#used_modules}
 
-<#assign targetObjects = [scope]+assetsInScope+processesInScope>
-
-<#assign relevantControlImplementations = []>
-<#list targetObjects as item>
-  <#list item.controlImplementations as ci>
-    <#assign relevantControlImplementations = relevantControlImplementations + [ci]>
+<#assign relevantControlImplementations = scope.controlImplementations>
+<#list elementSubTypeGroups as group>
+  <#list group.elements as item>
+    <#list item.controlImplementations as ci>
+      <#assign relevantControlImplementations = relevantControlImplementations + [ci]>
+    </#list>
   </#list>
 </#list>
 
@@ -298,42 +262,22 @@ domain/>
  -->
  
 </#if>
-</#macro> 
+</#macro>
 
 # ${title(scope)} {#information_domain}
 
 <@moduleview scope/>
 
-<div class="pagebreak"></div>
+<#list elementSubTypeGroups as group>
 
-<#if assetsInScope?has_content>
-# ${bundle.assets} {#assets}
-<#list assetsBySubType as assetType, assetsWithType>
+# ${group.subTypePlural} {#${group.elementType}_${group.subType}}
 
-## ${bundle['asset_'+assetType+'_plural']} {#${assetType}}
+<#list group.elements as element>
 
-<#list assetsWithType as asset>
-### ${title(asset)} {#asset_${assetType}_${asset?counter}}
+## ${title(element)} {#${group.elementType}_${group.subType}_${element?counter}}
 
-<@moduleview asset/>
+<@moduleview element/>
 
 </#list>
 <div class="pagebreak"></div>
 </#list>
-</#if>
-
-<#if processesInScope?has_content>
-# ${bundle.processes} {#processes}
-<#list processesBySubType as processType, processesWithType>
-
-## ${bundle['process_'+processType+'_plural']} {#${processType}}
-
-<#list processesWithType as process>
-### ${title(process)} {#process_${processType}_${process?counter}}
-
-<@moduleview process/>
-
-</#list>
-<div class="pagebreak"></div>
-</#list>
-</#if>

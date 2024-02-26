@@ -47,16 +47,9 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <#assign domain=domains?filter(it->it.name == 'IT-Grundschutz')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 <#assign institutions=scope.scopes?filter(it->it.hasSubType('SCP_Institution')) />
 
-<#assign assetsInScope = scope.getMembersWithType('asset')/>
-<#assign assetsBySubType = groupBySubType(assetsInScope, domain)/>
-
-<#function findBySubType elements subType domain>
-<#return elements?filter(it -> it.domains[domain.id].subType == subType)?sort_by('name_naturalized')>
-</#function>
-
-<#assign businessProcesses = findBySubType(scope.getMembersWithType('process'), 'PRO_BusinessProcess', domain)/>
-<#assign externalServiceProviders = findBySubType(scope.getMembersWithType('scope'), 'SCP_ExternalServiceProvider', domain)/>
-
+<#assign elementSubTypeGroups = groupBySubType(scope.members, 'process', domain)
+ + groupBySubType(scope.members, 'asset', domain)
+ + groupBySubType(scope.members, 'scope', domain)?filter(g -> g.subType == "SCP_ExternalServiceProvider") />
 
 <#function title element>
 <#if element.abbreviation?has_content>
@@ -69,34 +62,12 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <bookmarks>
   <bookmark name="${bundle.toc}" href="#toc"/>
   <bookmark name="${bundle.main_page}" href="#main_page"/>
-<#if businessProcesses?has_content>
-  <bookmark name="${bundle.process_PRO_BusinessProcess_plural}" href="#businessProcesses">
-    <#list businessProcesses as process>
-      <bookmark name="${title(process)}" href="#process_${process?counter}">
-      </bookmark>
+  <#list elementSubTypeGroups as group>
+    <bookmark name="${group.subTypePlural}" href="#${group.elementType}_${group.subType}"/>
+    <#list group.elements as element>
+      <bookmark name="${title(element)}" href="#${group.elementType}_${group.subType}_${element?counter}"/>
     </#list>
-  </bookmark>
-</#if>
-<#if assetsInScope?has_content>
-  <bookmark name="${bundle.assets}" href="#assets">
-    <#list assetsBySubType as assetType, assetsWithType>
-      <bookmark name="${bundle['asset_'+assetType+'_plural']}" href="#${assetType}">
-        <#list assetsWithType as asset>
-          <bookmark name="${title(asset)}" href="#asset_${assetType}_${asset?counter}">
-          </bookmark>
-        </#list>
-      </bookmark>
-    </#list>
-  </bookmark>
-</#if>
-<#if externalServiceProviders?has_content>
-  <bookmark name="${bundle.scope_SCP_ExternalServiceProvider_plural}" href="#externalServiceProviders">
-    <#list externalServiceProviders as externalServiceProvider>
-      <bookmark name="${title(externalServiceProvider)}" href="#externalServiceProvider_${externalServiceProvider?counter}">
-      </bookmark>
-    </#list>
-  </bookmark>
-</#if>
+  </#list>
 </bookmarks>
 
 
@@ -134,31 +105,12 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <table class="toc">
 <tbody>
   <@tocitem 1 "main_page" "1. ${bundle.main_page}" />
-  <#assign level2counter = 2>
-  <#if businessProcesses?has_content>
-    <@tocitem 1 "businessProcesses" "${level2counter}. ${bundle.process_PRO_BusinessProcess_plural}" />
-    <#list businessProcesses as process>
-      <@tocitem 2 "process_${process?counter}" "${process?counter}. ${title(process)}" />
-     </#list>
-    <#assign level2counter = 3>
-  </#if>
-  <#if assetsInScope?has_content>
-    <@tocitem 1 "assets" "${level2counter}. ${bundle.assets}" />
-    <#list assetsBySubType as assetType, assetsWithType>
-      <@tocitem 2 assetType "${assetType?counter}. ${bundle['asset_'+assetType+'_plural']}" />
-      <#list assetsWithType as asset>
-        <@tocitem 3 "asset_${assetType}_${asset?counter}" "${asset?counter}. ${title(asset)}" />
-      </#list>
+  <#list elementSubTypeGroups as group>
+    <@tocitem 1 "${group.elementType}_${group.subType}" "${group?counter+1}. ${group.subTypePlural}"/>
+    <#list group.elements as element>
+      <@tocitem 2 "${group.elementType}_${group.subType}_${element?counter}" "${element?counter}. ${title(element)}"/>
     </#list>
-    <#assign level2counter = 4>
-  </#if>
-  <#if externalServiceProviders?has_content>
-    <@tocitem 1 "externalServiceProviders" "${level2counter}. ${bundle.scope_SCP_ExternalServiceProvider_plural}" />
-    <#list externalServiceProviders as externalServiceProvider>
-      <@tocitem 2 "externalServiceProvider_${externalServiceProvider?counter}" "${externalServiceProvider?counter}. ${title(externalServiceProvider)}" />
-     </#list>
-    <#assign level2counter = 3>
-  </#if>
+  </#list>
 </tbody>
 </table>
 
@@ -193,65 +145,34 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 
 </div>
 
-<#if businessProcesses?has_content>
-# ${bundle.process_PRO_BusinessProcess_plural} {#businessProcesses}
+<#list elementSubTypeGroups as group>
 
-<#list businessProcesses as process>
-## ${title(process)} {#process_${process?counter}}
+# ${group.subTypePlural} {#${group.elementType}_${group.subType}}
 
-|||
-|:------------|:-----|
-<@row process, 'abbreviation'/>
-<@row process, 'name'/>
-<@row process, 'description'/>
-| ${bundle.process_details_processType} | ${(bundle[process.process_details_processType])!}
-| ${bundle.status} | ${status(process, domain)} |
+<#list group.elements as element>
 
-</#list>
-<div class="pagebreak"></div>
-</#if>
-
-<#if assetsInScope?has_content>
-# ${bundle.assets} {#assets}
-<#list assetsBySubType as assetType, assetsWithType>
-
-## ${bundle['asset_'+assetType+'_plural']} {#${assetType}}
-
-<#list assetsWithType as asset>
-### ${title(asset)} {#asset_${assetType}_${asset?counter}}
+## ${title(element)} {#${group.elementType}_${group.subType}_${element?counter}}
 
 |||
 |:------------|:-----|
-<@row asset, 'abbreviation'/>
-<@row asset, 'name'/>
-<@row asset, 'description'/>
-<@row asset, 'asset_bpDetails_platform'/>
-<@row asset, 'asset_details_number'/>
-| ${bundle.status} | ${status(asset, domain)} |
+<@row element, 'abbreviation'/>
+<@row element, 'name'/>
+<@row element, 'description'/>
+<#if group.elementType == "process">
+    | ${bundle.process_details_processType} | ${(bundle[element.process_details_processType])!}
+<#elseif group.elementType == "asset">
+    <@row element, 'asset_bpDetails_platform'/>
+    <@row element, 'asset_bpDetails_platform'/>
+    <@row element, 'asset_details_number'/>
+<#elseif group.elementType == "scope">
+    <@row element, 'scope_address_address1'/>
+    <@row element, {'scope_address_postcode, scope_address_city' : 'scope_address_postcode scope_address_city'}/>
+    <@row element, 'scope_contactInformation_phone'/>
+    <@row element, 'scope_contactInformation_email'/>
+    <@row element, 'scope_contactInformation_website'/>
+</#if>
+| ${bundle.status} | ${status(element, domain)} |
 
 </#list>
 <div class="pagebreak"></div>
 </#list>
-</#if>
-
-<#if externalServiceProviders?has_content>
-# ${bundle.scope_SCP_ExternalServiceProvider_plural} {#externalServiceProviders}
-
-<#list externalServiceProviders as externalServiceProvider>
-## ${title(externalServiceProvider)} {#externalServiceProvider_${externalServiceProvider?counter}}
-
-<@table '',
-externalServiceProvider,
-['name',
-'description',
-'scope_address_address1',
-{'scope_address_postcode, scope_address_city' : 'scope_address_postcode scope_address_city'},
-'scope_contactInformation_phone',
-'scope_contactInformation_email',
-'scope_contactInformation_website'
-]/>
-
-
-</#list>
-<div class="pagebreak"></div>
-</#if>

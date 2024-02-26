@@ -58,17 +58,28 @@ ${term}
 </#if>
 </#macro>
 
-<#function groupBySubType elements domain>
-<#assign elementsBySubType = {}/>
-<#list domain.elementTypeDefinitions?values as elementTypeDefinition>
-<#list elementTypeDefinition.subTypes?keys as subType>
-<#assign elementsWithSubType = elements?filter(it->it.domains[domain.id]?? && it.domains[domain.id].subType == subType)?sort_by('name_naturalized')>
-<#if elementsWithSubType?has_content>
-<#assign elementsBySubType = elementsBySubType + {subType: elementsWithSubType} />
-</#if>
-</#list>
-</#list>
-<#return elementsBySubType>
+<!-- TODO verinice-veo#2773 use sort order from domain -->
+<#assign orderedSubTypes = [
+'PRO_BusinessProcess',
+"AST_Information",
+"AST_Application",
+"AST_IT-System",
+"AST_ICS-System",
+"AST_Device",
+"AST_Network"
+]/>
+
+<#function groupBySubType elements elementType domain>
+<#assign etd = domain.elementTypeDefinitions[elementType]/>
+<#assign elementsBySubType = []/>
+<#assign subTypes = etd.subTypes?keys/>
+<#return subTypes?map(subType -> {
+    'elementType': elementType,
+    'subType': subType,
+    'elements': elements?filter(e -> e.type == elementType && e.domains[domain.id]?? && e.domains[domain.id].subType == subType),
+    'sortOrder': orderedSubTypes?seq_contains(subType)?then(orderedSubTypes?seq_index_of(subType), 99999999),
+    'subTypePlural': bundle[elementType+'_'+subType+'_plural']
+})?filter(s -> s.elements?has_content)?sort_by("sortOrder")/>
 </#function>
 
 <#function status element domain>
