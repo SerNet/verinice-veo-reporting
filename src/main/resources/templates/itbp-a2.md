@@ -12,6 +12,10 @@ h1, h2, h3, h4 {
   page-break-after: avoid;
 }
 
+td {
+    vertical-align: top;
+}
+
 .main_page {
   page-break-after: always;
 }
