@@ -13,7 +13,12 @@
   <#local valueDef = aspectDef?is_string?then(aspectDef, aspectDef?values?first) />
   <#local label =  labelDef?split('\\b', 'r')?map(v-> v?matches("[\\w]+")?then(bundle[v], v))?join('') />
   <#local val = getValue(valueDef, object, domain)/>
-  | ${label} | ${val} |
+  | ${label} | <@multiline val/> |
+</#macro>
+
+<#macro multiline string>
+    <#local lines = (string!'')?split("\n")/>
+    <#list lines as line>${line}<br/></#list>
 </#macro>
 
 <#function getValue valueDef element domain>
