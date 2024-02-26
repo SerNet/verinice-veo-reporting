@@ -23,7 +23,15 @@
     <#if valueDef == 'status'>
         <#return status(element, domain)/>
     </#if>
-  <#return valueDef?split('\\b', 'r')?map(v-> v?matches("[\\w]+")?then(to_user_presentable(element[v]), v))?join('')/>
+  <#return valueDef?split('\\b', 'r')?map(v-> v?matches("[\\w]+")?then(getSingleValue(v, element), v))?join('')/>
+</#function>
+
+<#function getSingleValue valueDef element>
+    <#assign val = element[valueDef]!/>
+    <#if val?is_string && (val?length > 0) && val?contains(valueDef) && bundle?keys?seq_contains(val)>
+        <#return bundle[val]/>
+    </#if>
+    <#return to_user_presentable(element[valueDef]!)/>
 </#function>
 
 <#macro table header object aspectDefs domain="">
