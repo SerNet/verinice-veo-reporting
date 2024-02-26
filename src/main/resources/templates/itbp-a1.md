@@ -4,6 +4,7 @@
         row = com.row
          def = com.def
          status = com.status
+         multiline = com.multiline
          groupBySubType = com.groupBySubType />
 
 
@@ -113,7 +114,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 </div>
 
 <div class="cover">
-<h1>${bundle.title}</h1>
+<h1><@multiline bundle.title/></h1>
 <p>powered by verinice</p>
 </div>
 
