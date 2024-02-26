@@ -179,16 +179,6 @@ domain/>
 
 </div>
 
-<#assign management=scope.findFirstLinked('scope_management')! />
-<#assign headOfDataProcessing=scope.findFirstLinked('scope_headOfDataProcessing')! />
-
-| ${bundle.representation}  ||
-|:---|:---|
-| ${bundle.scope_management} | ${management.name!} |
-| ${bundle.scope_headOfDataProcessing}  |  ${headOfDataProcessing.name!} |
-
-<div class="pagebreak"></div>
-
 # ${bundle.used_modules} {#used_modules}
 
 <#assign targetObjects = [scope]+assetsInScope+processesInScope>
