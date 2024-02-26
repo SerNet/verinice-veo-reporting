@@ -159,7 +159,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <@row element, 'name'/>
 <@row element, 'description'/>
 <#if group.elementType == "process">
-    | ${bundle.process_details_processType} | ${(bundle[element.process_details_processType])!}
+    <@row element, 'process_details_processType'/>
 <#elseif group.elementType == "asset">
     <@row element, 'asset_bpDetails_platform'/>
     <@row element, 'asset_bpDetails_platform'/>
