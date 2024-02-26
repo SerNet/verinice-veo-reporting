@@ -91,7 +91,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <div class="footer-left">
   <table>
     <tr>
-      <td>${bundle.organization}: </td>
+      <td>${bundle.scope_SCP_InformationDomain_singular}: </td>
       <td>${scope.name}</td>
     </tr>
     <tr>
