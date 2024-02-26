@@ -228,7 +228,7 @@ div.pagebreak {
 		font-size: 10pt;
 		color: #767676;
 		padding: 15px 0;
-		content: 'powered by verinice | ' counter(page) ' von ' counter(pages);
+		content: 'Seite ' counter(page) ' von ' counter(pages);
     };
 }
 @page:first {
