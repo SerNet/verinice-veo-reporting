@@ -4627,7 +4627,7 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-47. Group: org.apache.pdfbox  Name: fontbox  Version: 2.0.30
+47. Group: org.apache.pdfbox  Name: fontbox  Version: 2.0.31
 
 Manifest Project URL: https://pdfbox.apache.org
 
@@ -4977,7 +4977,7 @@ Lohit-Bengali font (https://pagure.io/lohit):
 
 
 Apache FontBox
-Copyright 2008-2023 The Apache Software Foundation
+Copyright 2008-2024 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -4991,7 +4991,7 @@ Copyright 2017 Unicode, Inc.
 
 --------------------------------------------------------------------------------
 
-48. Group: org.apache.pdfbox  Name: pdfbox  Version: 2.0.30
+48. Group: org.apache.pdfbox  Name: pdfbox  Version: 2.0.31
 
 Manifest Project URL: https://pdfbox.apache.org
 
@@ -5448,7 +5448,7 @@ Twelvemonkeys (https://github.com/haraldk/TwelveMonkeys/)
 
 
 Apache PDFBox
-Copyright 2002-2023 The Apache Software Foundation
+Copyright 2002-2024 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -18287,5 +18287,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Thu Apr 11 16:37:31 UTC 2024.
+This report was generated at Thu Apr 11 17:36:24 UTC 2024.
 
