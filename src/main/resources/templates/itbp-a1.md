@@ -162,7 +162,6 @@ table.used_modules th:last-child, table.used_modules td:last-child {
     <@row element, 'process_details_processType'/>
 <#elseif group.elementType == "asset">
     <@row element, 'asset_bpDetails_platform'/>
-    <@row element, 'asset_bpDetails_platform'/>
     <@row element, 'asset_details_number'/>
 <#elseif group.elementType == "scope">
     <@row element, 'scope_address_address1'/>
