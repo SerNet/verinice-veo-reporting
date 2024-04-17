@@ -58,7 +58,7 @@ public class Demo {
     logger.info("Demo mode enabled");
     var reportEngine = ctx.getBean(ReportEngine.class);
     var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
-    var scopeId = ctx.getEnvironment().getRequiredProperty("veo.demoscopeid");
+    var scopeId = ctx.getEnvironment().getProperty("veo.demoscopeid");
     var printInputData = "true".equals(ctx.getEnvironment().getProperty("veo.print_report_data"));
     var requestId = ctx.getEnvironment().getProperty("veo.demorequestid");
     var scopeIdItgs = ctx.getEnvironment().getProperty("veo.demoscopeiditbp");
@@ -73,6 +73,7 @@ public class Demo {
 
     var dpiaId = ctx.getEnvironment().getProperty("veo.demodpiaid");
     var privacyIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentid");
+    boolean createGDPRReports = scopeId != null;
     boolean createDPIAReports = dpiaId != null;
     boolean createDPIncidentReports = privacyIncidentId != null;
     boolean createRequestReports = requestId != null;
@@ -122,6 +123,7 @@ public class Demo {
         reportEngine,
         dataProvider,
         entriesForLanguage,
+        createGDPRReports,
         createDPIAReports,
         createDPIncidentReports,
         createRequestReports,
@@ -148,6 +150,7 @@ public class Demo {
                 reportEngine,
                 dataProvider,
                 entriesForLanguage,
+                createGDPRReports,
                 createDPIAReports,
                 createDPIncidentReports,
                 createRequestReports,
@@ -166,6 +169,7 @@ public class Demo {
       ReportEngine reportEngine,
       DataProvider dataProvider,
       Map<Locale, Map<String, Object>> entriesForLanguage,
+      boolean createGDPRReports,
       boolean createDPIAReports,
       boolean createDPIncidentReports,
       boolean createRequestReports,
@@ -176,46 +180,65 @@ public class Demo {
     ReportCreationParameters parametersUS = new ReportCreationParameters(Locale.US);
 
     try {
-      createReport(
-          reportEngine,
-          "processing-activities",
-          "/tmp/vvt.md",
-          dataProvider,
-          "text/markdown",
-          parametersGermany,
-          entriesForLanguage.get(Locale.GERMANY));
-      createReport(
-          reportEngine,
-          "processing-activities",
-          "/tmp/vvt.html",
-          dataProvider,
-          MediaType.TEXT_HTML_VALUE,
-          parametersGermany,
-          entriesForLanguage.get(Locale.GERMANY));
-      createReport(
-          reportEngine,
-          "processing-activities",
-          "/tmp/vvt.pdf",
-          dataProvider,
-          MediaType.APPLICATION_PDF_VALUE,
-          parametersGermany,
-          entriesForLanguage.get(Locale.GERMANY));
-      createReport(
-          reportEngine,
-          "risk-analysis",
-          "/tmp/dpra.pdf",
-          dataProvider,
-          MediaType.APPLICATION_PDF_VALUE,
-          parametersGermany,
-          entriesForLanguage.get(Locale.GERMANY));
-      createReport(
-          reportEngine,
-          "risk-analysis",
-          "/tmp/dpra.html",
-          dataProvider,
-          MediaType.TEXT_HTML_VALUE,
-          parametersGermany,
-          entriesForLanguage.get(Locale.GERMANY));
+      if (createGDPRReports) {
+        createReport(
+            reportEngine,
+            "processing-activities",
+            "/tmp/vvt.md",
+            dataProvider,
+            "text/markdown",
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+        createReport(
+            reportEngine,
+            "processing-activities",
+            "/tmp/vvt.html",
+            dataProvider,
+            MediaType.TEXT_HTML_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+        createReport(
+            reportEngine,
+            "processing-activities",
+            "/tmp/vvt.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+        createReport(
+            reportEngine,
+            "risk-analysis",
+            "/tmp/dpra.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+        createReport(
+            reportEngine,
+            "risk-analysis",
+            "/tmp/dpra.html",
+            dataProvider,
+            MediaType.TEXT_HTML_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+        createReport(
+            reportEngine,
+            "processing-on-behalf",
+            "/tmp/av.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+
+        createReport(
+            reportEngine,
+            "dp-requests-from-data-subjects-overview",
+            "/tmp/request-overview.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersUS,
+            entriesForLanguage.get(Locale.US));
+      }
       if (createDPIAReports) {
 
         createReport(
@@ -261,23 +284,6 @@ public class Demo {
             parametersGermany,
             entriesForLanguage.get(Locale.GERMANY));
       }
-      createReport(
-          reportEngine,
-          "processing-on-behalf",
-          "/tmp/av.pdf",
-          dataProvider,
-          MediaType.APPLICATION_PDF_VALUE,
-          parametersGermany,
-          entriesForLanguage.get(Locale.GERMANY));
-
-      createReport(
-          reportEngine,
-          "dp-requests-from-data-subjects-overview",
-          "/tmp/request-overview.pdf",
-          dataProvider,
-          MediaType.APPLICATION_PDF_VALUE,
-          parametersUS,
-          entriesForLanguage.get(Locale.US));
       if (createRequestReports) {
         createReport(
             reportEngine,
