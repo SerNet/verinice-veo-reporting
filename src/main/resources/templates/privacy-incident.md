@@ -34,6 +34,8 @@ dl {
     <tr>
       <td>${bundle.organization}: </td>
       <td>${(scope.name)!}</td>
+      <td>${bundle.time_zone_hint}: </td>
+      <td>${timeZone}</td>
     </tr>
     <tr>
       <td>${bundle.creation_date}: </td>

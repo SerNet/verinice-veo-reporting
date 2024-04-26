@@ -123,6 +123,7 @@ public final class ReportEngineImpl implements ReportEngine {
       ResourceBundle reportBundle = ResourceBundle.getBundle(bundleName, parameters.getLocale());
       logger.info("Bundle loaded, locale: {}", reportBundle.getLocale());
       data.put("bundle", MapResourceBundle.createMergedBundle(reportBundle, dynamicBundleEntries));
+      data.put("timeZone", parameters.getTimeZone().getDisplayName(parameters.getLocale()));
     } catch (MissingResourceException e) {
       logger.warn("No resource bundle found for template {}", templateName);
       data.put("bundle", new MapResourceBundle(dynamicBundleEntries));
