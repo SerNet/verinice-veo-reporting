@@ -20,7 +20,6 @@ package org.veo.reporting.controllers;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -146,10 +145,11 @@ public class ReportController {
       throw new InvalidReportParametersException(
           "Target type " + target.type + " not supported by report " + id);
     }
-    Locale locale = RequestContextUtils.getLocale(request);
-    logger.info("Request locale = {}", locale);
+    ReportCreationParameters parameters =
+        new ReportCreationParameters(RequestContextUtils.getLocale(request));
+    logger.info("Request parameters = {}", parameters);
 
-    String desiredLanguage = locale.getLanguage();
+    String desiredLanguage = parameters.getLocale().getLanguage();
     Set<String> supportedLanguages = configuration.get().getName().keySet();
     if (!supportedLanguages.contains(desiredLanguage)) {
       throw new InvalidReportParametersException(
@@ -163,9 +163,10 @@ public class ReportController {
 
     Map<String, Object> entriesForLanguage;
     try {
-      entriesForLanguage = veoClient.fetchTranslations(locale, authorizationHeader);
+      entriesForLanguage = veoClient.fetchTranslations(parameters.getLocale(), authorizationHeader);
     } catch (IOException e) {
-      throw new ServerErrorException("Failed to fetch translations for " + locale, e);
+      throw new ServerErrorException(
+          "Failed to fetch translations for " + parameters.getLocale(), e);
     }
     DataProvider dataProvider =
         keysAndUrls -> {
@@ -187,12 +188,7 @@ public class ReportController {
         out -> {
           try {
             reportEngine.generateReport(
-                id,
-                outputType,
-                new ReportCreationParameters(locale),
-                out,
-                dataProvider,
-                entriesForLanguage);
+                id, outputType, parameters, out, dataProvider, entriesForLanguage);
             logger.info("Report generated");
           } catch (TemplateException e) {
             logger.error("Error creating report", e);
