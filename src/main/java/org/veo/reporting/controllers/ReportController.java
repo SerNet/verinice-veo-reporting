@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -146,7 +147,11 @@ public class ReportController {
           "Target type " + target.type + " not supported by report " + id);
     }
     ReportCreationParameters parameters =
-        new ReportCreationParameters(RequestContextUtils.getLocale(request));
+        new ReportCreationParameters(
+            RequestContextUtils.getLocale(request),
+            createReport.getTimeZone() != null
+                ? createReport.getTimeZone()
+                : TimeZone.getTimeZone("UTC"));
     logger.info("Request parameters = {}", parameters);
 
     String desiredLanguage = parameters.getLocale().getLanguage();

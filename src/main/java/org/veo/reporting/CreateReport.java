@@ -18,6 +18,7 @@
 package org.veo.reporting;
 
 import java.util.List;
+import java.util.TimeZone;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -43,6 +44,8 @@ public class CreateReport {
   // multiple targets are not supported yet
   private List<TargetSpecification> targets;
 
+  private TimeZone timeZone;
+
   public String getOutputType() {
     return outputType;
   }
@@ -58,6 +61,14 @@ public class CreateReport {
 
   public void setTargets(List<TargetSpecification> targets) {
     this.targets = List.copyOf(targets);
+  }
+
+  public TimeZone getTimeZone() {
+    return timeZone != null ? (TimeZone) timeZone.clone() : null;
+  }
+
+  public void setTimeZone(TimeZone timeZone) {
+    this.timeZone = (TimeZone) timeZone.clone();
   }
 
   public static class TargetSpecification {

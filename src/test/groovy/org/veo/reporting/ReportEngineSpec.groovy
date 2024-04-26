@@ -45,7 +45,7 @@ class ReportEngineSpec extends Specification {
         }
         when:
         def str = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport(reportConfiguration, data, 'text/markdown', it, new ReportCreationParameters(Locale.US) )
+            reportEngine.generateReport(reportConfiguration, data, 'text/markdown', it, new ReportCreationParameters(Locale.US, TimeZone.default) )
             it.toString()
         }
         then:
@@ -155,28 +155,28 @@ Favorite drink
         doc.documentCatalog.language == 'de-DE'
     }
 
-    def "Render report with different locales"() {
+    def "Render report with different locales and time zones"() {
         when:
         String text = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.GERMANY), it,{m->[person:[name: 'Max']]}, [:])
+            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.GERMANY, TimeZone.getTimeZone("Europe/Berlin")), it,{m->[person:[name: 'Max']]}, [:])
             it.toString()
         }
         then:
         text == '''Hallo Max,
 
-Hiermit lade ich Dich zu meinem Geburtstag ein.
+Hiermit lade ich Dich zu meinem Geburtstag ein. Mach Dir ein Kreuz im Kalender: 01.04.2024, 15:00:00
 
 Tschüß'''
         when:
 
         text = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.US), it,{m->[person:[name: 'Jack']]}, [:])
+            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.US, TimeZone.getTimeZone("America/New_York")), it,{m->[person:[name: 'Jack']]}, [:])
             it.toString()
         }
         then:
         text == '''Hi Jack,
 
-I'd like to invite you to my birthday party.
+I'd like to invite you to my birthday party. Save the date: Apr 1, 2024, 9:00:00 AM
 
 Cheers'''
     }
@@ -247,7 +247,7 @@ Cheers'''
             getTemplateType() >> templateType
         }
         new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport(reportConfiguration, data, 'application/pdf', it, new ReportCreationParameters(locale))
+            reportEngine.generateReport(reportConfiguration, data, 'application/pdf', it, new ReportCreationParameters(locale, TimeZone.default))
             PDDocument.load(it.toByteArray())
         }
     }
@@ -259,7 +259,7 @@ Cheers'''
             getTemplateType() >> templateType
         }
         new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport(reportConfiguration, data, 'text/html', it, new ReportCreationParameters(locale))
+            reportEngine.generateReport(reportConfiguration, data, 'text/html', it, new ReportCreationParameters(locale, TimeZone.default))
             it.toString()
         }
     }

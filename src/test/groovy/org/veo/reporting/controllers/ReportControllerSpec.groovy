@@ -213,10 +213,11 @@ public class ReportControllerSpec extends ReportingTest {
         response.contentAsString == '''Language en not supported by report processing-activities, supported languages: [de]'''
     }
 
-    def "create a report with different locales"() {
+    def "create a report with different locales and time zones"() {
         when:
         def response = POST("/reports/invitation",'abc','en', [
             outputType:'text/plain',
+            timeZone: 'America/New_York',
             targets: [
                 [
                     type: 'person',
@@ -239,7 +240,7 @@ public class ReportControllerSpec extends ReportingTest {
         ]
         response.contentAsString == '''Hi Mary,
 
-I'd like to invite you to my birthday party.
+I'd like to invite you to my birthday party. Save the date: Apr 1, 2024, 9:00:00 AM
 
 Cheers'''
         when:
@@ -250,7 +251,8 @@ Cheers'''
                     type: 'person',
                     id: '1'
                 ]
-            ]
+            ],
+            timeZone: 'Europe/Berlin'
         ])
         then:
         response.status == 200
@@ -267,7 +269,64 @@ Cheers'''
         ]
         response.contentAsString == '''Hallo Maria,
 
-Hiermit lade ich Dich zu meinem Geburtstag ein.
+Hiermit lade ich Dich zu meinem Geburtstag ein. Mach Dir ein Kreuz im Kalender: 01.04.2024, 15:00:00
+
+Tschüß'''
+
+        when: "using an unknown time zone"
+        response = POST("/reports/invitation",'abc','de', [
+            outputType:'text/plain',
+            targets: [
+                [
+                    type: 'person',
+                    id: '1'
+                ]
+            ],
+            timeZone: 'Atlantis'
+        ])
+        then: "UTC is used"
+        response.status == 200
+        1 * veoClient.fetchData([person:'/persons/1'], 'Bearer: abc') >> [
+            person : [
+                name: 'Maria'
+            ]
+        ]
+        1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
+            lang: [
+                de:[:]
+            ]
+        ]
+        response.contentAsString == '''Hallo Maria,
+
+Hiermit lade ich Dich zu meinem Geburtstag ein. Mach Dir ein Kreuz im Kalender: 01.04.2024, 13:00:00
+
+Tschüß'''
+
+        when: "omitting the time zone"
+        response = POST("/reports/invitation",'abc','de', [
+            outputType:'text/plain',
+            targets: [
+                [
+                    type: 'person',
+                    id: '1'
+                ]
+            ],
+        ])
+        then: "UTC is used"
+        response.status == 200
+        1 * veoClient.fetchData([person:'/persons/1'], 'Bearer: abc') >> [
+            person : [
+                name: 'Maria'
+            ]
+        ]
+        1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
+            lang: [
+                de:[:]
+            ]
+        ]
+        response.contentAsString == '''Hallo Maria,
+
+Hiermit lade ich Dich zu meinem Geburtstag ein. Mach Dir ein Kreuz im Kalender: 01.04.2024, 13:00:00
 
 Tschüß'''
     }

@@ -111,6 +111,7 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
               (ResourceBundle) data.get("bundle"));
       Environment env = template.createProcessingEnvironment(data, writer, objectWrapper);
       env.setLocale(parameters.getLocale());
+      env.setTimeZone(parameters.getTimeZone());
       logger.info("Processing template");
       env.process();
       logger.info("Template processed");

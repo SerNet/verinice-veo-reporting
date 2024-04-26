@@ -40,7 +40,7 @@ class ComposedConversionHandlerSpec extends Specification {
         def os = new ByteArrayOutputStream()
         new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8)).withStream { is->
             os.withStream {
-                compositeHandler.convert(is, it, reportConfiguration, new ReportCreationParameters(Locale.US))
+                compositeHandler.convert(is, it, reportConfiguration, new ReportCreationParameters(Locale.US, TimeZone.default))
             }
         }
         def output = new String(os.toByteArray(), 'UTF-8')

@@ -87,7 +87,7 @@ class HtmlPDFConverterSpec extends Specification {
         InputStream is = Mock()
         OutputStream out = Mock()
         when:
-        converter.convert(is, out, reportConfiguration, new ReportCreationParameters(Locale.US))
+        converter.convert(is, out, reportConfiguration, new ReportCreationParameters(Locale.US, TimeZone.default))
         then:
         0 * out.write(_)
         thrown(NoSuchElementException)
@@ -98,7 +98,7 @@ class HtmlPDFConverterSpec extends Specification {
 
     PDDocument createDocument(String html, ReportConfiguration reportConfiguration) {
         new ByteArrayOutputStream().withCloseable {
-            converter.convert(new ByteArrayInputStream(html.bytes), it, reportConfiguration, new ReportCreationParameters(Locale.US))
+            converter.convert(new ByteArrayInputStream(html.bytes), it, reportConfiguration, new ReportCreationParameters(Locale.US, TimeZone.default))
             PDDocument.load(it.toByteArray())
         }
     }

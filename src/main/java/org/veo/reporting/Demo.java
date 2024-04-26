@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -176,8 +177,10 @@ public class Demo {
       boolean createItgsReports)
       throws IOException {
 
-    ReportCreationParameters parametersGermany = new ReportCreationParameters(Locale.GERMANY);
-    ReportCreationParameters parametersUS = new ReportCreationParameters(Locale.US);
+    ReportCreationParameters parametersGermany =
+        new ReportCreationParameters(Locale.GERMANY, TimeZone.getTimeZone("Europe/Berlin"));
+    ReportCreationParameters parametersUS =
+        new ReportCreationParameters(Locale.US, TimeZone.getTimeZone("America/New_York"));
 
     try {
       if (createGDPRReports) {

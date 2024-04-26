@@ -56,7 +56,7 @@ Fourth line</dd>
 '''
     }
 
-    String execute(String templateName, data, ReportCreationParameters parameters = new ReportCreationParameters(Locale.US)) {
+    String execute(String templateName, data, ReportCreationParameters parameters = new ReportCreationParameters(Locale.US, TimeZone.default)) {
         new ByteArrayOutputStream().withCloseable {
             templateEvaluator.executeTemplate(templateName, data, it, parameters)
             it.toString()

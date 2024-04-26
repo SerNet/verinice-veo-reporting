@@ -41,19 +41,19 @@ public class TemplateEvaluatorSpec extends Specification {
         def bundleDe = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_de.properties'))
         def bundleEn = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_en.properties'))
         when:
-        def text = execute('invitation.txt', [person:[name: "Johannes"], bundle: bundleDe],)
+        def text = execute('invitation.txt', [person:[name: "Johannes"], bundle: bundleDe], new ReportCreationParameters(Locale.GERMAN, TimeZone.getTimeZone("Europe/Berlin")))
         then:
         text == '''Hallo Johannes,
 
-Hiermit lade ich Dich zu meinem Geburtstag ein.
+Hiermit lade ich Dich zu meinem Geburtstag ein. Mach Dir ein Kreuz im Kalender: 01.04.2024, 15:00:00
 
 Tschüß'''
         when:
-        text = execute('invitation.txt',  [person:[name: "John"], bundle: bundleEn])
+        text = execute('invitation.txt',  [person:[name: "John"], bundle: bundleEn], new ReportCreationParameters(Locale.ENGLISH, TimeZone.getTimeZone("America/New_York")))
         then:
         text == '''Hi John,
 
-I'd like to invite you to my birthday party.
+I'd like to invite you to my birthday party. Save the date: Apr 1, 2024, 9:00:00 AM
 
 Cheers'''
     }
@@ -531,7 +531,7 @@ Jack's children are named John and Jane.'''
 
     def "Date format fits locale"() {
         when:
-        def text = execute('date-test.txt', [date: "2020-01-01"], new ReportCreationParameters(locale))
+        def text = execute('date-test.txt', [date: "2020-01-01"], new ReportCreationParameters(locale, TimeZone.default))
         then:
         text == expectedOutput
         where:
@@ -540,7 +540,7 @@ Jack's children are named John and Jane.'''
         Locale.US       | 'Jan 1, 2020'
     }
 
-    String execute(String templateName, data, ReportCreationParameters parameters = new ReportCreationParameters(Locale.US)) {
+    String execute(String templateName, data, ReportCreationParameters parameters = new ReportCreationParameters(Locale.US, TimeZone.default)) {
         new ByteArrayOutputStream().withCloseable {
             templateEvaluator.executeTemplate(templateName, data, it, parameters)
             it.toString()
