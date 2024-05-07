@@ -41,19 +41,19 @@ public class TemplateEvaluatorSpec extends Specification {
         def bundleDe = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_de.properties'))
         def bundleEn = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_en.properties'))
         when:
-        def text = execute('invitation.txt', [person:[name: "Johannes"], bundle: bundleDe], new ReportCreationParameters(Locale.GERMAN, TimeZone.getTimeZone("Europe/Berlin")))
+        def text = execute('invitation.txt', [person:[name: "Johannes"], bundle: bundleDe, timeZone: "Mitteleuropäische Normalzeit"], new ReportCreationParameters(Locale.GERMAN, TimeZone.getTimeZone("Europe/Berlin")))
         then:
         text == '''Hallo Johannes,
 
-Hiermit lade ich Dich zu meinem Geburtstag ein. Mach Dir ein Kreuz im Kalender: 01.04.2024, 15:00:00
+Hiermit lade ich Dich zu meinem Geburtstag ein. Mach Dir ein Kreuz im Kalender: 01.04.2024, 15:00:00 (Mitteleuropäische Normalzeit)
 
 Tschüß'''
         when:
-        text = execute('invitation.txt',  [person:[name: "John"], bundle: bundleEn], new ReportCreationParameters(Locale.ENGLISH, TimeZone.getTimeZone("America/New_York")))
+        text = execute('invitation.txt',  [person:[name: "John"], bundle: bundleEn, timeZone: "Eastern Standard Time"], new ReportCreationParameters(Locale.ENGLISH, TimeZone.getTimeZone("America/New_York")))
         then:
         text == '''Hi John,
 
-I'd like to invite you to my birthday party. Save the date: Apr 1, 2024, 9:00:00 AM
+I'd like to invite you to my birthday party. Save the date: Apr 1, 2024, 9:00:00 AM (Eastern Standard Time)
 
 Cheers'''
     }

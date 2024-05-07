@@ -19,6 +19,7 @@ package org.veo.reporting.controllers;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -150,7 +151,9 @@ public class ReportController {
         new ReportCreationParameters(
             RequestContextUtils.getLocale(request),
             createReport.getTimeZone() != null
-                ? createReport.getTimeZone()
+                    && Arrays.asList(TimeZone.getAvailableIDs())
+                        .contains(createReport.getTimeZone())
+                ? TimeZone.getTimeZone(createReport.getTimeZone())
                 : TimeZone.getTimeZone("UTC"));
     logger.info("Request parameters = {}", parameters);
 

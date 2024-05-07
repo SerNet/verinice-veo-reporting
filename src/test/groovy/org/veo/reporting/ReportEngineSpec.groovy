@@ -164,7 +164,7 @@ Favorite drink
         then:
         text == '''Hallo Max,
 
-Hiermit lade ich Dich zu meinem Geburtstag ein. Mach Dir ein Kreuz im Kalender: 01.04.2024, 15:00:00
+Hiermit lade ich Dich zu meinem Geburtstag ein. Mach Dir ein Kreuz im Kalender: 01.04.2024, 15:00:00 (Mitteleuropäische Normalzeit)
 
 Tschüß'''
         when:
@@ -176,7 +176,7 @@ Tschüß'''
         then:
         text == '''Hi Jack,
 
-I'd like to invite you to my birthday party. Save the date: Apr 1, 2024, 9:00:00 AM
+I'd like to invite you to my birthday party. Save the date: Apr 1, 2024, 9:00:00 AM (Eastern Standard Time)
 
 Cheers'''
     }

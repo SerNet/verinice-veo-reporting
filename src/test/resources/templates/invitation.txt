@@ -1,5 +1,5 @@
 ${bundle('hello', person.name)},
 
-${bundle.invitationText} ${'2024-04-01T13:00:00+00:00'?datetime.iso}
+${bundle.invitationText} ${'2024-04-01T13:00:00+00:00'?datetime.iso} (${timeZone})
 
 ${bundle.complimentary_close}
