@@ -2416,7 +2416,7 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-38. Group: de.rototor.pdfbox  Name: graphics2d  Version: 0.43
+38. Group: de.rototor.pdfbox  Name: graphics2d  Version: 0.44
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -18291,5 +18291,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Wed May 08 15:03:27 CEST 2024.
+This report was generated at Mon May 13 05:33:49 UTC 2024.
 
