@@ -17,6 +17,7 @@
  ******************************************************************************/
 package org.veo.reporting
 
+import org.apache.pdfbox.Loader
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import org.springframework.beans.factory.annotation.Autowired
@@ -248,7 +249,7 @@ Cheers'''
         }
         new ByteArrayOutputStream().withCloseable {
             reportEngine.generateReport(reportConfiguration, data, 'application/pdf', it, new ReportCreationParameters(locale, TimeZone.default))
-            PDDocument.load(it.toByteArray())
+            Loader.loadPDF(it.toByteArray())
         }
     }
 

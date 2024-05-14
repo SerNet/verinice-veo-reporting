@@ -18,6 +18,7 @@
 package org.veo.reporting.controllers
 import java.nio.charset.StandardCharsets
 
+import org.apache.pdfbox.Loader
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import org.spockframework.spring.SpringBean
@@ -543,7 +544,7 @@ Tschüß'''
             description: 'Beschreibung'
         ]
         when:
-        PDDocument doc = PDDocument.load(response.contentAsByteArray)
+        PDDocument doc = Loader.loadPDF(response.contentAsByteArray)
         then:
         doc.numberOfPages == 3
         when:

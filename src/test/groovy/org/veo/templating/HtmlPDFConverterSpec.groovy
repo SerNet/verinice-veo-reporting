@@ -17,6 +17,7 @@
  ******************************************************************************/
 package org.veo.templating
 
+import org.apache.pdfbox.Loader
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 
@@ -99,7 +100,7 @@ class HtmlPDFConverterSpec extends Specification {
     PDDocument createDocument(String html, ReportConfiguration reportConfiguration) {
         new ByteArrayOutputStream().withCloseable {
             converter.convert(new ByteArrayInputStream(html.bytes), it, reportConfiguration, new ReportCreationParameters(Locale.US, TimeZone.default))
-            PDDocument.load(it.toByteArray())
+            Loader.loadPDF(it.toByteArray())
         }
     }
 }
