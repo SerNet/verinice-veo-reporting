@@ -76,7 +76,7 @@ ${term}
 <#return subTypes?map(subType -> {
     'elementType': elementType,
     'subType': subType,
-    'elements': elements?filter(e -> e.type == elementType && e.domains[domain.id]?? && e.domains[domain.id].subType == subType),
+    'elements': elements?filter(e -> e.type == elementType && e.domains[domain.id]?? && e.domains[domain.id].subType == subType)?sort_by("name_naturalized")?sort_by("abbreviation_naturalized"),
     'sortOrder': orderedSubTypes?seq_contains(subType)?then(orderedSubTypes?seq_index_of(subType), 99999999),
     'subTypePlural': bundle[elementType+'_'+subType+'_plural']
 })?filter(s -> s.elements?has_content)?sort_by("sortOrder")/>
