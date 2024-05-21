@@ -234,7 +234,7 @@ domain/>
 
 <#if moduleControlImplementations?has_content>
 
-## Bausteine
+## ${bundle.control_CTL_Module_plural}
 
 <#list moduleControlImplementations as moduleControlImplementation>
 <div class="nobreak">
