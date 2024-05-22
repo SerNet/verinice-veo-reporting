@@ -247,6 +247,9 @@ domain/>
 
 <@def bundle.responsible, (moduleControlImplementation.responsible.name)!/>
 
+<#assign mainContact = moduleControlImplementation.control.findFirstLinked('control_mainContact')!/>
+<@def bundle.control_mainContact, mainContact.name/>
+
 <@def bundle.implementation_status, bundle[moduleControlImplementation.implementationStatus]!/>
 
 </div>
