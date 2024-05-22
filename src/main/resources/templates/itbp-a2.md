@@ -60,7 +60,6 @@ td {
     <bookmark name="${bundle.level}: ${impact.translations.de.name}" href="#impact_definitions_${impact?counter}"/>
     </#list>
     <bookmark name="${bundle.targets}" href="#targets"/>
-    <bookmark name="${bundle.legend}" href="#targets_legend"/>
     <#list elementSubTypeGroups as group>
         <bookmark name="${group.subTypePlural}" href="#targets_${group.elementType}_${group.subType}"/>
     </#list>
@@ -107,10 +106,9 @@ td {
   </#list>
   <@tocitem 1 "targets" "3. ${bundle.targets}" />
   <#assign level2Counter=1/>
-  <@tocitem 2 "targets_legend" "${level2Counter} ${bundle.legend}"/>
   <#list elementSubTypeGroups as group>
-      <#assign level2Counter++/>
       <@tocitem 2 "targets_${group.elementType}_${group.subType}" "${level2Counter}. ${group.subTypePlural}"/>
+      <#assign level2Counter++/>
   </#list>
 </tbody>
 </table>
