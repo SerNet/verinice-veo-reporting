@@ -1,0 +1,24 @@
+{
+  "name": {
+    "de": "A.4 Ergebnis des IT-Grundschutz-Checks"
+  },
+  "description": {
+    "de": "Eine Übersicht über den Umsetzungsstatus der Anforderungen"
+  },
+  "templateFile": "itbp-a4.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_InformationDomain"
+      ]
+    }
+  ],
+  "data": {
+    "informationDomain": "/scopes/${targetId}"
+  }
+}
