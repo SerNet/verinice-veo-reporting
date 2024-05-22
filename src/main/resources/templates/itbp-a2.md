@@ -42,7 +42,7 @@ td {
 <#assign institutions=scope.scopes?filter(it->it.hasSubType('SCP_Institution')) />
 
 <#assign elementSubTypeGroups =
-groupBySubType(scope.members, 'asset', domain) + groupBySubType(scope.members, 'process', domain)/>
+ groupBySubType(scope.members, 'process', domain) + groupBySubType(scope.members, 'asset', domain)/>
 
 <#function title element>
 <#if element.abbreviation?has_content>
