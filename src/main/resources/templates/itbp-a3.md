@@ -198,22 +198,6 @@ domain/>
 
 <#assign usedModules = sortModules(usedModules)>
 
-
-<#assign implementationStatuses = {'YES': 'rgb(160, 207, 17)', 'PARTIAL': 'rgb(255, 255, 19)', 'NO': 'rgb(255, 18, 18)', 'N_A': 'rgb(192, 192, 192)', 'UNKNOWN': 'rgb(128, 128, 128)'}>
-
-<#macro chart cis title>
-<object type="jfreechart/veo-pie" style="margin-bottom: 2cm;width:10cm;height:8cm;margin:auto;" title="${title}" alt="Diagramm: ${title}">
-<#list implementationStatuses?keys as implementationStatus>
-  <#assign filteredCIs=cis?filter(it->it.implementationStatus==implementationStatus) />
-  <#if filteredCIs?has_content>
-    <data name="${bundle[implementationStatus]}" color="${implementationStatuses[implementationStatus]}" value="${filteredCIs?size}"/>
-  </#if>
-</#list>
-</object>
-</#macro>
-
-<@chart relevantControlImplementations 'Umsetzungsstatus gesamt'/>
-
 |${bundle.abbreviation}| ${bundle.name}| ${bundle.number_of_occurrences}
 |:---|:---|:---|
 <#list usedModules as m>
@@ -228,9 +212,6 @@ domain/>
 <#macro moduleview targetObject>
 
 <#assign moduleControlImplementations = sortCIs(targetObject.controlImplementations)>
-
-<@chart moduleControlImplementations 'Umsetzungsstatus ${title(targetObject)}'/>
-
 
 <#if moduleControlImplementations?has_content>
 
