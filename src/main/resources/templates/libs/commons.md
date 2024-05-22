@@ -61,12 +61,14 @@ ${term}
 <!-- TODO verinice-veo#2773 use sort order from domain -->
 <#assign orderedSubTypes = [
 'PRO_BusinessProcess',
+'PRO_SpecialisedTask',
 "AST_Information",
 "AST_Application",
 "AST_IT-System",
 "AST_ICS-System",
 "AST_Device",
-"AST_Network"
+"AST_Network",
+'AST_Room'
 ]/>
 
 <#function groupBySubType elements elementType domain>
