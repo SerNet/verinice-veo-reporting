@@ -1,0 +1,24 @@
+{
+  "name": {
+    "de": "A.5 Risikoanalyse"
+  },
+  "description": {
+    "de": "Eine Übersicht über die Risiken und deren mitigierenden Maßnahmen"
+  },
+  "templateFile": "itbp-a5.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_InformationDomain"
+      ]
+    }
+  ],
+  "data": {
+    "informationDomain": "/scopes/${targetId}"
+  }
+}
