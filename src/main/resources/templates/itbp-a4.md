@@ -197,11 +197,6 @@ domain/>
   ?sort_by("protectionApproach")
   ?map(it->it.v)>
 
-<@def bundle.description moduleControlImplementation.description true/>
-
-<@def bundle.responsible, (moduleControlImplementation.responsible.name)! true/>
-
-
 <#list moduleRequirementImplementations as ri>
 
 #### ${controlTitle(ri.control)}
