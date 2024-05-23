@@ -1,5 +1,4 @@
 <#import "/libs/commons.md" as com>
-<#import "/libs/dp-risk.md" as dpRisk>
 
 <#assign table = com.table
          def = com.def
