@@ -207,7 +207,7 @@ domain/>
 
 <@def bundle.implementationStatement ri.implementationStatement true/>
 
-<@def bundle.responsible, (ri.responsible?map(it->title(it)))!, true/>
+<@def bundle.responsible, (ri.responsible.name)!, true/>
 
 </#list>
 
