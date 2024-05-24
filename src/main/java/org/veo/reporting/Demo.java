@@ -346,6 +346,14 @@ public class Demo {
             MediaType.APPLICATION_PDF_VALUE,
             parametersGermany,
             entriesForLanguage.get(Locale.GERMANY));
+        createReport(
+            reportEngine,
+            "itbp-a6",
+            "/tmp/itbp-a6.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
       }
     } catch (IOException | TemplateException e) {
       logger.error("Error creating reports", e);

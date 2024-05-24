@@ -1,0 +1,24 @@
+{
+  "name": {
+    "de": "A.6 Realisierungsplan"
+  },
+  "description": {
+    "de": "Eine Übersicht über die bestehenden Defizite bei der Umsetzung von Sicherheitsmaßnahmen"
+  },
+  "templateFile": "itbp-a6.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_InformationDomain"
+      ]
+    }
+  ],
+  "data": {
+    "informationDomain": "/scopes/${targetId}"
+  }
+}

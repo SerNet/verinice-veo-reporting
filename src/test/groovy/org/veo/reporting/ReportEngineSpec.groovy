@@ -200,7 +200,8 @@ Cheers'''
             'itbp-a2',
             'itbp-a3',
             'itbp-a4',
-            'itbp-a5'
+            'itbp-a5',
+            'itbp-a6'
         ]
     }
 
