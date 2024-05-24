@@ -25,7 +25,37 @@ POM License: GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1 - https://www.gnu.or
 
 --------------------------------------------------------------------------------
 
-3. Group: com.fasterxml  Name: classmate  Version: 1.7.0
+3. Group: ch.qos.logback.contrib  Name: logback-jackson  Version: 0.1.5
+
+Manifest license URL: https://www.gnu.org/licenses/lgpl-2.1
+
+POM License: Eclipse Public License - v 1.0 - http://www.eclipse.org/legal/epl-v10.html
+
+POM License: GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1 - https://www.gnu.org/licenses/lgpl-2.1
+
+--------------------------------------------------------------------------------
+
+4. Group: ch.qos.logback.contrib  Name: logback-json-classic  Version: 0.1.5
+
+Manifest license URL: https://www.gnu.org/licenses/lgpl-2.1
+
+POM License: Eclipse Public License - v 1.0 - http://www.eclipse.org/legal/epl-v10.html
+
+POM License: GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1 - https://www.gnu.org/licenses/lgpl-2.1
+
+--------------------------------------------------------------------------------
+
+5. Group: ch.qos.logback.contrib  Name: logback-json-core  Version: 0.1.5
+
+Manifest license URL: https://www.gnu.org/licenses/lgpl-2.1
+
+POM License: Eclipse Public License - v 1.0 - http://www.eclipse.org/legal/epl-v10.html
+
+POM License: GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1 - https://www.gnu.org/licenses/lgpl-2.1
+
+--------------------------------------------------------------------------------
+
+6. Group: com.fasterxml  Name: classmate  Version: 1.7.0
 
 Project URL: https://github.com/FasterXML/java-classmate
 
@@ -58,7 +88,7 @@ Other developers who have contributed code are:
 Copyright 2007-, Tatu Saloranta (tatu.saloranta@iki.fi)
 --------------------------------------------------------------------------------
 
-4. Group: com.fasterxml.jackson  Name: jackson-bom  Version: 2.17.1
+7. Group: com.fasterxml.jackson  Name: jackson-bom  Version: 2.17.1
 
 POM Project URL: https://github.com/FasterXML/jackson-bom
 
@@ -66,7 +96,7 @@ POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICEN
 
 --------------------------------------------------------------------------------
 
-5. Group: com.fasterxml.jackson.core  Name: jackson-annotations  Version: 2.17.1
+8. Group: com.fasterxml.jackson.core  Name: jackson-annotations  Version: 2.17.1
 
 Project URL: https://github.com/FasterXML/jackson
 
@@ -307,7 +337,7 @@ from the source code management (SCM) system project uses.
 
 --------------------------------------------------------------------------------
 
-6. Group: com.fasterxml.jackson.core  Name: jackson-core  Version: 2.17.1
+9. Group: com.fasterxml.jackson.core  Name: jackson-core  Version: 2.17.1
 
 Project URL: https://github.com/FasterXML/jackson-core
 
@@ -559,7 +589,7 @@ and the licenses and copyrights that apply to that code.
 
 --------------------------------------------------------------------------------
 
-7. Group: com.fasterxml.jackson.core  Name: jackson-databind  Version: 2.17.1
+10. Group: com.fasterxml.jackson.core  Name: jackson-databind  Version: 2.17.1
 
 Project URL: https://github.com/FasterXML/jackson
 
@@ -800,7 +830,7 @@ from the source code management (SCM) system project uses.
 
 --------------------------------------------------------------------------------
 
-8. Group: com.fasterxml.jackson.datatype  Name: jackson-datatype-jdk8  Version: 2.17.1
+11. Group: com.fasterxml.jackson.datatype  Name: jackson-datatype-jdk8  Version: 2.17.1
 
 Manifest Project URL: https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jdk8
 
@@ -843,7 +873,7 @@ from the source code management (SCM) system project uses.
 
 --------------------------------------------------------------------------------
 
-9. Group: com.fasterxml.jackson.datatype  Name: jackson-datatype-jsr310  Version: 2.17.1
+12. Group: com.fasterxml.jackson.datatype  Name: jackson-datatype-jsr310  Version: 2.17.1
 
 Manifest Project URL: https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jsr310
 
@@ -886,7 +916,7 @@ from the source code management (SCM) system project uses.
 
 --------------------------------------------------------------------------------
 
-10. Group: com.fasterxml.jackson.module  Name: jackson-module-blackbird  Version: 2.17.1
+13. Group: com.fasterxml.jackson.module  Name: jackson-module-blackbird  Version: 2.17.1
 
 Project URL: https://github.com/FasterXML/jackson-modules-base
 
@@ -967,7 +997,7 @@ from the source code management (SCM) system project uses.
 
 --------------------------------------------------------------------------------
 
-11. Group: com.fasterxml.jackson.module  Name: jackson-module-parameter-names  Version: 2.17.1
+14. Group: com.fasterxml.jackson.module  Name: jackson-module-parameter-names  Version: 2.17.1
 
 Manifest Project URL: https://github.com/FasterXML/jackson-modules-java8/jackson-module-parameter-names
 
@@ -1010,7 +1040,7 @@ from the source code management (SCM) system project uses.
 
 --------------------------------------------------------------------------------
 
-12. Group: com.google.code.findbugs  Name: jsr305  Version: 3.0.2
+15. Group: com.google.code.findbugs  Name: jsr305  Version: 3.0.2
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -1020,7 +1050,7 @@ POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICEN
 
 --------------------------------------------------------------------------------
 
-13. Group: com.helger.commons  Name: ph-commons  Version: 11.0.3
+16. Group: com.helger.commons  Name: ph-commons  Version: 11.0.3
 
 Manifest Project URL: http://www.helger.com
 
@@ -1235,7 +1265,7 @@ This product includes/uses software(s) developed by 'Bytecode Pty Ltd.'
 
 --------------------------------------------------------------------------------
 
-14. Group: com.helger.font  Name: ph-fonts-api  Version: 5.0.1
+17. Group: com.helger.font  Name: ph-fonts-api  Version: 5.0.1
 
 Manifest Project URL: http://www.helger.com
 
@@ -1438,7 +1468,7 @@ This product includes Open Source Software developed by phloc systems (http://ww
 
 --------------------------------------------------------------------------------
 
-15. Group: com.helger.font  Name: ph-fonts-open-sans  Version: 5.0.1
+18. Group: com.helger.font  Name: ph-fonts-open-sans  Version: 5.0.1
 
 Manifest Project URL: http://www.helger.com
 
@@ -1744,103 +1774,103 @@ license for all details.
 
 --------------------------------------------------------------------------------
 
-16. Group: com.vladsch.flexmark  Name: flexmark  Version: 0.64.8
+19. Group: com.vladsch.flexmark  Name: flexmark  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-17. Group: com.vladsch.flexmark  Name: flexmark-ext-attributes  Version: 0.64.8
+20. Group: com.vladsch.flexmark  Name: flexmark-ext-attributes  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-18. Group: com.vladsch.flexmark  Name: flexmark-ext-definition  Version: 0.64.8
+21. Group: com.vladsch.flexmark  Name: flexmark-ext-definition  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-19. Group: com.vladsch.flexmark  Name: flexmark-ext-tables  Version: 0.64.8
+22. Group: com.vladsch.flexmark  Name: flexmark-ext-tables  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-20. Group: com.vladsch.flexmark  Name: flexmark-util  Version: 0.64.8
+23. Group: com.vladsch.flexmark  Name: flexmark-util  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-21. Group: com.vladsch.flexmark  Name: flexmark-util-ast  Version: 0.64.8
+24. Group: com.vladsch.flexmark  Name: flexmark-util-ast  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-22. Group: com.vladsch.flexmark  Name: flexmark-util-builder  Version: 0.64.8
+25. Group: com.vladsch.flexmark  Name: flexmark-util-builder  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-23. Group: com.vladsch.flexmark  Name: flexmark-util-collection  Version: 0.64.8
+26. Group: com.vladsch.flexmark  Name: flexmark-util-collection  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-24. Group: com.vladsch.flexmark  Name: flexmark-util-data  Version: 0.64.8
+27. Group: com.vladsch.flexmark  Name: flexmark-util-data  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-25. Group: com.vladsch.flexmark  Name: flexmark-util-dependency  Version: 0.64.8
+28. Group: com.vladsch.flexmark  Name: flexmark-util-dependency  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-26. Group: com.vladsch.flexmark  Name: flexmark-util-format  Version: 0.64.8
+29. Group: com.vladsch.flexmark  Name: flexmark-util-format  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-27. Group: com.vladsch.flexmark  Name: flexmark-util-html  Version: 0.64.8
+30. Group: com.vladsch.flexmark  Name: flexmark-util-html  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-28. Group: com.vladsch.flexmark  Name: flexmark-util-misc  Version: 0.64.8
+31. Group: com.vladsch.flexmark  Name: flexmark-util-misc  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-29. Group: com.vladsch.flexmark  Name: flexmark-util-options  Version: 0.64.8
+32. Group: com.vladsch.flexmark  Name: flexmark-util-options  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-30. Group: com.vladsch.flexmark  Name: flexmark-util-sequence  Version: 0.64.8
+33. Group: com.vladsch.flexmark  Name: flexmark-util-sequence  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-31. Group: com.vladsch.flexmark  Name: flexmark-util-visitor  Version: 0.64.8
+34. Group: com.vladsch.flexmark  Name: flexmark-util-visitor  Version: 0.64.8
 
 POM License: The 2-Clause BSD License - https://opensource.org/licenses/BSD-2-Clause
 
 --------------------------------------------------------------------------------
 
-32. Group: commons-io  Name: commons-io  Version: 2.11.0
+35. Group: commons-io  Name: commons-io  Version: 2.11.0
 
 Project URL: https://commons.apache.org/proper/commons-io/
 
@@ -2066,7 +2096,7 @@ The Apache Software Foundation (https://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-33. Group: commons-logging  Name: commons-logging  Version: 1.3.0
+36. Group: commons-logging  Name: commons-logging  Version: 1.3.0
 
 Project URL: https://commons.apache.org/proper/commons-logging/
 
@@ -2291,13 +2321,13 @@ The Apache Software Foundation (https://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-34. Group: de.rototor.pdfbox  Name: graphics2d  Version: 3.0.1
+37. Group: de.rototor.pdfbox  Name: graphics2d  Version: 3.0.1
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
 --------------------------------------------------------------------------------
 
-35. Group: io.github.openhtmltopdf  Name: openhtmltopdf-core  Version: 1.1.15
+38. Group: io.github.openhtmltopdf  Name: openhtmltopdf-core  Version: 1.1.15
 
 Manifest license URL: https://www.gnu.org/licenses/lgpl-3.0
 
@@ -2330,7 +2360,7 @@ using any of those jars.
 
 --------------------------------------------------------------------------------
 
-36. Group: io.github.openhtmltopdf  Name: openhtmltopdf-objects  Version: 1.1.15
+39. Group: io.github.openhtmltopdf  Name: openhtmltopdf-objects  Version: 1.1.15
 
 Manifest license URL: https://www.gnu.org/licenses/lgpl-3.0
 
@@ -2363,7 +2393,7 @@ using any of those jars.
 
 --------------------------------------------------------------------------------
 
-37. Group: io.github.openhtmltopdf  Name: openhtmltopdf-pdfbox  Version: 1.1.15
+40. Group: io.github.openhtmltopdf  Name: openhtmltopdf-pdfbox  Version: 1.1.15
 
 Manifest license URL: https://www.gnu.org/licenses/lgpl-3.0
 
@@ -2396,7 +2426,7 @@ using any of those jars.
 
 --------------------------------------------------------------------------------
 
-38. Group: io.github.openhtmltopdf  Name: openhtmltopdf-slf4j  Version: 1.1.15
+41. Group: io.github.openhtmltopdf  Name: openhtmltopdf-slf4j  Version: 1.1.15
 
 Manifest license URL: https://www.gnu.org/licenses/lgpl-3.0
 
@@ -2429,7 +2459,7 @@ using any of those jars.
 
 --------------------------------------------------------------------------------
 
-39. Group: io.micrometer  Name: micrometer-commons  Version: 1.13.0
+42. Group: io.micrometer  Name: micrometer-commons  Version: 1.13.0
 
 POM Project URL: https://github.com/micrometer-metrics/micrometer
 
@@ -2691,7 +2721,7 @@ package in the Spring Framework library, distributed by VMware, Inc:
 
 --------------------------------------------------------------------------------
 
-40. Group: io.micrometer  Name: micrometer-core  Version: 1.13.0
+43. Group: io.micrometer  Name: micrometer-core  Version: 1.13.0
 
 POM Project URL: https://github.com/micrometer-metrics/micrometer
 
@@ -2953,7 +2983,7 @@ package in the Spring Framework library, distributed by VMware, Inc:
 
 --------------------------------------------------------------------------------
 
-41. Group: io.micrometer  Name: micrometer-jakarta9  Version: 1.13.0
+44. Group: io.micrometer  Name: micrometer-jakarta9  Version: 1.13.0
 
 POM Project URL: https://github.com/micrometer-metrics/micrometer
 
@@ -3215,7 +3245,7 @@ package in the Spring Framework library, distributed by VMware, Inc:
 
 --------------------------------------------------------------------------------
 
-42. Group: io.micrometer  Name: micrometer-observation  Version: 1.13.0
+45. Group: io.micrometer  Name: micrometer-observation  Version: 1.13.0
 
 POM Project URL: https://github.com/micrometer-metrics/micrometer
 
@@ -3477,7 +3507,7 @@ package in the Spring Framework library, distributed by VMware, Inc:
 
 --------------------------------------------------------------------------------
 
-43. Group: jakarta.annotation  Name: jakarta.annotation-api  Version: 2.1.1
+46. Group: jakarta.annotation  Name: jakarta.annotation-api  Version: 2.1.1
 
 Manifest Project URL: https://www.eclipse.org
 
@@ -4174,7 +4204,7 @@ permitted.
 
 --------------------------------------------------------------------------------
 
-44. Group: jakarta.validation  Name: jakarta.validation-api  Version: 3.0.2
+47. Group: jakarta.validation  Name: jakarta.validation-api  Version: 3.0.2
 
 Manifest Project URL: https://www.eclipse.org
 
@@ -4190,7 +4220,7 @@ POM License: GNU GENERAL PUBLIC LICENSE, Version 2 + Classpath Exception - https
 
 --------------------------------------------------------------------------------
 
-45. Group: org.apache.logging.log4j  Name: log4j-api  Version: 2.23.1
+48. Group: org.apache.logging.log4j  Name: log4j-api  Version: 2.23.1
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -4414,7 +4444,7 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-46. Group: org.apache.logging.log4j  Name: log4j-to-slf4j  Version: 2.23.1
+49. Group: org.apache.logging.log4j  Name: log4j-to-slf4j  Version: 2.23.1
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -4638,7 +4668,7 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-47. Group: org.apache.pdfbox  Name: fontbox  Version: 3.0.2
+50. Group: org.apache.pdfbox  Name: fontbox  Version: 3.0.2
 
 Manifest Project URL: https://pdfbox.apache.org
 
@@ -4999,7 +5029,7 @@ Copyright 2017 Unicode, Inc.
 
 --------------------------------------------------------------------------------
 
-48. Group: org.apache.pdfbox  Name: pdfbox  Version: 3.0.2
+51. Group: org.apache.pdfbox  Name: pdfbox  Version: 3.0.2
 
 Manifest Project URL: https://pdfbox.apache.org
 
@@ -7198,7 +7228,7 @@ Released to the public domain under the Creative Commons CC0 license by Clinton 
    
 --------------------------------------------------------------------------------
 
-49. Group: org.apache.pdfbox  Name: pdfbox-io  Version: 3.0.2
+52. Group: org.apache.pdfbox  Name: pdfbox-io  Version: 3.0.2
 
 Manifest Project URL: https://pdfbox.apache.org
 
@@ -7424,7 +7454,7 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-50. Group: org.apache.pdfbox  Name: xmpbox  Version: 3.0.2
+53. Group: org.apache.pdfbox  Name: xmpbox  Version: 3.0.2
 
 Manifest Project URL: https://pdfbox.apache.org
 
@@ -7650,7 +7680,7 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-51. Group: org.apache.tomcat.embed  Name: tomcat-embed-core  Version: 10.1.24
+54. Group: org.apache.tomcat.embed  Name: tomcat-embed-core  Version: 10.1.24
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -9418,7 +9448,7 @@ http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/javaee/index.html
 
 --------------------------------------------------------------------------------
 
-52. Group: org.apache.tomcat.embed  Name: tomcat-embed-el  Version: 10.1.24
+55. Group: org.apache.tomcat.embed  Name: tomcat-embed-el  Version: 10.1.24
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -9643,7 +9673,7 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-53. Group: org.apache.tomcat.embed  Name: tomcat-embed-websocket  Version: 10.1.24
+56. Group: org.apache.tomcat.embed  Name: tomcat-embed-websocket  Version: 10.1.24
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -9868,7 +9898,7 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-54. Group: org.apache.xmlgraphics  Name: batik-anim  Version: 1.17
+57. Group: org.apache.xmlgraphics  Name: batik-anim  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -10100,7 +10130,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-55. Group: org.apache.xmlgraphics  Name: batik-awt-util  Version: 1.17
+58. Group: org.apache.xmlgraphics  Name: batik-awt-util  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -10332,7 +10362,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-56. Group: org.apache.xmlgraphics  Name: batik-bridge  Version: 1.17
+59. Group: org.apache.xmlgraphics  Name: batik-bridge  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -10564,7 +10594,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-57. Group: org.apache.xmlgraphics  Name: batik-codec  Version: 1.17
+60. Group: org.apache.xmlgraphics  Name: batik-codec  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -10796,7 +10826,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-58. Group: org.apache.xmlgraphics  Name: batik-constants  Version: 1.17
+61. Group: org.apache.xmlgraphics  Name: batik-constants  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -11028,7 +11058,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-59. Group: org.apache.xmlgraphics  Name: batik-css  Version: 1.17
+62. Group: org.apache.xmlgraphics  Name: batik-css  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -11260,7 +11290,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-60. Group: org.apache.xmlgraphics  Name: batik-dom  Version: 1.17
+63. Group: org.apache.xmlgraphics  Name: batik-dom  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -11492,7 +11522,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-61. Group: org.apache.xmlgraphics  Name: batik-ext  Version: 1.17
+64. Group: org.apache.xmlgraphics  Name: batik-ext  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -11724,7 +11754,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-62. Group: org.apache.xmlgraphics  Name: batik-gvt  Version: 1.17
+65. Group: org.apache.xmlgraphics  Name: batik-gvt  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -11956,7 +11986,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-63. Group: org.apache.xmlgraphics  Name: batik-i18n  Version: 1.17
+66. Group: org.apache.xmlgraphics  Name: batik-i18n  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -12188,7 +12218,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-64. Group: org.apache.xmlgraphics  Name: batik-parser  Version: 1.17
+67. Group: org.apache.xmlgraphics  Name: batik-parser  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -12420,7 +12450,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-65. Group: org.apache.xmlgraphics  Name: batik-script  Version: 1.17
+68. Group: org.apache.xmlgraphics  Name: batik-script  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -12652,7 +12682,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-66. Group: org.apache.xmlgraphics  Name: batik-shared-resources  Version: 1.17
+69. Group: org.apache.xmlgraphics  Name: batik-shared-resources  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -12884,7 +12914,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-67. Group: org.apache.xmlgraphics  Name: batik-svg-dom  Version: 1.17
+70. Group: org.apache.xmlgraphics  Name: batik-svg-dom  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -13116,7 +13146,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-68. Group: org.apache.xmlgraphics  Name: batik-svggen  Version: 1.17
+71. Group: org.apache.xmlgraphics  Name: batik-svggen  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -13348,7 +13378,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-69. Group: org.apache.xmlgraphics  Name: batik-transcoder  Version: 1.17
+72. Group: org.apache.xmlgraphics  Name: batik-transcoder  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -13580,7 +13610,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-70. Group: org.apache.xmlgraphics  Name: batik-util  Version: 1.17
+73. Group: org.apache.xmlgraphics  Name: batik-util  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -13812,7 +13842,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-71. Group: org.apache.xmlgraphics  Name: batik-xml  Version: 1.17
+74. Group: org.apache.xmlgraphics  Name: batik-xml  Version: 1.17
 
 POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICENSE-2.0
 
@@ -14044,7 +14074,7 @@ This product includes images from the Pasodoble Icon Theme
 
 --------------------------------------------------------------------------------
 
-72. Group: org.apache.xmlgraphics  Name: xmlgraphics-commons  Version: 2.9
+75. Group: org.apache.xmlgraphics  Name: xmlgraphics-commons  Version: 2.9
 
 POM Project URL: http://xmlgraphics.apache.org/commons/
 
@@ -14267,7 +14297,7 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-73. Group: org.freemarker  Name: freemarker  Version: 2.3.32
+76. Group: org.freemarker  Name: freemarker  Version: 2.3.32
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -14484,7 +14514,7 @@ Embedded license:
 
 --------------------------------------------------------------------------------
 
-74. Group: org.hdrhistogram  Name: HdrHistogram  Version: 2.2.1
+77. Group: org.hdrhistogram  Name: HdrHistogram  Version: 2.2.1
 
 Manifest license URL: https://opensource.org/licenses/BSD-2-Clause
 
@@ -14544,7 +14574,7 @@ the Author.
 
 --------------------------------------------------------------------------------
 
-75. Group: org.hibernate.validator  Name: hibernate-validator  Version: 8.0.1.Final
+78. Group: org.hibernate.validator  Name: hibernate-validator  Version: 8.0.1.Final
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -14552,7 +14582,7 @@ POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICEN
 
 --------------------------------------------------------------------------------
 
-76. Group: org.jboss.logging  Name: jboss-logging  Version: 3.5.3.Final
+79. Group: org.jboss.logging  Name: jboss-logging  Version: 3.5.3.Final
 
 Project URL: http://www.jboss.org
 
@@ -14562,7 +14592,7 @@ POM License: PUBLIC DOMAIN - http://repository.jboss.org/licenses/cc0-1.0.txt
 
 --------------------------------------------------------------------------------
 
-77. Group: org.jetbrains  Name: annotations  Version: 24.0.1
+80. Group: org.jetbrains  Name: annotations  Version: 24.0.1
 
 POM Project URL: https://github.com/JetBrains/java-annotations
 
@@ -14570,7 +14600,7 @@ POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICEN
 
 --------------------------------------------------------------------------------
 
-78. Group: org.jfree  Name: jfreechart  Version: 1.5.4
+81. Group: org.jfree  Name: jfreechart  Version: 1.5.4
 
 POM Project URL: http://www.jfree.org/jfreechart/
 
@@ -14578,7 +14608,7 @@ POM License: GNU LESSER GENERAL PUBLIC LICENSE, Version 3 - https://www.gnu.org/
 
 --------------------------------------------------------------------------------
 
-79. Group: org.jsoup  Name: jsoup  Version: 1.17.2
+82. Group: org.jsoup  Name: jsoup  Version: 1.17.2
 
 Project URL: https://jsoup.org/
 
@@ -14667,7 +14697,7 @@ jsoup is in general, stable release.
 
 --------------------------------------------------------------------------------
 
-80. Group: org.latencyutils  Name: LatencyUtils  Version: 2.0.3
+83. Group: org.latencyutils  Name: LatencyUtils  Version: 2.0.3
 
 POM Project URL: http://latencyutils.github.io/LatencyUtils/
 
@@ -14677,7 +14707,7 @@ POM License: PUBLIC DOMAIN - http://creativecommons.org/publicdomain/zero/1.0/
 
 --------------------------------------------------------------------------------
 
-81. Group: org.slf4j  Name: jul-to-slf4j  Version: 2.0.13
+84. Group: org.slf4j  Name: jul-to-slf4j  Version: 2.0.13
 
 Project URL: http://www.slf4j.org
 
@@ -14714,7 +14744,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-82. Group: org.slf4j  Name: slf4j-api  Version: 2.0.13
+85. Group: org.slf4j  Name: slf4j-api  Version: 2.0.13
 
 Project URL: http://www.slf4j.org
 
@@ -14751,7 +14781,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 --------------------------------------------------------------------------------
 
-83. Group: org.springframework  Name: spring-aop  Version: 6.1.8
+86. Group: org.springframework  Name: spring-aop  Version: 6.1.8
 
 POM Project URL: https://github.com/spring-projects/spring-framework
 
@@ -15075,7 +15105,7 @@ subcomponent's license, as noted in the license.txt file.
 
 --------------------------------------------------------------------------------
 
-84. Group: org.springframework  Name: spring-beans  Version: 6.1.8
+87. Group: org.springframework  Name: spring-beans  Version: 6.1.8
 
 POM Project URL: https://github.com/spring-projects/spring-framework
 
@@ -15399,7 +15429,7 @@ subcomponent's license, as noted in the license.txt file.
 
 --------------------------------------------------------------------------------
 
-85. Group: org.springframework  Name: spring-context  Version: 6.1.8
+88. Group: org.springframework  Name: spring-context  Version: 6.1.8
 
 POM Project URL: https://github.com/spring-projects/spring-framework
 
@@ -15723,7 +15753,7 @@ subcomponent's license, as noted in the license.txt file.
 
 --------------------------------------------------------------------------------
 
-86. Group: org.springframework  Name: spring-core  Version: 6.1.8
+89. Group: org.springframework  Name: spring-core  Version: 6.1.8
 
 POM Project URL: https://github.com/spring-projects/spring-framework
 
@@ -16047,7 +16077,7 @@ subcomponent's license, as noted in the license.txt file.
 
 --------------------------------------------------------------------------------
 
-87. Group: org.springframework  Name: spring-expression  Version: 6.1.8
+90. Group: org.springframework  Name: spring-expression  Version: 6.1.8
 
 POM Project URL: https://github.com/spring-projects/spring-framework
 
@@ -16371,7 +16401,7 @@ subcomponent's license, as noted in the license.txt file.
 
 --------------------------------------------------------------------------------
 
-88. Group: org.springframework  Name: spring-jcl  Version: 6.1.8
+91. Group: org.springframework  Name: spring-jcl  Version: 6.1.8
 
 POM Project URL: https://github.com/spring-projects/spring-framework
 
@@ -16695,7 +16725,7 @@ subcomponent's license, as noted in the license.txt file.
 
 --------------------------------------------------------------------------------
 
-89. Group: org.springframework  Name: spring-web  Version: 6.1.8
+92. Group: org.springframework  Name: spring-web  Version: 6.1.8
 
 POM Project URL: https://github.com/spring-projects/spring-framework
 
@@ -17019,7 +17049,7 @@ subcomponent's license, as noted in the license.txt file.
 
 --------------------------------------------------------------------------------
 
-90. Group: org.springframework  Name: spring-webmvc  Version: 6.1.8
+93. Group: org.springframework  Name: spring-webmvc  Version: 6.1.8
 
 POM Project URL: https://github.com/spring-projects/spring-framework
 
@@ -17343,7 +17373,7 @@ subcomponent's license, as noted in the license.txt file.
 
 --------------------------------------------------------------------------------
 
-91. Group: org.springframework.boot  Name: spring-boot  Version: 3.3.0
+94. Group: org.springframework.boot  Name: spring-boot  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -17565,7 +17595,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-92. Group: org.springframework.boot  Name: spring-boot-actuator  Version: 3.3.0
+95. Group: org.springframework.boot  Name: spring-boot-actuator  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -17787,7 +17817,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-93. Group: org.springframework.boot  Name: spring-boot-actuator-autoconfigure  Version: 3.3.0
+96. Group: org.springframework.boot  Name: spring-boot-actuator-autoconfigure  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -18009,7 +18039,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-94. Group: org.springframework.boot  Name: spring-boot-autoconfigure  Version: 3.3.0
+97. Group: org.springframework.boot  Name: spring-boot-autoconfigure  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -18231,7 +18261,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-95. Group: org.springframework.boot  Name: spring-boot-starter  Version: 3.3.0
+98. Group: org.springframework.boot  Name: spring-boot-starter  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -18453,7 +18483,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-96. Group: org.springframework.boot  Name: spring-boot-starter-actuator  Version: 3.3.0
+99. Group: org.springframework.boot  Name: spring-boot-starter-actuator  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -18675,7 +18705,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-97. Group: org.springframework.boot  Name: spring-boot-starter-json  Version: 3.3.0
+100. Group: org.springframework.boot  Name: spring-boot-starter-json  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -18897,7 +18927,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-98. Group: org.springframework.boot  Name: spring-boot-starter-logging  Version: 3.3.0
+101. Group: org.springframework.boot  Name: spring-boot-starter-logging  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -19119,7 +19149,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-99. Group: org.springframework.boot  Name: spring-boot-starter-security  Version: 3.3.0
+102. Group: org.springframework.boot  Name: spring-boot-starter-security  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -19341,7 +19371,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-100. Group: org.springframework.boot  Name: spring-boot-starter-tomcat  Version: 3.3.0
+103. Group: org.springframework.boot  Name: spring-boot-starter-tomcat  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -19563,7 +19593,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-101. Group: org.springframework.boot  Name: spring-boot-starter-validation  Version: 3.3.0
+104. Group: org.springframework.boot  Name: spring-boot-starter-validation  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -19785,7 +19815,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-102. Group: org.springframework.boot  Name: spring-boot-starter-web  Version: 3.3.0
+105. Group: org.springframework.boot  Name: spring-boot-starter-web  Version: 3.3.0
 
 POM Project URL: https://spring.io/projects/spring-boot
 
@@ -20007,7 +20037,7 @@ This product is licensed to you under the Apache License, Version 2.0
 the License.
 --------------------------------------------------------------------------------
 
-103. Group: org.springframework.security  Name: spring-security-config  Version: 6.3.0
+106. Group: org.springframework.security  Name: spring-security-config  Version: 6.3.0
 
 POM Project URL: https://spring.io/projects/spring-security
 
@@ -20015,7 +20045,7 @@ POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICEN
 
 --------------------------------------------------------------------------------
 
-104. Group: org.springframework.security  Name: spring-security-core  Version: 6.3.0
+107. Group: org.springframework.security  Name: spring-security-core  Version: 6.3.0
 
 POM Project URL: https://spring.io/projects/spring-security
 
@@ -20023,7 +20053,7 @@ POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICEN
 
 --------------------------------------------------------------------------------
 
-105. Group: org.springframework.security  Name: spring-security-crypto  Version: 6.3.0
+108. Group: org.springframework.security  Name: spring-security-crypto  Version: 6.3.0
 
 POM Project URL: https://spring.io/projects/spring-security
 
@@ -20031,7 +20061,7 @@ POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICEN
 
 --------------------------------------------------------------------------------
 
-106. Group: org.springframework.security  Name: spring-security-web  Version: 6.3.0
+109. Group: org.springframework.security  Name: spring-security-web  Version: 6.3.0
 
 POM Project URL: https://spring.io/projects/spring-security
 
@@ -20039,7 +20069,7 @@ POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICEN
 
 --------------------------------------------------------------------------------
 
-107. Group: org.yaml  Name: snakeyaml  Version: 2.2
+110. Group: org.yaml  Name: snakeyaml  Version: 2.2
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -20049,7 +20079,7 @@ POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICEN
 
 --------------------------------------------------------------------------------
 
-108. Group: xml-apis  Name: xml-apis-ext  Version: 1.3.04
+111. Group: xml-apis  Name: xml-apis-ext  Version: 1.3.04
 
 POM Project URL: http://xml.apache.org/commons/components/external/
 
@@ -20284,5 +20314,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Thu May 23 14:31:07 UTC 2024.
+This report was generated at Fri May 24 16:29:08 CEST 2024.
 
