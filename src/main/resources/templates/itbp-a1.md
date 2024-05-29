@@ -63,10 +63,11 @@ table.used_modules th:last-child, table.used_modules td:last-child {
   <bookmark name="${bundle.toc}" href="#toc"/>
   <bookmark name="${bundle.main_page}" href="#main_page"/>
   <#list elementSubTypeGroups as group>
-    <bookmark name="${group.subTypePlural}" href="#${group.elementType}_${group.subType}"/>
+    <bookmark name="${group.subTypePlural}" href="#${group.elementType}_${group.subType}">
     <#list group.elements as element>
       <bookmark name="${title(element)}" href="#${group.elementType}_${group.subType}_${element?counter}"/>
     </#list>
+    </bookmark>
   </#list>
 </bookmarks>
 
