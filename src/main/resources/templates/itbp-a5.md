@@ -301,7 +301,9 @@ ${potentialImpact.name}
 
 <#list riskDefinition.riskValues as risk>
 
-<@def risk.translations.de.name risk.translations.de.description/>
+<span style="padding-left: 2mm; border-left: 5mm solid ${risk.htmlColor};">${risk.translations.de.name}</span>
+
+: ${risk.translations.de.description}
 
 </#list>
 
