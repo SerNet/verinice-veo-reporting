@@ -5,7 +5,8 @@
          def = com.def
          multiline = com.multiline
          groupBySubType = com.groupBySubType
-         sortModules = icom.sortModules />
+         sortModules = icom.sortModules
+         heading = com.heading />
 
 <style>
 <#include "styles/default.css">
@@ -155,18 +156,18 @@ domain/>
 <#return result>
 </#function>
 
-<#macro moduleview targetObject>
+<#macro moduleview targetObject nestingLevel>
 
 <#assign moduleControlImplementations = sortCIs(targetObject.controlImplementations)>
 
 <#if moduleControlImplementations?has_content>
 
-## ${bundle.control_CTL_Module_plural}
+<@heading bundle.control_CTL_Module_plural nestingLevel+1 />
 
 <#list moduleControlImplementations as moduleControlImplementation>
 <div class="nobreak">
 
-### ${title(moduleControlImplementation.control)}
+<@heading title(moduleControlImplementation.control) nestingLevel+2 />
 
 <@def bundle.description moduleControlImplementation.description true/>
 
@@ -185,7 +186,7 @@ domain/>
 
 <div class="nobreak">
 
-#### ${controlTitle(ri.control)}
+<@heading controlTitle(ri.control) nestingLevel+3/>
 
 <@def bundle.description ri.control.description true/>
 
@@ -207,7 +208,7 @@ domain/>
 
 # ${title(scope)} {#information_domain}
 
-<@moduleview scope/>
+<@moduleview scope 1/>
 
 <#list elementSubTypeGroups as group>
 
@@ -217,7 +218,7 @@ domain/>
 
 ## ${title(element)} {#${group.elementType}_${group.subType}_${element?counter}}
 
-<@moduleview element/>
+<@moduleview element 2/>
 
 </#list>
 <div class="pagebreak"></div>

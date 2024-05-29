@@ -5,7 +5,8 @@
          def = com.def
          multiline = com.multiline
          groupBySubType = com.groupBySubType
-         sortModules = icom.sortModules />
+         sortModules = icom.sortModules
+         heading = com.heading />
 
 <style>
 <#include "styles/default.css">
@@ -212,12 +213,12 @@ ${value}
 
 <#if moduleControlImplementations?has_content>
 
-## ${bundle.control_CTL_Module_plural}
+<@heading bundle.control_CTL_Module_plural nestingLevel+1 />
 
 <#list moduleControlImplementations as moduleControlImplementation>
 <div class="nobreak">
 
-### ${title(moduleControlImplementation.control)}
+<@heading title(moduleControlImplementation.control) nestingLevel+2 />
 
 <@def bundle.description moduleControlImplementation.description true/>
 
@@ -234,13 +235,13 @@ ${value}
   
 </div>
 
-#### Bestehende Defizite der Baustein-Anforderungen
+<@heading "Bestehende Defizite der Baustein-Anforderungen" nestingLevel+3 />
 
 <#list moduleRequirementImplementations?filter(it->it.status != 'YES') as ri>
 
 <div class="nobreak">
 
-##### ${controlTitle(ri.control)}
+<@heading controlTitle(ri.control) nestingLevel+4 />
 <#if ri.control.control_bpInformation_protectionApproach=='control_bpInformation_protectionApproach_base'>
 {.missingimplementation}
 </#if>
@@ -292,7 +293,7 @@ ${value}
 
 # ${title(scope)} {#information_domain}
 
-<@moduleview scope/>
+<@moduleview scope 1/>
 
 <#list elementSubTypeGroups as group>
 
@@ -302,7 +303,7 @@ ${value}
 
 ## ${title(element)} {#${group.elementType}_${group.subType}_${element?counter}}
 
-<@moduleview element/>
+<@moduleview element 2 />
 
 </#list>
 <div class="pagebreak"></div>
