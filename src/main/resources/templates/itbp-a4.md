@@ -199,6 +199,8 @@ domain/>
 
 <#list moduleRequirementImplementations as ri>
 
+<div class="nobreak">
+
 #### ${controlTitle(ri.control)}
 
 <@def bundle.description ri.control.description true/>
@@ -208,6 +210,8 @@ domain/>
 <@def bundle.implementationStatement ri.implementationStatement true/>
 
 <@def bundle.responsible, (ri.responsible.name)!, true/>
+
+</div>
 
 </#list>
 
