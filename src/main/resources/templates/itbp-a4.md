@@ -161,12 +161,6 @@ domain/>
 
 <#if moduleControlImplementations?has_content>
 
-<#assign orderedProtectionApproaches = [
-  'control_bpInformation_protectionApproach_base',
-  'control_bpInformation_protectionApproach_standard',
-  'control_bpInformation_protectionApproach_increased'
-]/>
-
 ## ${bundle.control_CTL_Module_plural}
 
 <#list moduleControlImplementations as moduleControlImplementation>
@@ -185,17 +179,7 @@ domain/>
         ?map(it->it._self)
         ?seq_contains(it.control._self)
       )
-  )
-  ?map(it->{
-    "v": it,
-    "status": it.status,
-    "protectionApproach": orderedProtectionApproaches
-                            ?seq_contains(it.control.control_bpInformation_protectionApproach)
-                            ?then(orderedProtectionApproaches?seq_index_of(it.control.control_bpInformation_protectionApproach), 99999999)
-  })
-  ?sort_by("status")
-  ?sort_by("protectionApproach")
-  ?map(it->it.v)>
+  )>
 
 <#list moduleRequirementImplementations as ri>
 
