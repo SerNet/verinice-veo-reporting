@@ -205,32 +205,30 @@ domain/>
 <@def bundle.implementationStatement ri.implementationStatement true/>
 
 <@def bundle.responsible, (ri.responsible.name)!, true/>
+
+
+##### Budget
+
+###### Personalkosten
+
+<@def bundle.control_cost_personFix ri.control.control_cost_personFix true />
+
+<@def bundle.control_cost_personVariable ri.control.control_cost_personVariable true/>
+
+<@def bundle.control_cost_personPeriod ri.control.control_cost_personPeriod true/>
+
+
+###### Sachkosten
+
+<@def bundle.control_cost_materialFix ri.control.control_cost_materialFix true/>
+
+<@def bundle.control_cost_materialVariable ri.control.control_cost_materialVariable true/>
+
+<@def bundle.control_cost_materialPeriod ri.control.control_cost_materialPeriod true/>
+
 </div>
 </#list>
 
-<div class="nobreak">
-
-#### Budget
-
-##### Personalkosten
-
-<@def bundle.control_cost_personFix moduleControlImplementation.control.control_cost_personFix true />
-
-<@def bundle.control_cost_personVariable moduleControlImplementation.control.control_cost_personVariable true/>
-
-<@def bundle.control_cost_personPeriod moduleControlImplementation.control.control_cost_personPeriod true/>
-
-
-##### Sachkosten
-
-<@def bundle.control_cost_materialFix moduleControlImplementation.control.control_cost_materialFix true/>
-
-<@def bundle.control_cost_materialVariable moduleControlImplementation.control.control_cost_materialVariable true/>
-
-<@def bundle.control_cost_materialPeriod moduleControlImplementation.control.control_cost_materialPeriod true/>
-
-
-</div>
 </#list>
 
 </#if>
