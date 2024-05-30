@@ -36,6 +36,45 @@ td {
 .missingimplementation {
   color: rgb(255, 18, 18);
 }
+
+table.table.budget {
+  font-size: 90%;
+}
+
+.table.budget, .table.budget th, .table.budget td {
+  border: none;
+}
+
+table.table.budget caption {
+  text-align: left;
+}
+
+table.table.budget thead tr th {
+  font-weight: normal;  
+}
+
+table.table.budget thead th {
+  background-color: #e3e3e3;
+  color: #767676;
+}
+
+table.table.budget tbody tr td {
+  border-bottom: 0.2mm solid #929292;
+}
+
+table.budget thead tr:first-child th {
+  border-top: 0.2mm solid #929292;
+}
+
+table.budget tbody tr td:first-child,
+table.budget thead tr th:first-child {
+  border-left: 0.2mm solid #929292;
+}
+
+table.budget tbody tr td:last-child,
+table.budget thead tr th:last-child {
+  border-right: 0.2mm solid #929292;
+}
 </style>
 
 <#assign scope = informationDomain/>
@@ -159,7 +198,15 @@ domain/>
 <#return result>
 </#function>
 
-<#macro moduleview targetObject>
+<#macro valueorspace value>
+<#if value?has_content>
+${value}
+<#else>
+&nbsp;
+</#if>
+</#macro>
+
+<#macro moduleview targetObject nestingLevel>
 
 <#assign moduleControlImplementations = sortCIs(targetObject.controlImplementations)>
 
@@ -207,24 +254,33 @@ domain/>
 <@def bundle.responsible, (ri.responsible.name)!, true/>
 
 
-##### Budget
-
-###### Personalkosten
-
-<@def bundle.control_cost_personFix ri.control.control_cost_personFix true />
-
-<@def bundle.control_cost_personVariable ri.control.control_cost_personVariable true/>
-
-<@def bundle.control_cost_personPeriod ri.control.control_cost_personPeriod true/>
-
-
-###### Sachkosten
-
-<@def bundle.control_cost_materialFix ri.control.control_cost_materialFix true/>
-
-<@def bundle.control_cost_materialVariable ri.control.control_cost_materialVariable true/>
-
-<@def bundle.control_cost_materialPeriod ri.control.control_cost_materialPeriod true/>
+<table class="table border-bottom budget">
+<caption>Budget</caption>
+<thead>
+<tr>
+<th colspan="3">Personalkosten</th>
+<th colspan="3">Sachkosten</th>
+</tr>
+<tr>
+<th>${bundle.control_cost_personFix}</th>
+<th>${bundle.control_cost_personVariable}</th>
+<th>${bundle.control_cost_personPeriod}</th>
+<th>${bundle.control_cost_materialFix}</th>
+<th>${bundle.control_cost_materialVariable}</th>
+<th>${bundle.control_cost_materialPeriod}</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><@valueorspace ri.control.control_cost_personFix! /></td>
+<td>${ri.control.control_cost_personVariable!}</td>
+<td>${ri.control.control_cost_personPeriod!}</td>
+<td>${ri.control.control_cost_materialFix!}</td>
+<td>${ri.control.control_cost_materialVariable!}</td>
+<td>${ri.control.control_cost_materialPeriod!}</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </#list>
