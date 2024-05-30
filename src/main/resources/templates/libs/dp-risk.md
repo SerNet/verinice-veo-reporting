@@ -1,21 +1,5 @@
 <#import "/libs/commons.md" as com>
-
-<#function riskReductionLabel raw>
-  <#return { "RISK_TREATMENT_ACCEPTANCE": "Risikoakzeptanz",
-      "RISK_TREATMENT_AVOIDANCE": "Risikovermeidung",
-      "RISK_TREATMENT_NONE": "Keins",
-      "RISK_TREATMENT_REDUCTION": "Risikoreduktion",
-      "RISK_TREATMENT_TRANSFER": "Risikotransfer"}[raw] />
-</#function>
-
-<#macro impactdisplay riskDefinition category value=""><#if value?has_content><span style="color:${riskDefinition.getImpact(category.id, value).color}">${riskDefinition.getImpact(category.id, value).label}</span></#if></#macro>
-
-<#macro probabilitydisplay riskDefinition value=""><#if value?has_content><span style="color:${riskDefinition.getProbability(value).color}">${riskDefinition.getProbability(value).label}</span></#if></#macro>
-
-<#macro riskCell color text>
-  <#assign svg='<svg xmlns="http://www.w3.org/2000/svg" height="1" width="1"><polygon points="0,0 0,1 1,1 1,0" style="fill:${color};" /></svg>' />
-  <td style="background-repeat:no-repeat;background-size:5mm 100%;background-position:bottom left;background-image: url('data:image/svg+xml;base64,${base64(svg)}');padding-left: 7mm;">${text}</td>
-</#macro>
+<#import "/libs/risk-commons.md" as rcom>
 
 <#macro riskdisplay headinglevel risk domain riskDefinition={}>
 <div class="risk">
@@ -61,16 +45,16 @@
 <#assign riskValuesForCategory = (riskValues[category.id])! />
 ${category.id}:
 <#if riskValuesForCategory?has_content>
-<@impactdisplay riskDefinition category, riskValuesForCategory.effectiveImpact />
+<@rcom.impactdisplay riskDefinition category, riskValuesForCategory.effectiveImpact />
 </#if>
 <br/>
 </#list>
 </td>
-<td><@probabilitydisplay riskDefinition, riskValues.effectiveProbability/></td>
+<td><@rcom.probabilitydisplay riskDefinition, riskValues.effectiveProbability/></td>
 <#assign maxInherent = riskDefinition.categories?map(c->(riskValues[c.id].inherentRisk)!-1)?max />
 <#if (maxInherent > -1)>
 <#assign maxInherentData = riskDefinition.getRisk(maxInherent) />
-<@riskCell maxInherentData.color maxInherentData.label/>
+<@rcom.riskCell maxInherentData.color maxInherentData.label/>
 <#else/>
 <td />
 </#if>
@@ -79,7 +63,7 @@ ${category.id}:
 ${category.id}:
 <#assign riskValuesForCategory = (riskValues[category.id])! />
 <#if riskValuesForCategory?has_content>
-${(riskValuesForCategory.riskTreatments?map(t->riskReductionLabel(t))?join(', '))!}
+${(riskValuesForCategory.riskTreatments?map(t->rcom.riskReductionLabel(t))?join(', '))!}
 <#if (riskValuesForCategory.riskTreatmentExplanation)?has_content>
 <br/>
 ${riskValuesForCategory.riskTreatmentExplanation}
@@ -91,7 +75,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <#assign maxResidual = riskDefinition.categories?map(c->(riskValues[c.id].residualRisk)!-1)?max />
 <#if (maxResidual > -1)>
 <#assign maxResidualData = riskDefinition.getRisk(maxResidual) />
-<@riskCell maxResidualData.color maxResidualData.label/>
+<@rcom.riskCell maxResidualData.color maxResidualData.label/>
 <#else/>
 <td />
 </#if>
@@ -130,7 +114,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <td>${tom.designator} ${tom.name}</td>
 <#if mitigationStatus?has_content>
 <#assign implementationStatus = riskDefinition.getImplementationStatus(mitigationStatus) />
-<@riskCell implementationStatus.color implementationStatus.label />
+<@rcom.riskCell implementationStatus.color implementationStatus.label />
 <#else>
 <td></td>
 </#if>
