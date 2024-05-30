@@ -3,7 +3,7 @@
     "de": "A.2 Schutzbedarfsfeststellung"
   },
   "description": {
-    "de": "BSI IT-Grundschutz Referenzdokument"
+    "de": "Eine Übersicht der Schutzbedarfsfeststellung"
   },
   "templateFile": "itbp-a2.md",
   "templateType": "text/markdown",
