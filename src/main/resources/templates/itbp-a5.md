@@ -1,6 +1,6 @@
 <#import "/libs/commons.md" as com>
 <#import "/libs/itbp-commons.md" as icom>
-<#import "/libs/dp-risk.md" as dpRisk>
+<#import "/libs/itbp-risk.md" as itbpRisk>
 
 <#assign table = com.table
          def = com.def
@@ -354,7 +354,7 @@ ${potentialImpact.name}
 ## Risiken
 
 <#list targetObjectRisksInDomain as risk>
-<@dpRisk.riskdisplay 3 risk domain riskDefinition />
+<@itbpRisk.riskdisplay 3 targetObject risk domain riskDefinition />
 </#list>
 
 </#if>
