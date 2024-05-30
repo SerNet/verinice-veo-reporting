@@ -6,7 +6,8 @@
          multiline = com.multiline
          groupBySubType = com.groupBySubType
          sortModules = icom.sortModules
-         heading = com.heading />
+         heading = com.heading
+         title = icom.title />
 
 <style>
 <#include "styles/default.css">
@@ -41,14 +42,6 @@ td {
 
 <#assign elementSubTypeGroups = groupBySubType(scope.members, 'process', domain)
 + groupBySubType(scope.members, 'asset', domain) />
-
-<#function title element>
-<#if element.abbreviation?has_content>
-  <#return "${element.abbreviation} ${element.name}">
-  <#else>
-  <#return element.name>
-</#if>
-</#function>
 
 <bookmarks>
   <bookmark name="${bundle.toc}" href="#toc"/>

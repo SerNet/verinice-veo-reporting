@@ -1,10 +1,12 @@
 <#import "/libs/commons.md" as com>
 <#import "/libs/itbp-commons.md" as icom>
+
 <#assign table = com.table
          def = com.def
          multiline = com.multiline
          groupBySubType = com.groupBySubType
-         sortModules = icom.sortModules />
+         sortModules = icom.sortModules
+         title = icom.title />
 
 
 <style>
@@ -48,14 +50,6 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 
 <#assign elementSubTypeGroups = groupBySubType(scope.members, 'process', domain)
 + groupBySubType(scope.members, 'asset', domain) />
-
-<#function title element>
-<#if element.abbreviation?has_content>
-  <#return "${element.abbreviation} ${element.name}">
-  <#else>
-  <#return element.name>
-</#if>
-</#function>
 
 <bookmarks>
   <bookmark name="${bundle.toc}" href="#toc"/>

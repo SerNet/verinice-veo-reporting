@@ -1,11 +1,13 @@
 <#import "/libs/commons.md" as com>
+<#import "/libs/itbp-commons.md" as icom>
 
 <#assign table = com.table
         row = com.row
          def = com.def
          status = com.status
          multiline = com.multiline
-         groupBySubType = com.groupBySubType />
+         groupBySubType = com.groupBySubType
+         title = icom.title />
 
 
 <style>
@@ -50,14 +52,6 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <#assign elementSubTypeGroups = groupBySubType(scope.members, 'process', domain)
  + groupBySubType(scope.members, 'asset', domain)
  + groupBySubType(scope.members, 'scope', domain)?filter(g -> g.subType == "SCP_ExternalServiceProvider") />
-
-<#function title element>
-<#if element.abbreviation?has_content>
-  <#return "${element.abbreviation} ${element.name}">
-  <#else>
-  <#return element.name>
-</#if>
-</#function>
 
 <bookmarks>
   <bookmark name="${bundle.toc}" href="#toc"/>

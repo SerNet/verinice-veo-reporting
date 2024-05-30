@@ -19,3 +19,11 @@
   <#assign step2 = sortInfo?map(it->modules?filter(module->module._self == it.url)?first)>
   <#return step2?filter(it->it.abbreviation?has_content)+step2?filter(it->!it.abbreviation?has_content)>
 </#function>
+
+<#function title element>
+<#if element.abbreviation?has_content>
+  <#return "${element.abbreviation} ${element.name}">
+  <#else>
+  <#return element.name>
+</#if>
+</#function>
