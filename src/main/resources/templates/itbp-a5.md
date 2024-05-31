@@ -43,6 +43,7 @@ dt {
 
 .risk dl {
   display: table;
+  width: 100%;
 }
 
 .risk dt, .risk dd {
@@ -55,7 +56,7 @@ dt {
 }
 
 .risk dd {
-  width: 100%
+  width: auto;
 }
 
 .riskmatrix {
