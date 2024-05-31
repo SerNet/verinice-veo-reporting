@@ -268,10 +268,10 @@ ${value}
 <tr>
 <td><@valueorspace ri.control.control_cost_personFix! /></td>
 <td>${ri.control.control_cost_personVariable!}</td>
-<td>${ri.control.control_cost_personPeriod!}</td>
+<td>${(bundle[ri.control.control_cost_personPeriod])!}</td>
 <td>${ri.control.control_cost_materialFix!}</td>
 <td>${ri.control.control_cost_materialVariable!}</td>
-<td>${ri.control.control_cost_materialPeriod!}</td>
+<td>${(bundle[ri.control.control_cost_materialPeriod])!}</td>
 </tr>
 </tbody>
 </table>
