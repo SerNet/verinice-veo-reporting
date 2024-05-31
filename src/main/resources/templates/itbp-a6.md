@@ -230,7 +230,7 @@ ${value}
 
 <@heading "Bestehende Defizite der Baustein-Anforderungen" nestingLevel+3 />
 
-<#list moduleRequirementImplementations?filter(it->it.status != 'YES') as ri>
+<#list moduleRequirementImplementations?filter(it->it.status == 'UNKNOWN' || it.status == 'NO' || it.status == 'PARTIAL') as ri>
 
 <div class="nobreak">
 
