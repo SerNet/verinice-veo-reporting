@@ -14297,7 +14297,7 @@ The Apache Software Foundation (http://www.apache.org/).
 
 --------------------------------------------------------------------------------
 
-76. Group: org.freemarker  Name: freemarker  Version: 2.3.32
+76. Group: org.freemarker  Name: freemarker  Version: 2.3.33
 
 Manifest license URL: https://www.apache.org/licenses/LICENSE-2.0
 
@@ -20314,5 +20314,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Mon May 27 11:36:37 UTC 2024.
+This report was generated at Mon Jun 03 06:34:49 UTC 2024.
 
