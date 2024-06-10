@@ -68,7 +68,7 @@ spotbugsMain.reports {
 }
 
 pmd {
-    toolVersion = '7.1.0'
+    toolVersion = '7.2.0'
     ruleSetConfig = rootProject.resources.text.fromFile('config/pmd-ruleset.xml')
     ruleSets = []
     rulesMinimumPriority = 3
