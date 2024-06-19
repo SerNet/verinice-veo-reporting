@@ -2327,7 +2327,7 @@ POM License: Apache License, Version 2.0 - https://www.apache.org/licenses/LICEN
 
 --------------------------------------------------------------------------------
 
-38. Group: io.github.openhtmltopdf  Name: openhtmltopdf-core  Version: 1.1.16
+38. Group: io.github.openhtmltopdf  Name: openhtmltopdf-core  Version: 1.1.17
 
 Manifest license URL: https://www.gnu.org/licenses/lgpl-3.0
 
@@ -2360,7 +2360,7 @@ using any of those jars.
 
 --------------------------------------------------------------------------------
 
-39. Group: io.github.openhtmltopdf  Name: openhtmltopdf-objects  Version: 1.1.16
+39. Group: io.github.openhtmltopdf  Name: openhtmltopdf-objects  Version: 1.1.17
 
 Manifest license URL: https://www.gnu.org/licenses/lgpl-3.0
 
@@ -2393,7 +2393,7 @@ using any of those jars.
 
 --------------------------------------------------------------------------------
 
-40. Group: io.github.openhtmltopdf  Name: openhtmltopdf-pdfbox  Version: 1.1.16
+40. Group: io.github.openhtmltopdf  Name: openhtmltopdf-pdfbox  Version: 1.1.17
 
 Manifest license URL: https://www.gnu.org/licenses/lgpl-3.0
 
@@ -2426,7 +2426,7 @@ using any of those jars.
 
 --------------------------------------------------------------------------------
 
-41. Group: io.github.openhtmltopdf  Name: openhtmltopdf-slf4j  Version: 1.1.16
+41. Group: io.github.openhtmltopdf  Name: openhtmltopdf-slf4j  Version: 1.1.17
 
 Manifest license URL: https://www.gnu.org/licenses/lgpl-3.0
 
@@ -20314,5 +20314,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Wed Jun 19 15:23:36 CEST 2024.
+This report was generated at Fri Jun 21 09:42:49 CEST 2024.
 
