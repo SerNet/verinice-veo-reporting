@@ -1,5 +1,5 @@
 
-Dependency License Report for veo-reporting 0.36.0
+Dependency License Report for veo-reporting 0.37.0-SNAPSHOT
 
 1. Group: ch.qos.logback  Name: logback-classic  Version: 1.5.6
 
@@ -20314,5 +20314,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Tue Jun 18 12:01:00 CEST 2024.
+This report was generated at Wed Jun 19 15:23:36 CEST 2024.
 
