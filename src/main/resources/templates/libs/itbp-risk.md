@@ -113,7 +113,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <td>${icom.title(part)}</td>
 <td>${(bundle[ri.status])!}</td>
 <td>${ri.implementationStatement!}</td>
-<td><#-- FIXME add implementation date (verinice-veo#2597)--></td>
+<td>${(ri.implementationUntil?date.iso)!}</td>
 </tr>
 </#list>
 </tbody>
