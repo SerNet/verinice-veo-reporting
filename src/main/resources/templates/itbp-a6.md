@@ -245,6 +245,8 @@ ${value}
 
 <@def bundle.implementationStatement ri.implementationStatement true/>
 
+<@def bundle.implementationUntil, (ri.implementationUntil?date.iso)!, true/>
+
 <@def bundle.responsible, (ri.responsible.name)!, true/>
 
 
