@@ -109,7 +109,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 </thead>
 <tbody>
 <#list risk.mitigation.parts as tom>
-<#assign mitigationStatus=tom.getImplementationStatus(domain.id, riskDefinition.id)! />
+<#assign mitigationStatus=riskDataAvailable?then(tom.getImplementationStatus(domain.id, riskDefinition.id)!, '')/>
 <tr>
 <td>${tom.designator} ${tom.name}</td>
 <#if mitigationStatus?has_content>
