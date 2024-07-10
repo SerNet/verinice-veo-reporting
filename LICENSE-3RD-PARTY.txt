@@ -14608,7 +14608,7 @@ POM License: GNU LESSER GENERAL PUBLIC LICENSE, Version 3 - https://www.gnu.org/
 
 --------------------------------------------------------------------------------
 
-82. Group: org.jsoup  Name: jsoup  Version: 1.17.2
+82. Group: org.jsoup  Name: jsoup  Version: 1.18.1
 
 Project URL: https://jsoup.org/
 
@@ -14620,7 +14620,7 @@ Embedded license:
 
 The MIT License
 
-Copyright (c) 2009-2023 Jonathan Hedley <https://jsoup.org/>
+Copyright (c) 2009-2024 Jonathan Hedley <https://jsoup.org/>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20314,5 +20314,5 @@ Embedded license:
 --------------------------------------------------------------------------------
 
 
-This report was generated at Mon Jul 01 05:34:52 UTC 2024.
+This report was generated at Wed Jul 10 07:29:36 UTC 2024.
 
