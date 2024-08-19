@@ -377,7 +377,7 @@ Jack's children are named John and Jane.'''
             ]
         ]
         when:
-        def text = execute('implementation-status-test.txt', [input:  objectData, domain: domain])
+        def text = execute('implementation-status-test.txt', [input:  objectData, domain: domain], new ReportCreationParameters(Locale.GERMANY, TimeZone.default))
         then:
         text == '''\
                 Implementation status: ja
@@ -470,7 +470,7 @@ Jack's children are named John and Jane.'''
             ]
         ]
         when:
-        def text = execute('risk-test.txt', [input:  objectData, scenario: scenario,person: person,control: control, domain: domain])
+        def text = execute('risk-test.txt', [input:  objectData, scenario: scenario,person: person,control: control, domain: domain], new ReportCreationParameters(Locale.GERMANY, TimeZone.default))
         then:
         text == '''\
                 Scenario: Fire

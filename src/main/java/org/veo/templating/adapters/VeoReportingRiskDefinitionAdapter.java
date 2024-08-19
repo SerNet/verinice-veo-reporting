@@ -18,7 +18,9 @@
 package org.veo.templating.adapters;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -27,6 +29,7 @@ import org.veo.templating.methods.SingleNumberArgumentMethod;
 import org.veo.templating.methods.VeoTemplateMethod;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import freemarker.core.Environment;
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
@@ -160,14 +163,24 @@ public class VeoReportingRiskDefinitionAdapter extends WrappingTemplateModel
   }
 
   private static Map<String, Object> getMetadata(Object key, Map level) {
+    Locale locale = Environment.getCurrentEnvironment().getLocale();
+    String language = locale.getLanguage();
+    @SuppressWarnings("unchecked")
+    Map<String, Map<String, String>> translations = (Map) level.get("translations");
+    Map<String, String> translationsForLocale =
+        Objects.requireNonNull(
+            translations.get(language),
+            "No translations found for " + key + ", language: " + locale.getLanguage());
+    String name =
+        Objects.requireNonNull(
+            translationsForLocale.get("name"),
+            "Translation misses entry for 'name', key: " + key + ", language: " + language);
+    String description =
+        Objects.requireNonNull(
+            translationsForLocale.get("description"),
+            "Translation misses entry for 'description', key: " + key + ", language: " + language);
+
     return Map.of(
-        "id",
-        key,
-        "label",
-        level.get("name"),
-        "description",
-        level.get("description"),
-        "color",
-        level.get("htmlColor"));
+        "id", key, "label", name, "description", description, "color", level.get("htmlColor"));
   }
 }
