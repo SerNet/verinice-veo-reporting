@@ -77,7 +77,10 @@ Cheers'''
                             foo: 'baz'
                         ],
                         target:[
-                            targetUri : 'http://example.org/4711'
+                            targetUri : 'http://example.org/4711',
+                            name: 'Foo',
+                            id: '4711',
+                            type: 'invalid'
                         ]
                     ]
                 ]
@@ -96,19 +99,22 @@ Cheers'''
                 type: 'asset',
                 name: 'Asset 1',
                 abbreviation: '1 of 12',
-                designator: 'AST-234'
+                designator: 'AST-234',
+                customAspects: []
             ],
             [
                 id: '2',
                 type: 'asset',
                 name: 'Asset 10',
-                abbreviation: '10 of 12'
+                abbreviation: '10 of 12',
+                customAspects: []
             ],
             [
                 id: '3',
                 type: 'asset',
                 name: 'Asset 12',
-                designator: 'AST-9'
+                designator: 'AST-9',
+                customAspects: []
             ]
         ]
         when:
@@ -130,7 +136,10 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                     father : [
                         [
                             target: [
-                                targetUri : 'http://example.org/persons/2'
+                                targetUri : 'http://example.org/persons/2',
+                                name: 'Jack',
+                                id: '2',
+                                type: 'person'
                             ]
                         ]
                     ],
@@ -140,11 +149,15 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                                 biological: true
                             ],
                             target: [
-                                targetUri : 'http://example.org/persons/4'
+                                targetUri : 'http://example.org/persons/4',
+                                name: 'Mary',
+                                id: '4',
+                                type: 'person'
                             ]
                         ]
                     ]
-                ]
+                ],
+                customAspects: []
             ],
             [
                 name: 'Jack',
@@ -155,16 +168,23 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                     child : [
                         [
                             target:[
-                                targetUri : 'http://example.org/persons/1'
+                                targetUri : 'http://example.org/persons/1',
+                                name: 'Jack',
+                                id: '1',
+                                type: 'person'
                             ]
                         ],
                         [
                             target:[
-                                targetUri : 'http://example.org/persons/3'
+                                targetUri : 'http://example.org/persons/3',
+                                name: 'Jane',
+                                id: '3',
+                                type: 'person'
                             ]
                         ]
                     ]
-                ]
+                ],
+                customAspects: []
             ],
             [
                 name: 'Jane',
@@ -175,17 +195,22 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                     father : [
                         [
                             target:[
-                                targetUri : 'http://example.org/persons/2'
+                                targetUri : 'http://example.org/persons/2',
+                                name: 'Jack',
+                                id: '2',
+                                type: 'person'
                             ]
                         ]
                     ]
-                ]
+                ],
+                customAspects: []
             ],
             [
                 name: 'Mary',
                 id: '4',
                 _self: 'http://example.org/persons/4',
-                type: 'person'
+                type: 'person',
+                customAspects: []
             ]
         ]
         when:
@@ -206,9 +231,13 @@ Jack's children are named John and Jane.'''
                     type: 'scope',
                     members: [
                         [
-                            targetUri : 'http://example.org/persons/1'
+                            targetUri : 'http://example.org/persons/1',
+                            name: 'Jack',
+                            id: '1',
+                            type: 'person'
                         ]
-                    ]
+                    ],
+                    customAspects: []
                 ]
             ],
             persons: [
@@ -216,7 +245,8 @@ Jack's children are named John and Jane.'''
                     name: 'Jack',
                     id: '1',
                     _self: 'http://example.org/persons/1',
-                    type: 'person'
+                    type: 'person',
+                    customAspects: []
 
                 ]
             ]
@@ -238,13 +268,18 @@ Jack's children are named John and Jane.'''
                     members: [
                         [
                             targetUri : 'http://example.org/persons/1',
+                            name: 'Jack',
+                            id: '1',
                             type: 'person'
                         ],
                         [
                             targetUri : 'http://example.org/assets/1',
+                            name: 'Missing asset',
+                            id: '1',
                             type: 'asset'
                         ]
-                    ]
+                    ],
+                    customAspects: []
                 ]
             ],
             persons: [
@@ -252,7 +287,8 @@ Jack's children are named John and Jane.'''
                     name: 'Jack',
                     id: '1',
                     _self: 'http://example.org/persons/1',
-                    type: 'person'
+                    type: 'person',
+                    customAspects: []
 
                 ]
             ]
@@ -273,24 +309,33 @@ Jack's children are named John and Jane.'''
                 _self: 'http://example.org/persons/1',
                 parts: [
                     [
-                        targetUri : 'http://example.org/persons/2'
+                        targetUri : 'http://example.org/persons/2',
+                        name: 'Jack',
+                        id: '2',
+                        type: 'person'
                     ],
                     [
-                        targetUri : 'http://example.org/persons/3'
+                        targetUri : 'http://example.org/persons/3',
+                        name: 'Jane',
+                        id: '3',
+                        type: 'person'
                     ]
-                ]
+                ],
+                customAspects: []
             ],
             [
                 name: 'Jack',
                 id: '2',
                 _self: 'http://example.org/persons/2',
-                type: 'person'
+                type: 'person',
+                customAspects: []
             ],
             [
                 name: 'Jane',
                 id: '3',
                 _self: 'http://example.org/persons/3',
-                type: 'person'
+                type: 'person',
+                customAspects: []
             ]
         ]
         when:
@@ -312,12 +357,14 @@ Jack's children are named John and Jane.'''
                     'abc':[
                         subType : 'MySubType'
                     ]
-                ]
+                ],
+                customAspects: []
             ],
             [
                 name: 'John',
                 id: '2',
-                type: 'person'
+                type: 'person',
+                customAspects: []
             ],
             [
                 name: 'Jack',
@@ -327,7 +374,8 @@ Jack's children are named John and Jane.'''
                     'abc':[
                         subType : 'OtherSubType'
                     ]
-                ]
+                ],
+                customAspects: []
             ],
             [
                 name: 'Sue',
@@ -340,7 +388,8 @@ Jack's children are named John and Jane.'''
                     'def':[
                         subType : 'MySubType'
                     ]
-                ]
+                ],
+                customAspects: []
             ]
         ]
         when:
@@ -368,7 +417,8 @@ Jack's children are named John and Jane.'''
                         ]
                     ]
                 ]
-            ]
+            ],
+            customAspects: []
         ]
         def domain = [
             id: domainId,
@@ -425,28 +475,40 @@ Jack's children are named John and Jane.'''
                         ]
                     ],
                     "scenario": [
-                        "targetUri": "http://localhost/scenarios/$scenarioId".toString()
+                        "targetUri": "http://localhost/scenarios/$scenarioId".toString(),
+                        name: 'Fire',
+                        id: scenarioId,
+                        type: 'scenario'
                     ],
                     "riskOwner": [
-                        "targetUri": "http://localhost/persons/$personId".toString()
+                        "targetUri": "http://localhost/persons/$personId".toString(),
+                        name: 'John Doe',
+                        id: personId,
+                        type: 'person'
                     ],
                     "mitigation": [
-                        "targetUri": "http://localhost/controls/$controlId".toString()
+                        "targetUri": "http://localhost/controls/$controlId".toString(),
+                        name: 'Fixitall',
+                        id: controlId,
+                        type: 'control'
                     ]
                 ]
-            ]
+            ],
+            customAspects: []
         ]
         def scenario = [
             name: 'Fire',
             id: scenarioId,
             type: 'scenario',
-            '_self': "http://localhost/scenarios/$scenarioId".toString()
+            '_self': "http://localhost/scenarios/$scenarioId".toString(),
+            customAspects: []
         ]
         def person = [
             name: 'John Doe',
             id: personId,
             type: 'person',
-            '_self': "http://localhost/persons/$personId".toString()
+            '_self': "http://localhost/persons/$personId".toString(),
+            customAspects: []
         ]
         def control = [
             name: 'Fixitall',
@@ -461,7 +523,8 @@ Jack's children are named John and Jane.'''
                         ]
                     ]
                 ]
-            ]
+            ],
+            customAspects: []
         ]
         def domain = [
             id: domainId,

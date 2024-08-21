@@ -56,7 +56,7 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
   public TemplateModel wrap(Object obj) throws TemplateModelException {
     if (obj instanceof Map) {
       Map<?, ?> m = (Map<?, ?>) obj;
-      if (m.containsKey("id") && m.containsKey("type")) {
+      if (m.containsKey("id") && m.containsKey("customAspects")) {
         // this is probably an entity
         return new VeoReportingEntityAdapter((Map<?, ?>) obj, this);
       } else if (m.containsKey("target") && m.containsKey("attributes")) {

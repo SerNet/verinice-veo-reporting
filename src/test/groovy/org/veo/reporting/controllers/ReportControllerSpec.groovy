@@ -392,7 +392,11 @@ Tschüß'''
                         [
                             target: [
                                 displayName: 'Foo',
-                                targetUri: 'http://example.org/persons/1'
+                                name: 'Foo',
+                                targetUri: 'http://example.org/persons/1',
+                                id: '1',
+                                type: 'person'
+
                             ],
                             attributes: [:]
                         ]
@@ -401,7 +405,10 @@ Tschüß'''
                         [
                             target: [
                                 displayName: 'Foo',
-                                targetUri: 'http://example.org/persons/2'
+                                name: 'Foo',
+                                targetUri: 'http://example.org/persons/2',
+                                id: '2',
+                                type: 'person'
                             ],
                             attributes: [:]
                         ]
@@ -409,9 +416,14 @@ Tschüß'''
                 ],
                 members: [
                     [
-                        targetUri: 'http://example.org/processes/1'
+                        targetUri: 'http://example.org/processes/1',
+                        name: 'Process 1',
+                        id: '1',
+                        type: 'process'
                     ]
-                ]
+                ],
+                customAspects: [:]
+
             ],
             processes: [
                 [
@@ -436,8 +448,11 @@ Tschüß'''
                         process_controller : [
                             [
                                 target: [
+                                    name: 'Foo',
                                     displayName: 'Foo',
-                                    targetUri: 'http://example.org/scopes/1'
+                                    targetUri: 'http://example.org/scopes/1',
+                                    id: '1',
+                                    type: 'scope'
                                 ],
                                 attributes: [:]
                             ]
@@ -514,7 +529,10 @@ Tschüß'''
                             [
                                 target: [
                                     displayName: 'Foo',
-                                    targetUri: 'http://example.org/persons/3'
+                                    name: 'Foo',
+                                    targetUri: 'http://example.org/persons/3',
+                                    id: '3',
+                                    type: 'person'
                                 ],
                                 attributes: [:]
                             ]
@@ -523,7 +541,10 @@ Tschüß'''
                             [
                                 target: [
                                     displayName: 'Foo',
-                                    targetUri: 'http://example.org/persons/4'
+                                    name: 'Foo',
+                                    targetUri: 'http://example.org/persons/4',
+                                    id: '4',
+                                    type: 'person'
                                 ],
                                 attributes: [:]
                             ]
@@ -531,9 +552,13 @@ Tschüß'''
                     ],
                     members: [
                         [
-                            targetUri: 'http://example.org/processes/1'
+                            targetUri: 'http://example.org/processes/1',
+                            name: 'Process 1',
+                            id: '1',
+                            type: 'process'
                         ]
-                    ]
+                    ],
+                    customAspects: [:]
                 ]
             ]
         ]
