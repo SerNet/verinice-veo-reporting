@@ -250,8 +250,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
           members.stream()
               .filter(
                   member -> {
-                    // FIXME: VEO-1203: use type in idref to filter
-                    return ((String) ((Map) member).get("targetUri")).contains("/" + arg);
+                    return arg.equals(((Map) member).get("type"));
                   })
               .collect(Collectors.toList());
       return filteredMembers;

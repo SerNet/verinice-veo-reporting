@@ -237,10 +237,12 @@ Jack's children are named John and Jane.'''
                     type: 'scope',
                     members: [
                         [
-                            targetUri : 'http://example.org/persons/1'
+                            targetUri : 'http://example.org/persons/1',
+                            type: 'person'
                         ],
                         [
-                            targetUri : 'http://example.org/assets/1'
+                            targetUri : 'http://example.org/assets/1',
+                            type: 'asset'
                         ]
                     ]
                 ]
