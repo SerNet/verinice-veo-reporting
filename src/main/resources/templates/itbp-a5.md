@@ -249,7 +249,7 @@ Eintrittswahrscheinlichkeit
 <th class="spacer"/>
 <#list riskDefinition.probability.levels as probability>
 <th class="rotate label" <@cellStyle probability.htmlColor />>
-<div>${probability.name}</div>
+<div>${probability.translations[.lang].name}</div>
 </th>
 </#list>
 </tr>
@@ -265,11 +265,11 @@ Eintrittswahrscheinlichkeit
 </td>
 </#if>
 <td class="label" <@cellStyle potentialImpact.htmlColor />>
-${potentialImpact.name}
+${potentialImpact.translations[.lang].name}
 </td>
 <#list riskDefinition.probability.levels as probability>
 <#assign risk=category.valueMatrix[probability.ordinalValue][potentialImpact.ordinalValue] />
-<@matrixCell risk.htmlColor risk.name />
+<@matrixCell risk.htmlColor risk.translations[.lang].name />
 </#list>
 </tr>
 </#list>
@@ -321,7 +321,7 @@ ${potentialImpact.name}
   <#assign filteredRisks=risksInDomainWithData?filter(r->
   (r.domains[domain.id].riskDefinitions[riskDefinitionId].riskValues?map(it->it.inherentRisk!-1)?max!-1) == riskValue.ordinalValue)>
   <#if filteredRisks?has_content>
-    <data name="${riskValue.name}" color="${riskValue.htmlColor}" value="${filteredRisks?size}"/>
+    <data name="${riskValue.translations[.lang].name}" color="${riskValue.htmlColor}" value="${filteredRisks?size}"/>
   </#if>
 </#list>
 </object>
@@ -333,7 +333,7 @@ ${potentialImpact.name}
   <#assign filteredRisks=risksInDomainWithData?filter(r->
   (r.domains[domain.id].riskDefinitions[riskDefinitionId].riskValues?map(it->it.residualRisk!-1)?max!-1) == riskValue.ordinalValue)>
   <#if filteredRisks?has_content>
-    <data name="${riskValue.name}" color="${riskValue.htmlColor}" value="${filteredRisks?size}"/>
+    <data name="${riskValue.translations[.lang].name}" color="${riskValue.htmlColor}" value="${filteredRisks?size}"/>
   </#if>
 </#list>
 </object>
