@@ -235,7 +235,7 @@ ${value}
 <div class="nobreak">
 
 <@heading controlTitle(ri.control) nestingLevel+4 />
-<#if ri.control.control_bpInformation_protectionApproach=='control_bpInformation_protectionApproach_base'>
+<#if (ri.control.control_bpInformation_protectionApproach!"")=='control_bpInformation_protectionApproach_base'>
 {.missingimplementation}
 </#if>
 
