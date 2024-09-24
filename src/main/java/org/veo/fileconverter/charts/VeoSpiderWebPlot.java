@@ -199,6 +199,15 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
   /** A URL generator for the plot ({@code null} permitted). */
   private CategoryURLGenerator urlGenerator;
 
+  /** The number of gridlines to draw (set to zero for no gridlines). */
+  private int gridLineCount;
+
+  /** The paint used to draw the gridlines. */
+  private transient Paint gridLinePaint;
+
+  /** The stroke used to draw the gridlines. */
+  private transient Stroke gridLineStroke;
+
   /** Creates a default plot with no dataset. */
   public VeoSpiderWebPlot() {
     this(null);
@@ -252,6 +261,17 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
     this.labelGenerator = new StandardCategoryItemLabelGenerator();
 
     this.legendItemShape = DEFAULT_LEGEND_ITEM_CIRCLE;
+
+    this.gridLineCount = 5;
+    this.gridLinePaint = Color.lightGray;
+    this.gridLineStroke =
+        new BasicStroke(
+            0.5f,
+            BasicStroke.CAP_BUTT,
+            BasicStroke.JOIN_BEVEL,
+            0.0f,
+            new float[] {2.0f, 2.0f},
+            0.0f);
   }
 
   /**
@@ -1068,6 +1088,8 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
       Point2D centre = new Point2D.Double(X + W / 2, Y + H / 2);
       Rectangle2D radarArea = new Rectangle2D.Double(X, Y, W, H);
 
+      drawGridlines(g2, radarArea);
+
       // draw the axis and category label
       for (int cat = 0; cat < catCount; cat++) {
         double angle = getStartAngle() + (getDirection().getFactor() * cat * 360 / catCount);
@@ -1091,6 +1113,35 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
     g2.setClip(savedClip);
     g2.setComposite(originalComposite);
     drawOutline(g2, area);
+  }
+
+  /**
+   * Draws gridlines for the plot.
+   *
+   * @param g2 the graphics target (<code>null</code> not permitted).
+   * @param drawArea the drawing area (<code>null</code> not permitted).
+   */
+  protected void drawGridlines(Graphics2D g2, Rectangle2D drawArea) {
+    int categoryCount;
+    if (this.dataExtractOrder == TableOrder.BY_ROW) {
+      categoryCount = this.dataset.getColumnCount();
+    } else {
+      categoryCount = this.dataset.getRowCount();
+    }
+    // draw the grid lines
+    for (int cat = 1; cat <= categoryCount; cat++) {
+      double angleA =
+          getStartAngle() + (getDirection().getFactor() * (cat - 1) * 360 / categoryCount);
+      double angleB = getStartAngle() + (getDirection().getFactor() * cat * 360 / categoryCount);
+      for (int tick = 0; tick < this.gridLineCount; tick++) {
+        Point2D ptA = getWebPoint(drawArea, angleA, (tick + 1) * (1.0 / this.gridLineCount));
+        Point2D ptB = getWebPoint(drawArea, angleB, (tick + 1) * (1.0 / this.gridLineCount));
+        Line2D gridLine = new Line2D.Double(ptA, ptB);
+        g2.setPaint(this.gridLinePaint);
+        g2.setStroke(this.gridLineStroke);
+        g2.draw(gridLine);
+      }
+    }
   }
 
   /**
