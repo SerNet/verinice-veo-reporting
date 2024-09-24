@@ -53,6 +53,7 @@ import com.openhtmltopdf.render.DefaultObjectDrawerFactory;
 
 import org.veo.fileconverter.ConversionHandler;
 import org.veo.fileconverter.charts.VeoJFreeChartPieDiagramObjectDrawer;
+import org.veo.fileconverter.charts.VeoJFreeChartSpiderWebDiagramObjectDrawer;
 import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
 
@@ -103,6 +104,8 @@ public class HtmlPDFConverter implements ConversionHandler {
       factory.registerDrawer("jfreechart/pie", new JFreeChartPieDiagramObjectDrawer());
       factory.registerDrawer("jfreechart/bar", new JFreeChartBarDiagramObjectDrawer());
       factory.registerDrawer("jfreechart/veo-pie", new VeoJFreeChartPieDiagramObjectDrawer());
+      factory.registerDrawer(
+          "jfreechart/veo-spiderweb", new VeoJFreeChartSpiderWebDiagramObjectDrawer());
       builder.useObjectDrawerFactory(factory);
 
       org.jsoup.nodes.Document doc = Jsoup.parse(html);
