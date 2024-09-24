@@ -17,6 +17,8 @@
 <#if riskDataAvailable>
 <#assign riskValues = risk.getRiskValues(domain.id, riskDefinition.id)>
 
+<#assign riskCategoriesWithMatrix=riskDefinition.categories?filter(it->it.valueMatrix?has_content)>
+
 <table class="table" style="width:100%;font-size:70%;">
 <colgroup>
   <col span="1" style="width: 15%;">
@@ -42,9 +44,11 @@
 <tbody>
 <tr>
 <td>
-<#list riskDefinition.categories as category>
+<#list riskCategoriesWithMatrix as category>
 <#assign riskValuesForCategory = (riskValues[category.id])! />
+<#if (riskCategoriesWithMatrix?size > 1)>
 ${category.id}:
+</#if>
 <#if riskValuesForCategory?has_content>
 <@rcom.impactdisplay riskDefinition category, riskValuesForCategory.effectiveImpact />
 </#if>
@@ -52,7 +56,7 @@ ${category.id}:
 </#list>
 </td>
 <td><@rcom.probabilitydisplay riskDefinition, riskValues.effectiveProbability/></td>
-<#assign maxInherent = riskDefinition.categories?map(c->(riskValues[c.id].inherentRisk)!-1)?max />
+<#assign maxInherent = riskCategoriesWithMatrix?map(c->(riskValues[c.id].inherentRisk)!-1)?max />
 <#if (maxInherent > -1)>
 <#assign maxInherentData = riskDefinition.getRisk(maxInherent) />
 <@rcom.riskCell maxInherentData.color maxInherentData.label/>
@@ -60,8 +64,10 @@ ${category.id}:
 <td />
 </#if>
 <td>
-<#list riskDefinition.categories as category>
+<#list riskCategoriesWithMatrix as category>
+<#if (riskCategoriesWithMatrix?size > 1)>
 ${category.id}:
+</#if>
 <#assign riskValuesForCategory = (riskValues[category.id])! />
 <#if riskValuesForCategory?has_content>
 ${(riskValuesForCategory.riskTreatments?map(t->rcom.riskReductionLabel(t))?join(', '))!}
@@ -73,7 +79,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <br/>
 </#list>
 </td>
-<#assign maxResidual = riskDefinition.categories?map(c->(riskValues[c.id].residualRisk)!-1)?max />
+<#assign maxResidual = riskCategoriesWithMatrix?map(c->(riskValues[c.id].residualRisk)!-1)?max />
 <#if (maxResidual > -1)>
 <#assign maxResidualData = riskDefinition.getRisk(maxResidual) />
 <@rcom.riskCell maxResidualData.color maxResidualData.label/>

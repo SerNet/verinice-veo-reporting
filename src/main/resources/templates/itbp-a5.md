@@ -60,9 +60,12 @@ dt {
 }
 
 .riskmatrix {
-  page-break-inside: avoid;
   margin: auto;
   table-layout: fixed;
+}
+
+.nobreak {
+  page-break-inside: avoid;
 }
 
 .riskmatrix td, .riskmatrix th {
@@ -140,7 +143,7 @@ dt {
 <bookmarks>
   <bookmark name="${bundle.main_page}" href="#main_page"/>
 <#if riskDefinitionId?has_content>
-  <bookmark name="${bundle.risk_matrix}" href="#risk_matrix"/>
+  <bookmark name="${bundle.risk_definition}" href="#risk_definition"/>
 </#if>
   <bookmark name="${bundle.scope_SCP_InformationDomain_singular}" href="#information_domain"/>
   <#list elementSubTypeGroups as group>
@@ -207,7 +210,7 @@ domain/>
 </div>
 <#if riskDefinitionId?has_content>
 
-# ${bundle.risk_matrix} {#risk_matrix}
+# ${bundle.risk_definition} {#risk_definition}
 
 <#assign riskDefinition=domain.riskDefinitions[riskDefinitionId] />
 
@@ -227,8 +230,16 @@ domain/>
   <td <@cellStyle color />>${text}</td>
 </#macro>
 
+<#assign riskCategoriesWithMatrix=riskDefinition.categories?filter(it->it.valueMatrix?has_content)>
 
-<table class="riskmatrix">
+<#list riskCategoriesWithMatrix as category>
+<#assign multipleMatrixes = (riskCategoriesWithMatrix?size > 1)>
+
+<#if multipleMatrixes>
+## ${category.translations[.lang].name}
+</#if>
+
+<table class="riskmatrix nobreak">
 <colgroup>
 <col span="1">
 <col span="1">
@@ -254,8 +265,6 @@ Eintrittswahrscheinlichkeit
 </#list>
 </tr>
 </thead>
-<#-- we assume that all categories share the same value matrix-->
-<#list riskDefinition.categories[0..0] as category>
 <tbody>
 <#list category.potentialImpacts?reverse as potentialImpact>
 <tr class="impactrow${potentialImpact?index}">
@@ -275,28 +284,40 @@ ${potentialImpact.translations[.lang].name}
 </#list>
 </tbody>
 
-</#list>
-</tbody>
 </table>
 
 <div class="pagebreak"></div>
 
-
+<#if multipleMatrixes>
+### Auswirkungen
+<#else>
 ## Auswirkungen
+</#if>
 
-<#list riskDefinition.categories[0].potentialImpacts as impact>
+<#list category.potentialImpacts as impact>
 
 <@def impact.translations.de.name impact.translations.de.description/>
 
 </#list>
 
-## Eintrittswahrscheinlichkeit
+</#list>
+
+<#if multipleMatrixes>
+<div class="pagebreak"></div>
+</#if>
+
+<div class="nobreak">
+
+## Eintrittswahrscheinlichkeiten
 
 <#list riskDefinition.probability.levels as probability>
 
 <@def probability.translations.de.name probability.translations.de.description/>
 
 </#list>
+</div>
+
+<div class="nobreak">
 
 ## Risikokategorien
 
@@ -307,6 +328,7 @@ ${potentialImpact.translations[.lang].name}
 : ${risk.translations.de.description}
 
 </#list>
+</div>
 
 
 # ${bundle.chart_section_title} {#charts}
