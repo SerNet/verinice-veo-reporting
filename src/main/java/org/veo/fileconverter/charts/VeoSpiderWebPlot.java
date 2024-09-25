@@ -1391,4 +1391,12 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
 
     return new Point2D.Double(labelX, labelY);
   }
+
+  public int getGridLineCount() {
+    return gridLineCount;
+  }
+
+  public void setGridLineCount(int gridLineCount) {
+    this.gridLineCount = gridLineCount;
+  }
 }
