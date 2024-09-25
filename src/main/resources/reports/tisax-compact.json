@@ -1,0 +1,25 @@
+{
+  "name": {
+    "de": "ISA: Information Security Assessment 6"
+  },
+  "domainName": "TISAX",
+  "description": {
+    "de": "ISA: Information Security Assessment 6"
+  },
+  "templateFile": "tisax-compact.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_InformationSecurityAssessment"
+      ]
+    }
+  ],
+  "data": {
+    "isa": "/scopes/${targetId}"
+  }
+}

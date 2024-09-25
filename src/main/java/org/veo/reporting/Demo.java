@@ -64,6 +64,7 @@ public class Demo {
     var requestId = ctx.getEnvironment().getProperty("veo.demorequestid");
     var scopeIdItgs = ctx.getEnvironment().getProperty("veo.demoscopeiditbp");
     var scopeIdNIS2 = ctx.getEnvironment().getProperty("veo.demoscopeidnis2");
+    var isaId = ctx.getEnvironment().getProperty("veo.demoisaid");
     var veoClient = ctx.getBean(VeoClient.class);
     var authHeader = "Bearer " + token;
     Map<Locale, Map<String, Object>> entriesForLanguage = new HashMap<>();
@@ -81,6 +82,7 @@ public class Demo {
     boolean createRequestReports = requestId != null;
     boolean createItgsReports = scopeIdItgs != null;
     boolean createNIS2Reports = scopeIdNIS2 != null;
+    boolean createISAReports = isaId != null;
 
     DataProvider dataProvider =
         dataSpec -> {
@@ -105,6 +107,8 @@ public class Demo {
                                   url = url.replace(TARGET_ID_PLACEHOLDER, scopeIdItgs);
                                 } else if ("organization".equals(key)) {
                                   url = url.replace(TARGET_ID_PLACEHOLDER, scopeIdNIS2);
+                                } else if ("isa".equals(key)) {
+                                  url = url.replace(TARGET_ID_PLACEHOLDER, isaId);
                                 } else if (url.contains("targetId")) {
                                   throw new IllegalArgumentException("Unhandled url: " + url);
                                 }
@@ -133,7 +137,8 @@ public class Demo {
         createDPIncidentReports,
         createRequestReports,
         createItgsReports,
-        createNIS2Reports);
+        createNIS2Reports,
+        createISAReports);
     Path template = Paths.get("src/main/resources/templates");
     try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 
@@ -161,7 +166,8 @@ public class Demo {
                 createDPIncidentReports,
                 createRequestReports,
                 createItgsReports,
-                createNIS2Reports);
+                createNIS2Reports,
+                createISAReports);
           }
           key.reset();
         }
@@ -181,7 +187,8 @@ public class Demo {
       boolean createDPIncidentReports,
       boolean createRequestReports,
       boolean createItgsReports,
-      boolean createNIS2Reports)
+      boolean createNIS2Reports,
+      boolean createISAReports)
       throws IOException {
 
     ReportCreationParameters parametersGermany =
@@ -380,6 +387,16 @@ public class Demo {
             MediaType.APPLICATION_PDF_VALUE,
             parametersUS,
             entriesForLanguage.get(Locale.US));
+      }
+      if (createISAReports) {
+        createReport(
+            reportEngine,
+            "tisax-compact",
+            "/tmp/tisax-compact.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
       }
     } catch (IOException | TemplateException e) {
       logger.error("Error creating reports", e);
