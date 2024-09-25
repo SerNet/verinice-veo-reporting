@@ -30,6 +30,7 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
+import java.awt.font.TextLayout;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -1128,18 +1129,36 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
     } else {
       categoryCount = this.dataset.getRowCount();
     }
+
+    FontRenderContext frc = g2.getFontRenderContext();
+
     // draw the grid lines
     for (int cat = 1; cat <= categoryCount; cat++) {
       double angleA =
           getStartAngle() + (getDirection().getFactor() * (cat - 1) * 360 / categoryCount);
       double angleB = getStartAngle() + (getDirection().getFactor() * cat * 360 / categoryCount);
       for (int tick = 0; tick < this.gridLineCount; tick++) {
+
         Point2D ptA = getWebPoint(drawArea, angleA, (tick + 1) * (1.0 / this.gridLineCount));
         Point2D ptB = getWebPoint(drawArea, angleB, (tick + 1) * (1.0 / this.gridLineCount));
         Line2D gridLine = new Line2D.Double(ptA, ptB);
         g2.setPaint(this.gridLinePaint);
         g2.setStroke(this.gridLineStroke);
         g2.draw(gridLine);
+        if (cat == 1) {
+          double value = this.maxValue / this.gridLineCount * (tick + 1);
+
+          String label = Double.toString(value);
+
+          TextLayout textLayout = new TextLayout(label, getLabelFont(), frc);
+          Rectangle2D bounds = textLayout.getBounds();
+          g2.setPaint(getLabelPaint());
+          g2.setFont(getLabelFont());
+          g2.drawString(
+              Double.toString(value),
+              (float) (ptA.getX() + 1.5 * this.maxValue),
+              (float) (ptA.getY() + bounds.getHeight() / 2));
+        }
       }
     }
   }
