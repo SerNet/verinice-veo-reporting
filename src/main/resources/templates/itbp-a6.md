@@ -7,7 +7,8 @@
          groupBySubType = com.groupBySubType
          sortModules = icom.sortModules
          heading = com.heading
-         title = icom.title />
+         title = icom.title
+         controlTitle = icom.controlTitle />
 
 <style>
 <#include "styles/default.css">
@@ -179,17 +180,6 @@ domain/>
 <#function sortCIs cis>
   <#assign sortedModules = sortModules(cis?map(it->it.control))>
   <#return sortedModules?map(it->cis?filter(ci->ci.control._self == it._self)?first)>
-</#function>
-
-<#function controlTitle element>
-<#local result = element.name>
-<#if element.control_bpInformation_protectionApproach?has_content>
-  <#local result = "[${bundle[element.control_bpInformation_protectionApproach]}] ${result}">
-</#if>
-<#if element.abbreviation?has_content>
-  <#local result = "${element.abbreviation} ${result}">
-</#if>
-<#return result>
 </#function>
 
 <#macro valueorspace value>

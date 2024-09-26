@@ -27,3 +27,14 @@
   <#return element.name>
 </#if>
 </#function>
+
+<#function controlTitle element>
+<#local result = element.name>
+<#if element.control_bpInformation_protectionApproach?has_content>
+  <#local result = "[${bundle[element.control_bpInformation_protectionApproach]}] ${result}">
+</#if>
+<#if element.abbreviation?has_content>
+  <#local result = "${element.abbreviation} ${result}">
+</#if>
+<#return result>
+</#function>
