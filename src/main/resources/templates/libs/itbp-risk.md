@@ -116,7 +116,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <#list icom.sortModules(risk.mitigation.parts) as part>
 <#assign ri = targetObject.requirementImplementations?filter(it->it.control._self == part._self)?first!>
 <tr>
-<td>${icom.title(part)}</td>
+<td>${icom.controlTitle(part)}</td>
 <td>${(bundle[ri.status])!}</td>
 <td>${ri.implementationStatement!}</td>
 <td>${(ri.implementationUntil?date.iso)!}</td>
