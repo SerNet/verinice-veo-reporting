@@ -78,7 +78,8 @@ public class ReportControllerSpec extends ReportingTest {
             'itbp-a3',
             'itbp-a4',
             'itbp-a5',
-            'itbp-a6'
+            'itbp-a6',
+            'nis2-registration-info'
         ]
     }
 

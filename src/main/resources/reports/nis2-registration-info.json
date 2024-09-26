@@ -1,0 +1,27 @@
+{
+  "name": {
+    "de": "Registrierungsinformationen",
+    "en": "Registration information"
+  },
+  "domainName": "NIS2",
+  "description": {
+    "de": "Das ist ein total toller Report",
+    "en": "This is a great report"
+  },
+  "templateFile": "nis2-registration-info.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_Organization"
+      ]
+    }
+  ],
+  "data": {
+    "organization": "/scopes/${targetId}"
+  }
+}

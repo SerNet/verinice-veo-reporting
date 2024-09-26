@@ -63,6 +63,7 @@ public class Demo {
     var printInputData = "true".equals(ctx.getEnvironment().getProperty("veo.print_report_data"));
     var requestId = ctx.getEnvironment().getProperty("veo.demorequestid");
     var scopeIdItgs = ctx.getEnvironment().getProperty("veo.demoscopeiditbp");
+    var scopeIdNIS2 = ctx.getEnvironment().getProperty("veo.demoscopeidnis2");
     var veoClient = ctx.getBean(VeoClient.class);
     var authHeader = "Bearer " + token;
     Map<Locale, Map<String, Object>> entriesForLanguage = new HashMap<>();
@@ -79,6 +80,7 @@ public class Demo {
     boolean createDPIncidentReports = privacyIncidentId != null;
     boolean createRequestReports = requestId != null;
     boolean createItgsReports = scopeIdItgs != null;
+    boolean createNIS2Reports = scopeIdNIS2 != null;
 
     DataProvider dataProvider =
         dataSpec -> {
@@ -101,6 +103,8 @@ public class Demo {
                                   url = url.replace(TARGET_ID_PLACEHOLDER, requestId);
                                 } else if ("informationDomain".equals(key)) {
                                   url = url.replace(TARGET_ID_PLACEHOLDER, scopeIdItgs);
+                                } else if ("organization".equals(key)) {
+                                  url = url.replace(TARGET_ID_PLACEHOLDER, scopeIdNIS2);
                                 } else if (url.contains("targetId")) {
                                   throw new IllegalArgumentException("Unhandled url: " + url);
                                 }
@@ -128,7 +132,8 @@ public class Demo {
         createDPIAReports,
         createDPIncidentReports,
         createRequestReports,
-        createItgsReports);
+        createItgsReports,
+        createNIS2Reports);
     Path template = Paths.get("src/main/resources/templates");
     try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 
@@ -155,7 +160,8 @@ public class Demo {
                 createDPIAReports,
                 createDPIncidentReports,
                 createRequestReports,
-                createItgsReports);
+                createItgsReports,
+                createNIS2Reports);
           }
           key.reset();
         }
@@ -174,7 +180,8 @@ public class Demo {
       boolean createDPIAReports,
       boolean createDPIncidentReports,
       boolean createRequestReports,
-      boolean createItgsReports)
+      boolean createItgsReports,
+      boolean createNIS2Reports)
       throws IOException {
 
     ReportCreationParameters parametersGermany =
@@ -350,6 +357,17 @@ public class Demo {
             reportEngine,
             "itbp-a6",
             "/tmp/itbp-a6.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+      }
+
+      if (createNIS2Reports) {
+        createReport(
+            reportEngine,
+            "nis2-registration-info",
+            "/tmp/nis2-registration-info.pdf",
             dataProvider,
             MediaType.APPLICATION_PDF_VALUE,
             parametersGermany,
