@@ -2,6 +2,7 @@
   "name": {
     "de": "A.4 Ergebnis des IT-Grundschutz-Checks"
   },
+  "domainName": "IT-Grundschutz",
   "description": {
     "de": "Eine Übersicht über den Umsetzungsstatus der Anforderungen"
   },

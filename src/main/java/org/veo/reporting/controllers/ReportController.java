@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
@@ -92,14 +93,22 @@ public class ReportController {
   }
 
   /**
-   * @return the available reports
+   * @return the available reports, optionally filtered by domain name
    */
   @GetMapping
-  public ResponseEntity<Map<String, ReportConfiguration>> getReports(WebRequest request) {
+  public ResponseEntity<Map<String, ReportConfiguration>> getReports(
+      WebRequest request, @RequestParam(name = "domain", required = false) String domainName) {
     if (request.checkNotModified(buildTime)) {
       return null;
     }
-    return ResponseEntity.ok().cacheControl(CacheControl.noCache()).body(reportEngine.getReports());
+    Map<String, ReportConfiguration> reports = reportEngine.getReports();
+    if (domainName != null) {
+      reports =
+          reports.entrySet().stream()
+              .filter(e -> domainName.equals(e.getValue().getDomainName()))
+              .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+    }
+    return ResponseEntity.ok().cacheControl(CacheControl.noCache()).body(reports);
   }
 
   /**

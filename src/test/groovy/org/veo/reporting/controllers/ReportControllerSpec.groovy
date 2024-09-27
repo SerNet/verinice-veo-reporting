@@ -82,6 +82,22 @@ public class ReportControllerSpec extends ReportingTest {
         ]
     }
 
+    def "retrieve a list of reports for a domain"() {
+        when:
+        def response = GET("/reports?domain=DS-GVO")
+        def reports = new JsonSlurper().parseText(response.contentAsString)
+        then:
+        reports.keySet() ==~ [
+            'processing-activities',
+            'processing-on-behalf',
+            'risk-analysis',
+            'dp-impact-assessment',
+            'dp-privacy-incident',
+            'dp-requests-from-data-subjects-overview',
+            'dp-request-from-data-subject'
+        ]
+    }
+
     def "Report configuration has the expected format"() {
         when:
         def response = GET("/reports")

@@ -2,6 +2,7 @@
   "name": {
     "de": "Verzeichnis der Verarbeitungstätigkeiten"
   },
+  "domainName": "DS-GVO",
   "description": {
     "de": "Eine detaillierte Übersicht über die in einem Scope durchgeführten Verarbeitungstätigkeiten"
   },

@@ -3,6 +3,7 @@
     "de": "Auftragsverarbeitungen gemäß Art. 30 II DS-GVO",
     "en": "Record of processing activities (processor) according to Art. 30 II GDPR"
   },
+  "domainName": "DS-GVO",
   "description": {
     "de": "Dokumentation über die Auftraggeber und für sie durchgeführte Verarbeitungstätigkeiten (Auftragsverarbeitung)",
     "en": "Record of all categories of processing activities carried out on behalf of a controller"

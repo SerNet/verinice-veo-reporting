@@ -3,6 +3,7 @@
     "de": "Meldeformular Datenschutzvorfall",
     "en": "Notification form for personal data breach"
   },
+  "domainName": "DS-GVO",
   "description": {
     "de": "Eine detaillierte Übersicht über die dokumentierten Datenschutzvorfälle einer Verantwortlichen",
     "en": "A detailed overview of a controller’s documented data protection breaches"

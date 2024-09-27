@@ -2,6 +2,7 @@
   "name": {
     "de": "Datenschutz-Folgenabschätzung"
   },
+  "domainName": "DS-GVO",
   "description": {
     "de": "Eine Auflistung der Informationen zu durchgeführten Datenschutz-Folgenabschätzungen"
   },

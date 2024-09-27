@@ -40,6 +40,7 @@ public class ReportConfiguration {
   @JsonCreator
   public ReportConfiguration(
       @JsonProperty(value = "name", required = true) Map<String, String> name,
+      @JsonProperty(value = "domainName", required = false) String domainName,
       @JsonProperty(value = "description", required = true) Map<String, String> description,
       @JsonProperty(value = "templateFile", required = true) String templateFile,
       @JsonProperty(value = "templateType", required = true) String templateType,
@@ -49,6 +50,7 @@ public class ReportConfiguration {
       @JsonProperty(value = "targetTypes", required = true) Set<TypeSpecification> targetTypes,
       @JsonProperty(value = "data", required = true) Map<String, String> data) {
     this.name = Map.copyOf(name);
+    this.domainName = domainName;
     this.description = Map.copyOf(description);
     this.templateFile = templateFile;
     this.templateType = templateType;
@@ -59,6 +61,8 @@ public class ReportConfiguration {
   }
 
   private final Map<String, String> name;
+
+  private final String domainName;
 
   private Map<String, String> description;
 
@@ -77,6 +81,11 @@ public class ReportConfiguration {
   @SuppressFBWarnings(EI_EXPOSE_REP)
   public Map<String, String> getName() {
     return name;
+  }
+
+  @JsonIgnore
+  public String getDomainName() {
+    return domainName;
   }
 
   @SuppressFBWarnings(EI_EXPOSE_REP)
