@@ -1,7 +1,7 @@
 <#import "/libs/commons.md" as com>
 <#import "/libs/dp-risk.md" as dpRisk>
 
-<#assign table = com.table
+<#assign multiline = com.multiline
          def = com.def/>
 
 <style>
@@ -10,12 +10,15 @@ h1, h2, h3, h4 {
   page-break-after: avoid;
 }
 
+body  {
+  font-size: 90%;
+}
 </style>
 
 
 <#assign scope = organization/>
 
-<#macro address name address1 postcode city>
+<#macro address name address1 postcode city country phone email>
 ${name}  
 <#if address1?has_content>
 ${address1}  
@@ -24,33 +27,48 @@ ${address1}
 ${postcode} 
 </#if>
 <#if city?has_content>
-${city}
+${city}  
+</#if>
+<#if country?has_content>
+${country}  
+</#if>
+<#if phone?has_content>
+  
+${bundle.phone} ${phone}    
+</#if>
+<#if email?has_content>
+  
+${bundle.email} ${email}  
 </#if>
 </#macro>
 
-
-<h1>${bundle.title}<br/>${scope.name}</h1>
+<h1><@multiline bundle.title /></h1>
 
 ## ${bundle.address}
 
-<@address scope.name, scope.scope_address_address1!, scope.scope_address_postcode!, scope.scope_address_city! />
-
-## ${bundle.contact_info}
-
-<@def bundle.scope_contactInformation_phone scope.scope_contactInformation_phone />
-
-<@def bundle.scope_contactInformation_email scope.scope_contactInformation_email />
- 
-<@def bundle.scope_contactInformation_website scope.scope_contactInformation_website />
+<@address scope.scope_nis2Contact_name, scope.scope_nis2Contact_address1!, scope.scope_nis2Contact_postcode!, scope.scope_nis2Contact_city!, scope.scope_nis2Contact_country!, scope.scope_nis2Contact_phone!, scope.scope_nis2Contact_email! />
 
 ## ${bundle.sector_info}
 
 <@def bundle.scope_specificInformation_sector scope.scope_specificInformation_sector />
+
 <@def bundle.scope_specificInformation_subSector scope.scope_specificInformation_subSector />
+
+<@def bundle.scope_specificInformation_typeOfEntity scope.scope_specificInformation_typeOfEntity />
+
+<@def bundle.scope_specificInformation_furtherSectors scope.scope_specificInformation_furtherSectors />
+
+<@def bundle.scope_specificInformation_identifiedAs bundle[scope.scope_specificInformation_identifiedAs]! />
+
+<@def bundle.scope_specificInformation_operatorCriticalSystem scope.scope_specificInformation_operatorCriticalSystem />
+
+<@def bundle.scope_specificInformation_ipRanges scope.scope_specificInformation_ipRanges />
+
+<@def bundle.scope_specificInformation_listOfMemberStates scope.scope_specificInformation_listOfMemberStates />
 
 ## ${bundle.competent_authority}
 
-<@address scope.scope_competentAuthority_name, scope.scope_competentAuthority_address1!, scope.scope_competentAuthority_postcode!, scope.scope_competentAuthority_city! />
+<@address scope.scope_competentAuthority_name, scope.scope_competentAuthority_address1!, scope.scope_competentAuthority_postcode!, scope.scope_competentAuthority_city!, scope.scope_competentAuthority_country!, scope.scope_competentAuthority_phone!, scope.scope_competentAuthority_email! />
 
 ## ${bundle.registration_info} 
 

@@ -372,6 +372,14 @@ public class Demo {
             MediaType.APPLICATION_PDF_VALUE,
             parametersGermany,
             entriesForLanguage.get(Locale.GERMANY));
+        createReport(
+            reportEngine,
+            "nis2-registration-info",
+            "/tmp/nis2-registration-info.en.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersUS,
+            entriesForLanguage.get(Locale.US));
       }
     } catch (IOException | TemplateException e) {
       logger.error("Error creating reports", e);
