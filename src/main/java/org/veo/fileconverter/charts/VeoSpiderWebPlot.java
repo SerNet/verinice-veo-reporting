@@ -61,12 +61,16 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetChangeEvent;
 import org.jfree.data.general.DatasetUtils;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * A plot that displays data from a {@link CategoryDataset} in the form of a "spider web". Multiple
  * series can be plotted on the same axis to allow easy comparison. This plot doesn't support
  * negative values at present.
  */
 public class VeoSpiderWebPlot extends Plot implements Cloneable {
+
+  private static final String PAINT = "paint";
 
   /** For serialization. */
   private static final long serialVersionUID = -5376340422031599463L;
@@ -235,15 +239,11 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
     this.direction = Rotation.CLOCKWISE;
     this.maxValue = DEFAULT_MAX_VALUE;
 
-    this.seriesPaint = null;
     this.seriesPaintList = new PaintList();
-    this.baseSeriesPaint = null;
 
-    this.seriesOutlinePaint = null;
     this.seriesOutlinePaintList = new PaintList();
     this.baseSeriesOutlinePaint = DEFAULT_OUTLINE_PAINT;
 
-    this.seriesOutlineStroke = null;
     this.seriesOutlineStrokeList = new StrokeList();
     this.baseSeriesOutlineStroke = DEFAULT_OUTLINE_STROKE;
 
@@ -534,7 +534,7 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
    * @see #getAxisLinePaint()
    */
   public void setAxisLinePaint(Paint paint) {
-    Args.nullNotPermitted(paint, "paint");
+    Args.nullNotPermitted(paint, PAINT);
     this.axisLinePaint = paint;
     fireChangeEvent();
   }
@@ -647,7 +647,7 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
    * @see #getBaseSeriesPaint()
    */
   public void setBaseSeriesPaint(Paint paint) {
-    Args.nullNotPermitted(paint, "paint");
+    Args.nullNotPermitted(paint, PAINT);
     this.baseSeriesPaint = paint;
     fireChangeEvent();
   }
@@ -720,7 +720,7 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
    * @param paint the paint ({@code null} not permitted).
    */
   public void setBaseSeriesOutlinePaint(Paint paint) {
-    Args.nullNotPermitted(paint, "paint");
+    Args.nullNotPermitted(paint, PAINT);
     this.baseSeriesOutlinePaint = paint;
     fireChangeEvent();
   }
@@ -862,7 +862,7 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
    * @see #getLabelPaint()
    */
   public void setLabelPaint(Paint paint) {
-    Args.nullNotPermitted(paint, "paint");
+    Args.nullNotPermitted(paint, PAINT);
     this.labelPaint = paint;
     fireChangeEvent();
   }
@@ -1314,6 +1314,7 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
    * @param startAngle the start angle for the pie series.
    * @return The location for a label.
    */
+  @SuppressFBWarnings("FE_FLOATING_POINT_EQUALITY")
   protected Point2D calculateLabelLocation(
       Rectangle2D labelBounds, double ascent, Rectangle2D plotArea, double startAngle) {
     Arc2D arc1 = new Arc2D.Double(plotArea, startAngle, 0, Arc2D.OPEN);
