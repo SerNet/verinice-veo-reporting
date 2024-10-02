@@ -89,6 +89,10 @@ springBoot {
     }
 }
 
+bootRun {
+    environment 'spring.output.ansi.console-available', true
+}
+
 testing {
     suites {
         test{
