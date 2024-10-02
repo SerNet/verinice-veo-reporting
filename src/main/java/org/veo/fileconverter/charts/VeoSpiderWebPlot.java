@@ -38,6 +38,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.jfree.chart.LegendItem;
 import org.jfree.chart.LegendItemCollection;
@@ -54,6 +55,7 @@ import org.jfree.chart.plot.PlotState;
 import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.chart.urls.CategoryURLGenerator;
 import org.jfree.chart.util.Args;
+import org.jfree.chart.util.BooleanList;
 import org.jfree.chart.util.PaintList;
 import org.jfree.chart.util.Rotation;
 import org.jfree.chart.util.StrokeList;
@@ -189,7 +191,7 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
   private CategoryItemLabelGenerator labelGenerator;
 
   /** controls if the web polygons are filled or not */
-  private boolean webFilled = true;
+  private BooleanList webFilledList;
 
   /** The alpha value of the fill portion of a polygon. */
   private float webFillAlpha = 0.1F;
@@ -263,6 +265,8 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
 
     this.legendItemShape = DEFAULT_LEGEND_ITEM_CIRCLE;
 
+    this.webFilledList = new BooleanList();
+
     this.gridLineCount = 5;
     this.gridLinePaint = Color.lightGray;
     this.gridLineStroke =
@@ -327,8 +331,8 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
    * @return A boolean.
    * @see #setWebFilled(boolean)
    */
-  public boolean isWebFilled() {
-    return this.webFilled;
+  public boolean getWebFilled(int series) {
+    return Optional.ofNullable(this.webFilledList.getBoolean(series)).orElse(false);
   }
 
   /**
@@ -337,8 +341,8 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
    * @param flag the flag.
    * @see #isWebFilled()
    */
-  public void setWebFilled(boolean flag) {
-    this.webFilled = flag;
+  public void setWebFilled(int series, boolean flag) {
+    this.webFilledList.setBoolean(series, flag);
     fireChangeEvent();
   }
 
@@ -1305,7 +1309,7 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
 
     // Lastly, fill the web polygon if this is required
 
-    if (this.webFilled) {
+    if (this.getWebFilled(series)) {
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, webFillAlpha));
       g2.fill(polygon);
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, getForegroundAlpha()));
