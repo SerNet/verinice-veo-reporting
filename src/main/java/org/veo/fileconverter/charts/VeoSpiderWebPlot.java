@@ -35,13 +35,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import org.jfree.chart.LegendItem;
 import org.jfree.chart.LegendItemCollection;
@@ -59,10 +54,7 @@ import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.chart.urls.CategoryURLGenerator;
 import org.jfree.chart.util.Args;
 import org.jfree.chart.util.PaintList;
-import org.jfree.chart.util.PaintUtils;
 import org.jfree.chart.util.Rotation;
-import org.jfree.chart.util.SerialUtils;
-import org.jfree.chart.util.ShapeUtils;
 import org.jfree.chart.util.StrokeList;
 import org.jfree.chart.util.TableOrder;
 import org.jfree.data.category.CategoryDataset;
@@ -74,7 +66,7 @@ import org.jfree.data.general.DatasetUtils;
  * series can be plotted on the same axis to allow easy comparison. This plot doesn't support
  * negative values at present.
  */
-public class VeoSpiderWebPlot extends Plot implements Cloneable, Serializable {
+public class VeoSpiderWebPlot extends Plot implements Cloneable {
 
   /** For serialization. */
   private static final long serialVersionUID = -5376340422031599463L;
@@ -1346,166 +1338,5 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable, Serializable {
     }
 
     return new Point2D.Double(labelX, labelY);
-  }
-
-  /**
-   * Tests this plot for equality with an arbitrary object.
-   *
-   * @param obj the object ({@code null} permitted).
-   * @return A boolean.
-   */
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == this) {
-      return true;
-    }
-    if (!(obj instanceof VeoSpiderWebPlot)) {
-      return false;
-    }
-    if (!super.equals(obj)) {
-      return false;
-    }
-    VeoSpiderWebPlot that = (VeoSpiderWebPlot) obj;
-    if (!this.dataExtractOrder.equals(that.dataExtractOrder)) {
-      return false;
-    }
-    if (this.headPercent != that.headPercent) {
-      return false;
-    }
-    if (this.interiorGap != that.interiorGap) {
-      return false;
-    }
-    if (this.startAngle != that.startAngle) {
-      return false;
-    }
-    if (!this.direction.equals(that.direction)) {
-      return false;
-    }
-    if (this.maxValue != that.maxValue) {
-      return false;
-    }
-    if (this.webFilled != that.webFilled) {
-      return false;
-    }
-    if (this.webFillAlpha != that.webFillAlpha) {
-      return false;
-    }
-    if (this.axisLabelGap != that.axisLabelGap) {
-      return false;
-    }
-    if (!PaintUtils.equal(this.axisLinePaint, that.axisLinePaint)) {
-      return false;
-    }
-    if (!this.axisLineStroke.equals(that.axisLineStroke)) {
-      return false;
-    }
-    if (!ShapeUtils.equal(this.legendItemShape, that.legendItemShape)) {
-      return false;
-    }
-    if (!PaintUtils.equal(this.seriesPaint, that.seriesPaint)) {
-      return false;
-    }
-    if (!this.seriesPaintList.equals(that.seriesPaintList)) {
-      return false;
-    }
-    if (!PaintUtils.equal(this.baseSeriesPaint, that.baseSeriesPaint)) {
-      return false;
-    }
-    if (!PaintUtils.equal(this.seriesOutlinePaint, that.seriesOutlinePaint)) {
-      return false;
-    }
-    if (!this.seriesOutlinePaintList.equals(that.seriesOutlinePaintList)) {
-      return false;
-    }
-    if (!PaintUtils.equal(this.baseSeriesOutlinePaint, that.baseSeriesOutlinePaint)) {
-      return false;
-    }
-    if (!Objects.equals(this.seriesOutlineStroke, that.seriesOutlineStroke)) {
-      return false;
-    }
-    if (!this.seriesOutlineStrokeList.equals(that.seriesOutlineStrokeList)) {
-      return false;
-    }
-    if (!this.baseSeriesOutlineStroke.equals(that.baseSeriesOutlineStroke)) {
-      return false;
-    }
-    if (!this.labelFont.equals(that.labelFont)) {
-      return false;
-    }
-    if (!PaintUtils.equal(this.labelPaint, that.labelPaint)) {
-      return false;
-    }
-    if (!this.labelGenerator.equals(that.labelGenerator)) {
-      return false;
-    }
-    if (!Objects.equals(this.toolTipGenerator, that.toolTipGenerator)) {
-      return false;
-    }
-    if (!Objects.equals(this.urlGenerator, that.urlGenerator)) {
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * Returns a clone of this plot.
-   *
-   * @return A clone of this plot.
-   * @throws CloneNotSupportedException if the plot cannot be cloned for any reason.
-   */
-  @Override
-  public Object clone() throws CloneNotSupportedException {
-    VeoSpiderWebPlot clone = (VeoSpiderWebPlot) super.clone();
-    clone.legendItemShape = ShapeUtils.clone(this.legendItemShape);
-    clone.seriesPaintList = (PaintList) this.seriesPaintList.clone();
-    clone.seriesOutlinePaintList = (PaintList) this.seriesOutlinePaintList.clone();
-    clone.seriesOutlineStrokeList = (StrokeList) this.seriesOutlineStrokeList.clone();
-    return clone;
-  }
-
-  /**
-   * Provides serialization support.
-   *
-   * @param stream the output stream.
-   * @throws IOException if there is an I/O error.
-   */
-  private void writeObject(ObjectOutputStream stream) throws IOException {
-    stream.defaultWriteObject();
-
-    SerialUtils.writeShape(this.legendItemShape, stream);
-    SerialUtils.writePaint(this.seriesPaint, stream);
-    SerialUtils.writePaint(this.baseSeriesPaint, stream);
-    SerialUtils.writePaint(this.seriesOutlinePaint, stream);
-    SerialUtils.writePaint(this.baseSeriesOutlinePaint, stream);
-    SerialUtils.writeStroke(this.seriesOutlineStroke, stream);
-    SerialUtils.writeStroke(this.baseSeriesOutlineStroke, stream);
-    SerialUtils.writePaint(this.labelPaint, stream);
-    SerialUtils.writePaint(this.axisLinePaint, stream);
-    SerialUtils.writeStroke(this.axisLineStroke, stream);
-  }
-
-  /**
-   * Provides serialization support.
-   *
-   * @param stream the input stream.
-   * @throws IOException if there is an I/O error.
-   * @throws ClassNotFoundException if there is a classpath problem.
-   */
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-    stream.defaultReadObject();
-
-    this.legendItemShape = SerialUtils.readShape(stream);
-    this.seriesPaint = SerialUtils.readPaint(stream);
-    this.baseSeriesPaint = SerialUtils.readPaint(stream);
-    this.seriesOutlinePaint = SerialUtils.readPaint(stream);
-    this.baseSeriesOutlinePaint = SerialUtils.readPaint(stream);
-    this.seriesOutlineStroke = SerialUtils.readStroke(stream);
-    this.baseSeriesOutlineStroke = SerialUtils.readStroke(stream);
-    this.labelPaint = SerialUtils.readPaint(stream);
-    this.axisLinePaint = SerialUtils.readPaint(stream);
-    this.axisLineStroke = SerialUtils.readStroke(stream);
-    if (this.dataset != null) {
-      this.dataset.addChangeListener(this);
-    }
   }
 }
