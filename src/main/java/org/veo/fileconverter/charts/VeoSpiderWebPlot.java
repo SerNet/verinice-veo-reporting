@@ -87,8 +87,8 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
   /** The default interior gap. */
   public static final double DEFAULT_INTERIOR_GAP = 0.25;
 
-  /** The maximum interior gap (currently 40%). */
-  public static final double MAX_INTERIOR_GAP = 0.40;
+  /** The maximum interior gap (currently 60%). */
+  public static final double MAX_INTERIOR_GAP = 0.60;
 
   /** The default starting angle for the radar chart axes. */
   public static final double DEFAULT_START_ANGLE = 90.0;
