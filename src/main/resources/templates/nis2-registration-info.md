@@ -18,8 +18,13 @@ body  {
 
 <#assign scope = organization/>
 
-<#macro address name address1 postcode city country phone email>
+<#macro address scope nameProperty address1 postcode city country phone email>
+<#local name=scope[nameProperty]!>
+<#if name?has_content>
 ${name}  
+<#else>
+<span style="color:#cd1719">${bundle('missing_property', bundle[nameProperty])}</span>  
+</#if>
 <#if address1?has_content>
 ${address1}  
 </#if>
@@ -46,7 +51,7 @@ ${bundle.email} ${email}
 
 ## ${bundle.address}
 
-<@address scope.scope_nis2Contact_name, scope.scope_nis2Contact_address1!, scope.scope_nis2Contact_postcode!, scope.scope_nis2Contact_city!, scope.scope_nis2Contact_country!, scope.scope_nis2Contact_phone!, scope.scope_nis2Contact_email! />
+<@address scope "scope_nis2Contact_name", scope.scope_nis2Contact_address1!, scope.scope_nis2Contact_postcode!, scope.scope_nis2Contact_city!, scope.scope_nis2Contact_country!, scope.scope_nis2Contact_phone!, scope.scope_nis2Contact_email! />
 
 ## ${bundle.sector_info}
 
@@ -68,7 +73,7 @@ ${bundle.email} ${email}
 
 ## ${bundle.competent_authority}
 
-<@address scope.scope_competentAuthority_name, scope.scope_competentAuthority_address1!, scope.scope_competentAuthority_postcode!, scope.scope_competentAuthority_city!, scope.scope_competentAuthority_country!, scope.scope_competentAuthority_phone!, scope.scope_competentAuthority_email! />
+<@address scope "scope_competentAuthority_name", scope.scope_competentAuthority_address1!, scope.scope_competentAuthority_postcode!, scope.scope_competentAuthority_city!, scope.scope_competentAuthority_country!, scope.scope_competentAuthority_phone!, scope.scope_competentAuthority_email! />
 
 ## ${bundle.registration_info} 
 
