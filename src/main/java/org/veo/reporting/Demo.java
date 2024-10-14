@@ -76,12 +76,15 @@ public class Demo {
 
     var dpiaId = ctx.getEnvironment().getProperty("veo.demodpiaid");
     var privacyIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentid");
+    var securityIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentidnis2");
+
     boolean createGDPRReports = scopeId != null;
     boolean createDPIAReports = dpiaId != null;
     boolean createDPIncidentReports = privacyIncidentId != null;
     boolean createRequestReports = requestId != null;
     boolean createItgsReports = scopeIdItgs != null;
     boolean createNIS2Reports = scopeIdNIS2 != null;
+    boolean createNIS2IncidentReports = securityIncidentId != null;
     boolean createISAReports = isaId != null;
 
     DataProvider dataProvider =
@@ -109,6 +112,8 @@ public class Demo {
                                   url = url.replace(TARGET_ID_PLACEHOLDER, scopeIdNIS2);
                                 } else if ("isa".equals(key)) {
                                   url = url.replace(TARGET_ID_PLACEHOLDER, isaId);
+                                } else if ("nis2incident".equals(key)) {
+                                  url = url.replace(TARGET_ID_PLACEHOLDER, securityIncidentId);
                                 } else if (url.contains("targetId")) {
                                   throw new IllegalArgumentException("Unhandled url: " + url);
                                 }
@@ -138,6 +143,7 @@ public class Demo {
         createRequestReports,
         createItgsReports,
         createNIS2Reports,
+        createNIS2IncidentReports,
         createISAReports);
     Path template = Paths.get("src/main/resources/templates");
     try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
@@ -167,6 +173,7 @@ public class Demo {
                 createRequestReports,
                 createItgsReports,
                 createNIS2Reports,
+                createNIS2IncidentReports,
                 createISAReports);
           }
           key.reset();
@@ -188,6 +195,7 @@ public class Demo {
       boolean createRequestReports,
       boolean createItgsReports,
       boolean createNIS2Reports,
+      boolean createNIS2IncidentReports,
       boolean createISAReports)
       throws IOException {
 
@@ -383,6 +391,25 @@ public class Demo {
             reportEngine,
             "nis2-registration-info",
             "/tmp/nis2-registration-info.en.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersUS,
+            entriesForLanguage.get(Locale.US));
+      }
+
+      if (createNIS2IncidentReports) {
+        createReport(
+            reportEngine,
+            "nis2-security-incident",
+            "/tmp/nis2-security-incident.pdf",
+            dataProvider,
+            MediaType.APPLICATION_PDF_VALUE,
+            parametersGermany,
+            entriesForLanguage.get(Locale.GERMANY));
+        createReport(
+            reportEngine,
+            "nis2-security-incident",
+            "/tmp/nis2-security-incident.en.pdf",
             dataProvider,
             MediaType.APPLICATION_PDF_VALUE,
             parametersUS,

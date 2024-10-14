@@ -1,0 +1,27 @@
+{
+  "name": {
+    "de": "Meldeformular Sicherheitsvorfall",
+    "en": "Notification form for security incident"
+  },
+  "domainName": "NIS2",
+  "description": {
+    "de": "Eine detaillierte Übersicht über die dokumentierten Sicherheitsvorfälle einer Organisation",
+    "en": "A detailed overview of the documented security incidents in an organization"
+  },
+  "templateFile": "nis2-security-incident.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "incident",
+      "subTypes": [
+        "INC_SecurityIncident"
+      ]
+    }
+  ],
+  "data": {
+    "nis2incident": "/incidents/${targetId}"
+  }
+}
