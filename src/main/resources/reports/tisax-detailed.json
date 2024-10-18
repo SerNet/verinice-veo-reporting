@@ -1,10 +1,10 @@
 {
   "name": {
-    "de": "ISA: Information Security Assessment 6"
+    "de": "ISA: Report detailliert 6"
   },
   "domainName": "TISAX",
   "description": {
-    "de": "ISA: Information Security Assessment 6"
+    "de": "Dieser Report unterscheidet sich vom kompakten Report durch die detaillierte Darstellung der dokumentierten Informationen zu den einzelnen ISA-Controls. Dies umfasst mindestens die Beschreibung der Umsetzung sowie die zugehörigen Referenzdokumente, die zusammengefasst dargestellt werden."
   },
   "templateFile": "tisax-detailed.md",
   "templateType": "text/markdown",
