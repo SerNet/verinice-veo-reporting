@@ -56,7 +56,7 @@ table.maturitytable > tbody > tr > td:nth-child(4) {
 
 <#assign domain=domains?filter(it->it.name == 'TISAX')?filter(it->isa.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 
-<#assign scope = scopes?filter(it->it.domains[domain.id].subType == 'SCP_Organization')?filter(it->it.members?map(it->it._self)?seq_contains(isa._self))?first! />
+<#assign scope = scopes?filter(it->(it.domains[domain.id].subType)! == 'SCP_Organization')?filter(it->it.members?map(it->it._self)?seq_contains(isa._self))?first! />
 
 <#assign usedControls = isa.getMembersWithType('control')>
 
