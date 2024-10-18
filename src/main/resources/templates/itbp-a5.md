@@ -370,7 +370,7 @@ ${potentialImpact.translations[.lang].name}
 <#macro moduleview targetObject>
 <@def "Beschreibung" targetObject.description true/>
 
-<#assign targetObjectRisksInDomain = (targetObject.risks?filter(it-> it.domains?keys?seq_contains(domain.id)))! />
+<#assign targetObjectRisksInDomain = (targetObject.risks?filter(it-> it.domains?keys?seq_contains(domain.id))?map(it->{"key": it.scenario.abbreviation_naturalized, "value": it})?sort_by('key')?map(it->it.value))! />
 
 <#if targetObjectRisksInDomain?has_content>
 ## Risiken
