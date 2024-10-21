@@ -19,55 +19,68 @@
 
 <#assign riskCategoriesWithMatrix=riskDefinition.categories?filter(it->it.valueMatrix?has_content)>
 
+<#if riskValues.effectiveProbability?has_content>
+
+Effektive Eintritts&shy;wahrscheinlichkeit:
+: <@rcom.probabilitydisplay riskDefinition, riskValues.effectiveProbability/>
+<#if riskValues.specificProbabilityExplanation?has_content>
+: ${riskValues.specificProbabilityExplanation}
+</#if>
+
+</#if>
+
 <table class="table" style="width:100%;font-size:70%;">
 <colgroup>
-  <col span="1" style="width: 15%;">
-  <col span="1" style="width: 10%;">
-  <col span="1" style="width: 12%;">
-  <col span="1" style="width: 51%;">
-  <col span="1" style="width: 12%;">
+<#assign additionalwidth=0>
+<#if (riskCategoriesWithMatrix?size > 1)>
+  <#assign additionalwidth=3>
+  <col span="1" style="width: ${4*additionalwidth}%;">
+</#if>
+  <col span="1" style="width: ${28-additionalwidth}%;">
+  <col span="1" style="width: ${16-additionalwidth}%;">
+  <col span="1" style="width: ${28-additionalwidth}%;">
+  <col span="1" style="width: ${28-additionalwidth}%;">
 </colgroup>
 <thead>
 <tr>
-<th colspan="3">Risikobewertung vor Maßnahmen</th>
+<#if (riskCategoriesWithMatrix?size > 1)>
+<th colspan="1">Kriterium</th>
+</#if>
+<th colspan="2">Risikobewertung vor Maßnahmen</th>
 <th>Risikobehandlung</th>
 <th colspan="1">Risikobewertung nach Maßnahmen</th>
 </tr>
 <tr>
+<#if (riskCategoriesWithMatrix?size > 1)>
+<th />
+</#if>
 <th>Effektive Auswirkung</th>
-<th>Effektive Eintritts&shy;wahrscheinlichkeit</th>
-<th>Bruttorisiko (maximaler Wert)</th>
+<th>Bruttorisiko</th>
 <th>Risikobehandlungsoptionen</th>
-<th>Nettorisiko (maximaler Wert)</th>
+<th>Nettorisiko</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>
 <#list riskCategoriesWithMatrix as category>
-<#assign riskValuesForCategory = (riskValues[category.id])! />
+<tr>
 <#if (riskCategoriesWithMatrix?size > 1)>
-${category.id}:
+<td>${category.translations[.lang].name}&nbsp;(${category.id})</td>
 </#if>
+<td>
+<#assign riskValuesForCategory = (riskValues[category.id])! />
 <#if riskValuesForCategory?has_content>
-<@rcom.impactdisplay riskDefinition category, riskValuesForCategory.effectiveImpact />
+<@rcom.impactdisplay riskDefinition category, riskValuesForCategory.effectiveImpact /><#if riskValuesForCategory.specificImpactExplanation?has_content><br/>${riskValuesForCategory.specificImpactExplanation}</#if>
 </#if>
 <br/>
-</#list>
 </td>
-<td><@rcom.probabilitydisplay riskDefinition, riskValues.effectiveProbability/></td>
-<#assign maxInherent = riskCategoriesWithMatrix?map(c->(riskValues[c.id].inherentRisk)!-1)?max />
-<#if (maxInherent > -1)>
-<#assign maxInherentData = riskDefinition.getRisk(maxInherent) />
-<@rcom.riskCell maxInherentData.color>${maxInherentData.label}</@rcom.riskCell>
+<#assign inherent = riskValuesForCategory.inherentRisk! />
+<#if inherent?has_content >
+<#assign inherentData = riskDefinition.getRisk(inherent) />
+<@rcom.riskCell inherentData.color>${inherentData.label}</@rcom.riskCell>
 <#else/>
 <td />
 </#if>
 <td>
-<#list riskCategoriesWithMatrix as category>
-<#if (riskCategoriesWithMatrix?size > 1)>
-${category.id}:
-</#if>
 <#assign riskValuesForCategory = (riskValues[category.id])! />
 <#if riskValuesForCategory?has_content>
 ${(riskValuesForCategory.riskTreatments?map(t->rcom.riskReductionLabel(t))?join(', '))!}
@@ -77,17 +90,17 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 </#if>
 </#if>
 <br/>
-</#list>
 </td>
-<#assign maxResidual = riskCategoriesWithMatrix?map(c->(riskValues[c.id].residualRisk)!-1)?max />
-<#if (maxResidual > -1)>
-<#assign maxResidualData = riskDefinition.getRisk(maxResidual) />
-<@rcom.riskCell maxResidualData.color>${maxResidualData.label}</@rcom.riskCell>
+<#assign residual = riskValuesForCategory.residualRisk! />
+<#if residual?has_content>
+<#assign residualData = riskDefinition.getRisk(residual) />
+<@rcom.riskCell residualData.color>${residualData.label}<#if riskValuesForCategory.residualRiskExplanation?has_content><br/>${riskValuesForCategory.residualRiskExplanation}</#if></@rcom.riskCell>
 <#else/>
 <td />
 </#if>
 
 </tr>
+</#list>
 </tbody>
 </table>
 

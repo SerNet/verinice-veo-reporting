@@ -41,22 +41,8 @@ dt {
   margin-bottom: 1cm;
 }
 
-.risk dl {
-  display: table;
-  width: 100%;
-}
-
-.risk dt, .risk dd {
-  display: table-cell;
-}
-
-.risk dt {
-  font-weight: normal;
-  min-width: 8cm;
-}
-
-.risk dd {
-  width: auto;
+dl, .risk {
+  page-break-inside: avoid;
 }
 
 .riskmatrix {
