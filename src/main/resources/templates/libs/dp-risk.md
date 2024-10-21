@@ -54,7 +54,7 @@ ${category.id}:
 <#assign maxInherent = riskDefinition.categories?map(c->(riskValues[c.id].inherentRisk)!-1)?max />
 <#if (maxInherent > -1)>
 <#assign maxInherentData = riskDefinition.getRisk(maxInherent) />
-<@rcom.riskCell maxInherentData.color maxInherentData.label/>
+<@rcom.riskCell maxInherentData.color>${maxInherentData.label}</@rcom.riskCell>
 <#else/>
 <td />
 </#if>
@@ -75,7 +75,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <#assign maxResidual = riskDefinition.categories?map(c->(riskValues[c.id].residualRisk)!-1)?max />
 <#if (maxResidual > -1)>
 <#assign maxResidualData = riskDefinition.getRisk(maxResidual) />
-<@rcom.riskCell maxResidualData.color maxResidualData.label/>
+<@rcom.riskCell maxResidualData.color maxResidualData.label>${maxResidualData.label}</@rcom.riskCell>
 <#else/>
 <td />
 </#if>
@@ -114,7 +114,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <td>${tom.designator} ${tom.name}</td>
 <#if mitigationStatus?has_content>
 <#assign implementationStatus = riskDefinition.getImplementationStatus(mitigationStatus) />
-<@rcom.riskCell implementationStatus.color implementationStatus.label />
+<@rcom.riskCell implementationStatus.color>${implementationStatus.label}</@rcom.riskCell>
 <#else>
 <td></td>
 </#if>

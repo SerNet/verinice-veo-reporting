@@ -59,7 +59,7 @@ ${category.id}:
 <#assign maxInherent = riskCategoriesWithMatrix?map(c->(riskValues[c.id].inherentRisk)!-1)?max />
 <#if (maxInherent > -1)>
 <#assign maxInherentData = riskDefinition.getRisk(maxInherent) />
-<@rcom.riskCell maxInherentData.color maxInherentData.label/>
+<@rcom.riskCell maxInherentData.color>${maxInherentData.label}</@rcom.riskCell>
 <#else/>
 <td />
 </#if>
@@ -82,7 +82,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <#assign maxResidual = riskCategoriesWithMatrix?map(c->(riskValues[c.id].residualRisk)!-1)?max />
 <#if (maxResidual > -1)>
 <#assign maxResidualData = riskDefinition.getRisk(maxResidual) />
-<@rcom.riskCell maxResidualData.color maxResidualData.label/>
+<@rcom.riskCell maxResidualData.color>${maxResidualData.label}</@rcom.riskCell>
 <#else/>
 <td />
 </#if>
