@@ -17,6 +17,7 @@
  ******************************************************************************/
 package org.veo.templating.adapters;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +87,9 @@ public class VeoReportingRiskAdapter extends WrappingTemplateModel
       Map dataForDomain = (Map) domains.get(domainId);
       Map riskDefinitions = (Map) dataForDomain.get("riskDefinitions");
       Map dataForRiskDefinition = (Map) riskDefinitions.get(riskDefinitionId);
+      if (dataForRiskDefinition == null) {
+        return Collections.emptyMap();
+      }
 
       Map result = new HashMap<>();
 
