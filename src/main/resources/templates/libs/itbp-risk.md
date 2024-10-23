@@ -3,6 +3,8 @@
 <#import "/libs/risk-commons.md" as rcom>
 
 <#macro riskdisplay headinglevel targetObject risk domain riskDefinition={}>
+<#assign riskCategoriesWithMatrix=riskDefinition.categories?filter(it->it.valueMatrix?has_content)>
+
 <div class="risk">
 
 <#assign scenario = risk.scenario>
@@ -13,11 +15,19 @@
 
 <@com.def "Risikobeschreibung", scenario.description />
 
-<#assign riskDataAvailable = riskDefinition?has_content && risk.domains[domain.id].riskDefinitions[riskDefinition.id]?has_content />
-<#if riskDataAvailable>
 <#assign riskValues = risk.getRiskValues(domain.id, riskDefinition.id)>
 
-<#assign riskCategoriesWithMatrix=riskDefinition.categories?filter(it->it.valueMatrix?has_content)>
+<#if riskValues?has_content && (riskValues.effectiveProbability?has_content
+                              || riskValues.effectiveProbabilityExplanation?has_content
+                              || riskCategoriesWithMatrix?map(it->riskValues[it.id])?filter(
+                                   it->it.effectiveImpact?has_content
+                                   || it.specificImpactExplanation?has_content
+                                   || it.inherentRisk?has_content
+                                   || it.riskTreatments?has_content
+                                   || it.riskTreatmentExplanation?has_content
+                                   || it.residualRisk?has_content
+                                   || it.residualRiskExplanation?has_content
+                                 )?has_content)>
 
 <table class="table" style="width:100%;font-size:70%;">
 <colgroup>
@@ -54,12 +64,12 @@
 </thead>
 <tbody>
 <#list riskCategoriesWithMatrix as category>
+<#assign riskValuesForCategory = (riskValues[category.id])! />
 <tr>
 <#if (riskCategoriesWithMatrix?size > 1)>
 <td>${category.translations[.lang].name}&nbsp;(${category.id})</td>
 </#if>
 <td>
-<#assign riskValuesForCategory = (riskValues[category.id])! />
 <#if riskValuesForCategory?has_content>
 <@rcom.impactdisplay riskDefinition category, riskValuesForCategory.effectiveImpact /><#if riskValuesForCategory.specificImpactExplanation?has_content><br/>${riskValuesForCategory.specificImpactExplanation}</#if>
 </#if>
@@ -76,7 +86,6 @@
 <td />
 </#if>
 <td>
-<#assign riskValuesForCategory = (riskValues[category.id])! />
 <#if riskValuesForCategory?has_content>
 ${(riskValuesForCategory.riskTreatments?map(t->rcom.riskReductionLabel(t))?join(', '))!}
 <#if (riskValuesForCategory.riskTreatmentExplanation)?has_content>
@@ -98,7 +107,8 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 </#list>
 </tbody>
 </table>
-
+<#else>
+Für diese Gefährdung wurde noch keine Risikobewertung vorgenommen.
 </#if>
 
 <#if risk.mitigation?has_content && risk.mitigation.parts?has_content>
