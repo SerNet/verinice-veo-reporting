@@ -9,8 +9,6 @@
 
 <#assign scope = informationDomain/>
 
-<#assign processesInScope = scope.getMembersWithType('process')?filter(p ->p.hasSubType('PRO_BusinessProcess'))>
-
 <style>
 <#include "styles/default.css">
 <#include "styles/default_landscape.css">
