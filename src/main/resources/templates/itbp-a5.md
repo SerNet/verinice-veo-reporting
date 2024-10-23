@@ -7,8 +7,6 @@
          groupBySubType = com.groupBySubType
          title = icom.title />
 
-<#assign scope = informationDomain/>
-
 <style>
 <#include "styles/default.css">
 <#include "styles/default_landscape.css">
@@ -107,8 +105,20 @@ dl, .risk {
 }
 </style>
 
+<#assign scope = informationDomain/>
+
 <#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
 <#assign domain=domains?filter(it->it.name == 'IT-Grundschutz')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
+
+<#function risksInDomain riskAffected>
+  <#return (riskAffected.risks?filter(it-> it.domains?keys?seq_contains(domain.id))?map(it->{"key": it.scenario.abbreviation_naturalized, "value": it})?sort_by('key')?map(it->it.value))!>
+</#function>
+
+<#assign risksByTargetObjectId = {}>
+<#list ([scope] + scope.members) as targetObject>
+  <#assign risksByTargetObjectId = risksByTargetObjectId + {targetObject.id : risksInDomain(targetObject) } />
+</#list>
+
 <#assign institutions=scope.scopes?filter(it->it.hasSubType('SCP_Institution')) />
 
 <#assign elementSubTypeGroups = groupBySubType(scope.members, 'process', domain)
@@ -129,13 +139,19 @@ dl, .risk {
 <#if riskDefinitionId?has_content>
   <bookmark name="${bundle.risk_definition}" href="#risk_definition"/>
 </#if>
+<#if risksByTargetObjectId[scope.id]?has_content>
   <bookmark name="${bundle.scope_SCP_InformationDomain_singular}" href="#information_domain"/>
+</#if>>
   <#list elementSubTypeGroups as group>
-    <bookmark name="${group.subTypePlural}" href="#${group.elementType}_${group.subType}">
-    <#list group.elements as element>
-      <bookmark name="${title(element)}" href="#${group.elementType}_${group.subType}_${element?counter}"/>
-    </#list>
-    </bookmark>
+    <#if group.elements?filter(it->risksByTargetObjectId[it.id]?has_content)?has_content>
+      <bookmark name="${group.subTypePlural}" href="#${group.elementType}_${group.subType}">
+        <#list group.elements as element>
+          <#if risksByTargetObjectId[element.id]?has_content>
+            <bookmark name="${title(element)}" href="#${group.elementType}_${group.subType}_${element?counter}"/>
+          </#if>
+        </#list>
+      </bookmark>
+    </#if>
   </#list>
 </bookmarks>
 
@@ -350,11 +366,10 @@ ${potentialImpact.translations[.lang].name}
 
 <div class="pagebreak"></div>
 
-
 <#macro moduleview targetObject>
 <@def "Beschreibung" targetObject.description true/>
 
-<#assign targetObjectRisksInDomain = (targetObject.risks?filter(it-> it.domains?keys?seq_contains(domain.id))?map(it->{"key": it.scenario.abbreviation_naturalized, "value": it})?sort_by('key')?map(it->it.value))! />
+<#assign targetObjectRisksInDomain = risksByTargetObjectId[targetObject.id] />
 
 <#if targetObjectRisksInDomain?has_content>
 ## Risiken
@@ -366,22 +381,34 @@ ${potentialImpact.translations[.lang].name}
 </#if>
 </#macro>
 
+<#if risksByTargetObjectId[scope.id]?has_content>
+
 # ${title(scope)} {#information_domain}
 
 <@moduleview scope/>
 
+</#if>
+
 <#list elementSubTypeGroups as group>
+
+<#if group.elements?filter(it->risksByTargetObjectId[it.id]?has_content)?has_content>
 
 # ${group.subTypePlural} {#${group.elementType}_${group.subType}}
 
 <#list group.elements as element>
 
+<#if risksByTargetObjectId[element.id]?has_content>
+
 ## ${title(element)} {#${group.elementType}_${group.subType}_${element?counter}}
 
 <@moduleview element/>
 
+</#if>
+
 </#list>
 
 <div class="pagebreak"></div>
+
+</#if>
 
 </#list>
