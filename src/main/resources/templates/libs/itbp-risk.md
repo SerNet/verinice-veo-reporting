@@ -19,34 +19,25 @@
 
 <#assign riskCategoriesWithMatrix=riskDefinition.categories?filter(it->it.valueMatrix?has_content)>
 
-<#if riskValues.effectiveProbability?has_content>
-
-Effektive Eintritts&shy;wahrscheinlichkeit:
-: <@rcom.probabilitydisplay riskDefinition, riskValues.effectiveProbability/>
-<#if riskValues.specificProbabilityExplanation?has_content>
-: ${riskValues.specificProbabilityExplanation}
-</#if>
-
-</#if>
-
 <table class="table" style="width:100%;font-size:70%;">
 <colgroup>
 <#assign additionalwidth=0>
 <#if (riskCategoriesWithMatrix?size > 1)>
   <#assign additionalwidth=3>
-  <col span="1" style="width: ${4*additionalwidth}%;">
+  <col span="1" style="width: ${5*additionalwidth}%;">
 </#if>
-  <col span="1" style="width: ${28-additionalwidth}%;">
-  <col span="1" style="width: ${16-additionalwidth}%;">
-  <col span="1" style="width: ${28-additionalwidth}%;">
-  <col span="1" style="width: ${28-additionalwidth}%;">
+  <col span="1" style="width: ${22-additionalwidth}%;">
+  <col span="1" style="width: ${20-additionalwidth}%;">
+  <col span="1" style="width: ${14-additionalwidth}%;">
+  <col span="1" style="width: ${22-additionalwidth}%;">
+  <col span="1" style="width: ${22-additionalwidth}%;">
 </colgroup>
 <thead>
 <tr>
 <#if (riskCategoriesWithMatrix?size > 1)>
 <th colspan="1">Kriterium</th>
 </#if>
-<th colspan="2">Risikobewertung vor Maßnahmen</th>
+<th colspan="3">Risikobewertung vor Maßnahmen</th>
 <th>Risikobehandlung</th>
 <th colspan="1">Risikobewertung nach Maßnahmen</th>
 </tr>
@@ -55,6 +46,7 @@ Effektive Eintritts&shy;wahrscheinlichkeit:
 <th />
 </#if>
 <th>Effektive Auswirkung</th>
+<th>Effektive Eintritts&shy;wahrscheinlichkeit</th>
 <th>Bruttorisiko</th>
 <th>Risikobehandlungsoptionen</th>
 <th>Nettorisiko</th>
@@ -73,6 +65,9 @@ Effektive Eintritts&shy;wahrscheinlichkeit:
 </#if>
 <br/>
 </td>
+<#if category?index == 0>
+<td rowspan="${riskCategoriesWithMatrix?size}"><@rcom.probabilitydisplay riskDefinition, riskValues.effectiveProbability/><#if riskValues.specificProbabilityExplanation?has_content><br/>${riskValues.specificProbabilityExplanation}</#if></td>
+</#if>
 <#assign inherent = riskValuesForCategory.inherentRisk! />
 <#if inherent?has_content >
 <#assign inherentData = riskDefinition.getRisk(inherent) />
