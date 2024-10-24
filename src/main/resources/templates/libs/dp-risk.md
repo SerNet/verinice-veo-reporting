@@ -75,7 +75,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <#assign maxResidual = riskDefinition.categories?map(c->(riskValues[c.id].residualRisk)!-1)?max />
 <#if (maxResidual > -1)>
 <#assign maxResidualData = riskDefinition.getRisk(maxResidual) />
-<@rcom.riskCell maxResidualData.color maxResidualData.label>${maxResidualData.label}</@rcom.riskCell>
+<@rcom.riskCell maxResidualData.color>${maxResidualData.label}</@rcom.riskCell>
 <#else/>
 <td />
 </#if>
