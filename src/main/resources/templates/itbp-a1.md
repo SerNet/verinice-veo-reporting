@@ -158,6 +158,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <#elseif group.elementType == "asset">
     <@row element, 'asset_bpDetails_platform'/>
     <@row element, 'asset_details_number'/>
+    <@row element, 'asset_details_operatingStage'/>
 <#elseif group.elementType == "scope">
     <@row element, 'scope_address_address1'/>
     <@row element, {'scope_address_postcode, scope_address_city' : 'scope_address_postcode scope_address_city'}/>
