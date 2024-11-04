@@ -137,12 +137,12 @@ dl {
 </#macro>
 
 
-<#assign notificationType=incident.incident_generalInformation_notificationType!>
+<#assign notificationType=incident.incident_dataBreach_notificationType!>
 <#if notificationType?has_content>
-${bundle.incident_generalInformation_notificationType}
-: <@checkbox_seq notificationType 'incident_generalInformation_notificationType_completeNotification' />
-: <@checkbox_seq notificationType 'incident_generalInformation_notificationType_temporaryNotification' />
-: <@checkbox_seq notificationType 'incident_generalInformation_notificationType_followupNotification' />
+${bundle.incident_dataBreach_notificationType}
+: <@checkbox_seq notificationType 'incident_dataBreach_notificationType_completeNotification' />
+: <@checkbox_seq notificationType 'incident_dataBreach_notificationType_temporaryNotification' />
+: <@checkbox_seq notificationType 'incident_dataBreach_notificationType_followupNotification' />
 </#if>
 
 <@def bundle.incident_contactPerson, (incident.findFirstLinked('incident_contactPerson').name)! />
@@ -195,7 +195,12 @@ ${bundle.incident_generalInformation_notificationType}
 
 <@def bundle.incident_description_others incident.incident_description_others />
 
-<@def bundle.incident_description_affectedProtectiongoals, (incident.incident_description_affectedProtectiongoals?map(item->bundle[item])?join(', '))! />
+<#-- Read those from the risk definition -->
+<#assign protectionGoals = ['confidentiality', 'integrity', 'availability', 'resilience']>
+
+<#assign affectedProtectionGoals = protectionGoals?filter(g->incident["incident_${g}_affected"]!false) />
+
+<@def bundle.affected_protection_goals, (affectedProtectionGoals?map(item->bundle[item])?join(', '))! />
 
 <@def bundle.incident_description_timeOfIncidentknown, incident.incident_description_timeOfIncidentknown />
 
@@ -242,7 +247,7 @@ ${bundle.incident_generalInformation_notificationType}
 
 <@def bundle.incident_presumedMotivation_collectedData, (incident.incident_presumedMotivation_collectedData?map(item->bundle[item])?join(', '))! />
 
-<@def bundle.incident_presumedMotivation_others incident.incident_presumedMotivation_others />
+<@def bundle.incident_presumedMotivation_otherPresumedMotivation incident.incident_presumedMotivation_otherPresumedMotivation />
 
 <#assign lawEnforcement=incident.incident_presumedMotivation_lawEnforcement!>
 <#if lawEnforcement?has_content>

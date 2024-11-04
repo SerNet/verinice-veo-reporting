@@ -202,6 +202,6 @@ h1, h2, h3, h4 {
 
 <@def bundle.document_decisionRequest_requestAnswered, (request.document_decisionRequest_requestAnswered?date.iso)! />
 
-<@def bundle.document_decisionRequest_FormOfResponse, (request.document_decisionRequest_FormOfResponse?map(item->bundle[item])?join(', '))! /> <#-- sic! -->
+<@def bundle.document_decisionRequest_formOfResponse, (request.document_decisionRequest_formOfResponse?map(item->bundle[item])?join(', '))! />
 
 <@def bundle.document_decisionRequest_otherForm request.document_decisionRequest_otherForm />
