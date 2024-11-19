@@ -87,7 +87,7 @@ dl {
   dataProtectionOfficer,
   [
    'name',
-   {'person_address_postcode, scope_address_city' : 'person_address_postcode scope_address_city'},
+   {'person_address_postcode, person_address_city' : 'person_address_postcode person_address_city'},
    'person_contactInformation_office / person_contactInformation_fax',
    'person_contactInformation_email'
   ]/>
@@ -100,7 +100,7 @@ dl {
   informationSecurityOfficer,
   [
    'name',
-   {'person_address_postcode, scope_address_city' : 'person_address_postcode scope_address_city'},
+   {'person_address_postcode, person_address_city' : 'person_address_postcode person_address_city'},
    'person_contactInformation_office / person_contactInformation_fax',
    'person_contactInformation_email'
   ]/>
