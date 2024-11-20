@@ -100,21 +100,21 @@ Cheers'''
                 name: 'Asset 1',
                 abbreviation: '1 of 12',
                 designator: 'AST-234',
-                customAspects: []
+                customAspects: [:]
             ],
             [
                 id: '2',
                 type: 'asset',
                 name: 'Asset 10',
                 abbreviation: '10 of 12',
-                customAspects: []
+                customAspects: [:]
             ],
             [
                 id: '3',
                 type: 'asset',
                 name: 'Asset 12',
                 designator: 'AST-9',
-                customAspects: []
+                customAspects: [:]
             ]
         ]
         when:
@@ -157,7 +157,7 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                         ]
                     ]
                 ],
-                customAspects: []
+                customAspects: [:]
             ],
             [
                 name: 'Jack',
@@ -184,7 +184,7 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                         ]
                     ]
                 ],
-                customAspects: []
+                customAspects: [:]
             ],
             [
                 name: 'Jane',
@@ -203,14 +203,14 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                         ]
                     ]
                 ],
-                customAspects: []
+                customAspects: [:]
             ],
             [
                 name: 'Mary',
                 id: '4',
                 _self: 'http://example.org/persons/4',
                 type: 'person',
-                customAspects: []
+                customAspects: [:]
             ]
         ]
         when:
@@ -237,7 +237,7 @@ Jack's children are named John and Jane.'''
                             type: 'person'
                         ]
                     ],
-                    customAspects: []
+                    customAspects: [:]
                 ]
             ],
             persons: [
@@ -246,7 +246,7 @@ Jack's children are named John and Jane.'''
                     id: '1',
                     _self: 'http://example.org/persons/1',
                     type: 'person',
-                    customAspects: []
+                    customAspects: [:]
 
                 ]
             ]
@@ -279,7 +279,7 @@ Jack's children are named John and Jane.'''
                             type: 'asset'
                         ]
                     ],
-                    customAspects: []
+                    customAspects: [:]
                 ]
             ],
             persons: [
@@ -288,7 +288,7 @@ Jack's children are named John and Jane.'''
                     id: '1',
                     _self: 'http://example.org/persons/1',
                     type: 'person',
-                    customAspects: []
+                    customAspects: [:]
 
                 ]
             ]
@@ -321,21 +321,21 @@ Jack's children are named John and Jane.'''
                         type: 'person'
                     ]
                 ],
-                customAspects: []
+                customAspects: [:]
             ],
             [
                 name: 'Jack',
                 id: '2',
                 _self: 'http://example.org/persons/2',
                 type: 'person',
-                customAspects: []
+                customAspects: [:]
             ],
             [
                 name: 'Jane',
                 id: '3',
                 _self: 'http://example.org/persons/3',
                 type: 'person',
-                customAspects: []
+                customAspects: [:]
             ]
         ]
         when:
@@ -358,13 +358,13 @@ Jack's children are named John and Jane.'''
                         subType : 'MySubType'
                     ]
                 ],
-                customAspects: []
+                customAspects: [:]
             ],
             [
                 name: 'John',
                 id: '2',
                 type: 'person',
-                customAspects: []
+                customAspects: [:]
             ],
             [
                 name: 'Jack',
@@ -375,7 +375,7 @@ Jack's children are named John and Jane.'''
                         subType : 'OtherSubType'
                     ]
                 ],
-                customAspects: []
+                customAspects: [:]
             ],
             [
                 name: 'Sue',
@@ -389,7 +389,7 @@ Jack's children are named John and Jane.'''
                         subType : 'MySubType'
                     ]
                 ],
-                customAspects: []
+                customAspects: [:]
             ]
         ]
         when:
@@ -418,7 +418,7 @@ Jack's children are named John and Jane.'''
                     ]
                 ]
             ],
-            customAspects: []
+            customAspects: [:]
         ]
         def domain = [
             id: domainId,
@@ -494,21 +494,21 @@ Jack's children are named John and Jane.'''
                     ]
                 ]
             ],
-            customAspects: []
+            customAspects: [:]
         ]
         def scenario = [
             name: 'Fire',
             id: scenarioId,
             type: 'scenario',
             '_self': "http://localhost/scenarios/$scenarioId".toString(),
-            customAspects: []
+            customAspects: [:]
         ]
         def person = [
             name: 'John Doe',
             id: personId,
             type: 'person',
             '_self': "http://localhost/persons/$personId".toString(),
-            customAspects: []
+            customAspects: [:]
         ]
         def control = [
             name: 'Fixitall',
@@ -524,7 +524,7 @@ Jack's children are named John and Jane.'''
                     ]
                 ]
             ],
-            customAspects: []
+            customAspects: [:]
         ]
         def domain = [
             id: domainId,
