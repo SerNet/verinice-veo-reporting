@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 
 import org.veo.templating.VeoReportingObjectWrapper;
 import org.veo.templating.methods.SingleStringArgumentMethod;
-import org.veo.templating.methods.VeoTemplateMethod;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import freemarker.template.AdapterTemplateModel;
@@ -100,11 +99,6 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     if ("scope".equals(type)) {
       if ("getMembersWithType".equals(key)) {
         return new GetMembersWithType(m, ow);
-      }
-    }
-    if ("control".equals(type)) {
-      if ("getImplementationStatus".equals(key)) {
-        return new GetImplementationStatus(m, ow);
       }
     }
     switch (key) {
@@ -210,30 +204,6 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
             .stream().map(m -> ((Map) m).get("target")).collect(Collectors.toList());
       }
       return Collections.emptyList();
-    }
-  }
-
-  private static final class GetImplementationStatus extends VeoTemplateMethod {
-
-    public GetImplementationStatus(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-      super(m, ow);
-    }
-
-    @Override
-    protected Object doExec(List arguments) throws TemplateModelException {
-      if (arguments.size() != 2) {
-        throw new TemplateModelException("Expecting 2 arguments, domain ID and risk definition ID");
-      }
-
-      String domainId = asString(arguments.get(0));
-      String riskDefinitionId = asString(arguments.get(1));
-
-      return Optional.ofNullable(getProperty("domains"))
-          .map(domains -> ((Map) domains).get(domainId))
-          .map(dataForDomain -> ((Map) dataForDomain).get("riskValues"))
-          .map(riskDefinitions -> ((Map) riskDefinitions).get(riskDefinitionId))
-          .map(dataForRiskDefinition -> ((Map) dataForRiskDefinition).get("implementationStatus"))
-          .orElse(null);
     }
   }
 

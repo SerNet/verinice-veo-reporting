@@ -1,7 +1,26 @@
 <#import "/libs/commons.md" as com>
 <#import "/libs/risk-commons.md" as rcom>
 
-<#macro riskdisplay headinglevel risk domain riskDefinition={}>
+<#-- TODO: #3385: use domain-specific status -->
+<#assign statusMap = {
+  'YES': {"color":"#12AE0F","labels":{"de":"ja","en":"yes"}},
+  'NO': {"color":"#AE0D11","labels":{"de":"nein","en":"no"}},
+  'PARTIAL': {"color":"#EDE92F","labels":{"de":"teilweise","en":"partial"}},
+  'N_A': {"color":"#49A2ED","labels":{"de":"nicht anwendbar","en":"not applicable"}}
+} />
+
+<#function getImplementationStatus ri>
+  <#local mitigationStatus=statusMap[ri.status]!/>
+  <#if mitigationStatus?has_content>
+    <#return {"color":mitigationStatus.color, "label":mitigationStatus.labels[.lang]}/>
+  </#if>
+</#function>
+
+<#function getRI riskAffected control>
+  <#return riskAffected.requirementImplementations?filter(ri->ri.control.id == control.id)?first>
+</#function>
+
+<#macro riskdisplay headinglevel riskAffected risk domain riskDefinition={}>
 <div class="risk">
 
 <#assign scenario = risk.scenario>
@@ -109,17 +128,17 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 </thead>
 <tbody>
 <#list risk.mitigation.parts as tom>
-<#assign mitigationStatus=riskDataAvailable?then(tom.getImplementationStatus(domain.id, riskDefinition.id)!, '')/>
+<#assign ri=getRI(riskAffected, tom)>
+<#assign mitigationStatus=getImplementationStatus(ri)!/>
 <tr>
 <td>${tom.designator} ${tom.name}</td>
 <#if mitigationStatus?has_content>
-<#assign implementationStatus = riskDefinition.getImplementationStatus(mitigationStatus) />
-<@rcom.riskCell implementationStatus.color>${implementationStatus.label}</@rcom.riskCell>
+<@rcom.riskCell mitigationStatus.color>${mitigationStatus.label}</@rcom.riskCell>
 <#else>
 <td></td>
 </#if>
-<td>${tom.control_implementation_explanation!}</td>
-<td>${(tom.control_implementation_date?date.iso)!}</td>
+<td>${ri.implementationStatement!}</td>
+<td>${(ri.implementationUntil?date.iso)!}</td>
 </tr>
 </#list>
 </tbody>

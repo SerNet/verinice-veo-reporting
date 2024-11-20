@@ -319,7 +319,7 @@ ${potentialImpact.translations[.lang].name}
 ## Risiken
 
 <#list processRisksInDomain as risk>
-<@dpRisk.riskdisplay 3 risk domain riskDefinition />
+<@dpRisk.riskdisplay 3 process risk domain riskDefinition />
 </#list>
 
 </#if>

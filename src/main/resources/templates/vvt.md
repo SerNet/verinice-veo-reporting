@@ -1,11 +1,12 @@
 <#import "/libs/commons.md" as com>
+<#import "/libs/dp-risk.md" as dpRisk>
 
 <#assign to_user_presentable = com.to_user_presentable
  row = com.row
  table = com.table
  def = com.def
  >
- 
+
 <#--  OLD VERSION, recursive membership
 <#function is_member_recursive scope entity>
   <#local filteredMembers = scope.members?filter(m -> m.type == 'scope' || m.type == 'process')>
@@ -453,11 +454,9 @@ ${bundle.process_opinionDPO_comment}
 <#assign mitigations=process.risks?map(r->r.mitigation!)?filter(it -> it??)?filter(it -> it.parts?has_content) />
 <#if mitigations?has_content>
 
-<#assign riskDefinitionId=scope.domains[domain.id].riskDefinition! />
-
 <@section 'Technische und organisatorische Maßnahmen' 'process_toms_${process?counter}'  >
 
-<#macro tomsection objective title>
+<#macro tomsection process objective title>
 <#list mitigations as mitigation>
 <#assign toms = mitigation.parts>
 <#assign tomsinsection = toms?filter(t->t.control_dataProtection_objectives!?seq_contains(objective))!>
@@ -469,20 +468,18 @@ ${bundle.process_opinionDPO_comment}
 <#list tomsinsection as t>
 <#assign statusTdStyle="">
 <#assign tom_status_output="">
-<#if riskDefinitionId?has_content>
-<#assign tom_status=t.getImplementationStatus(domain.id, riskDefinitionId)! />
+<#assign ri=dpRisk.getRI(process, t)>
+<#assign tom_status=dpRisk.getImplementationStatus(ri)! />
+
 <#if tom_status?has_content>
-<#assign riskDefinition=domain.riskDefinitions[riskDefinitionId] />
-<#assign implementationStatus = riskDefinition.getImplementationStatus(tom_status) />
-<#assign backgroundColor=implementationStatus.color />
+<#assign backgroundColor=tom_status.color />
 <#assign statusTdStyleSvg='<svg xmlns="http://www.w3.org/2000/svg" height="1" width="1"><polygon points="0,0 0,1 1,1 1,0" style="fill:${backgroundColor};" /></svg>' />
 <#assign statusTdStyle="background-repeat:no-repeat;background-size:5mm 100%;background-position:bottom left;background-image: url('data:image/svg+xml;base64,${base64(statusTdStyleSvg)}');padding-left: 7mm;">
-<#assign tom_status_output=implementationStatus.label>
-</#if>
+<#assign tom_status_output=tom_status.label>
 </#if>
 <tr>
   <td style="${statusTdStyle}">${tom_status_output}</td>
-  <td><dl class="tom"><dt>${t.name}</dt><dd>${t.control_implementation_explanation!}</dd></dl></td>
+  <td><dl class="tom"><dt>${t.name}</dt><dd>${ri.implementationStatement!}</dd></dl></td>
 </tr>
 </#list>
 </tbody>
@@ -497,14 +494,14 @@ ${bundle.process_opinionDPO_comment}
       <td>Maßnahme</td>
     </tr>
   </thead>
-  <@tomsection 'control_dataProtection_objectives_pseudonymization', 'Pseudonymisierung'/>
-  <@tomsection 'control_dataProtection_objectives_confidentiality', 'Gewährleistung der Vertraulichkeit'/>
-  <@tomsection 'control_dataProtection_objectives_integrity', 'Gewährleistung der Integrität'/>
-  <@tomsection 'control_dataProtection_objectives_availability', 'Gewährleistung der Verfügbarkeit'/>
-  <@tomsection 'control_dataProtection_objectives_resilience', 'Gewährleistung der Belastbarkeit'/>
-  <@tomsection 'control_dataProtection_objectives_recoverability', 'Wiederherstellbarkeit'/>
-  <@tomsection 'control_dataProtection_objectives_effectiveness', 'Wirksamkeit der TOMs'/>
-  <@tomsection 'control_dataProtection_objectives_encryption', 'Verschlüsselung'/>
+  <@tomsection process 'control_dataProtection_objectives_pseudonymization', 'Pseudonymisierung'/>
+  <@tomsection process 'control_dataProtection_objectives_confidentiality', 'Gewährleistung der Vertraulichkeit'/>
+  <@tomsection process 'control_dataProtection_objectives_integrity', 'Gewährleistung der Integrität'/>
+  <@tomsection process 'control_dataProtection_objectives_availability', 'Gewährleistung der Verfügbarkeit'/>
+  <@tomsection process 'control_dataProtection_objectives_resilience', 'Gewährleistung der Belastbarkeit'/>
+  <@tomsection process 'control_dataProtection_objectives_recoverability', 'Wiederherstellbarkeit'/>
+  <@tomsection process 'control_dataProtection_objectives_effectiveness', 'Wirksamkeit der TOMs'/>
+  <@tomsection process 'control_dataProtection_objectives_encryption', 'Verschlüsselung'/>
 </table> 
 </@section>
 </#if>

@@ -70,9 +70,6 @@ public class VeoReportingRiskDefinitionAdapter extends WrappingTemplateModel
     if ("getProbability".equals(key)) {
       return new GetProbability(m, ow);
     }
-    if ("getImplementationStatus".equals(key)) {
-      return new GetImplementationStatus(m, ow);
-    }
     return null;
   }
 
@@ -130,21 +127,6 @@ public class VeoReportingRiskDefinitionAdapter extends WrappingTemplateModel
       List levels = (List) ((Map) getProperty("probability")).get("levels");
       Map level = getByOrdinalValue(levels, probabilityId, "probablilty");
       return getMetadata(probabilityId, level);
-    }
-  }
-
-  private static final class GetImplementationStatus extends SingleNumberArgumentMethod {
-
-    public GetImplementationStatus(Map<?, ?> m, VeoReportingObjectWrapper ow) {
-      super(m, ow);
-    }
-
-    @Override
-    protected Object doExec(Number implementationStateId) throws TemplateModelException {
-      List levels = (List) ((Map) getProperty("implementationStateDefinition")).get("levels");
-      Map implementationState =
-          getByOrdinalValue(levels, implementationStateId, "implementation status");
-      return getMetadata(implementationStateId, implementationState);
     }
   }
 

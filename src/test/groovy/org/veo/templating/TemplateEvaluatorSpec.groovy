@@ -403,39 +403,6 @@ Jack's children are named John and Jane.'''
                 '''.stripIndent()
     }
 
-    def "Access implementation status"() {
-        def domainId = '2428ac8f-75f7-48fe-a7f1-d799b967e163'
-        def objectData = [
-            name: 'Control',
-            id: '0815',
-            type: 'control',
-            domains: [
-                (domainId): [
-                    riskValues: [
-                        DSRA : [
-                            implementationStatus: 0
-                        ]
-                    ]
-                ]
-            ],
-            customAspects: [:]
-        ]
-        def domain = [
-            id: domainId,
-            riskDefinitions : [
-                'DSRA': TemplateEvaluatorSpec.getResourceAsStream('/DSRA.json').withCloseable {
-                    new JsonSlurper().parse(it)
-                }
-            ]
-        ]
-        when:
-        def text = execute('implementation-status-test.txt', [input:  objectData, domain: domain], new ReportCreationParameters(Locale.GERMANY, TimeZone.default))
-        then:
-        text == '''\
-                Implementation status: ja
-                Color code: #12AE0F'''.stripIndent()
-    }
-
     def "Access risk values"() {
         def domainId = 'd4132a67-03c8-4f82-9585-6b240585c34e'
         def scenarioId = '9da57c19-8a53-4df5-aeed-86b0bfaf9399'
@@ -515,15 +482,6 @@ Jack's children are named John and Jane.'''
             id: controlId,
             type: 'control',
             '_self': "http://localhost/controls/$controlId".toString(),
-            domains: [
-                (domainId): [
-                    riskValues: [
-                        DSRA : [
-                            implementationStatus: 1
-                        ]
-                    ]
-                ]
-            ],
             customAspects: [:]
         ]
         def domain = [
@@ -543,7 +501,6 @@ Jack's children are named John and Jane.'''
                 Mitigation: Fixitall
                 Effective Probability: sehr häufig
                 Specific Impact (A): begrenzt
-                Control implementation status: nein
                 '''.stripIndent()
     }
 
