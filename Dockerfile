@@ -1,6 +1,15 @@
-FROM gcr.io/distroless/java21-debian12:nonroot
+FROM eclipse-temurin:21-jdk AS builder
 
-ARG VEO_REPORTING_VERSION
+WORKDIR /builder
+
+ARG JAR_FILE=build/libs/*.jar
+
+# Copy the jar file to the working directory and rename it to application.jar
+COPY ${JAR_FILE} application.jar
+# Extract the jar file using an efficient layout
+RUN java -Djarmode=tools -jar application.jar extract --layers --destination extracted
+
+FROM gcr.io/distroless/java21-debian12:nonroot
 
 LABEL org.opencontainers.image.title="vernice.veo reporting"
 LABEL org.opencontainers.image.description="Backend of the verinice.veo-reporting web application."
@@ -14,8 +23,12 @@ ENV JDK_JAVA_OPTIONS "-Djdk.serialFilter=maxbytes=0"
 
 USER nonroot
 
-COPY --chown=nonroot:nonroot build/libs/veo-reporting-${VEO_REPORTING_VERSION}.jar /app/veo-reporting.jar
-
 WORKDIR /app
 EXPOSE 8080
-CMD ["veo-reporting.jar"]
+
+COPY --chown=nonroot:nonroot --from=builder /builder/extracted/dependencies/ ./
+COPY --chown=nonroot:nonroot --from=builder /builder/extracted/spring-boot-loader/ ./
+COPY --chown=nonroot:nonroot --from=builder /builder/extracted/snapshot-dependencies/ ./
+COPY --chown=nonroot:nonroot --from=builder /builder/extracted/application/ ./
+
+CMD ["application.jar"]
