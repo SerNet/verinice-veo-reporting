@@ -58,6 +58,11 @@ dependencies {
     runtimeOnly 'ch.qos.logback.contrib:logback-jackson:0.1.5'
 }
 
+// https://docs.spring.io/spring-framework/reference/core/spring-jcl.html#page-title
+configurations.implementation {
+    exclude group: 'commons-logging'
+}
+
 spotbugs.excludeFilter = rootProject.file('misc/spotbugs/exclude.xml')
 spotbugsTest.enabled = false
 // write human readable report on normal builds
