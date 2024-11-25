@@ -5,7 +5,7 @@
   },
   "domainName": "DS-GVO",
   "description": {
-    "de": "Eine detaillierte Darstellung einrr dokumentierten Betroffenenanfrage",
+    "de": "Eine detaillierte Darstellung einer dokumentierten Betroffenenanfrage",
     "en": "A detailed view of a documented request from a data subject"
   },
   "templateFile": "dp-request.md",
