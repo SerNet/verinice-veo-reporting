@@ -468,8 +468,8 @@ ${bundle.process_opinionDPO_comment}
 <#list tomsinsection as t>
 <#assign statusTdStyle="">
 <#assign tom_status_output="">
-<#assign ri=dpRisk.getRI(process, t)>
-<#assign tom_status=dpRisk.getImplementationStatus(ri)! />
+<#assign ri=dpRisk.getRI(process, t)!>
+<#assign tom_status=(dpRisk.getImplementationStatus(ri))! />
 
 <#if tom_status?has_content>
 <#assign backgroundColor=tom_status.color />

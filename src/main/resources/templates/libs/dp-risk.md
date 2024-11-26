@@ -128,8 +128,8 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 </thead>
 <tbody>
 <#list risk.mitigation.parts as tom>
-<#assign ri=getRI(riskAffected, tom)>
-<#assign mitigationStatus=getImplementationStatus(ri)!/>
+<#assign ri=getRI(riskAffected, tom)!>
+<#assign mitigationStatus=(getImplementationStatus(ri))!/>
 <tr>
 <td>${tom.designator} ${tom.name}</td>
 <#if mitigationStatus?has_content>
