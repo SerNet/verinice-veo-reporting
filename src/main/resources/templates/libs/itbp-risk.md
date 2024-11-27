@@ -3,7 +3,6 @@
 <#import "/libs/risk-commons.md" as rcom>
 
 <#macro riskdisplay headinglevel targetObject risk domain riskDefinition={}>
-<#assign riskCategoriesWithMatrix=riskDefinition.categories?filter(it->it.valueMatrix?has_content)>
 
 <div class="risk">
 
@@ -15,7 +14,11 @@
 
 <@com.def "Risikobeschreibung", scenario.description />
 
-<#assign riskValues = risk.getRiskValues(domain.id, riskDefinition.id)>
+<#if riskDefinition?has_content>
+
+<#assign riskCategoriesWithMatrix=(riskDefinition.categories?filter(it->it.valueMatrix?has_content))>
+
+<#assign riskValues = (risk.getRiskValues(domain.id, riskDefinition.id))!>
 
 <#if riskValues?has_content && (riskValues.effectiveProbability?has_content
                               || riskValues.effectiveProbabilityExplanation?has_content
@@ -111,6 +114,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 Für diese Gefährdung wurde noch keine Risikobewertung vorgenommen.
 </#if>
 
+</#if>
 <#if risk.mitigation?has_content && risk.mitigation.parts?has_content>
 <table class="table " style="width:100%;font-size:70%;">
 <colgroup>
