@@ -195,7 +195,7 @@ dt {
 <#macro cellStyle color>
 <#assign svg='<svg xmlns="http://www.w3.org/2000/svg" height="100" width="100"><polygon points="0,0 0,100 100,100" style="fill:${color};" /></svg>' />
   style="background-size:7mm;background-repeat:no-repeat;background-position:bottom left;background-image: url('data:image/svg+xml;base64,${base64(svg)}');"
-</</#macro>
+</#macro>
 
 <#macro matrixCell color text>
   <td <@cellStyle color />>${text}</td>
