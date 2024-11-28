@@ -18,23 +18,6 @@ h1, h2, h3, h4 {
 dt {
   font-weight: 600;
 }
-
-.risk dl {
-  display: table;
-}
-
-.risk dt, .risk dd {
-  display: table-cell;
-}
-
-.risk dt {
-  font-weight: normal;
-  min-width: 8cm;
-}
-
-.risk dd {
-  width: 100%
-}
 </style>
 
 <#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->

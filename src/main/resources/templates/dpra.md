@@ -36,23 +36,6 @@ dt {
   margin-bottom: 1cm;
 }
 
-.risk dl {
-  display: table;
-}
-
-.risk dt, .risk dd {
-  display: table-cell;
-}
-
-.risk dt {
-  font-weight: normal;
-  min-width: 8cm;
-}
-
-.risk dd {
-  width: 100%
-}
-
 .riskmatrix {
   page-break-inside: avoid;
   margin: auto;
