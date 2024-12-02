@@ -243,7 +243,8 @@ ${potentialImpact.translations[.lang].name}
 </td>
 <#list riskDefinition.probability.levels as probability>
 <#assign risk=category.valueMatrix[potentialImpact.ordinalValue][probability.ordinalValue] />
-<@matrixCell risk.htmlColor risk.translations[.lang].name />
+<#assign riskDef=riskDefinition.riskValues[risk.ordinalValue] />
+<@matrixCell riskDef.htmlColor riskDef.translations[.lang].name />
 </#list>
 </tr>
 </#list>
