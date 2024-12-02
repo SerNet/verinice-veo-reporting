@@ -59,11 +59,11 @@ public class VeoReportingApplication {
   private static final Logger logger = LoggerFactory.getLogger(VeoReportingApplication.class);
 
   public static void main(String[] args) throws IOException {
-    XRLog.setLoggerImpl(new Slf4jLogger());
-    FontResourceManager.reInit(null);
     System.setProperty("java.util.PropertyResourceBundle.encoding", StandardCharsets.UTF_8.name());
+    XRLog.setLoggerImpl(new Slf4jLogger());
     @SuppressWarnings("PMD.CloseResource")
     ConfigurableApplicationContext ctx = SpringApplication.run(VeoReportingApplication.class, args);
+    FontResourceManager.reInit(null);
     if (Stream.of(ctx.getEnvironment().getActiveProfiles()).anyMatch("demo"::equals)) {
       Demo.runDemo(ctx);
     }
