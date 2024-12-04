@@ -85,9 +85,9 @@ pmdTest.enabled = false
 springBoot {
     buildInfo {
         properties {
-            if (rootProject.hasProperty('ciBuildNumer')) {
+            if (rootProject.hasProperty('ciBuildNumber')) {
                 additional = [
-                    'ci.buildnumber': rootProject.getProperty('ciBuildNumer'),
+                    'ci.buildnumber': rootProject.getProperty('ciBuildNumber'),
                     'ci.jobname': rootProject.getProperty('ciJobName')
                 ]
             }
