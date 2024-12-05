@@ -158,7 +158,12 @@ ${bundle.incident_security_notificationType}
 
 <@def bundle.incident_description_others incident.incident_description_others />
 
-<@def bundle.incident_description_affectedProtectiongoals, (incident.incident_description_affectedProtectiongoals?map(item->bundle[item])?join(', '))! />
+<#-- Read those from the risk definition -->
+<#assign protectionGoals = ['confidentiality', 'integrity', 'availability', 'resilience']>
+
+<#assign affectedProtectionGoals = protectionGoals?filter(g->incident["incident_${g}_affected"]!false) />
+
+<@def bundle.affected_protection_goals, (affectedProtectionGoals?map(item->bundle[item])?join(', '))! />
 
 <@def bundle.incident_description_timeOfIncidentknown, incident.incident_description_timeOfIncidentknown />
 
@@ -188,7 +193,7 @@ ${bundle.incident_security_notificationType}
 
 <@def bundle.incident_presumedMotivation_collectedData, (incident.incident_presumedMotivation_collectedData?map(item->bundle[item])?join(', '))! />
 
-<@def bundle.incident_presumedMotivation_others incident.incident_presumedMotivation_others />
+<@def bundle.incident_presumedMotivation_otherPresumedMotivation incident.incident_presumedMotivation_otherPresumedMotivation />
 
 <@def bundle.incident_nis2presumedMotivation_unlawfuOrMaliciousActs incident.incident_nis2presumedMotivation_unlawfuOrMaliciousActs />
 
