@@ -455,7 +455,7 @@ ${bundle.process_opinionDPO_comment}
 
 <#macro tomsection process objective title>
 <#list mitigations as mitigation>
-<#assign toms = mitigation.parts>
+<#assign toms = dpRisk.getDescendants(mitigation)>
 <#assign tomsinsection = toms?filter(t->t.control_dataProtection_objectives!?seq_contains(objective))!>
 <#if tomsinsection?has_content>
 <tbody>

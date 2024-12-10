@@ -20,6 +20,29 @@
   <#return riskAffected.requirementImplementations?filter(ri->ri.control.id == control.id)?first>
 </#function>
 
+<#assign maxSteps = 1000>
+<#function getDescendants composite>
+  <#local result = composite.parts>
+  <#local currentStep=result>
+  <#list 0..maxSteps as iteration>
+    <#if currentStep?size==0><#break></#if>
+    <#if iteration == maxSteps>
+      <#stop "Failed to determine descendants for ${composite.name} in ${maxSteps} steps">
+    </#if>
+    <#local nextStep=[]>
+    <#list currentStep as item>
+      <#list item.parts as part>
+        <#if !result?seq_contains(part)>
+          <#local result = result + [part]>
+          <#local nextStep = nextStep + [part]>
+        </#if>
+      </#list>
+    </#list>
+    <#local currentStep=nextStep>
+  </#list>
+  <#return result>
+</#function>
+
 <#macro riskdisplay headinglevel riskAffected risk domain riskDefinition={}>
 <div class="risk">
 
@@ -127,7 +150,7 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 </tr>
 </thead>
 <tbody>
-<#list risk.mitigation.parts as tom>
+<#list getDescendants(risk.mitigation) as tom>
 <#assign ri=getRI(riskAffected, tom)!>
 <#assign mitigationStatus=(getImplementationStatus(ri))!/>
 <tr>
