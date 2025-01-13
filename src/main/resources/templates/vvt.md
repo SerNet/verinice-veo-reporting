@@ -383,29 +383,26 @@ Rechtsgrundlage für Datenübertragung
 
 <#switch recipientType>
 
-<#case "process_recipient_type_internal">
+<#on "process_recipient_type_internal">
 <#assign internalRecipientLinks=transmission.getLinks('process_internalRecipient')! />
 #### Interne Empfänger
 <#list internalRecipientLinks as link>
 <@recipient_section "Interne Stelle" link.target, link.process_internalRecipient_thirdCountryProcessing link.process_internalRecipient_thirdCountryName link.process_internalRecipient_thirdCountryGuarantees link.process_internalRecipient_thirdCountryExplanation/>
 </#list>
-<#break>
 
-<#case "process_recipient_type_external">
+<#on "process_recipient_type_external">
 <#assign externalRecipientLinks=transmission.getLinks('process_externalRecipient')! />
 #### Externe Empfänger
 <#list externalRecipientLinks as link>
 <@recipient_section "Externe Stelle" link.target, link.process_externalRecipient_thirdCountryProcessing link.process_externalRecipient_thirdCountryName link.process_externalRecipient_thirdCountryGuarantees link.process_externalRecipient_thirdCountryExplanation/>
 </#list>
-<#break>
 
-<#case "process_recipient_type_processor">
+<#on "process_recipient_type_processor">
 <#assign processorsLinks=transmission.getLinks('process_processor')! />
 #### Auftragnehmer / Dienstleister
 <#list processorsLinks as link>
 <@recipient_section "Auftragnehmer" link.target, link.process_processor_thirdCountryProcessing link.process_processor_thirdCountryName link.process_processor_thirdCountryGuarantees link.process_processor_thirdCountryExplanation/>
 </#list>
-<#break>
 
 <#default>
 !!! UNBEKANNTER EMPFÄNGERTYP

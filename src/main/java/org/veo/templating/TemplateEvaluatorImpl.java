@@ -59,7 +59,7 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
   private final Configuration cfg;
 
   public TemplateEvaluatorImpl(TemplateLoader templateLoader, boolean useCache) {
-    cfg = new Configuration(Configuration.VERSION_2_3_33);
+    cfg = new Configuration(Configuration.VERSION_2_3_34);
     cfg.setTemplateLoader(templateLoader);
     // Recommended settings for new projects:
     cfg.setDefaultEncoding("UTF-8");
