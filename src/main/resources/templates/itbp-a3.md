@@ -144,11 +144,11 @@ domain/>
 </div>
 
 # ${bundle.used_modules} {#used_modules}
-
-<#assign relevantControlImplementations = scope.controlImplementations>
+<#assign complianceControlSubType = domain.controlImplementationConfiguration.complianceControlSubType>
+<#assign relevantControlImplementations = scope.controlImplementations?filter(it->it.control.hasSubType(complianceControlSubType))>
 <#list elementSubTypeGroups as group>
   <#list group.elements as item>
-    <#list item.controlImplementations as ci>
+    <#list item.controlImplementations?filter(it->it.control.hasSubType(complianceControlSubType)) as ci>
       <#assign relevantControlImplementations = relevantControlImplementations + [ci]>
     </#list>
   </#list>
@@ -184,7 +184,7 @@ domain/>
 
 <#macro moduleview targetObject>
 
-<#assign moduleControlImplementations = sortCIs(targetObject.controlImplementations)>
+<#assign moduleControlImplementations = sortCIs(targetObject.controlImplementations?filter(it->it.control.hasSubType(complianceControlSubType)))>
 
 <#if moduleControlImplementations?has_content>
 
