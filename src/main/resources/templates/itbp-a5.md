@@ -121,7 +121,8 @@ dl, .risk {
 
 <#assign institutions=scope.scopes?filter(it->it.hasSubType('SCP_Institution')) />
 
-<#assign elementSubTypeGroups = groupBySubType(scope.members, 'process', domain)
+<#assign elementSubTypeGroups = groupBySubType(scope.members, 'scope', domain)
++ groupBySubType(scope.members, 'process', domain)
 + groupBySubType(scope.members, 'asset', domain) />
 
 <#assign riskDefinitionId=scope.domains[domain.id].riskDefinition! />
