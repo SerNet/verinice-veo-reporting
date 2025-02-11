@@ -78,14 +78,14 @@ public class Demo {
     var privacyIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentid");
     var securityIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentidnis2");
 
-    boolean createGDPRReports = scopeId != null;
-    boolean createDPIAReports = dpiaId != null;
-    boolean createDPIncidentReports = privacyIncidentId != null;
-    boolean createRequestReports = requestId != null;
+    boolean createGDPRReports = false;
+    boolean createDPIAReports = false;
+    boolean createDPIncidentReports = false;
+    boolean createRequestReports = false;
     boolean createItgsReports = scopeIdItgs != null;
-    boolean createNIS2Reports = scopeIdNIS2 != null;
-    boolean createNIS2IncidentReports = securityIncidentId != null;
-    boolean createISAReports = isaId != null;
+    boolean createNIS2Reports = false;
+    boolean createNIS2IncidentReports = false;
+    boolean createISAReports = false;
 
     DataProvider dataProvider =
         dataSpec -> {
