@@ -215,7 +215,7 @@ domain/>
 
 <#assign riskDefinition=domain.riskDefinitions[riskDefinitionId] />
 
-<#assign risksInDomainWithData = [] />
+<#assign risksInDomainWithData = scope.risks?filter(it-> it.domains?keys?seq_contains(domain.id) && it.domains[domain.id].riskDefinitions?has_content) />
 <#list elementSubTypeGroups as group>
   <#list group.elements as element>
     <#assign risksInDomainWithData = risksInDomainWithData + element.risks?filter(it-> it.domains?keys?seq_contains(domain.id) && it.domains[domain.id].riskDefinitions?has_content) />
