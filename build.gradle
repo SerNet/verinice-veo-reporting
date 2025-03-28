@@ -48,13 +48,13 @@ dependencies {
     }
     implementation 'org.jfree:jfreechart:1.5.5'
     implementation 'org.jsoup:jsoup:1.19.1'
-    implementation 'com.helger.font:ph-fonts-api:5.0.3'
+    implementation 'com.helger.font:ph-fonts-api:5.0.4'
 
     compileOnly 'com.github.spotbugs:spotbugs-annotations:4.9.3'
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0'
 
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
-    runtimeOnly 'com.helger.font:ph-fonts-open-sans:5.0.3'
+    runtimeOnly 'com.helger.font:ph-fonts-open-sans:5.0.4'
     runtimeOnly 'ch.qos.logback.contrib:logback-json-classic:0.1.5'
     runtimeOnly 'ch.qos.logback.contrib:logback-jackson:0.1.5'
 }
