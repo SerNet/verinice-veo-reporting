@@ -22,6 +22,7 @@ import java.io.Reader;
 import java.io.Writer;
 
 /** Renders Markdown to HTML */
+@SuppressWarnings("PMD.ImplicitFunctionalInterface")
 public interface MarkdownRenderer {
   void renderToHTML(Reader reader, Writer writer) throws IOException;
 }

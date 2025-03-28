@@ -23,6 +23,7 @@ import java.util.Map;
  * Resolves an entry from a {@link ReportConfiguration}'s <code>data</code> specification to the
  * real value
  */
+@SuppressWarnings("PMD.ImplicitFunctionalInterface")
 public interface DataProvider {
 
   Map<String, Object> resolve(Map<String, String> data);

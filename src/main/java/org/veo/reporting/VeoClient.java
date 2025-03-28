@@ -27,6 +27,7 @@ import java.util.Objects;
  *
  * @see org.veo.reporting.ReportConfiguration.data
  */
+@SuppressWarnings("PMD.ImplicitFunctionalInterface")
 public interface VeoClient {
 
   Map<String, Object> fetchData(

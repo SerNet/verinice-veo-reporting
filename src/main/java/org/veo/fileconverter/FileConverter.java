@@ -29,6 +29,7 @@ import org.veo.reporting.ReportCreationParameters;
  * which supports the conversion from a single format to a single other one. See {@link
  * ConversionHandler}.
  */
+@SuppressWarnings("PMD.ImplicitFunctionalInterface")
 public interface FileConverter {
 
   void convert(

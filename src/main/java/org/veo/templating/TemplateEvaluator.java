@@ -31,6 +31,7 @@ import freemarker.template.TemplateException;
  *
  * @see TemplateLoader
  */
+@SuppressWarnings("PMD.ImplicitFunctionalInterface")
 public interface TemplateEvaluator {
   void executeTemplate(
       String templateName,
