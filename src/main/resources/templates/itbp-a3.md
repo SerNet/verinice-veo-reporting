@@ -27,6 +27,11 @@ td {
   width: 8cm;
 }
 
+
+table.used_modules {
+  -fs-table-paginate: paginate;
+}
+
 table.used_modules th:first-child, table.used_modules td:first-child {
   width: 2cm;
 }
@@ -55,6 +60,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
   <bookmark name="${bundle.toc}" href="#toc"/>
   <bookmark name="${bundle.main_page}" href="#main_page"/>
   <bookmark name="${bundle.used_modules}" href="#used_modules"/>
+  <bookmark name="${bundle.unused_modules}" href="#unused_modules"/>
   <bookmark name="${bundle.scope_SCP_InformationDomain_singular}" href="#information_domain"/>
   <#list elementSubTypeGroups as group>
     <bookmark name="${group.subTypePlural}" href="#${group.elementType}_${group.subType}">
@@ -101,9 +107,10 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 <tbody>
   <@tocitem 1 "main_page" "1. ${bundle.main_page}" />
   <@tocitem 1 "used_modules" "2. ${bundle.used_modules}" />
-  <@tocitem 1 "information_domain" "3. ${bundle.scope_SCP_InformationDomain_singular}" />
+  <@tocitem 1 "unused_modules" "4. ${bundle.unused_modules}" />
+  <@tocitem 1 "information_domain" "4. ${bundle.scope_SCP_InformationDomain_singular}" />
   <#list elementSubTypeGroups as group>
-      <@tocitem 1 "${group.elementType}_${group.subType}" "${group?counter+3}. ${group.subTypePlural}"/>
+      <@tocitem 1 "${group.elementType}_${group.subType}" "${group?counter+4}. ${group.subTypePlural}"/>
       <#list group.elements as element>
           <@tocitem 2 "${group.elementType}_${group.subType}_${element?counter}" "${element?counter}. ${title(element)}"/>
       </#list>
@@ -178,6 +185,136 @@ domain/>
 </#list>
 {.table .fullwidth .used_modules}
 
+
+<#assign allModules = [
+  {"abbreviation": "1 ISMS.1", "name": "Sicherheitsmanagement"},
+  {"abbreviation": "2 ORP.1", "name": "Organisation"},
+  {"abbreviation": "2 ORP.2", "name": "Personal"},
+  {"abbreviation": "2 ORP.3", "name": "Sensibilisierung und Schulung zur Informationssicherheit"},
+  {"abbreviation": "2 ORP.4", "name": "Identitäts- und Berechtigungsmanagement"},
+  {"abbreviation": "2 ORP.5", "name": "Compliance Management (Anforderungsmanagement)"},
+  {"abbreviation": "3 CON.1", "name": "Kryptokonzept"},
+  {"abbreviation": "3 CON.2", "name": "Datenschutz"},
+  {"abbreviation": "3 CON.3", "name": "Datensicherungskonzept"},
+  {"abbreviation": "3 CON.6", "name": "Löschen und Vernichten"},
+  {"abbreviation": "3 CON.7", "name": "Informationssicherheit auf Auslandsreisen"},
+  {"abbreviation": "3 CON.8", "name": "Software-Entwicklung"},
+  {"abbreviation": "3 CON.9", "name": "Informationsaustausch"},
+  {"abbreviation": "3 CON.10", "name": "Entwicklung von Webanwendungen"},
+  {"abbreviation": "3 CON.11.1", "name": "Geheimschutz VS-NUR FÜR DEN DIENSTGEBRAUCH (VS-NfD)"},
+  {"abbreviation": "4 OPS.1.1.1", "name": "Allgemeiner IT-Betrieb"},
+  {"abbreviation": "4 OPS.1.1.2", "name": "Ordnungsgemäße IT-Administration"},
+  {"abbreviation": "4 OPS.1.1.3", "name": "Patch- und Änderungsmanagement"},
+  {"abbreviation": "4 OPS.1.1.4", "name": "Schutz vor Schadprogrammen"},
+  {"abbreviation": "4 OPS.1.1.5", "name": "Protokollierung"},
+  {"abbreviation": "4 OPS.1.1.6", "name": "Software-Tests und -Freigaben"},
+  {"abbreviation": "4 OPS.1.1.7", "name": "Systemmanagement"},
+  {"abbreviation": "4 OPS.1.2.2", "name": "Archivierung"},
+  {"abbreviation": "4 OPS.1.2.4", "name": "Telearbeit"},
+  {"abbreviation": "4 OPS.1.2.5", "name": "Fernwartung"},
+  {"abbreviation": "4 OPS.1.2.6", "name": "NTP-Zeitsynchronisation"},
+  {"abbreviation": "4 OPS.2.2", "name": "Cloud-Nutzung"},
+  {"abbreviation": "4 OPS.2.3", "name": "Nutzung von Outsourcing"},
+  {"abbreviation": "4 OPS.3.2", "name": "Anbieten von Outsourcing"},
+  {"abbreviation": "5 DER.1", "name": "Detektion von sicherheitsrelevanten Ereignissen"},
+  {"abbreviation": "5 DER.2.1", "name": "Behandlung von Sicherheitsvorfällen"},
+  {"abbreviation": "5 DER.2.2", "name": "Vorsorge für die IT-Forensik"},
+  {"abbreviation": "5 DER.2.3", "name": "Bereinigung weitreichender Sicherheitsvorfälle"},
+  {"abbreviation": "5 DER.3.1", "name": "Audits und Revisionen"},
+  {"abbreviation": "5 DER.3.2", "name": "Revisionen auf Basis des Leitfadens IS-Revision"},
+  {"abbreviation": "5 DER.4", "name": "Notfallmanagement"},
+  {"abbreviation": "6 APP.1.1", "name": "Office-Produkte"},
+  {"abbreviation": "6 APP.1.2", "name": "Webbrowser"},
+  {"abbreviation": "6 APP.1.4", "name": "Mobile Anwendungen (Apps)"},
+  {"abbreviation": "6 APP.2.1", "name": "Allgemeiner Verzeichnisdienst"},
+  {"abbreviation": "6 APP.2.2", "name": "Active Directory Domain Services"},
+  {"abbreviation": "6 APP.2.3", "name": "OpenLDAP"},
+  {"abbreviation": "6 APP.3.1", "name": "Webanwendungen und Webservices"},
+  {"abbreviation": "6 APP.3.2", "name": "Webserver"},
+  {"abbreviation": "6 APP.3.3", "name": "Fileserver"},
+  {"abbreviation": "6 APP.3.4", "name": "Samba"},
+  {"abbreviation": "6 APP.3.6", "name": "DNS-Server"},
+  {"abbreviation": "6 APP.4.2", "name": "SAP-ERP-System"},
+  {"abbreviation": "6 APP.4.3", "name": "Relationale Datenbanken"},
+  {"abbreviation": "6 APP.4.4", "name": "Kubernetes"},
+  {"abbreviation": "6 APP.4.6", "name": "SAP ABAP-Programmierung"},
+  {"abbreviation": "6 APP.5.2", "name": "Microsoft Exchange und Outlook"},
+  {"abbreviation": "6 APP.5.3", "name": "Allgemeiner E-Mail-Client und -Server"},
+  {"abbreviation": "6 APP.5.4", "name": "Unified Communications und Collaboration (UCC)"},
+  {"abbreviation": "6 APP.6", "name": "Allgemeine Software"},
+  {"abbreviation": "6 APP.7", "name": "Entwicklung von Individualsoftware"},
+  {"abbreviation": "7 SYS.1.1", "name": "Allgemeiner Server"},
+  {"abbreviation": "7 SYS.1.2.2", "name": "Windows Server 2012"},
+  {"abbreviation": "7 SYS.1.2.3", "name": "Windows Server"},
+  {"abbreviation": "7 SYS.1.3", "name": "Server unter Linux und Unix"},
+  {"abbreviation": "7 SYS.1.5", "name": "Virtualisierung"},
+  {"abbreviation": "7 SYS.1.6", "name": "Containerisierung"},
+  {"abbreviation": "7 SYS.1.7", "name": "IBM Z"},
+  {"abbreviation": "7 SYS.1.8", "name": "Speicherlösungen"},
+  {"abbreviation": "7 SYS.1.9", "name": "Terminalserver"},
+  {"abbreviation": "7 SYS.2.1", "name": "Allgemeiner Client"},
+  {"abbreviation": "7 SYS.2.2.3", "name": "Clients unter Windows"},
+  {"abbreviation": "7 SYS.2.3", "name": "Clients unter Linux und Unix"},
+  {"abbreviation": "7 SYS.2.4", "name": "Clients unter macOS"},
+  {"abbreviation": "7 SYS.2.5", "name": "Client-Virtualisierung"},
+  {"abbreviation": "7 SYS.2.6", "name": "Virtual Desktop Infrastructure"},
+  {"abbreviation": "7 SYS.3.1", "name": "Laptops"},
+  {"abbreviation": "7 SYS.3.2.1", "name": "Allgemeine Smartphones und Tablets"},
+  {"abbreviation": "7 SYS.3.2.2", "name": "Mobile Device Management (MDM)"},
+  {"abbreviation": "7 SYS.3.2.3", "name": "iOS (for Enterprise)"},
+  {"abbreviation": "7 SYS.3.2.4", "name": "Android"},
+  {"abbreviation": "7 SYS.3.3", "name": "Mobiltelefon"},
+  {"abbreviation": "7 SYS.4.1", "name": "Drucker, Kopierer und Multifunktionsgeräte"},
+  {"abbreviation": "7 SYS.4.3", "name": "Eingebettete Systeme"},
+  {"abbreviation": "7 SYS.4.4", "name": "Allgemeines IoT-Gerät"},
+  {"abbreviation": "7 SYS.4.5", "name": "Wechseldatenträger"},
+  {"abbreviation": "8 IND.1", "name": "Prozessleit- und Automatisierungstechnik"},
+  {"abbreviation": "8 IND.2.1", "name": "Allgemeine ICS-Komponente"},
+  {"abbreviation": "8 IND.2.2", "name": "Speicherprogrammierbare Steuerung (SPS)"},
+  {"abbreviation": "8 IND.2.3", "name": "Sensoren und Aktoren"},
+  {"abbreviation": "8 IND.2.4", "name": "Maschine"},
+  {"abbreviation": "8 IND.2.7", "name": "Safety Instrumented Systems"},
+  {"abbreviation": "8 IND.3.2", "name": "Fernwartung im industriellen Umfeld"},
+  {"abbreviation": "9 NET.1.1", "name": "Netzarchitektur und -design"},
+  {"abbreviation": "9 NET.1.2", "name": "Netzmanagement"},
+  {"abbreviation": "9 NET.2.1", "name": "WLAN-Betrieb"},
+  {"abbreviation": "9 NET.2.2", "name": "WLAN-Nutzung"},
+  {"abbreviation": "9 NET.3.1", "name": "Router und Switches"},
+  {"abbreviation": "9 NET.3.2", "name": "Firewall"},
+  {"abbreviation": "9 NET.3.3", "name": "VPN"},
+  {"abbreviation": "9 NET.3.4", "name": "Network Access Control"},
+  {"abbreviation": "9 NET.4.1", "name": "TK-Anlagen"},
+  {"abbreviation": "9 NET.4.2", "name": "VoIP"},
+  {"abbreviation": "9 NET.4.3", "name": "Faxgeräte und Faxserver"},
+  {"abbreviation": "10 INF.1", "name": "Allgemeines Gebäude"},
+  {"abbreviation": "10 INF.2", "name": "Rechenzentrum sowie Serverraum"},
+  {"abbreviation": "10 INF.5", "name": "Raum sowie Schrank für technische Infrastruktur"},
+  {"abbreviation": "10 INF.6", "name": "Datenträgerarchiv"},
+  {"abbreviation": "10 INF.7", "name": "Büroarbeitsplatz"},
+  {"abbreviation": "10 INF.8", "name": "Häuslicher Arbeitsplatz"},
+  {"abbreviation": "10 INF.9", "name": "Mobiler Arbeitsplatz"},
+  {"abbreviation": "10 INF.10", "name": "Besprechungs-, Veranstaltungs- und Schulungsräume"},
+  {"abbreviation": "10 INF.11", "name": "Allgemeines Fahrzeug"},
+  {"abbreviation": "10 INF.12", "name": "Verkabelung"},
+  {"abbreviation": "10 INF.13", "name": "Technisches Gebäudemanagement"},
+  {"abbreviation": "10 INF.14", "name": "Gebäudeautomation"}
+] />
+
+<#assign usedModulesAbbrs = usedModules?map(m->m.abbreviation) />
+<#assign unusedModules = allModules?filter(m->!usedModulesAbbrs?seq_contains(m.abbreviation)) />
+
+<#if unusedModules?has_content>
+
+# ${bundle.unused_modules} {#unused_modules}
+
+|${bundle.abbreviation}| ${bundle.name}
+|:---|:---|:---|
+<#list unusedModules as m>
+|${m.abbreviation!}|${m.name}
+</#list>
+{.table .fullwidth .used_modules}
+
+</#if>
 <div class="pagebreak"></div>
 
 
