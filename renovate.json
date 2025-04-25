@@ -9,21 +9,18 @@
   "assignAutomerge": true,
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "^io.github.openhtmltopdf:"
-      ],
-      "groupName": "OpenHTMLtoPDF"
+      "groupName": "OpenHTMLtoPDF",
+      "matchPackageNames": [
+        "/^io.github.openhtmltopdf:/"
+      ]
     },
     {
-      "matchPackagePatterns": [
-        "^com.helger.font:"
-      ],
-      "groupName": "ph-fonts"
+      "groupName": "ph-fonts",
+      "matchPackageNames": [
+        "/^com.helger.font:/"
+      ]
     },
     {
-      "matchPackagePatterns": [
-        "^com.diffplug.spotless"
-      ],
       "groupName": "Spotless",
       "postUpgradeTasks": {
         "commands": [
@@ -32,19 +29,22 @@
         "fileFilters": [
           "**/*"
         ]
-      }
+      },
+      "matchPackageNames": [
+        "/^com.diffplug.spotless/"
+      ]
     },
     {
-      "matchPackagePatterns": [
-        "^org.apache.xmlgraphics:batik"
-      ],
-      "groupName": "Batik"
+      "groupName": "Batik",
+      "matchPackageNames": [
+        "/^org.apache.xmlgraphics:batik/"
+      ]
     },
     {
-      "matchPackagePatterns": [
-        "^com.vladsch.flexmark:"
-      ],
-      "groupName": "flexmark-java"
+      "groupName": "flexmark-java",
+      "matchPackageNames": [
+        "/^com.vladsch.flexmark:/"
+      ]
     }
   ]
 }
