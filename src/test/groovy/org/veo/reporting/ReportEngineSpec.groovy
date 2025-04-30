@@ -92,40 +92,25 @@ Favorite drink
   <h1 id="profile-for-guybrush-threepwood">Profile for Guybrush Threepwood</h1>
   <h2 id="basic-attributes">Basic attributes</h2>
   <dl>
-   <dt>
-    Age
-   </dt>
-   <dd>
-    42
-   </dd>
-   <dt>
-    Height
-   </dt>
-   <dd>
-    5'8"
-   </dd>
+   <dt>Age</dt>
+   <dd>42</dd>
+   <dt>Height</dt>
+   <dd>5'8"</dd>
   </dl>
   <h2 id="work-life">Work life</h2>
   <dl>
-   <dt>
-    Profession
-   </dt>
-   <dd>
-    Pirate
-   </dd>
+   <dt>Profession</dt>
+   <dd>Pirate</dd>
   </dl>
   <h2 id="private-life">Private life</h2>
   <dl>
-   <dt>
-    Favorite drink
-   </dt>
-   <dd>
-    Rum
-   </dd>
-  </dl><bookmarks>
-   <bookmark name="Basic attributes" href="#basic-attributes" />
-   <bookmark name="Work life" href="#work-life" />
-   <bookmark name="Private life" href="#private-life" />
+   <dt>Favorite drink</dt>
+   <dd>Rum</dd>
+  </dl>
+  <bookmarks>
+   <bookmark name="Basic attributes" href="#basic-attributes"></bookmark>
+   <bookmark name="Work life" href="#work-life"></bookmark>
+   <bookmark name="Private life" href="#private-life"></bookmark>
   </bookmarks>
  </body>
 </html>'''
@@ -229,7 +214,7 @@ Cheers'''
         text.contains(output)
         where:
         input                                | output
-        'Hello\nWorld'                       | '<p>Hello<br>\n    World</p>'
+        'Hello\nWorld'                       | '<p>Hello<br> World</p>'
         'foo*bar*'                           | '<p>foo*bar*</p>'
         '![img](file:///localPath/test.pdf)' | '<p>![img](file:///localPath/test.pdf)</p>'
     }

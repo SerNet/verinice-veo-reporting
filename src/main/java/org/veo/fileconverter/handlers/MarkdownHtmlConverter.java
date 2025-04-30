@@ -34,6 +34,8 @@ import java.util.Optional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
+import org.jsoup.parser.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +76,15 @@ public class MarkdownHtmlConverter implements ConversionHandler {
         logger.info("Markdown input is empty, skipping HTML creation");
         return;
       }
-      Document doc = Jsoup.parse(md);
+      Parser parser = Parser.htmlParser();
+      parser
+          .tagSet()
+          .add(Tag.valueOf("bookmark").set(Tag.SelfClose).set(Tag.Block))
+          .add(Tag.valueOf("bookmarks").set(Tag.Block))
+          // treat and format br as inline element
+          .get("br", Parser.NamespaceHtml)
+          .clear(Tag.Block);
+      Document doc = Jsoup.parse(md, parser);
       Element html = doc.getElementsByTag("html").first();
       Locale locale = parameters.getLocale();
       if (locale.getCountry().isEmpty()) {
