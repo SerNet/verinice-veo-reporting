@@ -451,6 +451,8 @@ public class Demo {
       reportEngine.generateReport(
           reportId, outputType, parameters, os, dataProvider, dynamicBundleEntries);
       logger.info("Report {} created at {}", reportId, fileName);
+    } catch (Exception e) {
+      logger.error("Could not create report {}", reportId, e);
     }
   }
 
