@@ -121,4 +121,17 @@ class VeoReportingObjectWrapperSpec extends Specification {
         expect :
         wrapper.wrap(data).class == DefaultMapAdapter
     }
+
+    def "CatalogItem is not wrapped"() {
+        given:
+        Map data = [
+            id: '123',
+            name: 'blah',
+            abbreviation: 'B',
+            type: 'catalog-item',
+            targetUri: '/domains/123/catalog-items/123'
+        ]
+        expect :
+        wrapper.wrap(data).class == DefaultMapAdapter
+    }
 }

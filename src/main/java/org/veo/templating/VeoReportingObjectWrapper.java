@@ -70,7 +70,10 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
         return new VeoReportingRiskDefinitionAdapter((Map<?, ?>) obj, this);
       } else if (m.containsKey("targetUri")) {
         // this is probably ref
-        return wrap(resolve((String) m.get("targetUri")));
+        // do not try to resolve catalog items
+        if (!"catalog-item".equals(m.get("type"))) {
+          return wrap(resolve((String) m.get("targetUri")));
+        }
       }
     }
     return super.wrap(obj);
