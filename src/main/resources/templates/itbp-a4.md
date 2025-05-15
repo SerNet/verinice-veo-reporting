@@ -171,8 +171,6 @@ domain/>
 
 <@heading controlTitle(ri.control) nestingLevel+3/>
 
-<@def bundle.description ri.control.description true/>
-
 <@def bundle.implementation_status bundle[ri.status] true />
 
 <@def bundle.implementationStatement ri.implementationStatement true/>
