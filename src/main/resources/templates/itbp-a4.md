@@ -154,9 +154,9 @@ domain/>
 
 <@def bundle.description moduleControlImplementation.description true/>
 
-<@def bundle.control_mainContact moduleControlImplementation.control.findLinked('control_mainContact')?map(it->it.name)?join(", ") true/>
+<@def bundle.responsible, (moduleControlImplementation.responsible.name)!, true/>
 
-<#assign moduleRequirementImplementations = 
+<#assign moduleRequirementImplementations =
   sortCIs(
     targetObject.requirementImplementations
       ?filter(it->moduleControlImplementation.control.parts
