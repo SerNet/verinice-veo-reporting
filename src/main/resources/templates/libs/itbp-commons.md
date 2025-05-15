@@ -38,3 +38,12 @@
 </#if>
 <#return result>
 </#function>
+
+<#-- TODO: #3385: use domain-specific status -->
+<#assign riStatusColors = {
+'YES': {"color":"#12AE0F"},
+'NO': {"color":"#AE0D11"},
+'PARTIAL': {"color":"#EDE92F"},
+'N_A': {"color":"#49A2ED"},
+'UNKNOWN': {"color": "#ffffff"}
+} />

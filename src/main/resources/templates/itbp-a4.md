@@ -8,7 +8,8 @@
          sortModules = icom.sortModules
          heading = com.heading
          title = icom.title
-         controlTitle = icom.controlTitle />
+         controlTitle = icom.controlTitle
+         riStatusColors = icom.riStatusColors/>
 
 <style>
 <#include "styles/default.css">
@@ -167,7 +168,7 @@ domain/>
 
 <#list moduleRequirementImplementations as ri>
 
-<div class="nobreak">
+<div class="nobreak" style="border-left: 1mm solid ${riStatusColors[ri.status].color}; padding-left: 0.6cm;">
 
 <@heading controlTitle(ri.control) nestingLevel+3/>
 

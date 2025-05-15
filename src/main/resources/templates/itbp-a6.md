@@ -8,7 +8,8 @@
          sortModules = icom.sortModules
          heading = com.heading
          title = icom.title
-         controlTitle = icom.controlTitle />
+         controlTitle = icom.controlTitle,
+         riStatusColors = icom.riStatusColors />
 
 <style>
 <#include "styles/default.css">
@@ -37,7 +38,7 @@ td {
 }
 
 .missingimplementation {
-  color: rgb(255, 18, 18);
+  color: ${riStatusColors.NO.color?no_esc};
 }
 
 table.table.budget {
@@ -222,7 +223,7 @@ ${value}
 
 <#list moduleRequirementImplementations?filter(it->it.status == 'UNKNOWN' || it.status == 'NO' || it.status == 'PARTIAL') as ri>
 
-<div class="nobreak">
+<div class="nobreak" style="border-left: 1mm solid ${riStatusColors[ri.status].color}; padding-left: 0.6cm;">
 
 <@heading controlTitle(ri.control) nestingLevel+4 />
 <#if (ri.control.control_bpInformation_protectionApproach!"")=='control_bpInformation_protectionApproach_base'>
