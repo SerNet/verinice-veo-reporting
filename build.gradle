@@ -46,7 +46,7 @@ dependencies {
         // work around https://issues.apache.org/jira/browse/BATIK-1289
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.jfree:jfreechart:1.5.5'
+    implementation 'org.jfree:jfreechart:1.5.6'
     implementation 'org.jsoup:jsoup:1.20.1'
     implementation 'com.helger.font:ph-fonts-api:5.0.4'
 
