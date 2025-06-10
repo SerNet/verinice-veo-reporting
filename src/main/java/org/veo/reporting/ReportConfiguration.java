@@ -25,8 +25,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 /**
  * The specification of a single report. This is used to define the basic properties such as name
  * and description as well as specify the URLS that are queried to supply the dynamic content. <br>
@@ -34,8 +32,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * on the classpath.
  */
 public class ReportConfiguration {
-
-  private static final String EI_EXPOSE_REP = "EI_EXPOSE_REP";
 
   @JsonCreator
   public ReportConfiguration(
@@ -78,7 +74,6 @@ public class ReportConfiguration {
 
   private final Map<String, String> data;
 
-  @SuppressFBWarnings(EI_EXPOSE_REP)
   public Map<String, String> getName() {
     return name;
   }
@@ -88,7 +83,6 @@ public class ReportConfiguration {
     return domainName;
   }
 
-  @SuppressFBWarnings(EI_EXPOSE_REP)
   public Map<String, String> getDescription() {
     return description;
   }
@@ -103,18 +97,15 @@ public class ReportConfiguration {
     return templateType;
   }
 
-  @SuppressFBWarnings(EI_EXPOSE_REP)
   public List<String> getOutputTypes() {
     return outputTypes;
   }
 
-  @SuppressFBWarnings(EI_EXPOSE_REP)
   public Set<TypeSpecification> getTargetTypes() {
     return targetTypes;
   }
 
   @JsonIgnore
-  @SuppressFBWarnings(EI_EXPOSE_REP)
   public Map<String, String> getData() {
     return data;
   }

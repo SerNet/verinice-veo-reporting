@@ -71,7 +71,6 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
   }
 
   @Override
-  @SuppressFBWarnings("EI_EXPOSE_REP")
   public Object getAdaptedObject(Class<?> hint) {
     return m;
   }

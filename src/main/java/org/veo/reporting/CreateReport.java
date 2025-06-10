@@ -23,8 +23,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 /**
  * The DTO for a report creation. It specifies the entities that the report is run upon and the
  * desired output format.
@@ -53,7 +51,6 @@ public class CreateReport {
     this.outputType = outputType;
   }
 
-  @SuppressFBWarnings("EI_EXPOSE_REP")
   public List<TargetSpecification> getTargets() {
     return targets;
   }

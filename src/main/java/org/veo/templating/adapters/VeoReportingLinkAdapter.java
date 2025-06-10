@@ -22,7 +22,6 @@ import java.util.Map.Entry;
 
 import org.veo.templating.VeoReportingObjectWrapper;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import freemarker.template.AdapterTemplateModel;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
@@ -34,14 +33,12 @@ public class VeoReportingLinkAdapter extends WrappingTemplateModel
 
   private final Map<?, ?> m;
 
-  @SuppressFBWarnings("EI_EXPOSE_REP2")
   public VeoReportingLinkAdapter(Map<?, ?> m, VeoReportingObjectWrapper ow) {
     super(ow);
     this.m = Map.copyOf(m);
   }
 
   @Override
-  @SuppressFBWarnings("EI_EXPOSE_REP")
   public Object getAdaptedObject(Class<?> hint) {
     return m;
   }
