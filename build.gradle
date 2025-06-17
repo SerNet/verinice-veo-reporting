@@ -51,7 +51,7 @@ dependencies {
     implementation 'com.helger.font:ph-fonts-api:5.0.4'
 
     compileOnly 'com.github.spotbugs:spotbugs-annotations:4.9.3'
-    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0'
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0'
 
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'com.helger.font:ph-fonts-open-sans:5.0.4'
