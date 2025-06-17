@@ -192,7 +192,8 @@ Cheers'''
             'tisax-detailed',
             'nis2-security-incident',
             'iso-soa',
-            'iso-inventory'
+            'iso-inventory',
+            'iso-risk-analysis'
         ]
     }
 

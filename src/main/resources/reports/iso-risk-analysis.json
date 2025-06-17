@@ -1,0 +1,25 @@
+{
+  "name": {
+    "de": "Risikoanalyse"
+  },
+  "domainName": "ISO/IEC 27000",
+  "description": {
+    "de": "Eine Übersicht über die Risiken und deren mitigierende Maßnahmen"
+  },
+  "templateFile": "iso-risk-analysis.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_isoScope"
+      ]
+    }
+  ],
+  "data": {
+    "isoOrg": "/scopes/${targetId}?embedRisks=true"
+  }
+}
