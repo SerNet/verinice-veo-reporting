@@ -235,6 +235,25 @@ Cheers'''
         pdfText == 'Auftragsverarbeitungen gemäß Art. 30 II \nDS-GVO\n'
     }
 
+    def "Chart input is left intact"() {
+        when:
+        def htmlText = renderHTML('chart-test.md','text/markdown', [:])
+        then:
+        htmlText == '''\
+<html lang="en-US">
+ <head>
+  <title>Test HTML report</title>
+ </head>
+ <body>
+  <object type="jfreechart/pie" title="Fruit Pie Chart 1">
+   <data name="Apple" value="23.2"></data>
+   <data name="Pear" value="43.2"></data>
+   <data name="Orange" value="53.2"></data>
+  </object>
+ </body>
+</html>'''
+    }
+
     private PDDocument renderPDF(String templateName, String templateType, Map data, Locale locale = Locale.US) {
         ReportConfiguration reportConfiguration = Stub {
             getName() >> ['en': 'Test PDF report', 'de': 'Test-PDF-Report']
