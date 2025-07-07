@@ -194,6 +194,7 @@ dl, .risk {
     'scope_contactInformation_email',
     'scope_contactInformation_website'
     ]/>
+
 </#list>
 <#else>
 ${bundle.no_organizations}
@@ -387,6 +388,7 @@ ${potentialImpact.translations[.lang].name}
 # ${title(scope)} {#iso_scope}
 
 <@moduleview scope/>
+<div class="pagebreak"></div>
 
 </#if>
 
@@ -404,11 +406,11 @@ ${potentialImpact.translations[.lang].name}
 
 <@moduleview element/>
 
+<div class="pagebreak"></div>
+
 </#if>
 
 </#list>
-
-<div class="pagebreak"></div>
 
 </#if>
 
