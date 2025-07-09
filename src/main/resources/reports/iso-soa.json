@@ -2,7 +2,7 @@
   "name": {
     "de": "Erklärung zur Anwendbarkeit"
   },
-  "domainName": "ISO/IEC 27000",
+  "domainName": "ISO 27001 (DE)",
   "description": {
     "de": "Erklärung zur Anwendbarkeit (Statement of Applicability, SoA) im ISMS:\n\nDie Erklärung zur Anwendbarkeit ist ein zentrales Dokument in einem Informationssicherheits-Managementsystem (ISMS), insbesondere im Rahmen der Norm ISO/IEC 27001. Es listet alle in Anhang A der Norm aufgeführten Sicherheitsmaßnahmen auf und beschreibt:\n\n • Ob eine Sicherheitsmaßnahme angewendet wird oder nicht.\n • Wie der aktuelle Umsetzungsstatus einer Sicherheitsmaßnahme ist.\n • Begründung für die Anwendbarkeit oder Nichtanwendbarkeit."
   },
