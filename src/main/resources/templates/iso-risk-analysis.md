@@ -108,7 +108,7 @@ dl, .risk {
 <#assign scope = isoOrg/>
 
 <#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
-<#assign domain=domains?filter(it->it.name == 'ISO/IEC 27000')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
+<#assign domain=domains?filter(it->it.name == 'ISO 27001 (DE)')?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 
 <#function risksInDomain riskAffected>
   <#return (riskAffected.risks?filter(it-> it.domains?keys?seq_contains(domain.id))?map(it->{"key": it.scenario.abbreviation_naturalized, "value": it})?sort_by('key')?map(it->it.value))!>

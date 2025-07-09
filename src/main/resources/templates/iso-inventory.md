@@ -49,7 +49,7 @@ table.asset_list th:first-child, table.asset_list td:first-child {
 </style>
 
 <#assign scope = isoOrg/>
-<#assign domain=domains?filter(it->it.name == 'ISO/IEC 27000')?filter(it->scope.domains?keys?seq_contains(it.id))
+<#assign domain=domains?filter(it->it.name == 'ISO 27001 (DE)')?filter(it->scope.domains?keys?seq_contains(it.id))
 ?sort_by("createdAt")?last />
 
 <div class="footer-left">
