@@ -12,7 +12,7 @@
          riStatusColors = icom.riStatusColors/>
 
 <style>
-<#include "styles/default.css">
+<@com.defaultStyles />
 h1, h2, h3, h4, h5, h6 {
   page-break-after: avoid;
 }

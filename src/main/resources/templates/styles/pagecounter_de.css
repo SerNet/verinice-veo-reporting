@@ -1,0 +1,10 @@
+@page {
+    @bottom-right {
+        border-top: 0.1mm solid #929292;
+        font-family: Open Sans;
+        font-size: 10pt;
+        color: #767676;
+        padding: 15px 0;
+        content: 'Seite ' counter(page) ' von ' counter(pages);
+    };
+}

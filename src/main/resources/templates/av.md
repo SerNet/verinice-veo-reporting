@@ -7,7 +7,7 @@
 <#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')!>
 
 <style>
-<#include "styles/default.css">
+<@com.defaultStyles />
 .scopeinfo {
   padding-top: 2mm;
 }

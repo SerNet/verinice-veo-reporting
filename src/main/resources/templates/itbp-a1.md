@@ -11,7 +11,7 @@
 
 
 <style>
-<#include "styles/default.css">
+<@com.defaultStyles />
 h1, h2, h3, h4 {
   page-break-after: avoid;
 }

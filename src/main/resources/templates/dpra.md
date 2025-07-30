@@ -7,8 +7,7 @@
 <#assign processesInScope = scope.getMembersWithType('process')?filter(p ->p.hasSubType('PRO_DataProcessing'))>
 
 <style>
-<#include "styles/default.css">
-<#include "styles/default_landscape.css">
+<@com.defaultStyles true/>
 h1, h2, h3, h4 {
   page-break-after: avoid;
 }

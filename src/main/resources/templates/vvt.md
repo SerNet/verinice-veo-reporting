@@ -19,7 +19,7 @@
 <#assign processesInScope = scope.getMembersWithType('process')?filter(p ->p.hasSubType('PRO_DataProcessing'))>
 
 <style>
-<#include "styles/default.css">
+<@com.defaultStyles />
 .section {
   page-break-inside: avoid;
 }

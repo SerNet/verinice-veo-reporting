@@ -91,3 +91,12 @@ ${term}
 <#macro heading text level>
   <#list 0..<level as i>#</#list> ${text}
 </#macro>
+
+<#macro defaultStyles landscape=false>
+<#include "../styles/default.css">
+<#include "../styles/pagecounter.css">
+<#if landscape>
+<#include "../styles/default_landscape.css">
+<#include "../styles/pagecounter_landscape.css">
+</#if>
+</#macro>
