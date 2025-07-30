@@ -146,7 +146,7 @@ domain/>
 <tr>
 <th>${bundle.abbr}</th>
 <th>${bundle.name}</th>
-<th>Anw.</th>
+<th>${bundle.applicable_abbr}</th>
 <th>${bundle.implementation_status}</th>
 <th>${bundle.reason}</th>
 </tr>

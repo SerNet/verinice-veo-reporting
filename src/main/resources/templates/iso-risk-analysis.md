@@ -1,6 +1,6 @@
 <#import "/libs/commons.md" as com>
 <#import "/libs/itbp-commons.md" as icom>
-<#import "/libs/itbp-risk.md" as itbpRisk>
+<#import "/libs/iso-risk.md" as isoRisk>
 
 <#assign table = com.table
          def = com.def
@@ -163,7 +163,7 @@ dl, .risk {
       <td>${scope.name}</td>
     </tr>
     <tr>
-      <td>Erstelldatum: </td>
+      <td>${bundle.creation_date}: </td>
       <td>${.now?date}</td>
     </tr>
   </table>
@@ -252,7 +252,7 @@ domain/>
 <th class="spacer"/>
 <th class="spacer"/>
 <th colspan="${riskDefinition.probability.levels?size}" class="caption">
-Eintrittswahrscheinlichkeit
+${bundle.probability}
 </th>
 </tr>
 <tr>
@@ -270,7 +270,7 @@ Eintrittswahrscheinlichkeit
 <tr class="impactrow${potentialImpact?index}">
 <#if potentialImpact?index == 0>
 <td class="rotate caption" rowspan="${category.potentialImpacts?size}">
-<div>Auswirkung</div>
+<div>${bundle.impact}</div>
 </td>
 </#if>
 <td class="label" <@cellStyle potentialImpact.htmlColor />>
@@ -290,14 +290,14 @@ ${potentialImpact.translations[.lang].name}
 <div class="pagebreak"></div>
 
 <#if multipleMatrixes>
-### Auswirkungen
+### ${bundle.impacts}
 <#else>
-## Auswirkungen
+## ${bundle.impacts}
 </#if>
 
 <#list category.potentialImpacts as impact>
 
-<@def impact.translations.de.name impact.translations.de.description/>
+<@def impact.translations[.lang].name impact.translations[.lang].description/>
 
 </#list>
 
@@ -309,24 +309,24 @@ ${potentialImpact.translations[.lang].name}
 
 <div class="nobreak">
 
-## Eintrittswahrscheinlichkeiten
+## ${bundle.probabilities}
 
 <#list riskDefinition.probability.levels as probability>
 
-<@def probability.translations.de.name probability.translations.de.description/>
+<@def probability.translations[.lang].name probability.translations[.lang].description/>
 
 </#list>
 </div>
 
 <div class="nobreak">
 
-## Risikokategorien
+## ${bundle.risk_caterogies}
 
 <#list riskDefinition.riskValues as risk>
 
-<span style="padding-left: 2mm; border-left: 5mm solid ${risk.htmlColor};">${risk.translations.de.name}</span>
+<span style="padding-left: 2mm; border-left: 5mm solid ${risk.htmlColor};">${risk.translations[.lang].name}</span>
 
-: ${risk.translations.de.description}
+: ${risk.translations[.lang].description}
 
 </#list>
 </div>
@@ -368,15 +368,15 @@ ${potentialImpact.translations[.lang].name}
 <div class="pagebreak"></div>
 
 <#macro moduleview targetObject>
-<@def "Beschreibung" targetObject.description true/>
+<@def bundle.description, targetObject.description true/>
 
 <#assign targetObjectRisksInDomain = risksByTargetObjectId[targetObject.id] />
 
 <#if targetObjectRisksInDomain?has_content>
-## Risiken
+## ${bundle.risks}
 
 <#list targetObjectRisksInDomain as risk>
-<@itbpRisk.riskdisplay 3 targetObject risk domain riskDefinition />
+<@isoRisk.riskdisplay 3 targetObject risk domain riskDefinition />
 </#list>
 
 </#if>

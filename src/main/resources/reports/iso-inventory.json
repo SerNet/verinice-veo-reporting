@@ -1,10 +1,12 @@
 {
   "name": {
-    "de": "Inventarverzeichnis"
+    "de": "Inventarverzeichnis",
+    "en": "Inventory of Assets"
   },
   "domainName": "ISO 27001 (DE)",
   "description": {
-    "de": "Ein \"Inventory of Assets\" (Inventarverzeichnis) ist ein zentrales Dokument im Informationssicherheits-Managementsystem (ISMS) nach ISO/IEC 27001, das alle relevanten Vermögenswerte (Assets) auflistet, die für den Schutz der Informationen innerhalb einer Organisation wichtig sind. Dieses Inventar ist notwendig, um Risiken systematisch identifizieren, bewerten und behandeln zu können.\nDas Inventarverzeichnis dient dazu, sämtliche informationssicherheitsrelevanten Vermögenswerte (Assets) innerhalb der Organisation zu identifizieren, zu klassifizieren und zu dokumentieren. Dies bildet die Grundlage für die Risikoanalyse und die Anwendung geeigneter Schutzmaßnahmen gemäß ISO/IEC 27001."
+    "de": "Ein \"Inventory of Assets\" (Inventarverzeichnis) ist ein zentrales Dokument im Informationssicherheits-Managementsystem (ISMS) nach ISO/IEC 27001, das alle relevanten Vermögenswerte (Assets) auflistet, die für den Schutz der Informationen innerhalb einer Organisation wichtig sind. Dieses Inventar ist notwendig, um Risiken systematisch identifizieren, bewerten und behandeln zu können.\nDas Inventarverzeichnis dient dazu, sämtliche informationssicherheitsrelevanten Vermögenswerte (Assets) innerhalb der Organisation zu identifizieren, zu klassifizieren und zu dokumentieren. Dies bildet die Grundlage für die Risikoanalyse und die Anwendung geeigneter Schutzmaßnahmen gemäß ISO/IEC 27001.",
+    "en": "An Inventory of Assets is a central document in the information security management system (ISMS) according to ISO/IEC 27001, which lists all relevant assets that are important for the protection of information within an organization. This inventory is necessary in order to systematically identify, evaluate, and address risks. The inventory list serves to identify, classify and document all information security-related assets within the organization. This provides the basis for risk analysis and the application of appropriate information security controls in accordance with ISO/IEC 27001."
   },
   "templateFile": "iso-inventory.md",
   "templateType": "text/markdown",

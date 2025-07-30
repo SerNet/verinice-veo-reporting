@@ -1,10 +1,12 @@
 {
   "name": {
-    "de": "Risikoanalyse"
+    "de": "Risikoanalyse",
+    "en": "Risk Assessment"
   },
   "domainName": "ISO 27001 (DE)",
   "description": {
-    "de": "Eine Übersicht über die Risiken und deren mitigierende Maßnahmen"
+    "de": "Eine Übersicht über die Risiken und deren mitigierende Maßnahmen",
+    "en": "The risk analysis document lists all risks for the ISMS scope. It provides an assessment of risks for the scope, processes, and assets, as well as the associated risk mitigation controls with the aim of ensuring information security."
   },
   "templateFile": "iso-risk-analysis.md",
   "templateType": "text/markdown",
