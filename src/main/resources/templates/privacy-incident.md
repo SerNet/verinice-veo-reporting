@@ -202,7 +202,7 @@ ${bundle.incident_dataBreach_notificationType}
 
 <@def bundle.affected_protection_goals, (affectedProtectionGoals?map(item->bundle[item])?join(', '))! />
 
-<@def bundle.incident_description_timeOfIncidentknown, incident.incident_description_timeOfIncidentknown />
+<@def bundle.incident_description_timeOfIncidentKnown, incident.incident_description_timeOfIncidentKnown />
 
 <@def bundle.incident_description_dateTimeOfIncident, (incident.incident_description_dateTimeOfIncident?datetime.iso)! />
 
