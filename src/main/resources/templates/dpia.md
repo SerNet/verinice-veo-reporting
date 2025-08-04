@@ -24,16 +24,16 @@ dt {
 <#assign riskDefinitionId=(scope.domains[domain.id].riskDefinition)! />
 
 <div class="footer-left">
-  <table>
-    <tr>
-      <td>Organisation: </td>
-      <td>${(scope.name)!}</td>
-    </tr>
-    <tr>
-      <td>Erstelldatum: </td>
-      <td>${.now?date}</td>
-    </tr>
-  </table>
+    <table>
+        <tr>
+            <td>${bundle.organization}: </td>
+            <td>${(scope.name)!}</td>
+        </tr>
+        <tr>
+            <td>${bundle.creation_date}: </td>
+            <td>${.now?date}</td>
+        </tr>
+    </table>
 </div>
 
 
@@ -48,7 +48,7 @@ dt {
 
 <div class="main_page">
 
-<@table 'Angaben zum Verantwortlichen',
+<@table bundle.controller_information,
   scope,
   ['name',
    'scope_address_address1',
@@ -62,10 +62,10 @@ dt {
 <#assign headOfDataProcessing=scope.findFirstLinked('scope_headOfDataProcessing')! />
 <#assign jointController=dpia.findFirstLinked('process_PIAJointControllership')!>
 
-| Vertretung  ||
+|  ${bundle.representation}  ||
 |:---|:---|
-| Leitung der verantwortlichen Stelle<br/>(einschließlich Vertreter) | ${management.person_generalInformation_givenName!} ${management.person_generalInformation_familyName!} |
-| Leitung der Datenverarbeitung |  ${headOfDataProcessing.person_generalInformation_givenName!} ${headOfDataProcessing.person_generalInformation_familyName!} |
+| ${bundle.scope_management} | ${management.name!} |
+| ${bundle.scope_headOfDataProcessing}  |  ${headOfDataProcessing.name!} |
 
 
 <#if jointController?has_content>
@@ -84,10 +84,10 @@ Angaben zu gemeinsam Verantwortlichen
    'scope_contactInformation_website'
   ]/>
 
-| Vertretung  ||
+| ${bundle.representation}  ||
 |:---|:---|
-| Leitung der verantwortlichen Stelle<br/>(einschließlich Vertreter) | ${managementJointController.person_generalInformation_givenName!} ${managementJointController.person_generalInformation_familyName!} |
-| Leitung der Datenverarbeitung |  ${headOfDataProcessingJointController.person_generalInformation_givenName!} ${headOfDataProcessingJointController.person_generalInformation_familyName!} |
+| ${bundle.scope_management} | ${managementJointController.name} |
+| ${bundle.scope_headOfDataProcessing} |  ${headOfDataProcessingJointController.name} |
 </#if>
 
 </div>
@@ -100,29 +100,29 @@ Angaben zu gemeinsam Verantwortlichen
 <#if ownerLinks?has_content>
 <#list ownerLinks as personLink>
 <#assign person=personLink.target />
-## Projektverantwortliche
+## ${bundle.process_PIAProcessOwner}
 
 |:------------|:-----|
-| Name, Vorname | ${person.person_generalInformation_familyName!}, ${person.person_generalInformation_givenName!} |  
-| Rolle bei der Durchführung der DSFA | ${personLink.process_PIAProcessOwner_role!} |
+| ${bundle.name}, ${bundle.person_generalInformation_givenName} | ${person.person_generalInformation_familyName!}, ${person.person_generalInformation_givenName!} |
+| ${bundle.process_PIAProcessOwner_role} | ${personLink.process_PIAProcessOwner_role!} |
 </#list>
 </#if>
 
 <#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')! />
 
-## Datenschutzbeauftragte
+## ${bundle.scope_dataProtectionOfficer}
 
 |:------------|:-----|
-| Name, Vorname | ${dataProtectionOfficer.person_generalInformation_familyName!}, ${dataProtectionOfficer.person_generalInformation_givenName!} |
+| ${bundle.name}, ${bundle.person_generalInformation_givenName} | ${dataProtectionOfficer.person_generalInformation_familyName!}, ${dataProtectionOfficer.person_generalInformation_givenName!} |
 
 <#assign representativesLinks=dpia.getLinks('process_PIARepresentatives')!>
 <#if representativesLinks?has_content>
-## Beteiligte Personen:
+## ${bundle.involved_persons}:
 |:------------|:-----|
 <#list representativesLinks as personLink>
 <#assign person=personLink.target />
-| Name, Vorname | ${person.person_generalInformation_familyName!}, ${person.person_generalInformation_givenName!} |  
-| Rolle bei der Durchführung der DSFA | ${personLink.process_PIARepresentatives_role!} |
+| ${bundle.name}, ${bundle.person_generalInformation_givenName} | ${person.person_generalInformation_familyName!}, ${person.person_generalInformation_givenName!} |
+| ${bundle.process_PIARepresentatives_role} | ${personLink.process_PIARepresentatives_role!} |
 </#list>
 </#if>
 
@@ -130,68 +130,68 @@ Angaben zu gemeinsam Verantwortlichen
 <#if processorLinks?has_content>
 <#list processorLinks as processorLink>
 <#assign scope=processorLink.target />
-## Beteiligte Auftragsverarbeiter
+## ${bundle.involved_processors}
 
 |:------------|:-----|
-| Name des Auftragsverarbeiters | ${scope.name} |  
+| ${bundle.processor_name} | ${scope.name} |
 
 </#list>
 </#if>
 
 <#if jointController?has_content>
-## Gemeinsame Verantwortliche
+## ${bundle.process_PIAJointControllership}
 
 |:------------|:-----|
-| Name des Auftzragsverarbeiters | ${jointController.name} |  
+| ${bundle.processor_name} | ${jointController.name} |
 
 </#if>
 
 <#assign otherPersonLinks=dpia.getLinks('process_PIAOtherPersonsInvolved')!>
 <#assign otherOrganizationLinks=dpia.getLinks('process_PIAOOtherOrganisationsInvolved')!>
 <#if otherPersonLinks?has_content || otherOrganizationLinks?has_content>
-## Weitere beteiligte Personen und oder Organisationen
+## ${bundle.other_involved_parties}
 
 |:------------|:-----|
 <#list otherPersonLinks as otherPersonLink>
 <#assign person=otherPersonLink.target />
-| Name, Vorname | ${person.person_generalInformation_familyName!}, ${person.person_generalInformation_givenName!} |  
+| ${bundle.name}, ${bundle.person_generalInformation_givenName} | ${person.person_generalInformation_familyName!}, ${person.person_generalInformation_givenName!} |
 </#list>
 <#list otherOrganizationLinks as otherOrganizationLink>
 <#assign scope=otherOrganizationLink.target />
-| Organisation | ${scope.name} |  
+| ${bundle.organization} | ${scope.name} |
 </#list></#if>
 
-# Allgemeine Angaben zur DSFA
+# ${bundle.general_information}
 
 
-<@def "ID und Name der  DSFA" dpia.name />
+<@def bundle.id_and_name dpia.name />
 
-<@def "Beschreibung der DSFA" dpia.description />
+<@def bundle.dpia_desc dpia.description />
 
-<@def "Status der DSFA" bundle['process_PRO_DPIA_status_'+dpia.domains[domain.id].status] />
+<@def bundle.dpia_status bundle['process_PRO_DPIA_status_'+dpia.domains[domain.id].status] />
 
-<@def "Anlass der DSFA" dpia.process_PIADetails_reason?has_content?then(bundle[dpia.process_PIADetails_reason], "") />
+<@def bundle.process_PIADetails_reason dpia.process_PIADetails_reason?has_content?then(bundle[dpia.process_PIADetails_reason], "") />
 
 <@def bundle.process_PIADetails_date, (dpia.process_PIADetails_date?date.iso)! />
 
-<@def "Prüfer", (dpia.findFirstLinked('process_PIAAuditor').name)!"" />
+<@def bundle.process_PIAAuditor, (dpia.findFirstLinked('process_PIAAuditor').name)!"" />
 
-<@def "Betroffenen Verarbeitungstätigkeit(en)", dpia.findLinked('process_PIADataProcessing')?map(it->it.name)?join(", ") />
+<@def bundle.process_PIADataProcessing, dpia.findLinked('process_PIADataProcessing')?map(it->it.name)?join(", ") />
 
-<@def "Rat des Datenschutzbeauftragten wurde eingeholt", (dpia.process_PIADPO_advice?string(bundle.yes, bundle.no))! />
+<@def bundle.process_PIADPO_advice, (dpia.process_PIADPO_advice?string(bundle.yes, bundle.no))! />
 
-<@def "Anmerkung oder Begründung", dpia.process_PIADPO_comment />
+<@def bundle.comment_or_reason dpia.process_PIADPO_comment />
 
-# Akteuren und betroffenen Personen
+# ${bundle.affected_persons}
 
-|Betroffene Personen/Vertreter  | Standpunkt wurde eingeholt | Anmerkung oder Begründung 
+|${bundle.process_PIAInvolvement_affectedPersons}  | ${bundle.process_PIAInvolvement_affectedPersonsPOV} | ${bundle.comment_or_reason}
 |:------------|:-----|:-----|
 | ${dpia.process_PIAInvolvement_affectedPersons!} | ${(dpia.process_PIAInvolvement_affectedPersonsPOV?string(bundle.yes, bundle.no))!} | ${dpia.process_PIAInvolvement_affectedPersonsComment!} |
 
 
 <#if dpia.process_PIAInvolvement_stakeholderParticipation!false>
 
-|Akteure  | Standpunkt wurde eingeholt | Anmerkung oder Begründung 
+|${bundle.process_PIAInvolvement_stakeholder}  | ${bundle.process_PIAInvolvement_stakeholderPOV} | ${bundle.comment_or_reason}
 |:------------|:-----|:-----|
 | ${dpia.process_PIAInvolvement_stakeholder!} | ${(dpia.process_PIAInvolvement_stakeholderPOV?string(bundle.yes, bundle.no))!} | ${dpia.process_PIAInvolvement_stakeholderComment!} |
 
@@ -201,10 +201,10 @@ Angaben zu gemeinsam Verantwortlichen
 <#assign addidionalITSystems=dpia.findLinked('process_PIADescriptionAdditionalITSystems') />
 <#assign additionalApplicationsAndITSystems = addidionalApplications+addidionalITSystems>
 
-# Systematische Beschreibung der Verarbeitungsvorgänge und Zwecke
+# ${bundle.systematic_description}
 
 |:------------|:-----|
-| Beschreibung des Prüfgegenstandes | ${dpia.process_PIADescription_testObject!} |  
+| ${bundle.description_test_object} | ${dpia.process_PIADescription_testObject!} |
 <#if dpia.process_PIADescription_intendedPurpose!false>
 | ${bundle.process_PIADescription_intendedPurpose} | ${dpia.process_PIADescription_intendedPurposeAdditions!} |
 </#if>
@@ -233,15 +233,15 @@ Angaben zu gemeinsam Verantwortlichen
 | ${bundle.process_PIADescription_applicationsSystems} | ${additionalApplicationsAndITSystems?map(it->it.name)?join(", ")} | 
 </#if>
 
-# Bewertung der Notwendigkeit und Verhältnismäßigkeit
+# ${bundle.assessment}
 
 <#if dpia.process_PIAAssessment_rulesExisting!false>
-<@def "Genehmigte Verhaltensregeln", dpia.process_PIAAssessment_rules />
+<@def bundle.process_PIAAssessment_rules, dpia.process_PIAAssessment_rules />
 </#if>
 
-<@def "Notwendigkeit und Verhältnismäßigkeitsprüfung", dpia.process_PIAAssessment_necessity />
+<@def bundle.process_PIAAssessment_necessity, dpia.process_PIAAssessment_necessity />
 
-# Risikoanalyse
+# ${bundle.risk_analysis}
 
 <#assign processRisksInDomain = (dpia.risks?filter(it-> it.domains?keys?seq_contains(domain.id)))![] />
 
@@ -269,13 +269,13 @@ Angaben zu gemeinsam Verantwortlichen
 
 </#if>
 
-# Ergebnis der DSFA nach Durchführung
+# ${bundle.dpia_results}
 
 |:------------|:-----|
-| Hohes Risiko | ${(dpia.process_PIAResult_risk?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_comment?has_content><br/>${dpia.process_PIAResult_comment}</#if> |  
-| Konsultation der Aufsichtsbehörde erforderlich | ${(dpia.process_PIAResult_consultationRequired?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_consultationJustification?has_content><br/>${dpia.process_PIAResult_consultationJustification}</#if> |
-| Konsultation durchgeführt | ${(dpia.process_PIAResult_consultationConducted?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_consultationDate?has_content><br/>Datum ${dpia.process_PIAResult_consultationDate?date.iso } <br/>Ergebnis der Konsultation ${dpia.process_PIAResult_consultationResult!}</#if>|
-| Bemerkungen DSB | ${dpia.process_PIAResult_commentsPIO!} |
+| ${bundle.high_risk} | ${(dpia.process_PIAResult_risk?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_comment?has_content><br/>${dpia.process_PIAResult_comment}</#if> |
+| ${bundle.process_PIAResult_consultationRequired} | ${(dpia.process_PIAResult_consultationRequired?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_consultationJustification?has_content><br/>${dpia.process_PIAResult_consultationJustification}</#if> |
+| ${bundle.process_PIAResult_consultationConducted} | ${(dpia.process_PIAResult_consultationConducted?string(bundle.yes, bundle.no))!} <#if dpia.process_PIAResult_consultationDate?has_content><br/>${bundle.date} ${dpia.process_PIAResult_consultationDate?date.iso } <br/>${bundle.consultation_result} ${dpia.process_PIAResult_consultationResult!}</#if>|
+| ${bundle.pio_comments} | ${dpia.process_PIAResult_commentsPIO!} |
 
 </#list>
 </#if>
