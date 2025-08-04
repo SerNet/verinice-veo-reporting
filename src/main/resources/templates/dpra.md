@@ -116,11 +116,11 @@ dt {
 <div class="footer-left">
   <table>
     <tr>
-      <td>Organisation: </td>
+      <td>${bundle.organization}: </td>
       <td>${scope.name}</td>
     </tr>
     <tr>
-      <td>Erstelldatum: </td>
+      <td>${bundle.creation_date}: </td>
       <td>${.now?date}</td>
     </tr>
   </table>
@@ -138,7 +138,7 @@ dt {
 
 <div class="main_page">
 
-<@table 'Angaben zum Verantwortlichen',
+<@table bundle.information_about_controller,
   scope,
   ['name',
    'scope_address_address1',
@@ -153,15 +153,15 @@ dt {
 <#assign headOfDataProcessing=scope.findFirstLinked('scope_headOfDataProcessing')! />
 
 
-| Vertretung  ||
+| ${bundle.representation_of_the_data_controller}  ||
 |:---|:---|
-| Leitung der verantwortlichen Stelle<br/>(einschließlich Vertreter) | ${management.person_generalInformation_givenName!} ${management.person_generalInformation_familyName!} |
-| Leitung der Datenverarbeitung |  ${headOfDataProcessing.person_generalInformation_givenName!} ${headOfDataProcessing.person_generalInformation_familyName!} |
+| ${bundle.head_of_data_controller} | ${management.person_generalInformation_givenName!} ${management.person_generalInformation_familyName!} |
+| ${bundle.head_of_it} |  ${headOfDataProcessing.person_generalInformation_givenName!} ${headOfDataProcessing.person_generalInformation_familyName!} |
 
 
 <#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')! />
 
-<@table 'Datenschutzbeauftragte',
+<@table bundle.scope_dataProtectionOfficer,
   dataProtectionOfficer,
   [
    {'name' : 'person_generalInformation_givenName person_generalInformation_familyName'},
@@ -214,7 +214,7 @@ dt {
 <th class="spacer"/>
 <th class="spacer"/>
 <th colspan="${riskDefinition.probability.levels?size}" class="caption">
-Eintrittswahrscheinlichkeit
+${bundle.probability}
 </th>
 </tr>
 <tr>
@@ -234,7 +234,7 @@ Eintrittswahrscheinlichkeit
 <tr class="impactrow${potentialImpact?index}">
 <#if potentialImpact?index == 0>
 <td class="rotate caption" rowspan="${category.potentialImpacts?size}">
-<div>Auswirkung</div>
+<div>${bundle.impact}</div>
 </td>
 </#if>
 <td class="label" <@cellStyle potentialImpact.htmlColor />>
@@ -294,12 +294,12 @@ ${potentialImpact.translations[.lang].name}
 
 # ${process.name} (${process.designator}) {#process_${process?counter}}
 
-<@def "Beschreibung" process.description true/>
+<@def bundle.description process.description true/>
 
 <#assign processRisksInDomain = process.risks?filter(it-> it.domains?keys?seq_contains(domain.id)) />
 
 <#if processRisksInDomain?has_content>
-## Risiken
+## ${bundle.risks}
 
 <#list processRisksInDomain as risk>
 <@dpRisk.riskdisplay 3 process risk domain riskDefinition />

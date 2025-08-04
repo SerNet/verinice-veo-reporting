@@ -1,0 +1,25 @@
+{
+  "name": {
+    "en": "Data protection risk assessment"
+  },
+  "domainName": "GDPR (INT)",
+  "description": {
+    "en": "The existing risks for processing activities for controller, Art. 7 Nr.4 GDPR"
+  },
+  "templateFile": "dpra.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_ResponsibleBody"
+      ]
+    }
+  ],
+  "data": {
+    "scope": "/scopes/${targetId}"
+  }
+}

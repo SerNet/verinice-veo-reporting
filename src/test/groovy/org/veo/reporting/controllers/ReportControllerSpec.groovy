@@ -96,7 +96,8 @@ public class ReportControllerSpec extends ReportingTest {
             'nis2-registration-info-int',
             'nis2-security-incident-int',
             'processing-on-behalf-int',
-            'processing-activities-int'
+            'processing-activities-int',
+            'risk-analysis-int'
         ]
     }
 
