@@ -202,7 +202,8 @@ Cheers'''
             'iso-soa-int',
             'nis2-registration-info-int',
             'nis2-security-incident-int',
-            'processing-on-behalf-int'
+            'processing-on-behalf-int',
+            'processing-activities-int'
         ]
     }
 

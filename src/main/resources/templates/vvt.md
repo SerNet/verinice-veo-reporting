@@ -63,13 +63,13 @@ dl.tom dd {
   <bookmark name="${bundle.main_page}" href="#main_page"/>
 <#list processesInScope as process>
   <bookmark name="${process.name}" href="#process_${process?counter}">
-    <bookmark name="Prüfergebnis zur materiellen Rechtmäßigkeit" href="#process_opinionDPO_${process?counter}" />
-    <bookmark name="Detailergebnisse" href="#process_details_${process?counter}">
+    <bookmark name="${bundle.audit_result_regarding_substantive_legality}" href="#process_opinionDPO_${process?counter}" />
+    <bookmark name="${bundle.detailed_results}" href="#process_details_${process?counter}">
       <#if process.getLinks('process_dataTransmission')?has_content>
-        <bookmark name="Art übermittelter Daten und deren Empfänger" href="#process_transmissions_${process?counter}"/>
+        <bookmark name="${bundle.type_of_data_transmitted_and_recipients}" href="#process_transmissions_${process?counter}"/>
       </#if>
       <#if process.risks?map(r->r.mitigation!)?filter(it -> it??)?filter(it -> it.parts?has_content)?has_content>
-        <bookmark name="Technische und organisatorische Maßnahmen" href="#process_toms_${process?counter}"/>
+        <bookmark name="${bundle.technical_and_organizational_measures}" href="#process_toms_${process?counter}"/>
       </#if>
     </bookmark>
   </bookmark>
@@ -99,15 +99,15 @@ dl.tom dd {
   <@tocitem 1 "main_page" "1. ${bundle.main_page}" />
   <#list processesInScope as process>
     <@tocitem 1 "process_${process?counter}" "${1+process?counter}. ${process.name}" />
-    <@tocitem 2 "process_opinionDPO_${process?counter}" "1. Prüfergebnis zur materiellen Rechtmäßigkeit" />
-    <@tocitem 2 "process_details_${process?counter}" "2. Detailergebnisse" />
+    <@tocitem 2 "process_opinionDPO_${process?counter}" "1. ${bundle.audit_result_regarding_substantive_legality}" />
+    <@tocitem 2 "process_details_${process?counter}" "2. ${bundle.detailed_results}" />
     <#assign level3counter = 1>
     <#if process.getLinks('process_dataTransmission')?has_content>
-      <@tocitem 3 "process_transmissions_${process?counter}" "${level3counter}. Art übermittelter Daten und deren Empfänger" />
+      <@tocitem 3 "process_transmissions_${process?counter}" "${level3counter}. ${bundle.type_of_data_transmitted_and_recipients}" />
       <#assign level3counter = 2>
     </#if>
     <#if process.risks?map(r->r.mitigation!)?filter(it -> it??)?filter(it -> it.parts?has_content)?has_content>
-      <@tocitem 3 "process_toms_${process?counter}" "${level3counter}. Technische und organisatorische Maßnahmen" />
+      <@tocitem 3 "process_toms_${process?counter}" "${level3counter}. ${bundle.technical_and_organizational_measures}" />
     </#if>
   </#list>
 </tbody>
@@ -117,7 +117,7 @@ dl.tom dd {
 
 <div class="main_page">
 
-<@table 'Angaben zum Verantwortlichen',
+<@table bundle.information_about_controller,
   scope,
   ['name',
    'scope_address_address1',
@@ -132,15 +132,15 @@ dl.tom dd {
 <#assign headOfDataProcessing=scope.findFirstLinked('scope_headOfDataProcessing')! />
 
 
-| Vertretung  ||
+| ${bundle.representation_of_the_data_controller}  ||
 |:---|:---|
-| Leitung der verantwortlichen Stelle<br/>(einschließlich Vertreter) | ${management.person_generalInformation_givenName!} ${management.person_generalInformation_familyName!} |
-| Leitung der Datenverarbeitung |  ${headOfDataProcessing.person_generalInformation_givenName!} ${headOfDataProcessing.person_generalInformation_familyName!} |
+| ${bundle.head_of_data_controller} | ${management.person_generalInformation_givenName!} ${management.person_generalInformation_familyName!} |
+| ${bundle.scope_headOfDataProcessing} |  ${headOfDataProcessing.person_generalInformation_givenName!} ${headOfDataProcessing.person_generalInformation_familyName!} |
 
 
 <#assign dataProtectionOfficer=scope.findFirstLinked('scope_dataProtectionOfficer')! />
 
-<@table 'Datenschutzbeauftragte',
+<@table bundle.scope_dataProtectionOfficer,
   dataProtectionOfficer,
   [
    {'name' : 'person_generalInformation_givenName person_generalInformation_familyName'},
@@ -158,7 +158,7 @@ dl.tom dd {
 ]/>
 </#if>
 
-<@table bundle.responsibleRegulatoryAuthority_table_caption, scope, [
+<@table bundle.competent_supervisory_authority, scope, [
   'scope_regulatoryAuthority_name',
   'scope_regulatoryAuthority_address1',
   {'scope_regulatoryAuthority_postcode, scope_regulatoryAuthority_city' : 'scope_regulatoryAuthority_postcode scope_regulatoryAuthority_city'},
@@ -178,26 +178,25 @@ dl.tom dd {
 # ${process.name} {#process_${process?counter}}
 <#if process.process_processing_asProcessor!false>
 <div class="pullup">
-Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO
+${bundle.processing_as_a_processor_according_to_art_30_ii_gdpr}
 </div>
 </#if>
 
 <div class="section">
 
-## Prüfergebnis zur materiellen Rechtmäßigkeit {#process_opinionDPO_${process?counter}}
+## ${bundle.audit_result_regarding_substantive_legality} {#process_opinionDPO_${process?counter}}
 
-### Rechtmäßigkeit der Verarbeitung
+### ${bundle.lawfulness_of_processing}
 
-Feststellungen
-: ${process.process_opinionDPO_findings!} 
+<@def bundle.process_opinionDPO_findings process.process_opinionDPO_findings true/>
 
-Empfehlungen
-: ${process.process_opinionDPO_recommendations!} 
+<@def bundle.process_opinionDPO_recommendations process.process_opinionDPO_recommendations true/>
+
 </div>
 
 <div class="pagebreak"></div>
 
-## Detailergebnisse {#process_details_${process?counter}}
+## ${bundle.detailed_results} {#process_details_${process?counter}}
 
 <#macro section title id="">
 <div class="section">
@@ -210,63 +209,56 @@ Empfehlungen
 </div>
 </#macro>
 
-<@section 'Allgemeine Informationen'>
+<@section bundle.general_information>
 
-Name des Unternehmens
+${bundle.general_information}
 : ${scope.name}
 
 <#assign responsiblePerson=process.findFirstLinked('process_responsiblePerson')! />
 
-Abteilung/Fachbereich
-: ${process.process_processingDetails_responsibleDepartment!}
+<@def bundle.department_division, process.process_processingDetails_responsibleDepartment!, true />
 
-Leiter Fachabteilung
-: ${responsiblePerson.name!}
+<@def bundle.head_of_department, (responsiblePerson.name)!, true />
 
 ${bundle.process_processingDetails_surveyConductedOn}
 : ${(process.process_processingDetails_surveyConductedOn?date.iso)!}
 </@section>
 
-<@section 'Allgemeine Verarbeitungsangaben'>
+<@section bundle.processing_details>
 
-Bezeichnung der Verarbeitung
-: ${process.name}
+<@def bundle.name_of_processing process.name true/>
 
-Beschreibung der Verarbeitung
-: ${process.description!}
+<@def bundle.description_of_processing process.description true/>
 
-Art der Verarbeitung
-: ${(bundle[process.process_processingDetails_typeOfSurvey])!}
+<@def bundle.type_of_processing ,(bundle[process.process_processingDetails_typeOfSurvey])!, true/>
 
-Auftragsverarbeitung i.S.d. Art. 30 II DS-GVO
-: ${(process.process_processing_asProcessor?string(bundle.yes, bundle.no))!}
+<@def bundle.process_processing_asProcessor, (process.process_processing_asProcessor?string(bundle.yes, bundle.no))!, true/>
 
-${bundle.process_processingDetails_operatingStage}
-: ${(bundle[process.process_processingDetails_operatingStage])!}
+<@def bundle.process_processingDetails_operatingStage, (bundle[process.process_processingDetails_operatingStage])!, true/>
 </@section>
 
 <#if jointControllership?has_content>
-<@section 'Gemeinsam für die Verarbeitung Verantwortliche Art. 26 DS-GVO'>
+<@section bundle.joint_controller_art_26_gdpr>
 ${jointControllership?map(item->item.name)?join(", ")}
 </@section>
 </#if>
 
-<@section 'Zweckbestimmung der Datenverarbeitung'>
+<@section bundle.purpose_of_the_data_processing>
 ${process.process_intendedPurpose_intendedPurpose!}
 </@section>
 
-<@section 'Rechtsgrundlage für die Datenverarbeitung'>
+<@section bundle.legal_basis_for_the_data_processing>
 ${(process.process_dataProcessing_legalBasis?map(item->bundle[item])?join(', '))!}
 </@section>
 
-<@def "Sonstige Rechtsgrundlagen" process.process_dataProcessing_otherLegalBasis />
+<@def bundle.process_dataProcessing_otherLegalBasis process.process_dataProcessing_otherLegalBasis />
 
-<@def "Erläuterungen" process.process_dataProcessing_explanation true />
+<@def bundle.process_dataProcessing_explanation process.process_dataProcessing_explanation true />
 
 <#assign processDataTypeLinks=process.getLinks('process_dataType')! />
 
 <#if processDataTypeLinks?has_content>
-<@section 'Datenkategorien'>
+<@section bundle.data_categories>
 <#list processDataTypeLinks as dataTypeLink>
 <#assign dataType=dataTypeLink.target />
 <#assign dataOrigin=dataTypeLink.process_dataType_dataOrigin! />
@@ -316,21 +308,21 @@ ${bundle.process_dataType_deletionPeriodStart}
 </#if>
 
 
-<@section "Kategorien betroffener Personen">
+<@section bundle.categories_of_data_subjects>
 ${effectiveDataSubjects}
 </@section>
 </#if>
 
-<@section 'Informationspflichten Art. 13, 14 DS-GVO'>
+<@section bundle.information_obligations_art_13_14_gdpr>
 ${(process.process_informationsObligations_status?string(bundle.yes, bundle.no))!}
 
-<@def "Erläuterungen" process.process_informationsObligations_explanation />
+<@def bundle.process_informationsObligations_explanation process.process_informationsObligations_explanation />
 
 </@section>
 
 <#if transmissions?has_content>
 
-<@section 'Art übermittelter Daten und deren Empfänger' 'process_transmissions_${process?counter}'>
+<@section bundle.type_of_data_transmitted_and_recipients 'process_transmissions_${process?counter}'>
 
 <#list transmissions as transmission>
 
@@ -355,28 +347,27 @@ ${(process.process_informationsObligations_status?string(bundle.yes, bundle.no))
 
 #### ${transmission.name}
 
-Art der Daten
-: ${transmissionDataTypes?map(t->t.name)?join(", ")}
+<@def bundle.process_dataType, transmissionDataTypes?map(t->t.name)?join(", "), true/>
 
-Rechtsgrundlage für Datenübertragung
-: ${effectiveDataTransferLegalBasis!}
+<@def bundle.process_dataTransfer_legalBasis, effectiveDataTransferLegalBasis true />
 
-<@def "Erläuterungen" transmission.process_dataTransfer_explanation true />
+<@def bundle.process_dataTransfer_explanation transmission.process_dataTransfer_explanation true />
 
 
 <#macro recipient_section recipient_label recipient thirdCountryProcessing=false thirdCountryName="" thirdCountryGuarantees="" thirdCountryExplanation="">
 <div class="section">
+
 <@def recipient_label recipient.name true />
 
-<@def "Datenübermittlung in Drittland", (thirdCountryProcessing?string(bundle.yes, bundle.no))!"", true />
+<@def bundle.process_internalRecipient_thirdCountryProcessing, (thirdCountryProcessing?string(bundle.yes, bundle.no))!"", true />
 
 <#if thirdCountryProcessing!false>
-<@def "Name des Landes" thirdCountryName true />
+<@def bundle.process_internalRecipient_thirdCountryName thirdCountryName true />
 
-<@def "Angabe geeigneter Garantien" thirdCountryGuarantees true />
+<@def bundle.process_internalRecipient_thirdCountryGuarantees thirdCountryGuarantees true />
 </#if>
 
-<@def "Erläuterungen" thirdCountryExplanation />
+<@def bundle.process_internalRecipient_thirdCountryExplanation thirdCountryExplanation />
 
 </div>
 </#macro>
@@ -385,27 +376,27 @@ Rechtsgrundlage für Datenübertragung
 
 <#on "process_recipient_type_internal">
 <#assign internalRecipientLinks=transmission.getLinks('process_internalRecipient')! />
-#### Interne Empfänger
+#### ${bundle.internal_recipients}
 <#list internalRecipientLinks as link>
-<@recipient_section "Interne Stelle" link.target, link.process_internalRecipient_thirdCountryProcessing link.process_internalRecipient_thirdCountryName link.process_internalRecipient_thirdCountryGuarantees link.process_internalRecipient_thirdCountryExplanation/>
+<@recipient_section bundle.internal_position link.target, link.process_internalRecipient_thirdCountryProcessing link.process_internalRecipient_thirdCountryName link.process_internalRecipient_thirdCountryGuarantees link.process_internalRecipient_thirdCountryExplanation/>
 </#list>
 
 <#on "process_recipient_type_external">
 <#assign externalRecipientLinks=transmission.getLinks('process_externalRecipient')! />
-#### Externe Empfänger
+#### ${bundle.external_recipients}
 <#list externalRecipientLinks as link>
-<@recipient_section "Externe Stelle" link.target, link.process_externalRecipient_thirdCountryProcessing link.process_externalRecipient_thirdCountryName link.process_externalRecipient_thirdCountryGuarantees link.process_externalRecipient_thirdCountryExplanation/>
+<@recipient_section bundle.external_position link.target, link.process_externalRecipient_thirdCountryProcessing link.process_externalRecipient_thirdCountryName link.process_externalRecipient_thirdCountryGuarantees link.process_externalRecipient_thirdCountryExplanation/>
 </#list>
 
 <#on "process_recipient_type_processor">
 <#assign processorsLinks=transmission.getLinks('process_processor')! />
-#### Auftragnehmer / Dienstleister
+#### ${bundle.processors}
 <#list processorsLinks as link>
-<@recipient_section "Auftragnehmer" link.target, link.process_processor_thirdCountryProcessing link.process_processor_thirdCountryName link.process_processor_thirdCountryGuarantees link.process_processor_thirdCountryExplanation/>
+<@recipient_section bundle.processor link.target, link.process_processor_thirdCountryProcessing link.process_processor_thirdCountryName link.process_processor_thirdCountryGuarantees link.process_processor_thirdCountryExplanation/>
 </#list>
 
 <#default>
-!!! UNBEKANNTER EMPFÄNGERTYP
+!!! ${bundle.unknown_recipient_type}: ${recipientType}
 </#switch>
 
 </div>
@@ -414,20 +405,20 @@ Rechtsgrundlage für Datenübertragung
 </@section>
 </#if>
 
-<@section 'Zugriffsberechtigte Personengruppen (Berechtigungsgruppen)'>
-<@def "Ein Berechtigungskonzept ist vorhanden", (process.process_accessAuthorization_concept?string(bundle.yes, bundle.no))!"" true />
+<@section bundle.authorized_groups_of_persons_authorization_groups>
+<@def bundle.process_accessAuthorization_concept, (process.process_accessAuthorization_concept?string(bundle.yes, bundle.no))!"" true />
 
 <#if process.process_accessAuthorization_concept!false>
-<@def "Beschreibung des Berechtigungsverfahrens" process.process_accessAuthorization_description true />
+<@def bundle.process_accessAuthorization_description process.process_accessAuthorization_description true />
 </#if>
 </@section>
 
 <#assign relatedAssets=process.findLinked('process_requiredApplications') + process.findLinked('process_requiredITSystems') />
 <#if relatedAssets?has_content>
 
-<@section 'Systeminformationen über Hard- und Software'>
+<@section bundle.system_information_about_hardware_and_software>
 |:---|
-| **Name** | **Beschreibung** |
+| **${bundle.name}** | **${bundle.description}** |
 <#list relatedAssets as asset>
 | ${(asset.name)!} | ${asset.description!} |
 </#list>
@@ -437,7 +428,7 @@ Rechtsgrundlage für Datenübertragung
 <#-- FIXME #1175: maybe pass domain into report? -->
 <#assign domain=domains?filter(it->it.name == domainName)?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 
-<@section 'Datenschutz-Folgenabschätzung'>
+<@section bundle.data_protection_impact_assessment>
 ${bundle.piaMandatory}
 : ${(process.domains[domain.id].decisionResults.piaMandatory.value?string(bundle.yes, bundle.no))!""}
 
@@ -451,7 +442,7 @@ ${bundle.process_opinionDPO_comment}
 <#assign mitigations=process.risks?map(r->r.mitigation!)?filter(it -> it??)?filter(it -> it.parts?has_content) />
 <#if mitigations?has_content>
 
-<@section 'Technische und organisatorische Maßnahmen' 'process_toms_${process?counter}'  >
+<@section bundle.technical_and_organizational_measures 'process_toms_${process?counter}'  >
 
 <#macro tomsection process objective title>
 <#list mitigations as mitigation>
@@ -487,18 +478,18 @@ ${bundle.process_opinionDPO_comment}
 <table class="table toms">
   <thead>
     <tr>
-      <td>Ums.</td>
-      <td>Maßnahme</td>
+      <td>${bundle.control_impl}</td>
+      <td>${bundle.control_tom}</td>
     </tr>
   </thead>
-  <@tomsection process 'control_dataProtection_objectives_pseudonymization', 'Pseudonymisierung'/>
-  <@tomsection process 'control_dataProtection_objectives_confidentiality', 'Gewährleistung der Vertraulichkeit'/>
-  <@tomsection process 'control_dataProtection_objectives_integrity', 'Gewährleistung der Integrität'/>
-  <@tomsection process 'control_dataProtection_objectives_availability', 'Gewährleistung der Verfügbarkeit'/>
-  <@tomsection process 'control_dataProtection_objectives_resilience', 'Gewährleistung der Belastbarkeit'/>
-  <@tomsection process 'control_dataProtection_objectives_recoverability', 'Wiederherstellbarkeit'/>
-  <@tomsection process 'control_dataProtection_objectives_effectiveness', 'Wirksamkeit der TOMs'/>
-  <@tomsection process 'control_dataProtection_objectives_encryption', 'Verschlüsselung'/>
+  <@tomsection process 'control_dataProtection_objectives_pseudonymization', bundle.control_dataProtection_objectives_pseudonymization/>
+  <@tomsection process 'control_dataProtection_objectives_confidentiality', bundle.control_dataProtection_objectives_confidentiality/>
+  <@tomsection process 'control_dataProtection_objectives_integrity', bundle.control_dataProtection_objectives_integrity/>
+  <@tomsection process 'control_dataProtection_objectives_availability', bundle.control_dataProtection_objectives_availability/>
+  <@tomsection process 'control_dataProtection_objectives_resilience', bundle.control_dataProtection_objectives_resilience/>
+  <@tomsection process 'control_dataProtection_objectives_recoverability', bundle.control_dataProtection_objectives_recoverability/>
+  <@tomsection process 'control_dataProtection_objectives_effectiveness', bundle.control_dataProtection_objectives_effectiveness/>
+  <@tomsection process 'control_dataProtection_objectives_encryption', bundle.control_dataProtection_objectives_encryption/>
 </table> 
 </@section>
 </#if>

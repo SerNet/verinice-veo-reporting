@@ -1,0 +1,25 @@
+{
+  "name": {
+    "en": "Records of processing activities"
+  },
+  "domainName": "GDPR (INT)",
+  "description": {
+    "en": "A detailed overview of the processing activities carried out within a scope"
+  },
+  "templateFile": "vvt.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_ResponsibleBody"
+      ]
+    }
+  ],
+  "data": {
+    "scope": "/scopes/${targetId}"
+  }
+}
