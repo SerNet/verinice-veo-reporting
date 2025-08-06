@@ -91,8 +91,8 @@ class HtmlPDFConverterSpec extends Specification {
         converter.convert(is, out, reportConfiguration, new ReportCreationParameters(Locale.US, TimeZone.default))
         then:
         0 * out.write(_)
-        thrown(NoSuchElementException)
-        0 * is.read(_)>> {
+        thrown(IOException)
+        1 * is.readAllBytes()>> {
             throw new IOException("Closed")
         }
     }

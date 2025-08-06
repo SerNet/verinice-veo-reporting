@@ -25,7 +25,6 @@ import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.EnumSet;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -89,42 +88,40 @@ public class HtmlPDFConverter implements ConversionHandler {
     // options.set(TocExtension.LIST_CLASS,
     // PdfConverterExtension.DEFAULT_TOC_LIST_CLASS);
 
-    try (Scanner s = new Scanner(input, StandardCharsets.UTF_8).useDelimiter("\\Z")) {
-      String html = s.next();
+    String html = new String(input.readAllBytes(), StandardCharsets.UTF_8);
 
-      if (html.isEmpty()) {
-        logger.info("HTML input is empty, skipping PDF creation");
-        return;
-      }
-      // There are more options on the builder than shown below.
-      PdfRendererBuilder builder = new PdfRendererBuilder();
+    if (html.isEmpty()) {
+      logger.info("HTML input is empty, skipping PDF creation");
+      return;
+    }
+    // There are more options on the builder than shown below.
+    PdfRendererBuilder builder = new PdfRendererBuilder();
 
-      addFonts(builder);
-      DefaultObjectDrawerFactory factory = new DefaultObjectDrawerFactory();
-      factory.registerDrawer("jfreechart/pie", new JFreeChartPieDiagramObjectDrawer());
-      factory.registerDrawer("jfreechart/bar", new JFreeChartBarDiagramObjectDrawer());
-      factory.registerDrawer("jfreechart/veo-pie", new VeoJFreeChartPieDiagramObjectDrawer());
-      factory.registerDrawer(
-          "jfreechart/veo-spiderweb", new VeoJFreeChartSpiderWebDiagramObjectDrawer());
-      builder.useObjectDrawerFactory(factory);
+    addFonts(builder);
+    DefaultObjectDrawerFactory factory = new DefaultObjectDrawerFactory();
+    factory.registerDrawer("jfreechart/pie", new JFreeChartPieDiagramObjectDrawer());
+    factory.registerDrawer("jfreechart/bar", new JFreeChartBarDiagramObjectDrawer());
+    factory.registerDrawer("jfreechart/veo-pie", new VeoJFreeChartPieDiagramObjectDrawer());
+    factory.registerDrawer(
+        "jfreechart/veo-spiderweb", new VeoJFreeChartSpiderWebDiagramObjectDrawer());
+    builder.useObjectDrawerFactory(factory);
 
-      org.jsoup.nodes.Document doc = Jsoup.parse(html);
-      doc.forEach(
-          el -> {
-            String style = el.attr(STYLE);
-            if (style != null && !style.isEmpty()) {
-              el.attr(STYLE, replaceSvgBackgrounds(style));
-            }
-          });
-      Document dom = new W3CDom().fromJsoup(doc);
+    org.jsoup.nodes.Document doc = Jsoup.parse(html);
+    doc.forEach(
+        el -> {
+          String style = el.attr(STYLE);
+          if (style != null && !style.isEmpty()) {
+            el.attr(STYLE, replaceSvgBackgrounds(style));
+          }
+        });
+    Document dom = new W3CDom().fromJsoup(doc);
 
-      builder.withW3cDocument(dom, "");
-      builder.usePdfUaAccessibility(true);
-      builder.toStream(output);
-      try (PdfBoxRenderer renderer = builder.buildPdfRenderer()) {
-        renderer.layout();
-        renderer.createPDF();
-      }
+    builder.withW3cDocument(dom, "");
+    builder.usePdfUaAccessibility(true);
+    builder.toStream(output);
+    try (PdfBoxRenderer renderer = builder.buildPdfRenderer()) {
+      renderer.layout();
+      renderer.createPDF();
     }
   }
 
