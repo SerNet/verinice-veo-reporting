@@ -20,8 +20,8 @@ package org.veo.fileconverter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.nio.channels.Channels;
+import java.nio.channels.Pipe;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -75,8 +75,9 @@ public class ComposedConversionHandler implements ConversionHandler {
       ReportConfiguration reportConfiguration,
       ReportCreationParameters parameters)
       throws IOException {
-    try (PipedInputStream pipedInputStream = new PipedInputStream();
-        PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
+    Pipe pipe = Pipe.open();
+    try (InputStream intermediateInputStream = Channels.newInputStream(pipe.source());
+        OutputStream intermediateOutputStream = Channels.newOutputStream(pipe.sink())) {
       // start async conversion of the first
       // handler's output with the second handler
       Future<Void> future =
@@ -86,7 +87,8 @@ public class ComposedConversionHandler implements ConversionHandler {
                     "Starting conversion from {} to {}",
                     secondHandler.getInputType(),
                     secondHandler.getOutputType());
-                secondHandler.convert(pipedInputStream, output, reportConfiguration, parameters);
+                secondHandler.convert(
+                    intermediateInputStream, output, reportConfiguration, parameters);
                 logger.debug(
                     "Finished conversion from {} to {}",
                     secondHandler.getInputType(),
@@ -98,7 +100,8 @@ public class ComposedConversionHandler implements ConversionHandler {
             "Starting conversion from {} to {}",
             firstHandler.getInputType(),
             firstHandler.getOutputType());
-        firstHandler.convert(input, pipedOutputStream, reportConfiguration, parameters);
+        firstHandler.convert(input, intermediateOutputStream, reportConfiguration, parameters);
+        intermediateOutputStream.flush();
         logger.debug(
             "Finished conversion from {} to {}",
             firstHandler.getInputType(),
