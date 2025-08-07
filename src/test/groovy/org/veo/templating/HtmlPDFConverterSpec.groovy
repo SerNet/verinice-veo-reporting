@@ -92,9 +92,22 @@ class HtmlPDFConverterSpec extends Specification {
         then:
         0 * out.write(_)
         thrown(IOException)
-        1 * is.readAllBytes()>> {
+        1 * is.read(*_)>> {
             throw new IOException("Closed")
         }
+    }
+
+    def "No output is created for an empty input stream"() {
+        given:
+
+        ReportConfiguration reportConfiguration = Mock()
+        InputStream is = Mock()
+        OutputStream out = Mock()
+        when:
+        converter.convert(is, out, reportConfiguration, new ReportCreationParameters(Locale.US, TimeZone.default))
+        then:
+        0 * out.write(_)
+        1 * is.read(*_) >> -1
     }
 
     PDDocument createDocument(String html, ReportConfiguration reportConfiguration) {

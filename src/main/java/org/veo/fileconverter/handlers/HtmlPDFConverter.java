@@ -17,6 +17,7 @@
  ******************************************************************************/
 package org.veo.fileconverter.handlers;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,43 +88,45 @@ public class HtmlPDFConverter implements ConversionHandler {
     // uncomment to set optional extensions
     // options.set(TocExtension.LIST_CLASS,
     // PdfConverterExtension.DEFAULT_TOC_LIST_CLASS);
+    try (BufferedInputStream bufferedInputStream = new BufferedInputStream(input)) {
+      bufferedInputStream.mark(1);
+      if (bufferedInputStream.read() == -1) {
+        logger.info("HTML input is empty, skipping PDF creation");
+        return;
+      }
+      bufferedInputStream.reset();
 
-    String html = new String(input.readAllBytes(), StandardCharsets.UTF_8);
+      // There are more options on the builder than shown below.
+      PdfRendererBuilder builder = new PdfRendererBuilder();
+      addFonts(builder);
+      DefaultObjectDrawerFactory factory = new DefaultObjectDrawerFactory();
+      factory.registerDrawer("jfreechart/pie", new JFreeChartPieDiagramObjectDrawer());
+      factory.registerDrawer("jfreechart/bar", new JFreeChartBarDiagramObjectDrawer());
+      factory.registerDrawer("jfreechart/veo-pie", new VeoJFreeChartPieDiagramObjectDrawer());
+      factory.registerDrawer(
+          "jfreechart/veo-spiderweb", new VeoJFreeChartSpiderWebDiagramObjectDrawer());
+      builder.useObjectDrawerFactory(factory);
+      org.jsoup.nodes.Document doc =
+          Jsoup.parse(bufferedInputStream, StandardCharsets.UTF_8.name(), "");
 
-    if (html.isEmpty()) {
-      logger.info("HTML input is empty, skipping PDF creation");
-      return;
-    }
-    // There are more options on the builder than shown below.
-    PdfRendererBuilder builder = new PdfRendererBuilder();
-
-    addFonts(builder);
-    DefaultObjectDrawerFactory factory = new DefaultObjectDrawerFactory();
-    factory.registerDrawer("jfreechart/pie", new JFreeChartPieDiagramObjectDrawer());
-    factory.registerDrawer("jfreechart/bar", new JFreeChartBarDiagramObjectDrawer());
-    factory.registerDrawer("jfreechart/veo-pie", new VeoJFreeChartPieDiagramObjectDrawer());
-    factory.registerDrawer(
-        "jfreechart/veo-spiderweb", new VeoJFreeChartSpiderWebDiagramObjectDrawer());
-    builder.useObjectDrawerFactory(factory);
-
-    org.jsoup.nodes.Document doc = Jsoup.parse(html);
-    doc.forEach(
-        el -> {
-          if (el.hasAttr(STYLE)) {
-            String style = el.attr(STYLE);
-            if (!style.isEmpty()) {
-              el.attr(STYLE, replaceSvgBackgrounds(style));
+      doc.forEach(
+          el -> {
+            if (el.hasAttr(STYLE)) {
+              String style = el.attr(STYLE);
+              if (!style.isEmpty()) {
+                el.attr(STYLE, replaceSvgBackgrounds(style));
+              }
             }
-          }
-        });
-    Document dom = new W3CDom().fromJsoup(doc);
+          });
+      Document dom = new W3CDom().fromJsoup(doc);
 
-    builder.withW3cDocument(dom, "");
-    builder.usePdfUaAccessibility(true);
-    builder.toStream(output);
-    try (PdfBoxRenderer renderer = builder.buildPdfRenderer()) {
-      renderer.layout();
-      renderer.createPDF();
+      builder.withW3cDocument(dom, "");
+      builder.usePdfUaAccessibility(true);
+      builder.toStream(output);
+      try (PdfBoxRenderer renderer = builder.buildPdfRenderer()) {
+        renderer.layout();
+        renderer.createPDF();
+      }
     }
   }
 
