@@ -109,9 +109,11 @@ public class HtmlPDFConverter implements ConversionHandler {
     org.jsoup.nodes.Document doc = Jsoup.parse(html);
     doc.forEach(
         el -> {
-          String style = el.attr(STYLE);
-          if (style != null && !style.isEmpty()) {
-            el.attr(STYLE, replaceSvgBackgrounds(style));
+          if (el.hasAttr(STYLE)) {
+            String style = el.attr(STYLE);
+            if (!style.isEmpty()) {
+              el.attr(STYLE, replaceSvgBackgrounds(style));
+            }
           }
         });
     Document dom = new W3CDom().fromJsoup(doc);
