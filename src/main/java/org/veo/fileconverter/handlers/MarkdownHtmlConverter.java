@@ -100,7 +100,7 @@ public class MarkdownHtmlConverter implements ConversionHandler {
       if (head.getElementsByTag("title").first() == null) {
         head.appendElement("title").text(reportConfiguration.getName().get(locale.getLanguage()));
       }
-      writer.write(doc.toString());
+      doc.html(writer);
     }
   }
 }
