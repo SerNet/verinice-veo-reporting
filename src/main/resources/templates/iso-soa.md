@@ -151,9 +151,9 @@ domain/>
 <th>${bundle.reason}</th>
 </tr>
 </thead>
-<@section "A-5 Organisatorische Maßnahmen" officialCIs?filter(ci->ci.control.abbreviation?starts_with('A-5')) />
-<@section "A-6 Personenbezogene Maßnahmen" officialCIs?filter(ci->ci.control.abbreviation?starts_with('A-6')) />
-<@section "A-7 Physische Maßnahmen" officialCIs?filter(ci->ci.control.abbreviation?starts_with('A-7')) />
-<@section "A-8 Technologische Maßnahmen" officialCIs?filter(ci->ci.control.abbreviation?starts_with('A-8')) />
-<@section "Benutzerdefinierte Maßnahmen" customCIs  />
+<@section bundle.a5_controls officialCIs?filter(ci->ci.control.abbreviation?starts_with('A-5')) />
+<@section bundle.a6_controls officialCIs?filter(ci->ci.control.abbreviation?starts_with('A-6')) />
+<@section bundle.a7_controls officialCIs?filter(ci->ci.control.abbreviation?starts_with('A-7')) />
+<@section bundle.a8_controls officialCIs?filter(ci->ci.control.abbreviation?starts_with('A-8')) />
+<@section bundle.custom_controls customCIs  />
 </table>
