@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.helger.commons.collection.impl.ICommonsOrderedSet;
+import com.helger.collection.commons.ICommonsOrderedSet;
 import com.helger.font.api.FontResourceManager;
 import com.helger.font.api.IFontResource;
 import com.openhtmltopdf.extend.FSObjectDrawer;
