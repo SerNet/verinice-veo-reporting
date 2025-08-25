@@ -202,9 +202,9 @@ ${value}
 
 <@heading title(moduleControlImplementation.control) nestingLevel+1 />
 
-<@def bundle.description moduleControlImplementation.description true/>
+<@def bundle.description moduleControlImplementation.description/>
 
-<@def bundle.responsible, (moduleControlImplementation.responsible.name)!, true/>
+<@def bundle.responsible, (moduleControlImplementation.responsible.name)!/>
 
 <#assign moduleRequirementImplementations = 
   sortCIs(
@@ -236,6 +236,13 @@ ${value}
 
 <@def bundle.responsible, (ri.responsible.name)!, true/>
 
+<#if ri.control.control_cost_personFix?has_content
+   || ri.control.control_cost_personVariable?has_content
+   || ri.control.control_cost_personVariable?has_content
+   || ri.control.control_cost_personPeriod?has_content
+   || ri.control.control_cost_materialFix?has_content
+   || ri.control.control_cost_materialVariable?has_content
+   || ri.control.control_cost_materialPeriod?has_content>
 
 <table class="table border-bottom budget">
 <caption>Budget</caption>
@@ -265,6 +272,7 @@ ${value}
 </tbody>
 </table>
 
+</#if>
 </div>
 </#list>
 
