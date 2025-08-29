@@ -197,12 +197,10 @@ ${value}
 
 <#if moduleControlImplementations?has_content>
 
-<@heading bundle.control_CTL_Module_plural nestingLevel+1 />
-
 <#list moduleControlImplementations as moduleControlImplementation>
 <div class="nobreak">
 
-<@heading title(moduleControlImplementation.control) nestingLevel+2 />
+<@heading title(moduleControlImplementation.control) nestingLevel+1 />
 
 <@def bundle.description moduleControlImplementation.description true/>
 
@@ -219,13 +217,11 @@ ${value}
   
 </div>
 
-<@heading "Bestehende Defizite der Baustein-Anforderungen" nestingLevel+3 />
-
 <#list moduleRequirementImplementations?filter(it->it.status == 'UNKNOWN' || it.status == 'NO' || it.status == 'PARTIAL') as ri>
 
 <div class="nobreak" style="border-left: 1mm solid ${riStatusColors[ri.status].color}; padding-left: 0.6cm;">
 
-<@heading controlTitle(ri.control) nestingLevel+4 />
+<@heading controlTitle(ri.control) nestingLevel+2 />
 <#if (ri.control.control_bpInformation_protectionApproach!"")=='control_bpInformation_protectionApproach_base'>
 {.missingimplementation}
 </#if>
