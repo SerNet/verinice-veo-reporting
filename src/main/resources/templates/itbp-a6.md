@@ -228,13 +228,24 @@ ${value}
 
 <#-- <@def bundle.description ri.control.description true/> -->
 
-<@def bundle.implementation_status bundle[ri.status] true />
+<table class="fullwidth">
+    <thead>
+        <tr>
+            <th>${bundle.implementation_status}</th>
+            <th>${bundle.responsible}</th>
+            <th>${bundle.implementationUntil}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>${bundle[ri.status]}</td>
+            <td>${(ri.responsible.name)!}</td>
+            <td>${(ri.implementationUntil?date.iso)!}</td>
+        </tr>
+    </tbody>
+</table>
 
-<@def bundle.implementationStatement ri.implementationStatement true/>
-
-<@def bundle.implementationUntil, (ri.implementationUntil?date.iso)!, true/>
-
-<@def bundle.responsible, (ri.responsible.name)!, true/>
+<@def bundle.implementationStatement ri.implementationStatement/>
 
 <#if ri.control.control_cost_personFix?has_content
    || ri.control.control_cost_personVariable?has_content
