@@ -37,6 +37,8 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 
 import com.helger.font.api.FontResourceManager;
 import com.openhtmltopdf.slf4j.Slf4jLogger;
@@ -130,5 +132,12 @@ public class VeoReportingApplication {
       logger.info("Not using proxy");
     }
     return factory;
+  }
+
+  @Bean
+  public AuthenticationManager noopAuthenticationManager() {
+    return authentication -> {
+      throw new AuthenticationServiceException("Authentication is disabled");
+    };
   }
 }
