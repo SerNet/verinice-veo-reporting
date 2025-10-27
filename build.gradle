@@ -115,6 +115,7 @@ jib {
         environment = ['JDK_JAVA_OPTIONS':'-Djdk.serialFilter=maxbytes=0']
         user = 'nonroot'
         ports = ['8080']
+        mainClass = 'org.veo.reporting.VeoReportingApplication'
     }
 }
 
