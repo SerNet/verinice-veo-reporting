@@ -48,6 +48,12 @@
       "matchPackageNames": [
         "/^com.vladsch.flexmark:/"
       ]
+    },
+    {
+      "matchPackageNames": [
+        "eclipse-temurin"
+      ],
+      "allowedVersions": "25-jdk"
     }
   ]
 }

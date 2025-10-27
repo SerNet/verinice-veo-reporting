@@ -17,7 +17,7 @@ repositories {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 
@@ -96,7 +96,7 @@ bootRun {
 
 jib {
     from {
-        image = 'gcr.io/distroless/java21-debian12:nonroot'
+        image = 'gcr.io/distroless/java25-debian13:nonroot'
     }
     container {
         labels = project.provider {
