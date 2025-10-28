@@ -17,18 +17,18 @@
  ******************************************************************************/
 package org.veo.reporting
 
-import com.fasterxml.jackson.databind.ObjectMapper
-
 import spock.lang.Specification
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.databind.json.JsonMapper
 
 class ReportConfigurationSpec extends Specification {
 
-    def objectMapper = new ObjectMapper()
+    def jsonMapper = JsonMapper.builder().disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES).build()
 
     def "#f can be read as a ReportConfiguration"() {
 
         when:
-        def reportConfiguration = objectMapper.readValue(f, ReportConfiguration)
+        def reportConfiguration = jsonMapper.readValue(f, ReportConfiguration)
         then:
         reportConfiguration != null
         where:
@@ -38,7 +38,7 @@ class ReportConfigurationSpec extends Specification {
     def "read ReportConfiguration from processing-activities.json"() {
 
         when:
-        def reportConfiguration = objectMapper.readValue(new File('src/main/resources/reports/processing-activities.json'), ReportConfiguration)
+        def reportConfiguration = jsonMapper.readValue(new File('src/main/resources/reports/processing-activities.json'), ReportConfiguration)
         then:
         with(reportConfiguration) {
             name.de == 'Verzeichnis der Verarbeitungstätigkeiten'

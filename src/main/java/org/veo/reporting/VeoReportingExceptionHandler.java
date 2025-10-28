@@ -30,10 +30,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.veo.reporting.exception.DataFetchingException;
 import org.veo.reporting.exception.InvalidReportParametersException;
+
+import tools.jackson.core.JacksonException;
 
 @ControllerAdvice
 public class VeoReportingExceptionHandler {
@@ -60,7 +60,7 @@ public class VeoReportingExceptionHandler {
   protected ResponseEntity<String> handle(HttpMessageNotReadableException exception) {
     logger.error("Error reading HTTP message", exception);
     Throwable cause = exception.getCause();
-    if (cause instanceof JsonProcessingException jpe) {
+    if (cause instanceof JacksonException jpe) {
       return handle(jpe.getOriginalMessage(), HttpStatus.BAD_REQUEST);
     }
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

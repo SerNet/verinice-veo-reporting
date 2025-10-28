@@ -38,14 +38,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.task.AsyncTaskExecutor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.veo.fileconverter.FileConverter;
 import org.veo.reporting.exception.VeoReportingException;
 import org.veo.templating.TemplateEvaluator;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import freemarker.template.TemplateException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 public final class ReportEngineImpl implements ReportEngine {
 
@@ -53,7 +53,8 @@ public final class ReportEngineImpl implements ReportEngine {
 
   private final TemplateEvaluator templateEvaluator;
   private final FileConverter converter;
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  private final JsonMapper jsonMapper =
+      JsonMapper.builder().disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES).build();
   private final ResourcePatternResolver resourcePatternResolver;
   private final AsyncTaskExecutor asyncTaskExecutor;
 
@@ -85,7 +86,7 @@ public final class ReportEngineImpl implements ReportEngine {
                     resource -> {
                       try (var is = resource.getInputStream()) {
                         ReportConfiguration reportConfiguration =
-                            objectMapper.readValue(is, ReportConfiguration.class);
+                            jsonMapper.readValue(is, ReportConfiguration.class);
                         logger.info(
                             "Read report {} from {}", reportConfiguration.getName(), resource);
                         return reportConfiguration;
@@ -192,7 +193,7 @@ public final class ReportEngineImpl implements ReportEngine {
       return Optional.empty();
     }
     try (InputStream is = resource.getInputStream()) {
-      var config = objectMapper.readValue(is, ReportConfiguration.class);
+      var config = jsonMapper.readValue(is, ReportConfiguration.class);
       return Optional.of(config);
     } catch (IOException e) {
       throw new VeoReportingException("Error loading report configuration", e);

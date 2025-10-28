@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '3.5.8'
+    id 'org.springframework.boot' version '4.0.0'
     id 'groovy'
     id 'jacoco'
     id "com.github.spotbugs" version '6.4.6'
@@ -27,7 +27,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    implementation 'com.fasterxml.jackson.module:jackson-module-blackbird'
+    implementation 'tools.jackson.module:jackson-module-blackbird'
     implementation 'jakarta.validation:jakarta.validation-api'
     implementation 'org.freemarker:freemarker:2.3.34'
     implementation 'com.vladsch.flexmark:flexmark:0.64.8'
@@ -57,11 +57,6 @@ dependencies {
     runtimeOnly 'com.helger.font:ph-fonts-open-sans:6.1.0'
     runtimeOnly 'ch.qos.logback.contrib:logback-json-classic:0.1.5'
     runtimeOnly 'ch.qos.logback.contrib:logback-jackson:0.1.5'
-}
-
-// https://docs.spring.io/spring-framework/reference/core/spring-jcl.html#page-title
-configurations.implementation {
-    exclude group: 'commons-logging'
 }
 
 spotbugs.excludeFilter = rootProject.file('config/spotbugs-exclude.xml')
@@ -126,10 +121,12 @@ jib {
 testing {
     suites {
         test{
-            useSpock('2.3-groovy-4.0')
+            useSpock('2.4-M7-groovy-5.0')
             dependencies {
-                implementation 'org.spockframework:spock-spring:2.3-groovy-4.0'
-                implementation 'org.springframework.boot:spring-boot-starter-test'
+                implementation 'org.spockframework:spock-spring:2.4-M7-groovy-5.0'
+                implementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+                runtimeOnly 'org.springframework.boot:spring-boot-starter-security-test'
+                runtimeOnly 'org.springframework.boot:spring-boot-starter-validation-test'
                 implementation 'org.apache.groovy:groovy-json'
                 implementation 'org.apache.groovy:groovy-xml'
             }

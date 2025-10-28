@@ -40,9 +40,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import freemarker.template.TemplateException;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Runs a demo and a template editing environment that can be used to develop new reports. This is
@@ -72,7 +71,7 @@ public class Demo {
     entriesForLanguage.put(Locale.GERMANY, veoClient.fetchTranslations(Locale.GERMANY, authHeader));
     entriesForLanguage.put(Locale.US, veoClient.fetchTranslations(Locale.US, authHeader));
 
-    var objectMapper = new ObjectMapper();
+    var objectMapper = new JsonMapper();
     var writer = objectMapper.writerWithDefaultPrettyPrinter();
 
     var dpiaId = ctx.getEnvironment().getProperty("veo.demodpiaid");
