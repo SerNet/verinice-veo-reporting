@@ -67,17 +67,7 @@ public class CreateReport {
     this.timeZone = timeZone;
   }
 
-  public static class TargetSpecification {
-
-    public TargetSpecification(EntityType entityType, String id) {
-      this.type = entityType;
-      this.id = id;
-    }
-
-    @NotNull(message = "Entity type not specified.")
-    public final EntityType type;
-
-    @NotNull(message = "ID not specified.")
-    public final String id;
-  }
+  public record TargetSpecification(
+      @NotNull(message = "Entity type not specified.") EntityType type,
+      @NotNull(message = "ID not specified.") String id) {}
 }

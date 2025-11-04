@@ -152,9 +152,9 @@ public class ReportController {
     TargetSpecification target = createReport.getTargets().get(0);
     Set<TypeSpecification> supportedTargetTypes = configuration.get().getTargetTypes();
     if (supportedTargetTypes.stream()
-        .noneMatch(typeSpecification -> typeSpecification.getModelType() == target.type)) {
+        .noneMatch(typeSpecification -> typeSpecification.getModelType() == target.type())) {
       throw new InvalidReportParametersException(
-          "Target type " + target.type + " not supported by report " + id);
+          "Target type " + target.type() + " not supported by report " + id);
     }
     ReportCreationParameters parameters =
         new ReportCreationParameters(
@@ -225,7 +225,7 @@ public class ReportController {
         url,
         placeholderName -> {
           if (TARGET_ID.equals(placeholderName)) {
-            return target.id;
+            return target.id();
           } else {
             throw new IllegalArgumentException(
                 "Unsupported placeholder \"%s\" in url for %s (%s)"
