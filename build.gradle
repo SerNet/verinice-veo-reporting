@@ -64,7 +64,7 @@ configurations.implementation {
     exclude group: 'commons-logging'
 }
 
-spotbugs.excludeFilter = rootProject.file('misc/spotbugs/exclude.xml')
+spotbugs.excludeFilter = rootProject.file('config/spotbugs-exclude.xml')
 spotbugsTest.enabled = false
 // write human readable report on normal builds
 spotbugsMain.reports {
