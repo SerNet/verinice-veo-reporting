@@ -1,7 +1,8 @@
 <FindBugsFilter>
-    <!-- CT_CONSTRUCTOR_THROW is supposed to prevent finalizer attacks, but we decided that this threat is negligible in veo-reporting,
-        and we'd rather have strict constructors for better data integrity. -->
-    <Match>
-        <Bug pattern="CT_CONSTRUCTOR_THROW" />
-    </Match>
+	<!-- CT_CONSTRUCTOR_THROW is supposed to prevent finalizer attacks, but 
+		we decided that this threat is negligible in veo-reporting, and we'd rather 
+		have strict constructors for better data integrity. -->
+	<Match>
+		<Bug pattern="CT_CONSTRUCTOR_THROW" />
+	</Match>
 </FindBugsFilter>

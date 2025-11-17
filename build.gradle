@@ -184,6 +184,11 @@ spotless {
                 .indentWithSpaces(2)
         endWithNewline()
     }
+    format 'xml', {
+        target 'config/**/*.xml'
+        eclipseWtp('xml')
+    }
+
     yaml {
         target '.gitlab-ci.yml'
         trimTrailingWhitespace()
