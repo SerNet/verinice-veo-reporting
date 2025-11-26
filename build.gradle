@@ -2,7 +2,7 @@ plugins {
     id 'org.springframework.boot' version '3.5.8'
     id 'groovy'
     id 'jacoco'
-    id "com.github.spotbugs" version '6.4.5'
+    id "com.github.spotbugs" version '6.4.6'
     id "com.gorylenko.gradle-git-properties" version "2.5.4"
     id 'pmd'
     id "com.diffplug.spotless" version "8.1.0"
