@@ -51,6 +51,7 @@ import org.veo.templating.TemplateEvaluatorImpl;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
+import tools.jackson.databind.json.JsonMapper;
 
 @SpringBootApplication
 @Import(ReportingSecurityConfig.class)
@@ -108,10 +109,11 @@ public class VeoReportingApplication {
       TemplateEvaluator templateEvaluator,
       FileConverter fileConverter,
       ResourcePatternResolver resourcePatternResolver,
-      AsyncTaskExecutor asyncTaskExecutor)
+      AsyncTaskExecutor asyncTaskExecutor,
+      JsonMapper jsonMapper)
       throws IOException {
     return new ReportEngineImpl(
-        templateEvaluator, fileConverter, resourcePatternResolver, asyncTaskExecutor);
+        templateEvaluator, fileConverter, resourcePatternResolver, asyncTaskExecutor, jsonMapper);
   }
 
   @Bean

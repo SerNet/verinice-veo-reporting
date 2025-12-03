@@ -44,7 +44,6 @@ import org.veo.templating.TemplateEvaluator;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import freemarker.template.TemplateException;
-import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.json.JsonMapper;
 
 public final class ReportEngineImpl implements ReportEngine {
@@ -53,8 +52,7 @@ public final class ReportEngineImpl implements ReportEngine {
 
   private final TemplateEvaluator templateEvaluator;
   private final FileConverter converter;
-  private final JsonMapper jsonMapper =
-      JsonMapper.builder().disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES).build();
+  private final JsonMapper jsonMapper;
   private final ResourcePatternResolver resourcePatternResolver;
   private final AsyncTaskExecutor asyncTaskExecutor;
 
@@ -64,12 +62,14 @@ public final class ReportEngineImpl implements ReportEngine {
       TemplateEvaluator templateEvaluator,
       FileConverter converter,
       ResourcePatternResolver resourcePatternResolver,
-      AsyncTaskExecutor asyncTaskExecutor)
+      AsyncTaskExecutor asyncTaskExecutor,
+      JsonMapper jsonMapper)
       throws IOException {
     this.templateEvaluator = templateEvaluator;
     this.converter = converter;
     this.resourcePatternResolver = resourcePatternResolver;
     this.asyncTaskExecutor = asyncTaskExecutor;
+    this.jsonMapper = jsonMapper;
 
     Resource[] resources = resourcePatternResolver.getResources("classpath*:/reports/*.json");
     reports =

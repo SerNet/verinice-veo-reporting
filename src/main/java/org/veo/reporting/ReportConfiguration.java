@@ -24,6 +24,8 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 
 /**
  * The specification of a single report. This is used to define the basic properties such as name
@@ -41,7 +43,8 @@ public class ReportConfiguration {
       @JsonProperty(value = "templateFile", required = true) String templateFile,
       @JsonProperty(value = "templateType", required = true) String templateType,
       @JsonProperty(value = "outputTypes", required = true) List<String> outputTypes,
-      @JsonProperty(value = "multipleTargetsSupported", defaultValue = "false")
+      @JsonSetter(nulls = Nulls.AS_EMPTY)
+          @JsonProperty(value = "multipleTargetsSupported", defaultValue = "false")
           boolean multipleTargetsSupported,
       @JsonProperty(value = "targetTypes", required = true) Set<TypeSpecification> targetTypes,
       @JsonProperty(value = "data", required = true) Map<String, String> data) {
