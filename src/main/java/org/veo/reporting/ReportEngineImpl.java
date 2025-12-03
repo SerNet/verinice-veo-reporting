@@ -19,7 +19,6 @@ package org.veo.reporting;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -52,8 +51,6 @@ public final class ReportEngineImpl implements ReportEngine {
 
   private final TemplateEvaluator templateEvaluator;
   private final FileConverter converter;
-  private final JsonMapper jsonMapper;
-  private final ResourcePatternResolver resourcePatternResolver;
   private final AsyncTaskExecutor asyncTaskExecutor;
 
   private final Map<String, ReportConfiguration> reports;
@@ -67,9 +64,7 @@ public final class ReportEngineImpl implements ReportEngine {
       throws IOException {
     this.templateEvaluator = templateEvaluator;
     this.converter = converter;
-    this.resourcePatternResolver = resourcePatternResolver;
     this.asyncTaskExecutor = asyncTaskExecutor;
-    this.jsonMapper = jsonMapper;
 
     Resource[] resources = resourcePatternResolver.getResources("classpath*:/reports/*.json");
     reports =
@@ -188,15 +183,6 @@ public final class ReportEngineImpl implements ReportEngine {
 
   @Override
   public Optional<ReportConfiguration> getReport(String id) {
-    var resource = resourcePatternResolver.getResource("classpath:/reports/" + id + ".json");
-    if (!resource.exists()) {
-      return Optional.empty();
-    }
-    try (InputStream is = resource.getInputStream()) {
-      var config = jsonMapper.readValue(is, ReportConfiguration.class);
-      return Optional.of(config);
-    } catch (IOException e) {
-      throw new VeoReportingException("Error loading report configuration", e);
-    }
+    return Optional.ofNullable(reports.get(id));
   }
 }
