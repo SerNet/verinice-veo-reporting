@@ -150,12 +150,23 @@ domain/>
 
 </div>
 
+<#assign complianceControlSubTypes = domain.controlImplementationConfiguration.complianceControlSubTypes>
+<#function filterComplianceCIs cis>
+  <#local result = [] />
+    <#list cis as ci>
+      <#local subType = ci.control.domains[domain.id].subType />
+      <#if complianceControlSubTypes?seq_contains(subType)>
+        <#local result = result + [ci] />
+      </#if>
+    </#list>
+  <#return result/>
+</#function>
+
 # ${bundle.used_modules} {#used_modules}
-<#assign complianceControlSubType = domain.controlImplementationConfiguration.complianceControlSubType>
-<#assign relevantControlImplementations = scope.controlImplementations?filter(it->it.control.hasSubType(complianceControlSubType))>
+<#assign relevantControlImplementations = filterComplianceCIs(scope.controlImplementations)>
 <#list elementSubTypeGroups as group>
   <#list group.elements as item>
-    <#list item.controlImplementations?filter(it->it.control.hasSubType(complianceControlSubType)) as ci>
+    <#list filterComplianceCIs(item.controlImplementations) as ci>
       <#assign relevantControlImplementations = relevantControlImplementations + [ci]>
     </#list>
   </#list>
@@ -321,7 +332,7 @@ domain/>
 
 <#macro moduleview targetObject>
 
-<#assign moduleControlImplementations = sortCIs(targetObject.controlImplementations?filter(it->it.control.hasSubType(complianceControlSubType)))>
+<#assign moduleControlImplementations = sortCIs(filterComplianceCIs(targetObject.controlImplementations))>
 
 <#if moduleControlImplementations?has_content>
 
