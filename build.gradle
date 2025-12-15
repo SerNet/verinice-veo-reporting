@@ -6,7 +6,7 @@ plugins {
     id "com.gorylenko.gradle-git-properties" version "2.5.4"
     id 'pmd'
     id "com.diffplug.spotless" version "8.1.0"
-    id 'com.google.cloud.tools.jib' version '3.5.1'
+    id 'com.google.cloud.tools.jib' version '3.5.2'
 }
 
 version = '0.62.0-SNAPSHOT'
