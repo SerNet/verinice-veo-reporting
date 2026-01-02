@@ -47,7 +47,7 @@ dependencies {
         exclude group: "xml-apis", module: "xml-apis"
     }
     implementation 'org.jfree:jfreechart:1.5.6'
-    implementation 'org.jsoup:jsoup:1.21.2'
+    implementation 'org.jsoup:jsoup:1.22.1'
     implementation 'com.helger.font:ph-fonts-api:6.1.0'
 
     compileOnly 'com.github.spotbugs:spotbugs-annotations:4.9.8'

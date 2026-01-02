@@ -82,10 +82,7 @@ public class MarkdownHtmlConverter implements ConversionHandler {
           .add(Tag.valueOf("bookmark").set(Tag.SelfClose).set(Tag.Block))
           .add(Tag.valueOf("bookmarks").set(Tag.Block))
           .add(Tag.valueOf("data").set(Tag.SelfClose).set(Tag.Block))
-          .add(Tag.valueOf("object").set(Tag.Block))
-          // treat and format br as inline element
-          .get("br", Parser.NamespaceHtml)
-          .clear(Tag.Block);
+          .add(Tag.valueOf("object").set(Tag.Block));
       Document doc = Jsoup.parse(md, parser);
       Element html = doc.getElementsByTag("html").first();
       Locale locale = parameters.getLocale();

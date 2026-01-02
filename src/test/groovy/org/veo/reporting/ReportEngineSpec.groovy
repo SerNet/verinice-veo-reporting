@@ -205,7 +205,7 @@ Cheers'''
         text.contains(output)
         where:
         input                                | output
-        'Hello\nWorld'                       | 'Hello\nWorld'
+        'Hello\nWorld'                       | 'Hello \nWorld'
         'foo*bar*'                           | 'foo*bar*'
         '![img](file:///localPath/test.pdf)' | '![img](file:///localPath/test.pdf)'
     }
@@ -217,7 +217,7 @@ Cheers'''
         text.contains(output)
         where:
         input                                | output
-        'Hello\nWorld'                       | '<p>Hello<br> World</p>'
+        'Hello\nWorld'                       | '<p>Hello\n   <br>\n   World</p>'
         'foo*bar*'                           | '<p>foo*bar*</p>'
         '![img](file:///localPath/test.pdf)' | '<p>![img](file:///localPath/test.pdf)</p>'
     }
