@@ -31,6 +31,7 @@ public class MapResourceBundle extends ResourceBundle {
   private final Map<String, Object> map;
 
   public MapResourceBundle(Map<String, Object> map) {
+    super();
     this.map = new HashMap<>(map);
   }
 

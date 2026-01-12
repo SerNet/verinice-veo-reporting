@@ -35,6 +35,24 @@ import com.fasterxml.jackson.annotation.Nulls;
  */
 public class ReportConfiguration {
 
+  private final Map<String, String> name;
+
+  private final String domainName;
+
+  private Map<String, String> description;
+
+  private final String templateFile;
+
+  private final String templateType;
+
+  private final List<String> outputTypes;
+
+  private final boolean multipleTargetsSupported;
+
+  private final Set<TypeSpecification> targetTypes;
+
+  private final Map<String, String> data;
+
   @JsonCreator
   public ReportConfiguration(
       @JsonProperty(value = "name", required = true) Map<String, String> name,
@@ -58,24 +76,6 @@ public class ReportConfiguration {
     this.targetTypes = Set.copyOf(targetTypes);
     this.data = Map.copyOf(data);
   }
-
-  private final Map<String, String> name;
-
-  private final String domainName;
-
-  private Map<String, String> description;
-
-  private final String templateFile;
-
-  private final String templateType;
-
-  private final List<String> outputTypes;
-
-  private final boolean multipleTargetsSupported;
-
-  private final Set<TypeSpecification> targetTypes;
-
-  private final Map<String, String> data;
 
   public Map<String, String> getName() {
     return name;

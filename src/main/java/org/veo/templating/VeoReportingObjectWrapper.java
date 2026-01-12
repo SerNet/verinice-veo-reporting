@@ -38,7 +38,7 @@ import freemarker.template.Version;
 
 public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
 
-  private static final Logger logger = LoggerFactory.getLogger(VeoReportingObjectWrapper.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(VeoReportingObjectWrapper.class);
 
   private final Map<String, Object> entitiesByUri;
 
@@ -93,7 +93,7 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
 
   private Object resolve(String uri) throws TemplateModelException {
     Objects.requireNonNull(uri);
-    logger.debug("resolve uri {}", uri);
+    LOGGER.debug("resolve uri {}", uri);
     Object entity = entitiesByUri.get(uri);
     if (entity == null) {
       throw new TemplateModelException("Failed to resolve entity with targetUri " + uri);

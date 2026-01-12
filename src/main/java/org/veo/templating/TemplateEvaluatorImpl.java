@@ -54,7 +54,7 @@ import freemarker.template.TemplateModelException;
 
 public class TemplateEvaluatorImpl implements TemplateEvaluator {
 
-  private static final Logger logger = LoggerFactory.getLogger(TemplateEvaluatorImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(TemplateEvaluatorImpl.class);
 
   private final Configuration cfg;
 
@@ -69,7 +69,7 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
     cfg.setWrapUncheckedExceptions(true);
     cfg.setFallbackOnNullLoopVariable(false);
     if (!useCache) {
-      logger.info("Caching disabled");
+      LOGGER.info("Caching disabled");
       cfg.setCacheStorage(NullCacheStorage.INSTANCE);
     }
     cfg.setSharedVariable("colorContrast", ColorContrast.INSTANCE);
@@ -95,13 +95,13 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
   public void executeTemplate(
       String templateName, Map data, OutputStream out, ReportCreationParameters parameters)
       throws TemplateException, IOException {
-    logger.info("Evaluating template {}", templateName);
+    LOGGER.info("Evaluating template {}", templateName);
     Template template = cfg.getTemplate(templateName);
 
     try (Writer writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
 
       Map<String, Object> entitiesByUri = new HashMap<>();
-      logger.info("Building entity lookup map");
+      LOGGER.info("Building entity lookup map");
       addRecursively(entitiesByUri, data);
 
       VeoReportingObjectWrapper objectWrapper =
@@ -112,24 +112,24 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
       Environment env = template.createProcessingEnvironment(data, writer, objectWrapper);
       env.setLocale(parameters.getLocale());
       env.setTimeZone(parameters.getTimeZone());
-      logger.info("Processing template");
+      LOGGER.info("Processing template");
       env.process();
-      logger.info("Template processed");
+      LOGGER.info("Template processed");
     }
   }
 
   private void addRecursively(Map<String, Object> entitiesByUri, Object data)
       throws TemplateModelException {
-    logger.debug("adding entities from {}", data);
+    LOGGER.debug("adding entities from {}", data);
     if (data instanceof Map) {
       Map<?, ?> map = (Map<?, ?>) data;
       String selfUri = (String) map.get("_self");
       if (selfUri != null) {
-        logger.debug("adding {}: {}", selfUri, map);
+        LOGGER.debug("adding {}: {}", selfUri, map);
         entitiesByUri.put(selfUri, map);
       } else {
         for (Entry<?, ?> e : map.entrySet()) {
-          logger.debug("Found key {}", e.getKey());
+          LOGGER.debug("Found key {}", e.getKey());
           addRecursively(entitiesByUri, e.getValue());
         }
       }
@@ -137,7 +137,7 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
     } else if (data instanceof Collection) {
       Collection<?> list = (Collection<?>) data;
       for (Object object : list) {
-        logger.debug(" found item: {}", object);
+        LOGGER.debug(" found item: {}", object);
         addRecursively(entitiesByUri, object);
       }
     }

@@ -59,7 +59,7 @@ import tools.jackson.databind.json.JsonMapper;
 @Import(ReportingSecurityConfig.class)
 public class VeoReportingApplication {
 
-  private static final Logger logger = LoggerFactory.getLogger(VeoReportingApplication.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(VeoReportingApplication.class);
 
   public static void main(String[] args) throws IOException {
     System.setProperty("java.util.PropertyResourceBundle.encoding", StandardCharsets.UTF_8.name());
@@ -89,7 +89,7 @@ public class VeoReportingApplication {
   public TemplateEvaluator createTemplateEvaluator(
       TemplateLoader templateLoader,
       @Value("${veo.reporting.use_template_cache:true}") boolean useCache) {
-    logger.info("Using template loader {}", templateLoader);
+    LOGGER.info("Using template loader {}", templateLoader);
     return new TemplateEvaluatorImpl(templateLoader, useCache);
   }
 
@@ -126,10 +126,10 @@ public class VeoReportingApplication {
     if (proxyHost != null && !proxyHost.isEmpty()) {
       var proxy =
           new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(proxyHost, proxyPort));
-      logger.info("Using proxy {}", proxy);
+      LOGGER.info("Using proxy {}", proxy);
       factory.setProxy(proxy);
     } else {
-      logger.info("Not using proxy");
+      LOGGER.info("Not using proxy");
     }
     return factory;
   }

@@ -23,8 +23,16 @@
 		</properties>
 	</rule>
 
-	<!-- <rule ref="category/java/codestyle.xml"> -->
-	<!-- </rule> -->
+	<rule ref="category/java/codestyle.xml">
+		<exclude name="MethodArgumentCouldBeFinal" />
+		<exclude name="LongVariable" />
+		<exclude name="ShortVariable" />
+		<exclude name="LocalVariableCouldBeFinal" />
+		<exclude name="OnlyOneReturn" />
+		<exclude name="UseExplicitTypes" />
+		<exclude name="AtLeastOneConstructor" />
+		<exclude name="CommentDefaultAccessModifier" />
+	</rule>
 
 	<!-- <rule ref="category/java/design.xml"> -->
 	<!-- </rule> -->

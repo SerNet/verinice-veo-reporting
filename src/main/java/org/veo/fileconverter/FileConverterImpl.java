@@ -35,7 +35,7 @@ import org.veo.reporting.exception.VeoReportingException;
 
 public class FileConverterImpl implements FileConverter {
 
-  private static final Logger logger = LoggerFactory.getLogger(FileConverterImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(FileConverterImpl.class);
   private final Map<String, Map<String, ConversionHandler>> handlerRegistry =
       new ConcurrentHashMap<>();
   private final AsyncTaskExecutor asyncTaskExecutor;
@@ -76,7 +76,7 @@ public class FileConverterImpl implements FileConverter {
     if (inputType.equals(outputType)) {
       input.transferTo(output);
     } else {
-      logger.info("Converting from {} to {}", inputType, outputType);
+      LOGGER.info("Converting from {} to {}", inputType, outputType);
       ConversionHandler converter = getHandler(inputType, outputType);
       if (converter == null) {
         throw new IllegalArgumentException("Cannot convert " + inputType + " to " + outputType);

@@ -68,10 +68,10 @@ public class ColorContrast implements TemplateMethodModelEx {
   }
 
   private static double getRelativeLuminance(Color color) {
-    double[] c = new double[] {color.getRed(), color.getGreen(), color.getBlue()};
+    double[] c = {color.getRed(), color.getGreen(), color.getBlue()};
     for (int i = 0; i <= 2; i++) {
       double col = c[i] / 255d;
-      if (col <= 0.03928) {
+      if (col <= 0.039_28) {
         col = col / 12.92;
       } else {
         col = Math.pow((col + 0.055) / 1.055, 2.4);

@@ -34,7 +34,7 @@ public abstract class VeoTemplateMethod implements TemplateMethodModelEx {
   private final Map<?, ?> m;
   private final VeoReportingObjectWrapper ow;
 
-  protected static final Logger logger = LoggerFactory.getLogger(VeoTemplateMethod.class);
+  protected static final Logger LOGGER = LoggerFactory.getLogger(VeoTemplateMethod.class);
 
   protected VeoTemplateMethod(Map<?, ?> m, VeoReportingObjectWrapper ow) {
     this.m = m;
@@ -51,7 +51,7 @@ public abstract class VeoTemplateMethod implements TemplateMethodModelEx {
 
   @Override
   public final Object exec(List arguments) throws TemplateModelException {
-    logger.debug("execute {} with arguments {}", getClass().getName(), arguments);
+    LOGGER.debug("execute {} with arguments {}", getClass().getName(), arguments);
     return ow.wrap(doExec(arguments));
   }
 

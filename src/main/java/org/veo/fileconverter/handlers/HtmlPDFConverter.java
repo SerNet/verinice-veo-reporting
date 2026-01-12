@@ -62,7 +62,7 @@ public class HtmlPDFConverter implements ConversionHandler {
 
   private static final String STYLE = "style";
 
-  private static final Logger logger = LoggerFactory.getLogger(HtmlPDFConverter.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(HtmlPDFConverter.class);
 
   private static final Pattern SVG_BASE_64 =
       Pattern.compile("url\\('data:image/svg\\+xml;base64,(.+)'\\)");
@@ -91,7 +91,7 @@ public class HtmlPDFConverter implements ConversionHandler {
     try (BufferedInputStream bufferedInputStream = new BufferedInputStream(input)) {
       bufferedInputStream.mark(1);
       if (bufferedInputStream.read() == -1) {
-        logger.info("HTML input is empty, skipping PDF creation");
+        LOGGER.info("HTML input is empty, skipping PDF creation");
         return;
       }
       bufferedInputStream.reset();

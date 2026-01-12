@@ -29,17 +29,17 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class TypeSpecification {
 
+  private final EntityType modelType;
+
+  private final Set<String> subTypes;
+
   @JsonCreator
   public TypeSpecification(
       @JsonProperty(value = "modelType", required = true) EntityType modelType,
-      @JsonProperty(value = "subTypes", required = false) Set<String> subTypes) {
+      @JsonProperty("subTypes") Set<String> subTypes) {
     this.modelType = modelType;
     this.subTypes = Optional.ofNullable(subTypes).map(Set::copyOf).orElse(null);
   }
-
-  EntityType modelType;
-
-  Set<String> subTypes;
 
   public @NotNull(message = "Entity type not specified.") EntityType getModelType() {
     return modelType;

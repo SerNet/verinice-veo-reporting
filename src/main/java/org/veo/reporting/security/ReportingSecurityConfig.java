@@ -42,7 +42,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @Configuration
 public class ReportingSecurityConfig {
 
-  private static final Logger logger = LoggerFactory.getLogger(ReportingSecurityConfig.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ReportingSecurityConfig.class);
 
   @Value("${veo.reporting.cors.origins}")
   private String[] origins;
@@ -53,7 +53,7 @@ public class ReportingSecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(
-        new Customizer<CsrfConfigurer<HttpSecurity>>() {
+        new Customizer<>() {
           @Override
           @SuppressFBWarnings("SPRING_CSRF_PROTECTION_DISABLED")
           public void customize(CsrfConfigurer<HttpSecurity> csrf) {
@@ -73,7 +73,7 @@ public class ReportingSecurityConfig {
   }
 
   @Bean
-  CorsConfigurationSource corsConfigurationSource() {
+  public CorsConfigurationSource corsConfigurationSource() {
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     CorsConfiguration corsConfig = new CorsConfiguration();
     corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
@@ -84,14 +84,14 @@ public class ReportingSecurityConfig {
     Arrays.stream(allowedHeaders)
         .forEach(
             s -> {
-              logger.debug("Added CORS allowed header: {}", s);
+              LOGGER.debug("Added CORS allowed header: {}", s);
               corsConfig.addAllowedHeader(s);
             });
 
     Arrays.stream(origins)
         .forEach(
             s -> {
-              logger.debug("Added CORS origin pattern: {}", s);
+              LOGGER.debug("Added CORS origin pattern: {}", s);
               corsConfig.addAllowedOriginPattern(s);
             });
     corsConfig.setMaxAge(Duration.ofMinutes(30));

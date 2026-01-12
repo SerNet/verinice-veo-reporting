@@ -47,7 +47,7 @@ import org.veo.templating.MarkdownRendererImpl;
 /** Converts Markdown to HTML */
 public class MarkdownHtmlConverter implements ConversionHandler {
 
-  private static final Logger logger = LoggerFactory.getLogger(MarkdownHtmlConverter.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MarkdownHtmlConverter.class);
 
   @Override
   public String getInputType() {
@@ -73,7 +73,7 @@ public class MarkdownHtmlConverter implements ConversionHandler {
       new MarkdownRendererImpl().renderToHTML(reader, intermediateWriter);
       String md = intermediateWriter.toString();
       if (md.isEmpty()) {
-        logger.info("Markdown input is empty, skipping HTML creation");
+        LOGGER.info("Markdown input is empty, skipping HTML creation");
         return;
       }
       Parser parser = Parser.htmlParser();

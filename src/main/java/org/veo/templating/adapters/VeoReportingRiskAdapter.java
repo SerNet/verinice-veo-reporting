@@ -105,7 +105,7 @@ public class VeoReportingRiskAdapter extends WrappingTemplateModel
       for (Object object : categorizedValues) {
         Map r = (Map) object;
         String category = (String) r.get("category");
-        ((Map) result.computeIfAbsent(category, (k) -> new HashMap())).putAll(r);
+        ((Map) result.computeIfAbsent(category, (k) -> new HashMap<>())).putAll(r);
       }
     }
   }

@@ -45,7 +45,7 @@ public class ComposedConversionHandler implements ConversionHandler {
   private final String outputType;
   private final AsyncTaskExecutor asyncTaskExecutor;
 
-  private static final Logger logger = LoggerFactory.getLogger(ComposedConversionHandler.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ComposedConversionHandler.class);
 
   public ComposedConversionHandler(
       ConversionHandler firstHandler,
@@ -83,26 +83,26 @@ public class ComposedConversionHandler implements ConversionHandler {
       Future<Void> future =
           asyncTaskExecutor.submit(
               () -> {
-                logger.debug(
+                LOGGER.debug(
                     "Starting conversion from {} to {}",
                     secondHandler.getInputType(),
                     secondHandler.getOutputType());
                 secondHandler.convert(
                     intermediateInputStream, output, reportConfiguration, parameters);
-                logger.debug(
+                LOGGER.debug(
                     "Finished conversion from {} to {}",
                     secondHandler.getInputType(),
                     secondHandler.getOutputType());
                 return null;
               });
       try {
-        logger.debug(
+        LOGGER.debug(
             "Starting conversion from {} to {}",
             firstHandler.getInputType(),
             firstHandler.getOutputType());
         firstHandler.convert(input, intermediateOutputStream, reportConfiguration, parameters);
         intermediateOutputStream.flush();
-        logger.debug(
+        LOGGER.debug(
             "Finished conversion from {} to {}",
             firstHandler.getInputType(),
             firstHandler.getOutputType());

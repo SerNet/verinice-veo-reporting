@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -79,7 +80,7 @@ import freemarker.template.TemplateException;
 public class ReportController {
 
   private static final String TARGET_ID = "targetId";
-  private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
 
   private final ReportEngine reportEngine;
   private final VeoClient veoClient;
@@ -131,7 +132,7 @@ public class ReportController {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
     String outputType = createReport.outputType();
-    logger.info("Create report {}, outputType {}", id, outputType);
+    LOGGER.info("Create report {}, outputType {}", id, outputType);
     Optional<ReportConfiguration> configuration = reportEngine.getReport(id);
     if (!configuration.isPresent()) {
       return ResponseEntity.notFound().build();
@@ -154,7 +155,10 @@ public class ReportController {
     if (supportedTargetTypes.stream()
         .noneMatch(typeSpecification -> typeSpecification.getModelType() == target.type())) {
       throw new InvalidReportParametersException(
-          "Target type " + target.type() + " not supported by report " + id);
+          "Target type "
+              + target.type().name().toLowerCase(Locale.US)
+              + " not supported by report "
+              + id);
     }
     ReportCreationParameters parameters =
         new ReportCreationParameters(
@@ -163,7 +167,7 @@ public class ReportController {
                     && Arrays.asList(TimeZone.getAvailableIDs()).contains(createReport.timeZone())
                 ? TimeZone.getTimeZone(createReport.timeZone())
                 : TimeZone.getTimeZone("UTC"));
-    logger.info("Request parameters = {}", parameters);
+    LOGGER.info("Request parameters = {}", parameters);
 
     String desiredLanguage = parameters.getLocale().getLanguage();
     Set<String> supportedLanguages = configuration.get().getName().keySet();
@@ -205,9 +209,9 @@ public class ReportController {
           try {
             reportEngine.generateReport(
                 id, outputType, parameters, out, dataProvider, entriesForLanguage);
-            logger.info("Report generated");
+            LOGGER.info("Report generated");
           } catch (TemplateException e) {
-            logger.error("Error creating report", e);
+            LOGGER.error("Error creating report", e);
             throw new ServerErrorException("Error creating report", e);
           }
         };

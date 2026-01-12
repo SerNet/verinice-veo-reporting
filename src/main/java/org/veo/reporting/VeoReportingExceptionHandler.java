@@ -38,7 +38,7 @@ import tools.jackson.core.JacksonException;
 @ControllerAdvice
 public class VeoReportingExceptionHandler {
 
-  private static final Logger logger = LoggerFactory.getLogger(VeoReportingExceptionHandler.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(VeoReportingExceptionHandler.class);
 
   @ExceptionHandler({DataFetchingException.class})
   protected ResponseEntity<String> handle(DataFetchingException exception) {
@@ -47,7 +47,7 @@ public class VeoReportingExceptionHandler {
 
   @ExceptionHandler({MethodArgumentNotValidException.class})
   protected ResponseEntity<String> handle(MethodArgumentNotValidException exception) {
-    logger.error("Error invoking method", exception);
+    LOGGER.error("Error invoking method", exception);
     return handle(
         exception.getBindingResult().getAllErrors().stream()
             .map(er -> er.unwrap(ConstraintViolation.class))
@@ -58,7 +58,7 @@ public class VeoReportingExceptionHandler {
 
   @ExceptionHandler({HttpMessageNotReadableException.class})
   protected ResponseEntity<String> handle(HttpMessageNotReadableException exception) {
-    logger.error("Error reading HTTP message", exception);
+    LOGGER.error("Error reading HTTP message", exception);
     Throwable cause = exception.getCause();
     if (cause instanceof JacksonException jpe) {
       return handle(jpe.getOriginalMessage(), HttpStatus.BAD_REQUEST);
@@ -72,7 +72,7 @@ public class VeoReportingExceptionHandler {
   }
 
   private ResponseEntity<String> handle(Throwable exception, HttpStatus status) {
-    logger.error("Error handling request", exception);
+    LOGGER.error("Error handling request", exception);
     return handle(exception.getMessage(), status);
   }
 

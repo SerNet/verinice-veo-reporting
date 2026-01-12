@@ -45,7 +45,7 @@ import tools.jackson.module.blackbird.BlackbirdModule;
 
 public class VeoClientImpl implements VeoClient {
 
-  private static final Logger logger = LoggerFactory.getLogger(VeoClientImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(VeoClientImpl.class);
   private static final Set<String> RISK_AFFECTED_TYPES = Set.of("asset", "process", "scope");
 
   private final ClientHttpRequestFactory httpRequestFactory;
@@ -144,12 +144,12 @@ public class VeoClientImpl implements VeoClient {
     if (cache != null) {
       result = cache.get(cacheKey);
       if (result != null) {
-        logger.info("Returning cached result for {}", uri);
+        LOGGER.info("Returning cached result for {}", uri);
         return result;
       }
     }
 
-    logger.info("Requesting data from {}", uri);
+    LOGGER.info("Requesting data from {}", uri);
 
     ClientHttpRequest request = httpRequestFactory.createRequest(uri, HttpMethod.GET);
     request.getHeaders().add(HttpHeaders.AUTHORIZATION, authorizationHeader);
@@ -157,7 +157,7 @@ public class VeoClientImpl implements VeoClient {
     request.getHeaders().add(HttpHeaders.ACCEPT_ENCODING, "gzip");
     try (ClientHttpResponse response = request.execute()) {
       if (!response.getStatusCode().is2xxSuccessful()) {
-        logger.error(
+        LOGGER.error(
             "HTTP error {} for {}, message: {}",
             response.getStatusCode().value(),
             uri,

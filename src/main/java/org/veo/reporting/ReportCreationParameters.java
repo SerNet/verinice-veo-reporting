@@ -21,14 +21,13 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 public class ReportCreationParameters {
+  private final Locale locale;
+  private final TimeZone timeZone;
 
   public ReportCreationParameters(Locale locale, TimeZone timeZone) {
     this.locale = locale;
     this.timeZone = (TimeZone) timeZone.clone();
   }
-
-  private final Locale locale;
-  private final TimeZone timeZone;
 
   public Locale getLocale() {
     return locale;

@@ -17,20 +17,32 @@
  ******************************************************************************/
 package org.veo.reporting;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * An entity type that can be used as the input for a report
  *
  * @see {@link CreateReport}
  */
 public enum EntityType {
-  asset,
-  client,
-  control,
-  document,
-  incident,
-  person,
-  process,
-  scenario,
-  scope,
-  unit
+  @JsonProperty("asset")
+  ASSET,
+  @JsonProperty("client")
+  CLIENT,
+  @JsonProperty("control")
+  CONTROL,
+  @JsonProperty("document")
+  DOCUMENT,
+  @JsonProperty("incident")
+  INCIDENT,
+  @JsonProperty("person")
+  PERSON,
+  @JsonProperty("process")
+  PROCESS,
+  @JsonProperty("scenario")
+  SCENARIO,
+  @JsonProperty("scope")
+  SCOPE,
+  @JsonProperty("unit")
+  UNIT
 }

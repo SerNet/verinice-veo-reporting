@@ -1052,7 +1052,9 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
     Composite originalComposite = g2.getComposite();
     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, getForegroundAlpha()));
 
-    if (!DatasetUtils.isEmptyOrNull(this.dataset)) {
+    if (DatasetUtils.isEmptyOrNull(this.dataset)) {
+      drawNoDataMessage(g2, area);
+    } else {
       int seriesCount, catCount;
 
       if (this.dataExtractOrder == TableOrder.BY_ROW) {
@@ -1075,23 +1077,23 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
       double gapHorizontal = area.getWidth() * getInteriorGap();
       double gapVertical = area.getHeight() * getInteriorGap();
 
-      double X = area.getX() + gapHorizontal / 2;
-      double Y = area.getY() + gapVertical / 2;
-      double W = area.getWidth() - gapHorizontal;
-      double H = area.getHeight() - gapVertical;
+      double x = area.getX() + gapHorizontal / 2;
+      double y = area.getY() + gapVertical / 2;
+      double w = area.getWidth() - gapHorizontal;
+      double h = area.getHeight() - gapVertical;
 
       double headW = area.getWidth() * this.headPercent;
       double headH = area.getHeight() * this.headPercent;
 
       // make the chart area a square
-      double min = Math.min(W, H) / 2;
-      X = (X + X + W) / 2 - min;
-      Y = (Y + Y + H) / 2 - min;
-      W = 2 * min;
-      H = 2 * min;
+      double min = Math.min(w, h) / 2;
+      x = (x + x + w) / 2 - min;
+      y = (y + y + h) / 2 - min;
+      w = 2 * min;
+      h = 2 * min;
 
-      Point2D centre = new Point2D.Double(X + W / 2, Y + H / 2);
-      Rectangle2D radarArea = new Rectangle2D.Double(X, Y, W, H);
+      Point2D centre = new Point2D.Double(x + w / 2, y + h / 2);
+      Rectangle2D radarArea = new Rectangle2D.Double(x, y, w, h);
 
       drawGridlines(g2, radarArea);
 
@@ -1112,8 +1114,6 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
       for (int series = 0; series < seriesCount; series++) {
         drawRadarPoly(g2, radarArea, centre, info, series, catCount, headH, headW);
       }
-    } else {
-      drawNoDataMessage(g2, area);
     }
     g2.setClip(savedClip);
     g2.setComposite(originalComposite);

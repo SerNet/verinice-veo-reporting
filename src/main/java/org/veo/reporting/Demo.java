@@ -52,10 +52,10 @@ import tools.jackson.databind.json.JsonMapper;
 public class Demo {
 
   private static final String TARGET_ID_PLACEHOLDER = "${targetId}";
-  private static final Logger logger = LoggerFactory.getLogger(Demo.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(Demo.class);
 
   static void runDemo(ConfigurableApplicationContext ctx) throws IOException {
-    logger.info("Demo mode enabled");
+    LOGGER.info("Demo mode enabled");
     var reportEngine = ctx.getBean(ReportEngine.class);
     var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
     var scopeId = ctx.getEnvironment().getProperty("veo.demoscopeid");
@@ -154,7 +154,7 @@ public class Demo {
 
       Files.walkFileTree(
           template,
-          new SimpleFileVisitor<Path>() {
+          new SimpleFileVisitor<>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
                 throws IOException {
@@ -184,7 +184,7 @@ public class Demo {
           key.reset();
         }
       } catch (InterruptedException e) {
-        logger.info("Exiting ...");
+        LOGGER.info("Exiting ...");
       }
     }
     ctx.stop();
@@ -467,7 +467,7 @@ public class Demo {
       }
 
     } catch (IOException | TemplateException e) {
-      logger.error("Error creating reports", e);
+      LOGGER.error("Error creating reports", e);
     }
   }
 
@@ -483,9 +483,9 @@ public class Demo {
     try (var os = Files.newOutputStream(Paths.get(fileName))) {
       reportEngine.generateReport(
           reportId, outputType, parameters, os, dataProvider, dynamicBundleEntries);
-      logger.info("Report {} created at {}", reportId, fileName);
+      LOGGER.info("Report {} created at {}", reportId, fileName);
     } catch (Exception e) {
-      logger.error("Could not create report {}", reportId, e);
+      LOGGER.error("Could not create report {}", reportId, e);
     }
   }
 

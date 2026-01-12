@@ -33,7 +33,7 @@ public interface VeoClient {
   Map<String, Object> fetchData(
       ReportDataSpecification dataSpecification, String authorizationHeader) throws IOException;
 
-  public default Map<String, Object> fetchTranslations(Locale locale, String authorizationHeader)
+  default Map<String, Object> fetchTranslations(Locale locale, String authorizationHeader)
       throws IOException {
     String language = locale.getLanguage();
     String translationsUrl = "/translations?languages=" + language;

@@ -42,6 +42,7 @@ public class MarkdownOutputFormat extends CommonMarkupOutputFormat<TemplateMarkd
    * @since 2.3.29
    */
   protected MarkdownOutputFormat() {
+    super();
     // Only to decrease visibility
   }
 

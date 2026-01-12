@@ -145,7 +145,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     public Object doExec(String arg) throws TemplateModelException {
       var domains = (Map<String, Map<String, ?>>) getProperty("domains");
 
-      logger.debug("domains: {}", domains);
+      LOGGER.debug("domains: {}", domains);
       return domains != null
           && domains.values().stream()
               .map(domainAssociation -> (String) domainAssociation.get("subType"))
@@ -162,7 +162,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     @Override
     public Object doExec(String arg) throws TemplateModelException {
       Map<String, ?> links = (Map<String, ?>) getProperty("links");
-      logger.debug("links: {}", links);
+      LOGGER.debug("links: {}", links);
       return links.get(arg);
     }
   }
@@ -215,14 +215,12 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     @Override
     public Object doExec(String arg) throws TemplateModelException {
       var members = (List) getProperty("members");
-      var filteredMembers =
-          members.stream()
-              .filter(
-                  member -> {
-                    return arg.equals(((Map) member).get("type"));
-                  })
-              .collect(Collectors.toList());
-      return filteredMembers;
+      return members.stream()
+          .filter(
+              member -> {
+                return arg.equals(((Map) member).get("type"));
+              })
+          .collect(Collectors.toList());
     }
   }
 }

@@ -47,7 +47,7 @@ import tools.jackson.databind.json.JsonMapper;
 
 public final class ReportEngineImpl implements ReportEngine {
 
-  private static final Logger logger = LoggerFactory.getLogger(ReportEngineImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ReportEngineImpl.class);
 
   private final TemplateEvaluator templateEvaluator;
   private final FileConverter converter;
@@ -82,7 +82,7 @@ public final class ReportEngineImpl implements ReportEngine {
                       try (var is = resource.getInputStream()) {
                         ReportConfiguration reportConfiguration =
                             jsonMapper.readValue(is, ReportConfiguration.class);
-                        logger.info(
+                        LOGGER.info(
                             "Read report {} from {}", reportConfiguration.getName(), resource);
                         return reportConfiguration;
                       } catch (IOException e) {
@@ -110,18 +110,18 @@ public final class ReportEngineImpl implements ReportEngine {
     String templateName = config.getTemplateFile();
     String templateBaseName = templateName.split("\\.")[0];
     String bundleName = "templates." + templateBaseName;
-    logger.info(
+    LOGGER.info(
         "Loading resourceBundle for template {}, locale {} from {}",
         templateName,
         parameters.getLocale(),
         bundleName);
     try {
       ResourceBundle reportBundle = ResourceBundle.getBundle(bundleName, parameters.getLocale());
-      logger.info("Bundle loaded, locale: {}", reportBundle.getLocale());
+      LOGGER.info("Bundle loaded, locale: {}", reportBundle.getLocale());
       data.put("bundle", MapResourceBundle.createMergedBundle(reportBundle, dynamicBundleEntries));
       data.put("timeZone", parameters.getTimeZone().getDisplayName(parameters.getLocale()));
     } catch (MissingResourceException e) {
-      logger.warn("No resource bundle found for template {}", templateName);
+      LOGGER.warn("No resource bundle found for template {}", templateName);
       data.put("bundle", new MapResourceBundle(dynamicBundleEntries));
     }
     generateReport(config, data, outputType, outputStream, parameters);

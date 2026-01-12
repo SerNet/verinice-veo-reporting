@@ -53,26 +53,31 @@ public class VeoJFreeChartSpiderWebDiagramObjectDrawer implements FSObjectDrawer
   private static final Pattern PATTERN_HTML =
       Pattern.compile("#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})", Pattern.CASE_INSENSITIVE);
 
-  private static final Font openSansRegular;
-  private static final Font openSansBold;
+  private static final Font OPEN_SANS_REGULAR;
+  private static final Font OPEN_SANS_BOLD;
 
   static {
     var openSansFontResources = FontResourceManager.getAllResourcesOfFontType("Open Sans");
-    openSansRegular = loadFont(openSansFontResources, 400);
-    openSansBold = loadFont(openSansFontResources, 700);
+    OPEN_SANS_REGULAR = loadFont(openSansFontResources, 400);
+    OPEN_SANS_BOLD = loadFont(openSansFontResources, 700);
   }
 
-  static Map<Shape, String> buildShapeLinkMap(ChartRenderingInfo renderingInfo, int dotsPerPixel) {
+  private static Map<Shape, String> buildShapeLinkMap(
+      ChartRenderingInfo renderingInfo, int dotsPerPixel) {
     Map<Shape, String> linkShapes = null;
     AffineTransform scaleTransform = new AffineTransform();
     scaleTransform.scale(dotsPerPixel, dotsPerPixel);
     for (Object entity : renderingInfo.getEntityCollection().getEntities()) {
-      if (!(entity instanceof ChartEntity)) continue;
+      if (!(entity instanceof ChartEntity)) {
+        continue;
+      }
       ChartEntity chartEntity = (ChartEntity) entity;
       Shape shape = chartEntity.getArea();
       String url = chartEntity.getURLText();
       if (url != null) {
-        if (linkShapes == null) linkShapes = new HashMap<>();
+        if (linkShapes == null) {
+          linkShapes = new HashMap<>();
+        }
         linkShapes.put(scaleTransform.createTransformedShape(shape), url);
       }
     }
@@ -124,10 +129,14 @@ public class VeoJFreeChartSpiderWebDiagramObjectDrawer implements FSObjectDrawer
     final Map<String, String> urls = new HashMap<>();
     for (int i = 0; i < childNodes.getLength(); i++) {
       Node item = childNodes.item(i);
-      if (!(item instanceof Element)) continue;
+      if (!(item instanceof Element)) {
+        continue;
+      }
       Element childElement = (Element) item;
       String tagName = ((Element) item).getTagName();
-      if (!"data".equals(tagName) && !"td".equals(tagName)) continue;
+      if (!"data".equals(tagName) && !"td".equals(tagName)) {
+        continue;
+      }
       String row = childElement.getAttribute("row");
       String column = childElement.getAttribute("column");
       double value = Double.parseDouble(childElement.getAttribute("value"));
@@ -165,9 +174,9 @@ public class VeoJFreeChartSpiderWebDiagramObjectDrawer implements FSObjectDrawer
     chart.getLegend().setItemPaint(defaultFontColor);
 
     chart.getTitle().setPaint(defaultFontColor);
-    chart.getTitle().setFont(openSansBold.deriveFont(Font.BOLD, 20f));
-    chart.getLegend().setItemFont(openSansRegular.deriveFont(Font.PLAIN, 12f));
-    plot.setLabelFont(openSansRegular.deriveFont(Font.PLAIN, 9f));
+    chart.getTitle().setFont(OPEN_SANS_BOLD.deriveFont(Font.BOLD, 20f));
+    chart.getLegend().setItemFont(OPEN_SANS_REGULAR.deriveFont(Font.PLAIN, 12f));
+    plot.setLabelFont(OPEN_SANS_REGULAR.deriveFont(Font.PLAIN, 9f));
 
     final ChartRenderingInfo renderingInfo = new ChartRenderingInfo();
     outputDevice.drawWithGraphics(
