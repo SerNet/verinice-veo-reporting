@@ -18,10 +18,13 @@
 package org.veo.reporting;
 
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * The DTO for a report creation. It specifies the entities that the report is run upon and the
@@ -31,40 +34,18 @@ import jakarta.validation.constraints.Size;
  * @see {@link ReportEngine}
  * @see {@link ReportController}
  */
-public class CreateReport {
+public record CreateReport(
+    @NotEmpty(message = "Output type not specified.") String outputType,
+    @NotNull(message = "Targets not specified.")
+        // multiple targets are not supported yet
+        @Size(min = 1, max = 1)
+        // https://github.com/spotbugs/spotbugs/issues/3022
+        @SuppressFBWarnings("EI_EXPOSE_REP")
+        List<TargetSpecification> targets,
+    String timeZone) {
 
-  @NotEmpty(message = "Output type not specified.")
-  private String outputType;
-
-  @NotNull(message = "Targets not specified.")
-  @Size(min = 1, max = 1)
-  // multiple targets are not supported yet
-  private List<TargetSpecification> targets;
-
-  private String timeZone;
-
-  public String getOutputType() {
-    return outputType;
-  }
-
-  public void setOutputType(String outputType) {
-    this.outputType = outputType;
-  }
-
-  public List<TargetSpecification> getTargets() {
-    return targets;
-  }
-
-  public void setTargets(List<TargetSpecification> targets) {
-    this.targets = List.copyOf(targets);
-  }
-
-  public String getTimeZone() {
-    return timeZone;
-  }
-
-  public void setTimeZone(String timeZone) {
-    this.timeZone = timeZone;
+  public CreateReport {
+    targets = Optional.ofNullable(targets).map(List::copyOf).orElse(null);
   }
 
   public record TargetSpecification(

@@ -130,7 +130,7 @@ public class ReportController {
     if (authorizationHeader == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-    String outputType = createReport.getOutputType();
+    String outputType = createReport.outputType();
     logger.info("Create report {}, outputType {}", id, outputType);
     Optional<ReportConfiguration> configuration = reportEngine.getReport(id);
     if (!configuration.isPresent()) {
@@ -149,7 +149,7 @@ public class ReportController {
     }
 
     // exactly one target entity is supported at the moment
-    TargetSpecification target = createReport.getTargets().get(0);
+    TargetSpecification target = createReport.targets().get(0);
     Set<TypeSpecification> supportedTargetTypes = configuration.get().getTargetTypes();
     if (supportedTargetTypes.stream()
         .noneMatch(typeSpecification -> typeSpecification.getModelType() == target.type())) {
@@ -159,10 +159,9 @@ public class ReportController {
     ReportCreationParameters parameters =
         new ReportCreationParameters(
             RequestContextUtils.getLocale(request),
-            createReport.getTimeZone() != null
-                    && Arrays.asList(TimeZone.getAvailableIDs())
-                        .contains(createReport.getTimeZone())
-                ? TimeZone.getTimeZone(createReport.getTimeZone())
+            createReport.timeZone() != null
+                    && Arrays.asList(TimeZone.getAvailableIDs()).contains(createReport.timeZone())
+                ? TimeZone.getTimeZone(createReport.timeZone())
                 : TimeZone.getTimeZone("UTC"));
     logger.info("Request parameters = {}", parameters);
 
