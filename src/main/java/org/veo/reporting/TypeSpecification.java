@@ -27,31 +27,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public class TypeSpecification {
-
-  private final EntityType modelType;
-
-  private final Set<String> subTypes;
+public record TypeSpecification(
+    @NotNull(message = "Entity type not specified.") @JsonProperty(required = true)
+        EntityType modelType,
+    // https://github.com/spotbugs/spotbugs/issues/3022
+    @SuppressFBWarnings("EI_EXPOSE_REP") Set<String> subTypes) {
 
   @JsonCreator
-  public TypeSpecification(
-      @JsonProperty(value = "modelType", required = true) EntityType modelType,
-      @JsonProperty("subTypes") Set<String> subTypes) {
-    this.modelType = modelType;
-    this.subTypes = Optional.ofNullable(subTypes).map(Set::copyOf).orElse(null);
-  }
-
-  public @NotNull(message = "Entity type not specified.") EntityType getModelType() {
-    return modelType;
-  }
-
-  @SuppressFBWarnings("EI_EXPOSE_REP")
-  public Set<String> getSubTypes() {
-    return subTypes;
-  }
-
-  @Override
-  public String toString() {
-    return "TypeSpecification [modelType=" + modelType + ", subTypes=" + subTypes + "]";
+  public TypeSpecification {
+    subTypes = Optional.ofNullable(subTypes).map(Set::copyOf).orElse(null);
   }
 }

@@ -85,7 +85,7 @@ public class MarkdownHtmlConverter implements ConversionHandler {
           .add(Tag.valueOf("object").set(Tag.Block));
       Document doc = Jsoup.parse(md, parser);
       Element html = doc.getElementsByTag("html").first();
-      Locale locale = parameters.getLocale();
+      Locale locale = parameters.locale();
       if (locale.getCountry().isEmpty()) {
         html.attr("lang", locale.getLanguage());
       } else {

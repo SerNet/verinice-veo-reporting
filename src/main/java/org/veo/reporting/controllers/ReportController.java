@@ -153,7 +153,7 @@ public class ReportController {
     TargetSpecification target = createReport.targets().get(0);
     Set<TypeSpecification> supportedTargetTypes = configuration.get().getTargetTypes();
     if (supportedTargetTypes.stream()
-        .noneMatch(typeSpecification -> typeSpecification.getModelType() == target.type())) {
+        .noneMatch(typeSpecification -> typeSpecification.modelType() == target.type())) {
       throw new InvalidReportParametersException(
           "Target type "
               + target.type().name().toLowerCase(Locale.US)
@@ -169,7 +169,7 @@ public class ReportController {
                 : TimeZone.getTimeZone("UTC"));
     LOGGER.info("Request parameters = {}", parameters);
 
-    String desiredLanguage = parameters.getLocale().getLanguage();
+    String desiredLanguage = parameters.locale().getLanguage();
     Set<String> supportedLanguages = configuration.get().getName().keySet();
     if (!supportedLanguages.contains(desiredLanguage)) {
       throw new InvalidReportParametersException(
@@ -183,10 +183,9 @@ public class ReportController {
 
     Map<String, Object> entriesForLanguage;
     try {
-      entriesForLanguage = veoClient.fetchTranslations(parameters.getLocale(), authorizationHeader);
+      entriesForLanguage = veoClient.fetchTranslations(parameters.locale(), authorizationHeader);
     } catch (IOException e) {
-      throw new ServerErrorException(
-          "Failed to fetch translations for " + parameters.getLocale(), e);
+      throw new ServerErrorException("Failed to fetch translations for " + parameters.locale(), e);
     }
     DataProvider dataProvider =
         keysAndUrls -> {
