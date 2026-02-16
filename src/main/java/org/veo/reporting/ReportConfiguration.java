@@ -19,6 +19,7 @@ package org.veo.reporting;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -26,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * The specification of a single report. This is used to define the basic properties such as name
@@ -37,7 +40,9 @@ public class ReportConfiguration {
 
   private final Map<String, String> name;
 
-  private final String domainName;
+  // https://github.com/spotbugs/spotbugs/issues/3022
+  @SuppressFBWarnings("EI_EXPOSE_REP")
+  private final Set<String> domainNames;
 
   private final Map<String, String> description;
 
@@ -56,7 +61,7 @@ public class ReportConfiguration {
   @JsonCreator
   public ReportConfiguration(
       @JsonProperty(value = "name", required = true) Map<String, String> name,
-      @JsonProperty(value = "domainName", required = false) String domainName,
+      @JsonProperty(value = "domainNames", required = false) Set<String> domainNames,
       @JsonProperty(value = "description", required = true) Map<String, String> description,
       @JsonProperty(value = "templateFile", required = true) String templateFile,
       @JsonProperty(value = "templateType", required = true) String templateType,
@@ -67,7 +72,7 @@ public class ReportConfiguration {
       @JsonProperty(value = "targetTypes", required = true) Set<TypeSpecification> targetTypes,
       @JsonProperty(value = "data", required = true) Map<String, String> data) {
     this.name = Map.copyOf(name);
-    this.domainName = domainName;
+    this.domainNames = Optional.ofNullable(domainNames).map(Set::copyOf).orElse(null);
     this.description = Map.copyOf(description);
     this.templateFile = templateFile;
     this.templateType = templateType;
@@ -82,8 +87,8 @@ public class ReportConfiguration {
   }
 
   @JsonIgnore
-  public String getDomainName() {
-    return domainName;
+  public Set<String> getDomainNames() {
+    return domainNames;
   }
 
   public Map<String, String> getDescription() {

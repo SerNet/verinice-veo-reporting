@@ -2,7 +2,9 @@
   "name": {
     "de": "ISA: Report kompakt 6"
   },
-  "domainName": "TISAX",
+  "domainNames": [
+    "TISAX"
+  ],
   "description": {
     "de": "In diesem Report wird auf Grundlage Ihrer Selbsteinschätzung basierend auf dem ISA der Gesamtreifegrad Ihres Informationssicherheitsmanagementsystems kompakt ausgewertet. Der Bericht enthält sowohl die ISA-Spinnennetzdiagramme zur Visualisierung als auch eine tabellarische Darstellung der Reifegrade jedes einzelnen ISA-Controls."
   },

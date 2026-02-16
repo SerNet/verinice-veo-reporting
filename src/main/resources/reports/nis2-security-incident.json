@@ -3,7 +3,9 @@
     "de": "Meldeformular Sicherheitsvorfall",
     "en": "Notification form for security incident"
   },
-  "domainName": "NIS2",
+  "domainNames": [
+    "NIS2"
+  ],
   "description": {
     "de": "Eine detaillierte Übersicht über die dokumentierten Sicherheitsvorfälle einer Organisation",
     "en": "A detailed overview of the documented security incidents in an organization"
