@@ -39,7 +39,7 @@ public class ReportConfiguration {
 
   private final String domainName;
 
-  private Map<String, String> description;
+  private final Map<String, String> description;
 
   private final String templateFile;
 
