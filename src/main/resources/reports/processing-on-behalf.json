@@ -4,7 +4,8 @@
     "en": "Record of processing activities (processor) according to Art. 30 II GDPR"
   },
   "domainNames": [
-    "DS-GVO"
+    "DS-GVO",
+    "GDPR (INT)"
   ],
   "description": {
     "de": "Dokumentation über die Auftraggeber und für sie durchgeführte Verarbeitungstätigkeiten (Auftragsverarbeitung)",

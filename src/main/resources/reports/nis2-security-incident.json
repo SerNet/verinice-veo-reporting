@@ -4,7 +4,8 @@
     "en": "Notification form for security incident"
   },
   "domainNames": [
-    "NIS2"
+    "NIS2",
+    "NIS2 (INT)"
   ],
   "description": {
     "de": "Eine detaillierte Übersicht über die dokumentierten Sicherheitsvorfälle einer Organisation",

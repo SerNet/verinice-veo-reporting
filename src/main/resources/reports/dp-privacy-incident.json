@@ -4,7 +4,8 @@
     "en": "Notification form for personal data breach"
   },
   "domainNames": [
-    "DS-GVO"
+    "DS-GVO",
+    "GDPR (INT)"
   ],
   "description": {
     "de": "Eine detaillierte Übersicht über die dokumentierten Datenschutzvorfälle einer Verantwortlichen",
