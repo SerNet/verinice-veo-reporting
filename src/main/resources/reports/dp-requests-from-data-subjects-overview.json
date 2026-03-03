@@ -3,9 +3,7 @@
     "de": "Übersicht Betroffenenanfragen",
     "en": "Overview of requests from data subjects"
   },
-  "domainNames": [
-    "DS-GVO"
-  ],
+  "domainName": "DS-GVO",
   "description": {
     "de": "Eine Übersicht über die dokumentierten Betroffenenanfragen einer Verantwortlichen",
     "en": "An overview of a controller’s documented requests from data subjects"

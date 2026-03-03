@@ -106,11 +106,7 @@ public class ReportController {
     if (domainName != null) {
       reports =
           reports.entrySet().stream()
-              .filter(
-                  e ->
-                      Optional.ofNullable(e.getValue().getDomainNames())
-                          .map(dn -> dn.contains(domainName))
-                          .orElse(false))
+              .filter(e -> domainName.equals(e.getValue().getDomainName()))
               .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
     return ResponseEntity.ok().cacheControl(CacheControl.noCache()).body(reports);

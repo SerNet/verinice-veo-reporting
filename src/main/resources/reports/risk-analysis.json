@@ -2,9 +2,7 @@
   "name": {
     "de": "Datenschutz-Risikoanalyse"
   },
-  "domainNames": [
-    "DS-GVO"
-  ],
+  "domainName": "DS-GVO",
   "description": {
     "de": "Die bestehenden Risiken für die Verarbeitungstätigkeiten in einer verantwortlichen Stelle"
   },

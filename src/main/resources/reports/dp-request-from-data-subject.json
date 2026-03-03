@@ -3,9 +3,7 @@
     "de": "Betroffenenanfrage",
     "en": "Request from data subject"
   },
-  "domainNames": [
-    "DS-GVO"
-  ],
+  "domainName": "DS-GVO",
   "description": {
     "de": "Eine detaillierte Darstellung einer dokumentierten Betroffenenanfrage",
     "en": "A detailed view of a documented request from a data subject"

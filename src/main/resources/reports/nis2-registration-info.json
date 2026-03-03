@@ -3,9 +3,7 @@
     "de": "Registrierungsinformationen für zuständige Behörde",
     "en": "Registration information for competent authority"
   },
-  "domainNames": [
-    "NIS2"
-  ],
+  "domainName": "NIS2",
   "description": {
     "de": "Die für eine Registrierung bei der zuständigen Behörde erforderlichen Informationen einer betroffenen Einrichtung",
     "en": "The information of an affected organization required for registration with the competent authority"

@@ -2,9 +2,7 @@
   "name": {
     "de": "A.1 Strukturanalyse"
   },
-  "domainNames": [
-    "IT-Grundschutz"
-  ],
+  "domainName": "IT-Grundschutz",
   "description": {
     "de": "Eine Übersicht über die Geschäftsprozesse und die verschiedenen Assets"
   },
