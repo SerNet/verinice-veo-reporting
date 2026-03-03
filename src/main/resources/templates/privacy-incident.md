@@ -26,7 +26,6 @@ dl {
 }
 </style>
 
-<#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
 <#assign scope=incident.findFirstLinked('incident_notifyingCompany')!>
 
 <div class="footer-left">

@@ -26,7 +26,6 @@ dl {
 }
 </style>
 
-<#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
 <#assign incident=nis2incident>
 <#assign scope=incident.findFirstLinked('incident_notifyingOrganization')!>
 
