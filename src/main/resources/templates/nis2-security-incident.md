@@ -55,8 +55,8 @@ dl {
 
 <div class="main_page">
 
-<#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
-<#assign domain=domains?filter(it->it.name == 'NIS2')?filter(it->incident.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
+<#-- FIXME #1175: maybe pass domain into report? -->
+<#assign domain=domains?filter(it->it.name == domainName)?filter(it->incident.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 
 <#if scope?has_content>
 <@table bundle.org_information,
