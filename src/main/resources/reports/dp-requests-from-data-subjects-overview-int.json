@@ -1,0 +1,27 @@
+{
+  "name": {
+    "de": "Übersicht Betroffenenanfragen",
+    "en": "Overview of requests from data subjects"
+  },
+  "domainName": "GDPR (INT)",
+  "description": {
+    "de": "Eine Übersicht über die dokumentierten Betroffenenanfragen einer Verantwortlichen",
+    "en": "An overview of a controller’s documented requests from data subjects"
+  },
+  "templateFile": "dp-requests-overview.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "scope",
+      "subTypes": [
+        "SCP_ResponsibleBody"
+      ]
+    }
+  ],
+  "data": {
+    "scope": "/scopes/${targetId}"
+  }
+}

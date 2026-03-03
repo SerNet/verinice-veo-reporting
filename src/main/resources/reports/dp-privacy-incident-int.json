@@ -1,0 +1,27 @@
+{
+  "name": {
+    "de": "Meldeformular Datenschutzvorfall",
+    "en": "Notification form for personal data breach"
+  },
+  "domainName": "GDPR (INT)",
+  "description": {
+    "de": "Eine detaillierte Übersicht über die dokumentierten Datenschutzvorfälle einer Verantwortlichen",
+    "en": "A detailed overview of a controller’s documented data protection breaches"
+  },
+  "templateFile": "privacy-incident.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "incident",
+      "subTypes": [
+        "INC_DataPrivacyIncident"
+      ]
+    }
+  ],
+  "data": {
+    "incident": "/incidents/${targetId}"
+  }
+}

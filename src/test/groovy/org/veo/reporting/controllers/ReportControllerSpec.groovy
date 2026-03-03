@@ -86,7 +86,16 @@ public class ReportControllerSpec extends ReportingTest {
             'nis2-security-incident',
             'iso-soa',
             'iso-inventory',
-            'iso-risk-analysis'
+            'iso-risk-analysis',
+            'dp-privacy-incident-int',
+            'dp-request-from-data-subject-int',
+            'dp-requests-from-data-subjects-overview-int',
+            'iso-inventory-int',
+            'iso-risk-analysis-int',
+            'iso-soa-int',
+            'nis2-registration-info-int',
+            'nis2-security-incident-int',
+            'processing-on-behalf-int'
         ]
     }
 

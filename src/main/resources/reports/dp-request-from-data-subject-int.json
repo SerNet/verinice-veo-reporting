@@ -1,0 +1,27 @@
+{
+  "name": {
+    "de": "Betroffenenanfrage",
+    "en": "Request from data subject"
+  },
+  "domainName": "GDPR (INT)",
+  "description": {
+    "de": "Eine detaillierte Darstellung einer dokumentierten Betroffenenanfrage",
+    "en": "A detailed view of a documented request from a data subject"
+  },
+  "templateFile": "dp-request.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "document",
+      "subTypes": [
+        "DOC_RequestDataSubject"
+      ]
+    }
+  ],
+  "data": {
+    "request": "/documents/${targetId}"
+  }
+}
