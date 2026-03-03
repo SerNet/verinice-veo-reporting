@@ -4,8 +4,7 @@
     "en": "Overview of requests from data subjects"
   },
   "domainNames": [
-    "DS-GVO",
-    "GDPR (INT)"
+    "DS-GVO"
   ],
   "description": {
     "de": "Eine Übersicht über die dokumentierten Betroffenenanfragen einer Verantwortlichen",
