@@ -2,9 +2,7 @@
   "name": {
     "de": "A.3 Modellierung"
   },
-  "domainNames": [
-    "IT-Grundschutz"
-  ],
+  "domainName": "IT-Grundschutz",
   "description": {
     "de": "Eine Übersicht über die Zielobjekte und modellierten Bausteine"
   },

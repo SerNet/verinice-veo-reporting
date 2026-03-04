@@ -2,9 +2,7 @@
   "name": {
     "de": "A.2 Schutzbedarfsfeststellung"
   },
-  "domainNames": [
-    "IT-Grundschutz"
-  ],
+  "domainName": "IT-Grundschutz",
   "description": {
     "de": "Eine Übersicht der Schutzbedarfsfeststellung"
   },

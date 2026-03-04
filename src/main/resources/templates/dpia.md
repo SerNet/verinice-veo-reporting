@@ -19,8 +19,8 @@ dt {
 }
 </style>
 
-<#-- FIXME VEO-619/VEO-1175: maybe pass domain into report? -->
-<#assign domain=domains?filter(it->it.name == 'DS-GVO')?filter(it->dpia.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
+<#-- FIXME #1175: maybe pass domain into report? -->
+<#assign domain=domains?filter(it->it.name == domainName)?filter(it->dpia.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 <#assign scope=dpia.findFirstLinked('process_PIAResponsibleBody')!>
 <#assign riskDefinitionId=(scope.domains[domain.id].riskDefinition)! />
 
