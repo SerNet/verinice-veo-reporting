@@ -63,7 +63,7 @@ ${bundle.email} ${email}
 
 <@def bundle.scope_specificInformation_furtherSectors scope.scope_specificInformation_furtherSectors />
 
-<@def bundle.scope_specificInformation_identifiedAs bundle[scope.scope_specificInformation_identifiedAs]! />
+<@def bundle.scope_specificInformation_identifiedAs, (bundle[scope.scope_specificInformation_identifiedAs])!, true />
 
 <@def bundle.scope_specificInformation_operatorCriticalSystem scope.scope_specificInformation_operatorCriticalSystem />
 
