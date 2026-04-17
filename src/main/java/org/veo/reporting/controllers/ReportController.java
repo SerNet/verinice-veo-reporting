@@ -40,7 +40,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.PropertyPlaceholderHelper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,7 +59,6 @@ import org.veo.reporting.CreateReport.TargetSpecification;
 import org.veo.reporting.DataProvider;
 import org.veo.reporting.ReportConfiguration;
 import org.veo.reporting.ReportCreationParameters;
-import org.veo.reporting.ReportDataSpecification;
 import org.veo.reporting.ReportEngine;
 import org.veo.reporting.TypeSpecification;
 import org.veo.reporting.VeoClient;
@@ -79,7 +77,6 @@ import freemarker.template.TemplateException;
 @RequestMapping("/reports")
 public class ReportController {
 
-  private static final String TARGET_ID = "targetId";
   private static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
 
   private final ReportEngine reportEngine;
@@ -183,21 +180,17 @@ public class ReportController {
 
     Map<String, Object> entriesForLanguage;
     try {
-      entriesForLanguage = veoClient.fetchTranslations(parameters.locale(), authorizationHeader);
+      entriesForLanguage =
+          veoClient.fetchTranslations(
+              parameters.locale(), createReport.domain(), authorizationHeader);
     } catch (IOException e) {
       throw new ServerErrorException("Failed to fetch translations for " + parameters.locale(), e);
     }
     DataProvider dataProvider =
-        keysAndUrls -> {
-          ReportDataSpecification reportDataSpecification =
-              new ReportDataSpecification(
-                  keysAndUrls.entrySet().stream()
-                      .collect(
-                          Collectors.toMap(
-                              Entry::getKey, e -> expandUrl(e.getKey(), e.getValue(), target))));
-
+        () -> {
           try {
-            return veoClient.fetchData(reportDataSpecification, authorizationHeader);
+            return veoClient.fetchData(
+                createReport.unit(), createReport.domain(), target.id(), authorizationHeader);
           } catch (IOException e) {
             throw new ServerErrorException("Failed to fetch report data", e);
           }
@@ -219,20 +212,5 @@ public class ReportController {
       mediaType = new MediaType(mediaType, StandardCharsets.UTF_8);
     }
     return ResponseEntity.ok().contentType(mediaType).body(stream);
-  }
-
-  private static String expandUrl(String key, String url, TargetSpecification target) {
-    PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${", "}");
-    return helper.replacePlaceholders(
-        url,
-        placeholderName -> {
-          if (TARGET_ID.equals(placeholderName)) {
-            return target.id().toString();
-          } else {
-            throw new IllegalArgumentException(
-                "Unsupported placeholder \"%s\" in url for %s (%s)"
-                    .formatted(placeholderName, key, url));
-          }
-        });
   }
 }

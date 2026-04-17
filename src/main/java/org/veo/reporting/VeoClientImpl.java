@@ -23,8 +23,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
 import org.slf4j.Logger;
@@ -37,7 +37,6 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 
 import org.veo.reporting.exception.DataFetchingException;
-import org.veo.reporting.exception.VeoReportingException;
 
 import tools.jackson.databind.ObjectReader;
 import tools.jackson.databind.json.JsonMapper;
@@ -70,39 +69,22 @@ public class VeoClientImpl implements VeoClient {
 
   @Override
   public Map<String, Object> fetchData(
-      ReportDataSpecification reportDataSpecification, String authorizationHeader)
-      throws IOException {
-
+      UUID unitId, UUID domainId, UUID targetId, String authorizationHeader) throws IOException {
     Map<String, Object> result = new HashMap<>();
-    for (Entry<String, String> e : reportDataSpecification.entrySet()) {
-      Object v = fetchData(URI.create(veoUrl + e.getValue()), authorizationHeader);
-      result.put(e.getKey(), v);
-      if (v instanceof Map m) {
-        @SuppressWarnings("unchecked")
-        Map<String, Object> owner = (Map<String, Object>) m.get("owner");
-        if (owner != null) {
-          String ownerId = (String) owner.get("id");
-          addDataForOwner(result, ownerId, authorizationHeader);
-        }
 
-      } else {
-        throw new VeoReportingException("List-valued targets are not supported." + v);
-      }
-    }
-    return result;
-  }
-
-  @SuppressWarnings("unchecked")
-  private void addDataForOwner(
-      Map<String, Object> result, String ownerId, String authorizationHeader) throws IOException {
     Map<String, Object> export =
-        (Map<String, Object>)
-            fetchData(URI.create(veoUrl + "/units/" + ownerId + "/export"), authorizationHeader);
+        (Map<String, Object>) fetchData("/units/" + unitId + "/export", authorizationHeader);
     List<Map<String, Object>> elements = (List<Map<String, Object>>) export.get("elements");
     List<Map<String, Object>> risks = (List<Map<String, Object>>) export.get("risks");
     applyRisks(elements, risks);
 
-    result.put("domains", export.get("domains"));
+    List<Map<String, ?>> domains = (List<Map<String, ?>>) export.get("domains");
+    var domain =
+        domains.stream()
+            .filter(d -> d.get("id").equals(domainId.toString()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Domain not found"));
+    result.put("domain", domain);
     result.put("unit", export.get("unit"));
     result.put("assets", filterElements(elements, "asset"));
     result.put("controls", filterElements(elements, "control"));
@@ -112,6 +94,17 @@ public class VeoClientImpl implements VeoClient {
     result.put("processes", filterElements(elements, "process"));
     result.put("scenarios", filterElements(elements, "scenario"));
     result.put("scopes", filterElements(elements, "scope"));
+    var target =
+        elements.stream()
+            .filter(it -> it.get("id").equals(targetId.toString()))
+            .findFirst()
+            .orElseThrow(
+                () ->
+                    new IllegalArgumentException(
+                        "Target with id " + targetId + " not found in unit " + unitId));
+    result.put("target", target);
+
+    return result;
   }
 
   private static List<Map<String, Object>> filterElements(
@@ -138,9 +131,11 @@ public class VeoClientImpl implements VeoClient {
     }
   }
 
-  private Object fetchData(URI uri, String authorizationHeader) throws IOException {
+  @Override
+  public Object fetchData(String path, String authorizationHeader) throws IOException {
     Object result;
-    String cacheKey = uri.toString();
+    String cacheKey = path;
+    URI uri = URI.create(veoUrl + path);
     if (cache != null) {
       result = cache.get(cacheKey);
       if (result != null) {

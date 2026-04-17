@@ -45,9 +45,7 @@ table.used_modules th:last-child, table.used_modules td:last-child {
 }
 </style>
 
-<#assign scope = informationDomain/>
-<#-- FIXME #1175: maybe pass domain into report? -->
-<#assign domain=domains?filter(it->it.name == domainName)?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
+<#assign scope = target/>
 <#assign institutions=scope.scopes?filter(it->it.hasSubType('SCP_Institution')) />
 
 <#assign elementSubTypeGroups = groupBySubType(scope.members, 'process', domain)

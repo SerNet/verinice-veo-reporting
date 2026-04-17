@@ -16,8 +16,5 @@
     {
       "modelType": "scope"
     }
-  ],
-  "data": {
-    "scopeMembers": "/scopes/${targetId}/members"
-  }
+  ]
 }

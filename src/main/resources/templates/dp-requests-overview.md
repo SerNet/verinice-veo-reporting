@@ -3,6 +3,7 @@
 
 <#assign table = com.table/>
 
+<#assign scope=target />
 <#assign requests = scope.getMembersWithType('document')?filter(p ->p.hasSubType('DOC_RequestDataSubject'))>
 
 <style>

@@ -105,9 +105,7 @@ public final class ReportEngineImpl implements ReportEngine {
         getReport(reportName)
             .orElseThrow(() -> new IllegalArgumentException("Unknown report " + reportName));
 
-    Map<String, Object> data = dataProvider.resolve(config.getData());
-    // TODO #1175: maybe pass domain into report?
-    data.put("domainName", config.getDomainName());
+    Map<String, Object> data = dataProvider.resolve();
 
     String templateName = config.getTemplateFile();
     String templateBaseName = templateName.split("\\.")[0];

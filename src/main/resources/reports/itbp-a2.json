@@ -18,8 +18,5 @@
         "SCP_InformationDomain"
       ]
     }
-  ],
-  "data": {
-    "informationDomain": "/scopes/${targetId}"
-  }
+  ]
 }

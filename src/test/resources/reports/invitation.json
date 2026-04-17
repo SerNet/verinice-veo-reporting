@@ -13,8 +13,5 @@
     {
       "modelType": "person"
     }
-  ],
-  "data": {
-    "person": "/persons/${targetId}"
-  }
+  ]
 }

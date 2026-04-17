@@ -19,12 +19,9 @@ package org.veo.reporting;
 
 import java.util.Map;
 
-/**
- * Resolves an entry from a {@link ReportConfiguration}'s <code>data</code> specification to the
- * real value
- */
+/** Resolves external data for the report execution */
 @SuppressWarnings("PMD.ImplicitFunctionalInterface")
 public interface DataProvider {
 
-  Map<String, Object> resolve(Map<String, String> data);
+  Map<String, Object> resolve();
 }

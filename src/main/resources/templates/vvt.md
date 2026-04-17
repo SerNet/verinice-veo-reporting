@@ -7,6 +7,8 @@
  def = com.def
  >
 
+<#assign scope=target />
+
 <#--  OLD VERSION, recursive membership
 <#function is_member_recursive scope entity>
   <#local filteredMembers = scope.members?filter(m -> m.type == 'scope' || m.type == 'process')>
@@ -424,9 +426,6 @@ ${(process.process_informationsObligations_status?string(bundle.yes, bundle.no))
 </#list>
 </@section>
 </#if>
-
-<#-- FIXME #1175: maybe pass domain into report? -->
-<#assign domain=domains?filter(it->it.name == domainName)?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 
 <@section bundle.data_protection_impact_assessment>
 ${bundle.piaMandatory}

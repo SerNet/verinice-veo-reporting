@@ -1,6 +1,8 @@
 <#import "/libs/commons.md" as com>
 
 <#assign def = com.def />
+<#assign scope=target />
+
 <#assign processings = scope.getMembersWithType('process')?filter(p ->p.hasSubType('PRO_DataProcessing'))?filter(p-> p.process_processing_asProcessor!false)>
 
 <#assign management=scope.findFirstLinked('scope_management')!>

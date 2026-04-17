@@ -21,33 +21,28 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
-/**
- * Fetches data from a veo instance.
- *
- * @see org.veo.reporting.ReportConfiguration.data
- */
-@SuppressWarnings("PMD.ImplicitFunctionalInterface")
+/** Fetches data from a veo instance. */
 public interface VeoClient {
 
-  Map<String, Object> fetchData(
-      ReportDataSpecification dataSpecification, String authorizationHeader) throws IOException;
-
-  default Map<String, Object> fetchTranslations(Locale locale, String authorizationHeader)
-      throws IOException {
+  default Map<String, Object> fetchTranslations(
+      Locale locale, UUID domainId, String authorizationHeader) throws IOException {
     String language = locale.getLanguage();
-    String translationsUrl = "/translations?languages=" + language;
-    Map<String, Map<String, Map<String, Object>>> lang =
-        (Map<String, Map<String, Map<String, Object>>>)
-            fetchData(
-                    new ReportDataSpecification(Map.of(translationsUrl, translationsUrl)),
-                    authorizationHeader)
-                .values()
-                .iterator()
-                .next();
-    Map<String, Object> entriesForLanguage = lang.get("lang").get(language);
+    String translationsUrl =
+        "/translations?languages=" + language + "&domain=" + domainId.toString();
+
+    Map<String, Map<String, Map<String, Object>>> translations =
+        (Map) fetchData(translationsUrl, authorizationHeader);
+
+    Map<String, Object> entriesForLanguage = translations.get("lang").get(language);
     Objects.requireNonNull(
         entriesForLanguage, "Failed to load translations for language " + language);
     return entriesForLanguage;
   }
+
+  Map<String, Object> fetchData(
+      UUID unitId, UUID domainId, UUID targetId, String authorizationHeader) throws IOException;
+
+  Object fetchData(String path, String authorizationHeader) throws IOException;
 }

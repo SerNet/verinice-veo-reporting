@@ -26,19 +26,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public enum EntityType {
   @JsonProperty("asset")
-  ASSET,
+  ASSET("assets"),
   @JsonProperty("control")
-  CONTROL,
+  CONTROL("controls"),
   @JsonProperty("document")
-  DOCUMENT,
+  DOCUMENT("documents"),
   @JsonProperty("incident")
-  INCIDENT,
+  INCIDENT("incidents"),
   @JsonProperty("person")
-  PERSON,
+  PERSON("persons"),
   @JsonProperty("process")
-  PROCESS,
+  PROCESS("processes"),
   @JsonProperty("scenario")
-  SCENARIO,
+  SCENARIO("scenarios"),
   @JsonProperty("scope")
-  SCOPE
+  SCOPE("scopes");
+
+  final String pluralTerm;
+
+  EntityType(String pluralTerm) {
+    this.pluralTerm = pluralTerm;
+  }
 }

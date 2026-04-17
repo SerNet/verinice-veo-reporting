@@ -48,10 +48,8 @@ table.asset_list th:first-child, table.asset_list td:first-child {
 }
 </style>
 
-<#assign scope = isoOrg/>
-<#-- FIXME #1175: maybe pass domain into report? -->
-<#assign domain=domains?filter(it->it.name == domainName)?filter(it->scope.domains?keys?seq_contains(it.id))
-?sort_by("createdAt")?last />
+<#assign scope = target/>
+
 
 <div class="footer-left">
   <table>

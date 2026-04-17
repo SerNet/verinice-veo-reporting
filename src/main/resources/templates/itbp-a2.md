@@ -37,9 +37,7 @@ td {
 }
 </style>
 
-<#assign scope = informationDomain/>
-<#-- FIXME #1175: maybe pass domain into report? -->
-<#assign domain=domains?filter(it->it.name == domainName)?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
+<#assign scope = target/>
 <#assign riskDefinitionId=(scope.domains[domain.id].riskDefinition)! />
 <#assign impacts=riskDefinitionId?has_content?then(domain.riskDefinitions[riskDefinitionId].categories[0].potentialImpacts,[])/>
 <#assign institutions=scope.scopes?filter(it->it.hasSubType('SCP_Institution')) />

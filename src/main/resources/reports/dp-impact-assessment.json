@@ -18,8 +18,5 @@
         "PRO_DPIA"
       ]
     }
-  ],
-  "data": {
-    "dpia": "/processes/${targetId}?embedRisks=true"
-  }
+  ]
 }

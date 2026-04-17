@@ -4,6 +4,7 @@
 <#assign table = com.table
          def = com.def />
 
+<#assign scope=target>
 <#assign processesInScope = scope.getMembersWithType('process')?filter(p ->p.hasSubType('PRO_DataProcessing'))>
 
 <style>
@@ -96,8 +97,6 @@ dt {
 }
 </style>
 
-<#-- FIXME #1175: maybe pass domain into report? -->
-<#assign domain=domains?filter(it->it.name == domainName)?filter(it->scope.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
 <#assign riskDefinitionId=scope.domains[domain.id].riskDefinition! />
 
 

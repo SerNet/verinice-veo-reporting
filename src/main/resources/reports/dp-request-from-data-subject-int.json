@@ -20,8 +20,5 @@
         "DOC_RequestDataSubject"
       ]
     }
-  ],
-  "data": {
-    "request": "/documents/${targetId}"
-  }
+  ]
 }

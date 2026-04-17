@@ -146,7 +146,9 @@ public class ReportControllerSpec extends ReportingTest {
                     type: 'scope',
                     id: UUID.randomUUID()
                 ]
-            ]])
+            ],
+            unit: UUID.randomUUID(),
+            domain: UUID.randomUUID()])
         then:
         response.status == 404
     }
@@ -154,7 +156,9 @@ public class ReportControllerSpec extends ReportingTest {
     def "try to create a report with missing targets parameter"() {
         when:
         def response = POST("/reports/processing-activities", 'abc', [
-            outputType:'application/pdf'
+            outputType:'application/pdf',
+            unit: UUID.randomUUID(),
+            domain: UUID.randomUUID()
         ])
         then:
         response.status == 400
@@ -165,7 +169,9 @@ public class ReportControllerSpec extends ReportingTest {
         when:
         def response = POST("/reports/processing-activities",'abc', [
             outputType:'application/pdf',
-            targets: []])
+            targets: [],
+            unit: UUID.randomUUID(),
+            domain: UUID.randomUUID()])
         then:
         response.status == 400
         response.contentAsString == '''targets: size must be between 1 and 1'''
@@ -180,7 +186,9 @@ public class ReportControllerSpec extends ReportingTest {
                     type: 'chocolate',
                     id: '1'
                 ]
-            ]])
+            ],
+            unit: UUID.randomUUID(),
+            domain: UUID.randomUUID()])
         then:
         response.status == 400
         response.contentAsString == '''Cannot deserialize value of type `org.veo.reporting.EntityType` from String "chocolate": not one of the values accepted for Enum class: [scenario, incident, scope, person, document, control, process, asset]'''
@@ -195,7 +203,10 @@ public class ReportControllerSpec extends ReportingTest {
                     type: 'control',
                     id: UUID.randomUUID()
                 ]
-            ]])
+            ],
+            unit: UUID.randomUUID(),
+            domain: UUID.randomUUID()
+        ])
         then:
         response.status == 400
         response.contentAsString == '''Target type control not supported by report processing-activities'''
@@ -214,7 +225,9 @@ public class ReportControllerSpec extends ReportingTest {
                     type: 'scope',
                     id: UUID.randomUUID()
                 ]
-            ]
+            ],
+            unit: UUID.randomUUID(),
+            domain: UUID.randomUUID()
         ])
         then:
         response.status == 400
@@ -230,7 +243,9 @@ public class ReportControllerSpec extends ReportingTest {
                     type: 'scope',
                     id: UUID.randomUUID()
                 ]
-            ]
+            ],
+            unit: UUID.randomUUID(),
+            domain: UUID.randomUUID()
         ])
         then:
         response.status == 401
@@ -245,7 +260,9 @@ public class ReportControllerSpec extends ReportingTest {
                     type: 'scope',
                     id: UUID.randomUUID()
                 ]
-            ]
+            ],
+            unit: UUID.randomUUID(),
+            domain: UUID.randomUUID()
         ])
         then:
         response.status == 400
@@ -254,6 +271,8 @@ public class ReportControllerSpec extends ReportingTest {
 
     def "create a report with different locales and time zones"() {
         given:
+        def unitId = UUID.randomUUID()
+        def domainId = UUID.randomUUID()
         def personId = UUID.randomUUID()
         when:
         def response = POST("/reports/invitation",'abc','en', [
@@ -264,17 +283,19 @@ public class ReportControllerSpec extends ReportingTest {
                     type: 'person',
                     id: personId
                 ]
-            ]
+            ],
+            unit: unitId,
+            domain: domainId
         ])
         then:
         response.status == 200
 
-        1 * veoClient.fetchData([person:"/persons/$personId"], 'Bearer: abc') >> [
+        1 * veoClient.fetchData(unitId, domainId, personId, 'Bearer: abc') >> [
             person : [
                 name: 'Mary'
             ]
         ]
-        1 * veoClient.fetchTranslations(Locale.ENGLISH, 'Bearer: abc') >> [
+        1 * veoClient.fetchTranslations(Locale.ENGLISH, domainId, 'Bearer: abc') >> [
             lang: [
                 en:[:]
             ]
@@ -293,17 +314,19 @@ Cheers'''
                     id: personId
                 ]
             ],
-            timeZone: 'Europe/Berlin'
+            timeZone: 'Europe/Berlin',
+            unit: unitId,
+            domain: domainId
         ])
         then:
         response.status == 200
 
-        1 * veoClient.fetchData([person:"/persons/$personId"], 'Bearer: abc') >> [
+        1 * veoClient.fetchData(unitId, domainId, personId, 'Bearer: abc') >> [
             person : [
                 name: 'Maria'
             ]
         ]
-        1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
+        1 * veoClient.fetchTranslations(Locale.GERMAN, domainId, 'Bearer: abc') >> [
             lang: [
                 de:[:]
             ]
@@ -323,16 +346,18 @@ Tschüß'''
                     id: personId
                 ]
             ],
-            timeZone: 'Atlantis'
+            timeZone: 'Atlantis',
+            unit: unitId,
+            domain: domainId
         ])
         then: "UTC is used"
         response.status == 200
-        1 * veoClient.fetchData([person:"/persons/$personId"], 'Bearer: abc') >> [
+        1 * veoClient.fetchData(unitId, domainId, personId, 'Bearer: abc') >> [
             person : [
                 name: 'Maria'
             ]
         ]
-        1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
+        1 * veoClient.fetchTranslations(Locale.GERMAN,domainId,'Bearer: abc') >> [
             lang: [
                 de:[:]
             ]
@@ -352,15 +377,17 @@ Tschüß'''
                     id: personId
                 ]
             ],
+            unit: unitId,
+            domain: domainId
         ])
         then: "UTC is used"
         response.status == 200
-        1 * veoClient.fetchData([person:"/persons/$personId"], 'Bearer: abc') >> [
+        1 * veoClient.fetchData(unitId, domainId, personId, 'Bearer: abc') >> [
             person : [
                 name: 'Maria'
             ]
         ]
-        1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
+        1 * veoClient.fetchTranslations(Locale.GERMAN, domainId, 'Bearer: abc') >> [
             lang: [
                 de:[:]
             ]
@@ -404,6 +431,8 @@ Tschüß'''
 
     def "create a PDF report"() {
         given:
+        def unitId = UUID.randomUUID()
+        def domainId = UUID.randomUUID()
         def scopeId = UUID.randomUUID()
         when:
         def response = POST("/reports/processing-on-behalf", 'abc', 'de',[
@@ -413,15 +442,15 @@ Tschüß'''
                     type: 'scope',
                     id: scopeId
                 ]
-            ]
+            ],
+            unit: unitId,
+            domain: domainId
         ])
         then:
         response.status == 200
 
-        1 * veoClient.fetchData([
-            scope: "/scopes/$scopeId"
-        ], 'Bearer: abc') >> [
-            scope:[
+        1 * veoClient.fetchData(unitId, domainId, scopeId, 'Bearer: abc') >> [
+            target:[
                 name: 'My Scope',
                 id: scopeId,
                 _self: "http://example.org/scopes/$scopeId".toString(),
@@ -601,7 +630,7 @@ Tschüß'''
                 ]
             ]
         ]
-        1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
+        1 * veoClient.fetchTranslations(Locale.GERMAN, domainId, 'Bearer: abc') >> [
             name: 'Name',
             scope_contactInformation_email: 'E-Mail',
             scope_contactInformation_phone: 'Telefon',
@@ -623,6 +652,8 @@ gemäß Art. 30 II DS-GVO''')
 
     def "Status 401 from data backend results in status 401"() {
         given:
+        def unitId = UUID.randomUUID()
+        def domainId = UUID.randomUUID()
         def scopeId = UUID.randomUUID()
         when:
         def response = POST("/reports/processing-on-behalf", 'abc', 'de', [
@@ -632,19 +663,23 @@ gemäß Art. 30 II DS-GVO''')
                     type: 'scope',
                     id: scopeId
                 ]
-            ]
+            ],
+            unit: unitId,
+            domain: domainId
         ])
         then:
         response.status == 401
         response.contentAsString == "Failed to retrieve data from http://localhost/scopes/$scopeId, status code: 401, message: Invalid token"
 
-        1 * veoClient.fetchData(_, 'Bearer: abc') >> {
+        1 * veoClient.fetchData(unitId,domainId,scopeId,'Bearer: abc') >> {
             throw new DataFetchingException("http://localhost/scopes/$scopeId", 401, 'Invalid token')
         }
     }
 
     def "report errors lead to an unsuccessful response"() {
         given:
+        def unitId = UUID.randomUUID()
+        def domainId = UUID.randomUUID()
         def scopeId = UUID.randomUUID()
         when:
         def response = POST("/reports/processing-on-behalf", 'abc', 'de',[
@@ -654,13 +689,15 @@ gemäß Art. 30 II DS-GVO''')
                     type: 'scope',
                     id: scopeId
                 ]
-            ]
+            ],
+            unit: unitId,
+            domain: domainId
         ])
         then:
         response.status != 200
 
-        _ * veoClient.fetchData(_, 'Bearer: abc') >> [:]
-        1 * veoClient.fetchTranslations(Locale.GERMAN, 'Bearer: abc') >> [
+        _ * veoClient.fetchData(unitId, domainId, scopeId, 'Bearer: abc') >> [:]
+        1 * veoClient.fetchTranslations(Locale.GERMAN, domainId, 'Bearer: abc') >> [
             name: 'Name',
             scope_contactInformation_email: 'E-Mail',
             scope_contactInformation_phone: 'Telefon',

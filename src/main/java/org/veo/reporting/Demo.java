@@ -31,9 +31,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +41,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 
 import freemarker.template.TemplateException;
+import tools.jackson.databind.ObjectWriter;
 import tools.jackson.databind.json.JsonMapper;
 
 /**
@@ -48,107 +49,87 @@ import tools.jackson.databind.json.JsonMapper;
  * only meant to be used by developers and is nowhere near production quality, that's why it must be
  * enabled via the <code>demo</code> Spring Boot profile.
  */
-@SuppressWarnings("PMD.SystemPrintln")
+@SuppressWarnings({"PMD.SystemPrintln", "PMD.AvoidDuplicateLiterals"})
 public class Demo {
 
-  private static final String TARGET_ID_PLACEHOLDER = "${targetId}";
   private static final Logger LOGGER = LoggerFactory.getLogger(Demo.class);
 
   static void runDemo(ConfigurableApplicationContext ctx) throws IOException {
     LOGGER.info("Demo mode enabled");
     var reportEngine = ctx.getBean(ReportEngine.class);
     var token = ctx.getEnvironment().getRequiredProperty("veo.accesstoken");
-    var scopeId = ctx.getEnvironment().getProperty("veo.demoscopeid");
+    var scopeId = ctx.getEnvironment().getProperty("veo.demoscopeid", UUID.class);
     var printInputData = "true".equals(ctx.getEnvironment().getProperty("veo.print_report_data"));
-    var requestId = ctx.getEnvironment().getProperty("veo.demorequestid");
-    var scopeIdItgs = ctx.getEnvironment().getProperty("veo.demoscopeiditbp");
-    var scopeIdNIS2 = ctx.getEnvironment().getProperty("veo.demoscopeidnis2");
-    var isaId = ctx.getEnvironment().getProperty("veo.demoisaid");
-    var scopeIdIso = ctx.getEnvironment().getProperty("veo.demoscopeidiso");
+    var requestId = ctx.getEnvironment().getProperty("veo.demorequestid", UUID.class);
+    var scopeIdItgs = ctx.getEnvironment().getProperty("veo.demoscopeiditbp", UUID.class);
+    var scopeIdNIS2 = ctx.getEnvironment().getProperty("veo.demoscopeidnis2", UUID.class);
+    var isaId = ctx.getEnvironment().getProperty("veo.demoisaid", UUID.class);
+    var scopeIdIso = ctx.getEnvironment().getProperty("veo.demoscopeidiso", UUID.class);
     var veoClient = ctx.getBean(VeoClient.class);
     var authHeader = "Bearer " + token;
-    Map<Locale, Map<String, Object>> entriesForLanguage = new HashMap<>();
-    entriesForLanguage.put(Locale.GERMANY, veoClient.fetchTranslations(Locale.GERMANY, authHeader));
-    entriesForLanguage.put(Locale.US, veoClient.fetchTranslations(Locale.US, authHeader));
 
-    var objectMapper = new JsonMapper();
-    var writer = objectMapper.writerWithDefaultPrettyPrinter();
+    var dpiaId = ctx.getEnvironment().getProperty("veo.demodpiaid", UUID.class);
+    var privacyIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentid", UUID.class);
+    var securityIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentidnis2", UUID.class);
 
-    var dpiaId = ctx.getEnvironment().getProperty("veo.demodpiaid");
-    var privacyIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentid");
-    var securityIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentidnis2");
+    var veoClientWrapper = new VeoClientWrapper(veoClient, authHeader, printInputData);
 
-    boolean createGDPRReports = scopeId != null;
-    boolean createDPIAReports = dpiaId != null;
-    boolean createDPIncidentReports = privacyIncidentId != null;
-    boolean createRequestReports = requestId != null;
-    boolean createItgsReports = scopeIdItgs != null;
-    boolean createNIS2Reports = scopeIdNIS2 != null;
-    boolean createNIS2IncidentReports = securityIncidentId != null;
-    boolean createISAReports = isaId != null;
-    boolean createISOReports = scopeIdIso != null;
+    if (scopeId != null) {
+      veoClientWrapper.addReportTargetData(
+          EntityType.SCOPE,
+          scopeId,
+          "processing-activities",
+          "risk-analysis",
+          "processing-on-behalf",
+          "dp-requests-from-data-subjects-overview");
+    }
 
-    DataProvider dataProvider =
-        dataSpec -> {
-          ReportDataSpecification reportDataSpecification =
-              new ReportDataSpecification(
-                  dataSpec.entrySet().stream()
-                      .collect(
-                          Collectors.toMap(
-                              Entry::getKey,
-                              e -> {
-                                String key = e.getKey();
-                                String url = e.getValue();
-                                if ("dpia".equals(key)) {
-                                  url = url.replace(TARGET_ID_PLACEHOLDER, dpiaId);
-                                } else if ("incident".equals(key)) {
-                                  url = url.replace(TARGET_ID_PLACEHOLDER, privacyIncidentId);
-                                } else if ("scope".equals(key)) {
-                                  url = url.replace(TARGET_ID_PLACEHOLDER, scopeId);
-                                } else if ("request".equals(key)) {
-                                  url = url.replace(TARGET_ID_PLACEHOLDER, requestId);
-                                } else if ("informationDomain".equals(key)) {
-                                  url = url.replace(TARGET_ID_PLACEHOLDER, scopeIdItgs);
-                                } else if ("organization".equals(key)) {
-                                  url = url.replace(TARGET_ID_PLACEHOLDER, scopeIdNIS2);
-                                } else if ("isa".equals(key)) {
-                                  url = url.replace(TARGET_ID_PLACEHOLDER, isaId);
-                                } else if ("nis2incident".equals(key)) {
-                                  url = url.replace(TARGET_ID_PLACEHOLDER, securityIncidentId);
-                                } else if ("isoOrg".equals(key)) {
-                                  url = url.replace(TARGET_ID_PLACEHOLDER, scopeIdIso);
-                                } else if (url.contains("targetId")) {
-                                  throw new IllegalArgumentException("Unhandled url: " + url);
-                                }
-                                return url;
-                              })));
-          try {
-            Map<String, Object> data = veoClient.fetchData(reportDataSpecification, authHeader);
-            if (printInputData) {
-              for (Entry<String, Object> e : data.entrySet()) {
-                System.out.println("\n" + e.getKey() + ":");
-                System.out.println(writer.writeValueAsString(e.getValue()));
-              }
-            }
-            return data;
-          } catch (IOException e) {
-            throw new RuntimeException("Error fetching data", e);
-          }
-        };
+    if (dpiaId != null) {
+      veoClientWrapper.addReportTargetData(EntityType.PROCESS, dpiaId, "dp-impact-assessment");
+    }
 
-    createReports(
-        reportEngine,
-        dataProvider,
-        entriesForLanguage,
-        createGDPRReports,
-        createDPIAReports,
-        createDPIncidentReports,
-        createRequestReports,
-        createItgsReports,
-        createNIS2Reports,
-        createNIS2IncidentReports,
-        createISAReports,
-        createISOReports);
+    if (privacyIncidentId != null) {
+      veoClientWrapper.addReportTargetData(
+          EntityType.INCIDENT, privacyIncidentId, "dp-privacy-incident");
+    }
+
+    if (requestId != null) {
+      veoClientWrapper.addReportTargetData(
+          EntityType.DOCUMENT, requestId, "dp-request-from-data-subject");
+    }
+
+    if (scopeIdItgs != null) {
+      veoClientWrapper.addReportTargetData(
+          EntityType.SCOPE,
+          scopeIdItgs,
+          "itbp-a1",
+          "itbp-a2",
+          "itbp-a3",
+          "itbp-a4",
+          "itbp-a5",
+          "itbp-a6");
+    }
+
+    if (scopeIdNIS2 != null) {
+      veoClientWrapper.addReportTargetData(EntityType.SCOPE, scopeIdNIS2, "nis2-registration-info");
+    }
+
+    if (scopeIdIso != null) {
+      veoClientWrapper.addReportTargetData(
+          EntityType.SCOPE, scopeIdIso, "iso-soa", "iso-inventory", "iso-risk-analysis");
+    }
+
+    if (securityIncidentId != null) {
+      veoClientWrapper.addReportTargetData(
+          EntityType.INCIDENT, securityIncidentId, "nis2-security-incident");
+    }
+
+    if (isaId != null) {
+      veoClientWrapper.addReportTargetData(
+          EntityType.SCOPE, isaId, "tisax-compact", "tisax-detailed");
+    }
+
+    createReports(reportEngine, veoClientWrapper);
     Path template = Paths.get("src/main/resources/templates");
     try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 
@@ -167,19 +148,7 @@ public class Demo {
       try {
         while ((key = watchService.take()) != null) {
           if (!key.pollEvents().isEmpty()) {
-            createReports(
-                reportEngine,
-                dataProvider,
-                entriesForLanguage,
-                createGDPRReports,
-                createDPIAReports,
-                createDPIncidentReports,
-                createRequestReports,
-                createItgsReports,
-                createNIS2Reports,
-                createNIS2IncidentReports,
-                createISAReports,
-                createISOReports);
+            createReports(reportEngine, veoClientWrapper);
           }
           key.reset();
         }
@@ -190,19 +159,7 @@ public class Demo {
     ctx.stop();
   }
 
-  static void createReports(
-      ReportEngine reportEngine,
-      DataProvider dataProvider,
-      Map<Locale, Map<String, Object>> entriesForLanguage,
-      boolean createGDPRReports,
-      boolean createDPIAReports,
-      boolean createDPIncidentReports,
-      boolean createRequestReports,
-      boolean createItgsReports,
-      boolean createNIS2Reports,
-      boolean createNIS2IncidentReports,
-      boolean createISAReports,
-      boolean createISOReports)
+  static void createReports(ReportEngine reportEngine, VeoClientWrapper veoClientWrapper)
       throws IOException {
 
     ReportCreationParameters parametersGermany =
@@ -211,260 +168,218 @@ public class Demo {
         new ReportCreationParameters(Locale.US, TimeZone.getTimeZone("America/New_York"));
 
     try {
-      if (createGDPRReports) {
-        createReport(
-            reportEngine,
-            "processing-activities",
-            "/tmp/vvt.md",
-            dataProvider,
-            "text/markdown",
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "processing-activities",
-            "/tmp/vvt.html",
-            dataProvider,
-            MediaType.TEXT_HTML_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "processing-activities",
-            "/tmp/vvt.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "risk-analysis",
-            "/tmp/dpra.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "risk-analysis",
-            "/tmp/dpra.html",
-            dataProvider,
-            MediaType.TEXT_HTML_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "processing-on-behalf",
-            "/tmp/av.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
+      createReport(
+          reportEngine,
+          "processing-activities",
+          "/tmp/vvt.md",
+          veoClientWrapper,
+          "text/markdown",
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "processing-activities",
+          "/tmp/vvt.html",
+          veoClientWrapper,
+          MediaType.TEXT_HTML_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "processing-activities",
+          "/tmp/vvt.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "risk-analysis",
+          "/tmp/dpra.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "risk-analysis",
+          "/tmp/dpra.html",
+          veoClientWrapper,
+          MediaType.TEXT_HTML_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "processing-on-behalf",
+          "/tmp/av.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
 
-        createReport(
-            reportEngine,
-            "dp-requests-from-data-subjects-overview",
-            "/tmp/request-overview.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersUS,
-            entriesForLanguage.get(Locale.US));
-      }
-      if (createDPIAReports) {
+      createReport(
+          reportEngine,
+          "dp-requests-from-data-subjects-overview",
+          "/tmp/request-overview.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersUS);
 
-        createReport(
-            reportEngine,
-            "dp-impact-assessment",
-            "/tmp/dpia.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "dp-impact-assessment",
-            "/tmp/dpia.html",
-            dataProvider,
-            MediaType.TEXT_HTML_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-      }
-      if (createDPIncidentReports) {
-        createReport(
-            reportEngine,
-            "dp-privacy-incident",
-            "/tmp/privacy-incident.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "dp-privacy-incident",
-            "/tmp/privacy-incident-en.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersUS,
-            entriesForLanguage.get(Locale.US));
-        createReport(
-            reportEngine,
-            "dp-privacy-incident",
-            "/tmp/privacy-incident.html",
-            dataProvider,
-            MediaType.TEXT_HTML_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-      }
-      if (createRequestReports) {
-        createReport(
-            reportEngine,
-            "dp-request-from-data-subject",
-            "/tmp/request.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "dp-request-from-data-subject",
-            "/tmp/request-en.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersUS,
-            entriesForLanguage.get(Locale.US));
-      }
-      if (createItgsReports) {
-        createReport(
-            reportEngine,
-            "itbp-a1",
-            "/tmp/itbp-a1.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "itbp-a2",
-            "/tmp/itbp-a2.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "itbp-a3",
-            "/tmp/itbp-a3.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "itbp-a4",
-            "/tmp/itbp-a4.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "itbp-a5",
-            "/tmp/itbp-a5.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "itbp-a6",
-            "/tmp/itbp-a6.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-      }
+      createReport(
+          reportEngine,
+          "dp-impact-assessment",
+          "/tmp/dpia.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "dp-impact-assessment",
+          "/tmp/dpia.html",
+          veoClientWrapper,
+          MediaType.TEXT_HTML_VALUE,
+          parametersGermany);
 
-      if (createNIS2Reports) {
-        createReport(
-            reportEngine,
-            "nis2-registration-info",
-            "/tmp/nis2-registration-info.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "nis2-registration-info",
-            "/tmp/nis2-registration-info.en.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersUS,
-            entriesForLanguage.get(Locale.US));
-      }
+      createReport(
+          reportEngine,
+          "dp-privacy-incident",
+          "/tmp/privacy-incident.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "dp-privacy-incident",
+          "/tmp/privacy-incident-en.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersUS);
+      createReport(
+          reportEngine,
+          "dp-privacy-incident",
+          "/tmp/privacy-incident.html",
+          veoClientWrapper,
+          MediaType.TEXT_HTML_VALUE,
+          parametersGermany);
 
-      if (createNIS2IncidentReports) {
-        createReport(
-            reportEngine,
-            "nis2-security-incident",
-            "/tmp/nis2-security-incident.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "nis2-security-incident",
-            "/tmp/nis2-security-incident.en.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersUS,
-            entriesForLanguage.get(Locale.US));
-      }
-      if (createISAReports) {
-        createReport(
-            reportEngine,
-            "tisax-compact",
-            "/tmp/tisax-compact.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "tisax-detailed",
-            "/tmp/tisax-detailed.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-      }
-      if (createISOReports) {
-        createReport(
-            reportEngine,
-            "iso-soa",
-            "/tmp/iso-soa.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "iso-inventory",
-            "/tmp/iso-inventory.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-        createReport(
-            reportEngine,
-            "iso-risk-analysis",
-            "/tmp/iso-risk-analysis.pdf",
-            dataProvider,
-            MediaType.APPLICATION_PDF_VALUE,
-            parametersGermany,
-            entriesForLanguage.get(Locale.GERMANY));
-      }
+      createReport(
+          reportEngine,
+          "dp-request-from-data-subject",
+          "/tmp/request.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "dp-request-from-data-subject",
+          "/tmp/request-en.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersUS);
+
+      createReport(
+          reportEngine,
+          "itbp-a1",
+          "/tmp/itbp-a1.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "itbp-a2",
+          "/tmp/itbp-a2.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "itbp-a3",
+          "/tmp/itbp-a3.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "itbp-a4",
+          "/tmp/itbp-a4.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "itbp-a5",
+          "/tmp/itbp-a5.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "itbp-a6",
+          "/tmp/itbp-a6.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+
+      createReport(
+          reportEngine,
+          "nis2-registration-info",
+          "/tmp/nis2-registration-info.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "nis2-registration-info",
+          "/tmp/nis2-registration-info.en.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersUS);
+
+      createReport(
+          reportEngine,
+          "nis2-security-incident",
+          "/tmp/nis2-security-incident.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "nis2-security-incident",
+          "/tmp/nis2-security-incident.en.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersUS);
+
+      createReport(
+          reportEngine,
+          "tisax-compact",
+          "/tmp/tisax-compact.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "tisax-detailed",
+          "/tmp/tisax-detailed.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+
+      createReport(
+          reportEngine,
+          "iso-soa",
+          "/tmp/iso-soa.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "iso-inventory",
+          "/tmp/iso-inventory.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+      createReport(
+          reportEngine,
+          "iso-risk-analysis",
+          "/tmp/iso-risk-analysis.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
 
     } catch (IOException | TemplateException e) {
       LOGGER.error("Error creating reports", e);
@@ -475,11 +390,17 @@ public class Demo {
       ReportEngine reportEngine,
       String reportId,
       String fileName,
-      DataProvider dataProvider,
+      VeoClientWrapper veoClientWrapper,
       String outputType,
-      ReportCreationParameters parameters,
-      Map<String, Object> dynamicBundleEntries)
+      ReportCreationParameters parameters)
       throws IOException, TemplateException {
+    if (!veoClientWrapper.supports(reportId)) {
+      LOGGER.info("No target registered for report {}, skipping", reportId);
+      return;
+    }
+    DataProvider dataProvider = () -> veoClientWrapper.loadData(reportId);
+    Map<String, Object> dynamicBundleEntries =
+        veoClientWrapper.loadTranslations(reportId, parameters.locale());
     try (var os = Files.newOutputStream(Paths.get(fileName))) {
       reportEngine.generateReport(
           reportId, outputType, parameters, os, dataProvider, dynamicBundleEntries);
@@ -490,4 +411,91 @@ public class Demo {
   }
 
   private Demo() {}
+
+  static class VeoClientWrapper {
+
+    private final Map<String, Map<String, Object>> cache = new HashMap<>();
+    private final Map<String, ElementInfo> reportTargets = new HashMap<>();
+
+    private final VeoClient veoClient;
+    private final String authorizationHeader;
+    private final boolean printInputData;
+    private final ObjectWriter writer;
+
+    public VeoClientWrapper(
+        VeoClient veoClient, String authorizationHeader, boolean printInputData) {
+      this.veoClient = veoClient;
+      this.authorizationHeader = authorizationHeader;
+      this.printInputData = printInputData;
+      var objectMapper = new JsonMapper();
+      writer = objectMapper.writerWithDefaultPrettyPrinter();
+    }
+
+    public Map<String, Object> loadData(String reportId) {
+      ElementInfo info =
+          Objects.requireNonNull(reportTargets.get(reportId), "Unsupported report " + reportId);
+      return cache.computeIfAbsent(
+          reportId,
+          _ -> {
+            try {
+              Map<String, Object> data =
+                  veoClient.fetchData(
+                      info.unitId, info.domainId, info.elementId, authorizationHeader);
+              if (printInputData) {
+                for (Map.Entry<String, Object> e : data.entrySet()) {
+                  System.out.println("\n" + e.getKey() + ":");
+                  System.out.println(writer.writeValueAsString(e.getValue()));
+                }
+              }
+              return data;
+            } catch (IOException e) {
+              throw new RuntimeException("Error fetching data", e);
+            }
+          });
+    }
+
+    public void addReportTargetData(EntityType entityType, UUID elementId, String... reportIDs) {
+      ElementInfo elementInfo = getElementInfo(entityType.pluralTerm, elementId);
+      for (String reportId : reportIDs) {
+        reportTargets.put(reportId, elementInfo);
+      }
+    }
+
+    public boolean supports(String reportId) {
+      return reportTargets.containsKey(reportId);
+    }
+
+    private ElementInfo getElementInfo(String elementTypePlural, UUID elementId) {
+      try {
+        Map<String, Object> data =
+            (Map<String, Object>)
+                veoClient.fetchData("/" + elementTypePlural + "/" + elementId, authorizationHeader);
+
+        Map<String, Object> owner = (Map<String, Object>) data.get("owner");
+
+        String ownerId = (String) owner.get("id");
+
+        Map<String, Map> domains = (Map<String, Map>) data.get("domains");
+
+        if (domains.size() != 1) {
+          throw new IllegalArgumentException("Expected a domain, but got " + domains.size());
+        }
+        String domainId = domains.entrySet().iterator().next().getKey();
+
+        return new ElementInfo(elementId, UUID.fromString(domainId), UUID.fromString(ownerId));
+
+      } catch (IOException e) {
+        throw new RuntimeException("Error fetching data", e);
+      }
+    }
+
+    public Map<String, Object> loadTranslations(String reportId, Locale locale) throws IOException {
+      ElementInfo info =
+          Objects.requireNonNull(reportTargets.get(reportId), "Unsupported report " + reportId);
+
+      return veoClient.fetchTranslations(locale, info.domainId, authorizationHeader);
+    }
+  }
+
+  record ElementInfo(UUID elementId, UUID domainId, UUID unitId) {}
 }

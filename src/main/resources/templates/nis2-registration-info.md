@@ -16,7 +16,7 @@ body  {
 </style>
 
 
-<#assign scope = organization/>
+<#assign scope = target/>
 
 <#macro address scope nameProperty address1 postcode city country phone email>
 <#local name=scope[nameProperty]!>

@@ -43,7 +43,9 @@ public record CreateReport(
         // https://github.com/spotbugs/spotbugs/issues/3022
         @SuppressFBWarnings("EI_EXPOSE_REP")
         List<TargetSpecification> targets,
-    String timeZone) {
+    String timeZone,
+    @NotNull(message = "Unit not specified.") UUID unit,
+    @NotNull(message = "Domain not specified.") UUID domain) {
 
   public CreateReport {
     targets = Optional.ofNullable(targets).map(List::copyOf).orElse(null);

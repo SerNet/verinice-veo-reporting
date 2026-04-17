@@ -51,8 +51,6 @@ public class ReportConfiguration {
 
   private final Set<TypeSpecification> targetTypes;
 
-  private final Map<String, String> data;
-
   @JsonCreator
   public ReportConfiguration(
       @JsonProperty(value = "name", required = true) Map<String, String> name,
@@ -64,8 +62,7 @@ public class ReportConfiguration {
       @JsonSetter(nulls = Nulls.AS_EMPTY)
           @JsonProperty(value = "multipleTargetsSupported", defaultValue = "false")
           boolean multipleTargetsSupported,
-      @JsonProperty(value = "targetTypes", required = true) Set<TypeSpecification> targetTypes,
-      @JsonProperty(value = "data", required = true) Map<String, String> data) {
+      @JsonProperty(value = "targetTypes", required = true) Set<TypeSpecification> targetTypes) {
     this.name = Map.copyOf(name);
     this.domainName = domainName;
     this.description = Map.copyOf(description);
@@ -74,7 +71,6 @@ public class ReportConfiguration {
     this.outputTypes = List.copyOf(outputTypes);
     this.multipleTargetsSupported = multipleTargetsSupported;
     this.targetTypes = Set.copyOf(targetTypes);
-    this.data = Map.copyOf(data);
   }
 
   public Map<String, String> getName() {
@@ -106,11 +102,6 @@ public class ReportConfiguration {
 
   public Set<TypeSpecification> getTargetTypes() {
     return targetTypes;
-  }
-
-  @JsonIgnore
-  public Map<String, String> getData() {
-    return data;
   }
 
   public boolean isMultipleTargetsSupported() {

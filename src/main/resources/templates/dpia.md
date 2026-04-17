@@ -18,10 +18,9 @@ dt {
   font-weight: 600;
 }
 </style>
-
-<#-- FIXME #1175: maybe pass domain into report? -->
-<#assign domain=domains?filter(it->it.name == domainName)?filter(it->dpia.domains?keys?seq_contains(it.id))?sort_by("createdAt")?last />
+<#assign dpia=target />
 <#assign scope=dpia.findFirstLinked('process_PIAResponsibleBody')!>
+
 <#assign riskDefinitionId=(scope.domains[domain.id].riskDefinition)! />
 
 <div class="footer-left">

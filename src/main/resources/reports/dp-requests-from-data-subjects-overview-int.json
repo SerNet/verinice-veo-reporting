@@ -20,8 +20,5 @@
         "SCP_ResponsibleBody"
       ]
     }
-  ],
-  "data": {
-    "scope": "/scopes/${targetId}"
-  }
+  ]
 }
