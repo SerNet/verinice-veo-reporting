@@ -58,19 +58,6 @@ ${term}
 </#if>
 </#macro>
 
-<!-- TODO verinice-veo#2773 use sort order from domain -->
-<#assign orderedSubTypes = [
-'PRO_BusinessProcess',
-'PRO_SpecialisedTask',
-"AST_Information",
-"AST_Application",
-"AST_IT-System",
-"AST_ICS-System",
-"AST_Device",
-"AST_Network",
-'AST_Room'
-]/>
-
 <#function groupBySubType elements elementType domain>
 <#assign etd = domain.elementTypeDefinitions[elementType]/>
 <#assign elementsBySubType = []/>
@@ -79,7 +66,7 @@ ${term}
     'elementType': elementType,
     'subType': subType,
     'elements': elements?filter(e -> e.type == elementType && e.domains[domain.id]?? && e.domains[domain.id].subType == subType)?sort_by("name_naturalized")?sort_by("abbreviation_naturalized"),
-    'sortOrder': orderedSubTypes?seq_contains(subType)?then(orderedSubTypes?seq_index_of(subType), 99999999),
+    'sortOrder': etd.subTypes[subType].sortKey!99999999,
     'subTypePlural': bundle[elementType+'_'+subType+'_plural']
 })?filter(s -> s.elements?has_content)?sort_by("sortOrder")/>
 </#function>
