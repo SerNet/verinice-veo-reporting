@@ -1,18 +1,19 @@
 <#import "/libs/commons.md" as com>
 <#import "/libs/risk-commons.md" as rcom>
+<#import "dp-risk-messages.ftl" as messages>
 
 <#-- TODO: #3385: use domain-specific status -->
 <#assign statusMap = {
-  'YES': {"color":"#12AE0F","labels":{"de":"ja","en":"yes"}},
-  'NO': {"color":"#AE0D11","labels":{"de":"nein","en":"no"}},
-  'PARTIAL': {"color":"#EDE92F","labels":{"de":"teilweise","en":"partial"}},
-  'N_A': {"color":"#49A2ED","labels":{"de":"nicht anwendbar","en":"not applicable"}}
+  'YES': {"color":"#12AE0F"},
+  'NO': {"color":"#AE0D11"},
+  'PARTIAL': {"color":"#EDE92F"},
+  'N_A': {"color":"#49A2ED"}
 } />
 
 <#function getImplementationStatus ri>
   <#local mitigationStatus=statusMap[ri.status]!/>
   <#if mitigationStatus?has_content>
-    <#return {"color":mitigationStatus.color, "label":mitigationStatus.labels[.lang]}/>
+    <#return {"color":mitigationStatus.color, "label":messages.msg["STATUS_" + ri.status]!ri.status}/>
   </#if>
 </#function>
 
@@ -50,9 +51,9 @@
 
 <#list 0..<headinglevel as i>#</#list> ${(scenario.name)!} (${risk.designator})
 
-<@com.def "Risikoverantwortlicher/-Eigentümer", (risk.riskOwner.name)! />
+<@com.def messages.risk_owner, (risk.riskOwner.name)! />
 
-<@com.def "Risikobeschreibung", scenario.description />
+<@com.def messages.risk_description, scenario.description />
 
 <#assign riskDataAvailable = riskDefinition?has_content && risk.domains[domain.id].riskDefinitions[riskDefinition.id]?has_content />
 <#if riskDataAvailable>
@@ -68,16 +69,16 @@
 </colgroup>
 <thead>
 <tr>
-<th colspan="3">Risikobewertung vor Maßnahmen</th>
-<th>Risikobehandlung</th>
-<th colspan="1">Risikobewertung nach Maßnahmen</th>
+<th colspan="3">${messages.assessment_pre}</th>
+<th>${messages.treatment_header}</th>
+<th colspan="1">${messages.assessment_post}</th>
 </tr>
 <tr>
-<th>Effektive Auswirkung</th>
-<th>Effektive Eintritts&shy;wahrscheinlichkeit</th>
-<th>Bruttorisiko (maximaler Wert)</th>
-<th>Risikobehandlungsoptionen</th>
-<th>Nettorisiko (maximaler Wert)</th>
+<th>${messages.eff_impact}</th>
+<th>${messages.eff_prob}</th>
+<th>${messages.gross_risk}</th>
+<th>${messages.treatment_options}</th>
+<th>${messages.net_risk}</th>
 </tr>
 </thead>
 <tbody>
@@ -121,14 +122,10 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <#else/>
 <td />
 </#if>
-
 </tr>
 </tbody>
 </table>
-
 </#if>
-
-
 
 <#if risk.mitigation?has_content && risk.mitigation.parts?has_content>
 <table class="table " style="width:100%;font-size:70%;">
@@ -140,13 +137,13 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 </colgroup>
 <thead>
 <tr>
-<th colspan="4">Maßnahmen</th>
+<th colspan="4">${messages.measures}</th>
 </tr>
 <tr>
-<th>Maßnahmentitel</th>
-<th>Umsetzungs&shy;status</th>
-<th>Umsetzungserläuterung</th>
-<th>Umset&shy;zungs&shy;datum</th>
+<th>${messages.measure_title}</th>
+<th>${messages.impl_status}</th>
+<th>${messages.impl_explanation}</th>
+<th>${messages.impl_date}</th>
 </tr>
 </thead>
 <tbody>
@@ -166,7 +163,6 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 </#list>
 </tbody>
 </table>
-
 </#if>
 </div>
 </#macro>
