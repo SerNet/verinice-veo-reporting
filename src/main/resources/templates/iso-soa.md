@@ -106,7 +106,8 @@ domain/>
 <td>${ci.description!}</td>
 <#else>
 <td/>
-<td colspan="2">
+<td/>
+<td>
 <#if ci.description?has_content>${ci.description}<br /></#if>${ri.implementationStatement!}
 </td>
 </#if>
