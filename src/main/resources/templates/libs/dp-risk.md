@@ -13,7 +13,7 @@
 <#function getImplementationStatus ri>
   <#local mitigationStatus=statusMap[ri.status]!/>
   <#if mitigationStatus?has_content>
-    <#return {"color":mitigationStatus.color, "label":messages.msg["STATUS_" + ri.status]!ri.status}/>
+    <#return {"color":mitigationStatus.color, "label":messages["STATUS_" + ri.status]!ri.status}/>
   </#if>
 </#function>
 
