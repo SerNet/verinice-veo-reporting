@@ -155,9 +155,11 @@ domain/>
 <#function filterComplianceCIs cis>
   <#local result = [] />
     <#list cis as ci>
-      <#local subType = ci.control.domains[domain.id].subType />
-      <#if complianceControlSubTypes?seq_contains(subType)>
-        <#local result = result + [ci] />
+      <#if ci.control.domains?keys?seq_contains(domain.id)>
+        <#local subType = ci.control.domains[domain.id].subType />
+        <#if complianceControlSubTypes?seq_contains(subType)>
+          <#local result = result + [ci] />
+        </#if>
       </#if>
     </#list>
   <#return result/>
