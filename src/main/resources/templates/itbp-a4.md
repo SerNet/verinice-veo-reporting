@@ -9,7 +9,8 @@
          heading = com.heading
          title = icom.title
          controlTitle = icom.controlTitle
-         riStatusColors = icom.riStatusColors/>
+         riStatusColors = icom.riStatusColors
+         filterComplianceCIs = com.filterComplianceCIs/>
 
 <style>
 <@com.defaultStyles />
@@ -143,7 +144,7 @@ domain/>
 
 <#macro moduleview targetObject nestingLevel>
 
-<#assign moduleControlImplementations = sortCIs(targetObject.controlImplementations)>
+<#assign moduleControlImplementations = sortCIs(filterComplianceCIs(targetObject, domain))>
 
 <#if moduleControlImplementations?has_content>
 

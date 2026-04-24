@@ -6,7 +6,8 @@
          multiline = com.multiline
          groupBySubType = com.groupBySubType
          sortModules = icom.sortModules
-         title = icom.title />
+         title = icom.title
+         filterComplianceCIs = com.filterComplianceCIs />
 
 
 <style>
@@ -151,25 +152,11 @@ domain/>
 
 </div>
 
-<#assign complianceControlSubTypes = domain.controlImplementationConfiguration.complianceControlSubTypes>
-<#function filterComplianceCIs cis>
-  <#local result = [] />
-    <#list cis as ci>
-      <#if ci.control.domains?keys?seq_contains(domain.id)>
-        <#local subType = ci.control.domains[domain.id].subType />
-        <#if complianceControlSubTypes?seq_contains(subType)>
-          <#local result = result + [ci] />
-        </#if>
-      </#if>
-    </#list>
-  <#return result/>
-</#function>
-
 # ${bundle.used_modules} {#used_modules}
-<#assign relevantControlImplementations = filterComplianceCIs(scope.controlImplementations)>
+<#assign relevantControlImplementations = filterComplianceCIs(scope, domain)>
 <#list elementSubTypeGroups as group>
   <#list group.elements as item>
-    <#list filterComplianceCIs(item.controlImplementations) as ci>
+    <#list filterComplianceCIs(item, domain) as ci>
       <#assign relevantControlImplementations = relevantControlImplementations + [ci]>
     </#list>
   </#list>
@@ -335,7 +322,7 @@ domain/>
 
 <#macro moduleview targetObject>
 
-<#assign moduleControlImplementations = sortCIs(filterComplianceCIs(targetObject.controlImplementations))>
+<#assign moduleControlImplementations = sortCIs(filterComplianceCIs(targetObject, domain))>
 
 <#if moduleControlImplementations?has_content>
 
