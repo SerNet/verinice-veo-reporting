@@ -248,7 +248,9 @@ ${value}
 
 <@def bundle.implementationStatement ri.implementationStatement/>
 
-<#if ri.control.control_cost_personFix?has_content
+<#if ri.cost?has_content>
+  <@def bundle.cost ri.cost+" €"/>
+<#elseif ri.control.control_cost_personFix?has_content
    || ri.control.control_cost_personVariable?has_content
    || ri.control.control_cost_personVariable?has_content
    || ri.control.control_cost_personPeriod?has_content
