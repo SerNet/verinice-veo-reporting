@@ -63,24 +63,26 @@ Cheers'''
             name: 'Asset',
             id: '0815',
             type: 'asset',
-            customAspects: [
-                basic : [
-                    attributes: [
-                        foo: 'bar'
-                    ]
-                ]
-            ],
-            links: [
-                uses : [
-                    [
-                        attributes: [
-                            foo: 'baz'
-                        ],
-                        target:[
-                            targetUri : 'http://example.org/4711',
-                            name: 'Foo',
-                            id: '4711',
-                            type: 'invalid'
+            domains: [
+                '3cde9f45-be7d-4fb7-867f-ebf112ab7220': [
+                    customAspects: [
+                        basic : [
+                            foo: 'bar'
+                        ]
+                    ],
+                    links: [
+                        uses : [
+                            [
+                                attributes: [
+                                    foo: 'baz'
+                                ],
+                                target:[
+                                    targetUri : 'http://example.org/4711',
+                                    name: 'Foo',
+                                    id: '4711',
+                                    type: 'invalid'
+                                ]
+                            ]
                         ]
                     ]
                 ]
@@ -100,21 +102,33 @@ Cheers'''
                 name: 'Asset 1',
                 abbreviation: '1 of 12',
                 designator: 'AST-234',
-                customAspects: [:]
+                domains: [
+                    'abc':[
+                        customAspects: [:]
+                    ]
+                ]
             ],
             [
                 id: '2',
                 type: 'asset',
                 name: 'Asset 10',
                 abbreviation: '10 of 12',
-                customAspects: [:]
+                domains: [
+                    'abc':[
+                        customAspects: [:]
+                    ]
+                ]
             ],
             [
                 id: '3',
                 type: 'asset',
                 name: 'Asset 12',
                 designator: 'AST-9',
-                customAspects: [:]
+                domains: [
+                    'abc':[
+                        customAspects: [:]
+                    ]
+                ]
             ]
         ]
         when:
@@ -132,85 +146,103 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                 id: '1',
                 type: 'person',
                 _self: 'http://example.org/persons/1',
-                links: [
-                    father : [
-                        [
-                            target: [
-                                targetUri : 'http://example.org/persons/2',
-                                name: 'Jack',
-                                id: '2',
-                                type: 'person'
-                            ]
-                        ]
-                    ],
-                    mother : [
-                        [
-                            attributes: [
-                                biological: true
+                domains: [
+                    '90d900a4-bfb4-44c5-82df-6259eed33d8e':[
+                        links: [
+                            father : [
+                                [
+                                    target: [
+                                        targetUri : 'http://example.org/persons/2',
+                                        name: 'Jack',
+                                        id: '2',
+                                        type: 'person'
+                                    ]
+                                ]
                             ],
-                            target: [
-                                targetUri : 'http://example.org/persons/4',
-                                name: 'Mary',
-                                id: '4',
-                                type: 'person'
+                            mother : [
+                                [
+                                    attributes: [
+                                        biological: true
+                                    ],
+                                    target: [
+                                        targetUri : 'http://example.org/persons/4',
+                                        name: 'Mary',
+                                        id: '4',
+                                        type: 'person'
+                                    ]
+                                ]
                             ]
-                        ]
+                        ],
+                        customAspects: [:]
                     ]
-                ],
-                customAspects: [:]
+                ]
             ],
             [
                 name: 'Jack',
                 id: '2',
                 _self: 'http://example.org/persons/2',
                 type: 'person',
-                links: [
-                    child : [
-                        [
-                            target:[
-                                targetUri : 'http://example.org/persons/1',
-                                name: 'Jack',
-                                id: '1',
-                                type: 'person'
+                domains: [
+                    'd1ee1ea8-0135-41f9-9b7a-3eda4a0bb546':[
+                        links: [
+                            child : [
+                                [
+                                    target:[
+                                        targetUri : 'http://example.org/persons/1',
+                                        name: 'Jack',
+                                        id: '1',
+                                        type: 'person'
+                                    ]
+                                ],
+                                [
+                                    target:[
+                                        targetUri : 'http://example.org/persons/3',
+                                        name: 'Jane',
+                                        id: '3',
+                                        type: 'person'
+                                    ]
+                                ]
                             ]
                         ],
-                        [
-                            target:[
-                                targetUri : 'http://example.org/persons/3',
-                                name: 'Jane',
-                                id: '3',
-                                type: 'person'
-                            ]
-                        ]
+                        customAspects: [:]
+
                     ]
-                ],
-                customAspects: [:]
+                ]
+
             ],
             [
                 name: 'Jane',
                 id: '3',
                 _self: 'http://example.org/persons/3',
                 type: 'person',
-                links: [
-                    father : [
-                        [
-                            target:[
-                                targetUri : 'http://example.org/persons/2',
-                                name: 'Jack',
-                                id: '2',
-                                type: 'person'
+                domains: [
+                    '0fd5b2dd-dc98-4cad-85ea-f556cdb04716':[
+                        links: [
+                            father : [
+                                [
+                                    target:[
+                                        targetUri : 'http://example.org/persons/2',
+                                        name: 'Jack',
+                                        id: '2',
+                                        type: 'person'
+                                    ]
+                                ]
                             ]
-                        ]
+                        ],
+                        customAspects: [:]
                     ]
-                ],
-                customAspects: [:]
+                ]
             ],
             [
                 name: 'Mary',
                 id: '4',
                 _self: 'http://example.org/persons/4',
                 type: 'person',
-                customAspects: [:]
+                domains: [
+                    '82b57069-903f-4f19-8d45-2f5e49dbe24b':[
+                        customAspects: [:]
+                    ]
+                ]
             ]
         ]
         when:
@@ -279,7 +311,11 @@ Jack's children are named John and Jane.'''
                             type: 'asset'
                         ]
                     ],
-                    customAspects: [:]
+                    domains: [
+                        '3cde9f45-be7d-4fb7-867f-ebf112ab7220': [
+                            customAspects: [:]
+                        ]
+                    ]
                 ]
             ],
             persons: [
@@ -288,7 +324,11 @@ Jack's children are named John and Jane.'''
                     id: '1',
                     _self: 'http://example.org/persons/1',
                     type: 'person',
-                    customAspects: [:]
+                    domains: [
+                        '3cde9f45-be7d-4fb7-867f-ebf112ab7220': [
+                            customAspects: [:]
+                        ]
+                    ]
 
                 ]
             ]
@@ -355,16 +395,20 @@ Jack's children are named John and Jane.'''
                 type: 'person',
                 domains: [
                     'abc':[
-                        subType : 'MySubType'
+                        subType : 'MySubType',
+                        customAspects: [:]
                     ]
                 ],
-                customAspects: [:]
             ],
             [
                 name: 'John',
                 id: '2',
                 type: 'person',
-                customAspects: [:]
+                domains: [
+                    'abc':[
+                        customAspects: [:]
+                    ]
+                ]
             ],
             [
                 name: 'Jack',
@@ -372,10 +416,10 @@ Jack's children are named John and Jane.'''
                 type: 'person',
                 domains: [
                     'abc':[
-                        subType : 'OtherSubType'
+                        subType : 'OtherSubType',
+                        customAspects: [:]
                     ]
                 ],
-                customAspects: [:]
             ],
             [
                 name: 'Sue',
@@ -383,13 +427,15 @@ Jack's children are named John and Jane.'''
                 type: 'person',
                 domains: [
                     'abc':[
-                        subType : 'OtherSubType'
+                        subType : 'OtherSubType',
+                        customAspects: [:]
+
                     ],
                     'def':[
-                        subType : 'MySubType'
+                        subType : 'MySubType',
+                        customAspects: [:]
                     ]
                 ],
-                customAspects: [:]
             ]
         ]
         when:

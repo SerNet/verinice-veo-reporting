@@ -469,7 +469,10 @@ public class Demo {
       try {
         Map<String, Object> data =
             (Map<String, Object>)
-                veoClient.fetchData("/" + elementTypePlural + "/" + elementId, authorizationHeader);
+                veoClient.fetchData(
+                    "/" + elementTypePlural + "/" + elementId,
+                    authorizationHeader,
+                    MediaType.APPLICATION_JSON_VALUE);
 
         Map<String, Object> owner = (Map<String, Object>) data.get("owner");
 

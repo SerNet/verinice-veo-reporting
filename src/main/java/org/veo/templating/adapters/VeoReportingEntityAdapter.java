@@ -112,16 +112,18 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
         return new HasSubType(m, ow);
       default:
         @SuppressWarnings("unchecked")
-        Map<String, ?> customAspects = (Map<String, ?>) m.get("customAspects");
-        if (customAspects != null) {
-          for (Entry<String, ?> ca : customAspects.entrySet()) {
-            @SuppressWarnings("unchecked")
-            Map<String, ?> attributes =
-                (Map<String, ?>) ((Map<String, ?>) ca.getValue()).get("attributes");
-            if (attributes != null) {
-              for (Entry<String, ?> a : attributes.entrySet()) {
-                if (key.equals(a.getKey())) {
-                  return wrap(a.getValue());
+        var domains = (Map<String, Map<String, ?>>) m.get(VeoReportingConstants.DOMAINS);
+        if (domains != null) {
+
+          for (var domainAssociation : domains.values()) {
+            Map<String, Map<String, ?>> customAspects =
+                (Map<String, Map<String, ?>>) domainAssociation.get("customAspects");
+            if (customAspects != null) {
+              for (Entry<String, Map<String, ?>> ca : customAspects.entrySet()) {
+                for (Entry<String, ?> a : ca.getValue().entrySet()) {
+                  if (key.equals(a.getKey())) {
+                    return wrap(a.getValue());
+                  }
                 }
               }
             }
@@ -162,9 +164,16 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
 
     @Override
     public Object doExec(String arg) throws TemplateModelException {
-      Map<String, ?> links = (Map<String, ?>) getProperty("links");
-      LOGGER.debug("links: {}", links);
-      return links.get(arg);
+      var domains = (Map<String, Map<String, ?>>) getProperty(VeoReportingConstants.DOMAINS);
+
+      if (domains != null && !domains.isEmpty()) {
+        var domainAssociation = domains.values().iterator().next();
+        return Optional.ofNullable(domainAssociation.get("links"))
+            .map(Map.class::cast)
+            .map(m -> m.get(arg))
+            .orElseGet(Collections::emptyList);
+      }
+      return Collections.emptyList();
     }
   }
 
@@ -176,13 +185,21 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
 
     @Override
     public Object doExec(String arg) throws TemplateModelException {
-      Map<String, ?> links = (Map<String, ?>) getProperty("links");
-      Object linksOfType = links.get(arg);
-      if (linksOfType instanceof List) {
-        List l = (List) linksOfType;
-        if (!l.isEmpty()) {
-          Map firstLink = (Map) l.get(0);
-          return firstLink.get("target");
+      var domains = (Map<String, Map<String, ?>>) getProperty(VeoReportingConstants.DOMAINS);
+
+      if (domains != null && !domains.isEmpty()) {
+
+        var domainAssociation = domains.values().iterator().next();
+        Map<String, ?> links = (Map<String, ?>) domainAssociation.get("links");
+        if (links != null) {
+          Object linksOfType = links.get(arg);
+          if (linksOfType instanceof List) {
+            List l = (List) linksOfType;
+            if (!l.isEmpty()) {
+              Map firstLink = (Map) l.get(0);
+              return firstLink.get("target");
+            }
+          }
         }
       }
       return null;
@@ -197,11 +214,17 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
 
     @Override
     public Object doExec(String arg) throws TemplateModelException {
-      Map<String, ?> links = (Map<String, ?>) getProperty("links");
-      Object linksOfType = links.get(arg);
-      if (linksOfType instanceof List) {
-        return ((List) linksOfType)
-            .stream().map(m -> ((Map) m).get("target")).collect(Collectors.toList());
+      var domains = (Map<String, Map<String, ?>>) getProperty(VeoReportingConstants.DOMAINS);
+      if (domains != null && !domains.isEmpty()) {
+
+        var domainAssociation = domains.values().iterator().next();
+        Map<String, ?> links = (Map<String, ?>) domainAssociation.get("links");
+        if (links != null) {
+          Object linksOfType = links.get(arg);
+          if (linksOfType instanceof List l) {
+            return l.stream().map(m -> ((Map) m).get("target")).collect(Collectors.toList());
+          }
+        }
       }
       return Collections.emptyList();
     }

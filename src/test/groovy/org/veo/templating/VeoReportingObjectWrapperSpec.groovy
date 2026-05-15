@@ -43,8 +43,11 @@ class VeoReportingObjectWrapperSpec extends Specification {
             abbreviation: 'A1',
             type: 'asset',
             _self: '/assets/1',
-            domains: [:],
-            customAspects: []
+            domains: [
+                'a82148ca-4327-47e2-9f8d-74b3be41b45a':[
+                    customAspects: []
+                ]
+            ],
         ]
         expect :
         wrapper.wrap(data) instanceof VeoReportingEntityAdapter

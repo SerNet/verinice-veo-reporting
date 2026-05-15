@@ -23,7 +23,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -78,7 +77,11 @@ public class VeoClientImpl implements VeoClient {
     Map<String, Object> result = new HashMap<>();
 
     Map<String, Object> export =
-        (Map<String, Object>) fetchData("/units/" + unitId + "/export", authorizationHeader);
+        (Map<String, Object>)
+            fetchData(
+                "/units/" + unitId + "/export",
+                authorizationHeader,
+                "application/vnd.sernet.verinice.unit-dump.v2+json");
     List<Map<String, Object>> elements = (List<Map<String, Object>>) export.get("elements");
     List<Map<String, Object>> risks =
         (List<Map<String, Object>>) export.get(VeoReportingConstants.RISKS);
@@ -86,12 +89,9 @@ public class VeoClientImpl implements VeoClient {
 
     elements = filterData(elements, domainId);
 
-    List<Map<String, ?>> domains = (List<Map<String, ?>>) export.get(VeoReportingConstants.DOMAINS);
     var domain =
-        domains.stream()
-            .filter(d -> d.get("id").equals(domainId.toString()))
-            .findFirst()
-            .orElseThrow(() -> new IllegalStateException("Domain not found"));
+        fetchData("/domains/" + domainId, authorizationHeader, MediaType.APPLICATION_JSON_VALUE);
+
     result.put("domain", domain);
     result.put("unit", export.get("unit"));
     result.put("assets", filterElements(elements, "asset"));
@@ -155,31 +155,6 @@ public class VeoClientImpl implements VeoClient {
                                     .toList()));
               });
 
-      Optional.ofNullable(element.get("customAspects"))
-          .map(it -> (Map<String, Map<String, Object>>) it)
-          .ifPresent(
-              customAspects -> {
-                Iterator<Map.Entry<String, Map<String, Object>>> it =
-                    customAspects.entrySet().iterator();
-                while (it.hasNext()) {
-                  var ca = it.next().getValue();
-
-                  List<Map<String, Object>> domains =
-                      (List<Map<String, Object>>) ca.get(VeoReportingConstants.DOMAINS);
-                  List<Map<String, Object>> newDomains =
-                      domains.stream()
-                          .filter(
-                              d ->
-                                  ((String) d.get(VeoReportingConstants.TARGET_URI))
-                                      .endsWith(domainIdAsString))
-                          .toList();
-                  if (newDomains.isEmpty()) {
-                    it.remove();
-                  }
-
-                  ca.put(VeoReportingConstants.DOMAINS, newDomains);
-                }
-              });
       Optional.ofNullable(element.get(VeoReportingConstants.RISKS))
           .map(it -> (List<Map<String, Object>>) it)
           .ifPresent(
@@ -222,60 +197,12 @@ public class VeoClientImpl implements VeoClient {
                                           riskOwner.get(VeoReportingConstants.TARGET_URI))) {
                                     risk.remove("riskOwner");
                                   }
-
                                   return true;
+                                } else {
+                                  return false;
                                 }
-                                return false;
                               })
                           .toList()));
-
-      Optional.ofNullable(element.get("links"))
-          .map(it -> (Map<String, List<Map<String, Object>>>) it)
-          .ifPresent(
-              links -> {
-                Set<String> linkTypes = links.keySet();
-
-                links
-                    .entrySet()
-                    .forEach(
-                        e -> {
-                          List<Map<String, Object>> linksOfType = e.getValue();
-                          List<Map<String, Object>> filteredLinks =
-                              linksOfType.stream()
-                                  .filter(
-                                      link -> {
-                                        List<Map<String, Object>> domains =
-                                            (List<Map<String, Object>>)
-                                                link.get(VeoReportingConstants.DOMAINS);
-                                        List<Map<String, Object>> newDomains =
-                                            domains.stream()
-                                                .filter(
-                                                    it ->
-                                                        ((String)
-                                                                it.get(
-                                                                    VeoReportingConstants
-                                                                        .TARGET_URI))
-                                                            .endsWith(domainIdAsString))
-                                                .toList();
-                                        if (newDomains.isEmpty()) {
-                                          return false;
-                                        }
-                                        Map<String, Object> target =
-                                            (Map<String, Object>) link.get("target");
-
-                                        if (elementURIsNotInDomain.contains(
-                                            target.get(VeoReportingConstants.TARGET_URI))) {
-                                          return false;
-                                        }
-                                        link.put(VeoReportingConstants.DOMAINS, newDomains);
-                                        return true;
-                                      })
-                                  .toList();
-                          if (filteredLinks.size() != linkTypes.size()) {
-                            e.setValue(filteredLinks);
-                          }
-                        });
-              });
 
       Stream.of("controlImplementations", "requirementImplementations")
           .forEach(
@@ -330,12 +257,12 @@ public class VeoClientImpl implements VeoClient {
   }
 
   @Override
-  public Object fetchData(String path, String authorizationHeader) throws IOException {
+  public Object fetchData(String path, String authorizationHeader, String accept)
+      throws IOException {
     Object result;
-    String cacheKey = path;
     URI uri = URI.create(veoUrl + path);
     if (cache != null) {
-      result = cache.get(cacheKey);
+      result = cache.get(path);
       if (result != null) {
         LOGGER.info("Returning cached result for {}", uri);
         return result;
@@ -346,7 +273,7 @@ public class VeoClientImpl implements VeoClient {
 
     ClientHttpRequest request = httpRequestFactory.createRequest(uri, HttpMethod.GET);
     request.getHeaders().add(HttpHeaders.AUTHORIZATION, authorizationHeader);
-    request.getHeaders().setAccept(List.of(MediaType.APPLICATION_JSON));
+    request.getHeaders().setAccept(MediaType.parseMediaTypes(accept));
     request.getHeaders().add(HttpHeaders.ACCEPT_ENCODING, "gzip");
     try (ClientHttpResponse response = request.execute()) {
       if (!response.getStatusCode().is2xxSuccessful()) {
@@ -378,7 +305,7 @@ public class VeoClientImpl implements VeoClient {
           result = m;
         }
         if (cache != null) {
-          cache.put(cacheKey, result);
+          cache.put(path, result);
         }
         return result;
       }

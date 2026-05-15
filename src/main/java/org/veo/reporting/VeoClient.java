@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import org.springframework.http.MediaType;
+
 /** Fetches data from a veo instance. */
 public interface VeoClient {
 
@@ -33,7 +35,7 @@ public interface VeoClient {
         "/translations?languages=" + language + "&domain=" + domainId.toString();
 
     Map<String, Map<String, Map<String, Object>>> translations =
-        (Map) fetchData(translationsUrl, authorizationHeader);
+        (Map) fetchData(translationsUrl, authorizationHeader, MediaType.APPLICATION_JSON_VALUE);
 
     Map<String, Object> entriesForLanguage = translations.get("lang").get(language);
     Objects.requireNonNull(
@@ -44,5 +46,5 @@ public interface VeoClient {
   Map<String, Object> fetchData(
       UUID unitId, UUID domainId, UUID targetId, String authorizationHeader) throws IOException;
 
-  Object fetchData(String path, String authorizationHeader) throws IOException;
+  Object fetchData(String path, String authorizationHeader, String accecpt) throws IOException;
 }

@@ -455,31 +455,37 @@ Tschüß'''
                 id: scopeId,
                 _self: "http://example.org/scopes/$scopeId".toString(),
                 type: 'scope',
-                links:[
-                    scope_management: [
-                        [
-                            target: [
-                                displayName: 'Foo',
-                                name: 'Foo',
-                                targetUri: 'http://example.org/persons/1',
-                                id: '1',
-                                type: 'person'
+                domains: [
+                    'fd672b7d-7e22-4c71-992c-76b59c0d4ee8':[
+                        links:[
+                            scope_management: [
+                                [
+                                    target: [
+                                        displayName: 'Foo',
+                                        name: 'Foo',
+                                        targetUri: 'http://example.org/persons/1',
+                                        id: '1',
+                                        type: 'person'
 
+                                    ],
+                                    attributes: [:]
+                                ]
                             ],
-                            attributes: [:]
-                        ]
-                    ],
-                    scope_dataProtectionOfficer: [
-                        [
-                            target: [
-                                displayName: 'Foo',
-                                name: 'Foo',
-                                targetUri: 'http://example.org/persons/2',
-                                id: '2',
-                                type: 'person'
-                            ],
-                            attributes: [:]
-                        ]
+                            scope_dataProtectionOfficer: [
+                                [
+                                    target: [
+                                        displayName: 'Foo',
+                                        name: 'Foo',
+                                        targetUri: 'http://example.org/persons/2',
+                                        id: '2',
+                                        type: 'person'
+                                    ],
+                                    attributes: [:]
+                                ]
+                            ]
+                        ],
+                        customAspects: [:]
+
                     ]
                 ],
                 members: [
@@ -489,9 +495,7 @@ Tschüß'''
                         id: '1',
                         type: 'process'
                     ]
-                ],
-                customAspects: [:]
-
+                ]
             ],
             processes: [
                 [
@@ -502,27 +506,25 @@ Tschüß'''
                     type: 'process',
                     domains: [
                         'fd672b7d-7e22-4c71-992c-76b59c0d4ee8':[
-                            subType: 'PRO_DataProcessing'
-                        ]
-                    ],
-                    customAspects: [
-                        process_processing: [
-                            attributes: [
-                                process_processing_asProcessor : false
-                            ]
-                        ]
-                    ],
-                    links:[
-                        process_controller : [
-                            [
-                                target: [
-                                    name: 'Foo',
-                                    displayName: 'Foo',
-                                    targetUri: 'http://example.org/scopes/1',
-                                    id: '1',
-                                    type: 'scope'
-                                ],
-                                attributes: [:]
+                            subType: 'PRO_DataProcessing',
+                            customAspects: [
+                                process_processing: [
+                                    process_processing_asProcessor : false
+                                ]
+                            ],
+                            links:[
+                                process_controller : [
+                                    [
+                                        target: [
+                                            name: 'Foo',
+                                            displayName: 'Foo',
+                                            targetUri: 'http://example.org/scopes/1',
+                                            id: '1',
+                                            type: 'scope'
+                                        ],
+                                        attributes: [:]
+                                    ]
+                                ]
                             ]
                         ]
                     ]
@@ -534,56 +536,63 @@ Tschüß'''
                     type:'person',
                     name: 'John Doe',
                     _self: 'http://example.org/persons/1',
-                    customAspects: [
-                        person_generalInformation: [
-                            attributes: [
-                                person_generalInformation_familyName : 'Doe',
-                                person_generalInformation_givenName: 'John'
+                    domains: [
+                        'f2cbaa64-74ed-44f5-88bd-2375f6f28849':[
+                            customAspects: [
+                                person_generalInformation: [
+                                    person_generalInformation_familyName : 'Doe',
+                                    person_generalInformation_givenName: 'John'
+                                ]
                             ]
                         ]
-                    ],
+                    ]
                 ],
                 [
                     id: '2',
                     type:'person',
                     name: 'Jane Doe',
                     _self: 'http://example.org/persons/2',
-                    customAspects: [
-                        person_generalInformation: [
-                            attributes: [
-                                person_generalInformation_familyName : 'Doe',
-                                person_generalInformation_givenName: 'Jane'
+                    domains: [
+                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5':[
+                            customAspects: [
+                                person_generalInformation: [
+                                    person_generalInformation_familyName : 'Doe',
+                                ]
                             ]
                         ]
-                    ],
+                    ]
                 ],
                 [
                     id: '3',
                     type:'person',
                     name: 'Jack Doe',
                     _self: 'http://example.org/persons/3',
-                    customAspects: [
-                        person_generalInformation: [
-                            attributes: [
-                                person_generalInformation_familyName : 'Doe',
-                                person_generalInformation_givenName: 'Jack'
+                    domains: [
+                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5':[
+                            customAspects: [
+                                person_generalInformation: [
+                                    person_generalInformation_familyName : 'Doe',
+                                    person_generalInformation_givenName: 'Jack'
+                                ]
                             ]
                         ]
-                    ],
+                    ]
                 ],
                 [
                     id: '4',
                     type:'person',
                     name: 'June Doe',
                     _self: 'http://example.org/persons/4',
-                    customAspects: [
-                        person_generalInformation: [
-                            attributes: [
-                                person_generalInformation_familyName : 'Doe',
-                                person_generalInformation_givenName: 'June'
+                    domains: [
+                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5':[
+                            customAspects: [
+                                person_generalInformation: [
+                                    person_generalInformation_familyName : 'Doe',
+                                    person_generalInformation_givenName: 'June'
+                                ]
                             ]
                         ]
-                    ],
+                    ]
                 ]
             ],
             scopes:[
@@ -592,32 +601,38 @@ Tschüß'''
                     id: '1',
                     type: 'scope',
                     _self: 'http://example.org/scopes/1',
-                    links:[
-                        scope_management: [
-                            [
-                                target: [
-                                    displayName: 'Foo',
-                                    name: 'Foo',
-                                    targetUri: 'http://example.org/persons/3',
-                                    id: '3',
-                                    type: 'person'
+                    domains: [
+                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5':[
+                            links:[
+                                scope_management: [
+                                    [
+                                        target: [
+                                            displayName: 'Foo',
+                                            name: 'Foo',
+                                            targetUri: 'http://example.org/persons/3',
+                                            id: '3',
+                                            type: 'person'
+                                        ],
+                                        attributes: [:]
+                                    ]
                                 ],
-                                attributes: [:]
-                            ]
-                        ],
-                        scope_dataProtectionOfficer: [
-                            [
-                                target: [
-                                    displayName: 'Foo',
-                                    name: 'Foo',
-                                    targetUri: 'http://example.org/persons/4',
-                                    id: '4',
-                                    type: 'person'
-                                ],
-                                attributes: [:]
-                            ]
+                                scope_dataProtectionOfficer: [
+                                    [
+                                        target: [
+                                            displayName: 'Foo',
+                                            name: 'Foo',
+                                            targetUri: 'http://example.org/persons/4',
+                                            id: '4',
+                                            type: 'person'
+                                        ],
+                                        attributes: [:]
+                                    ]
+                                ]
+                            ],
+                            customAspects: [:]
                         ]
-                    ],
+                    ]
+                    ,
                     members: [
                         [
                             targetUri: 'http://example.org/processes/1',
@@ -626,7 +641,6 @@ Tschüß'''
                             type: 'process'
                         ]
                     ],
-                    customAspects: [:]
                 ]
             ]
         ]
