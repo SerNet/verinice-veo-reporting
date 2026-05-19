@@ -183,7 +183,7 @@ public class ReportControllerSpec extends ReportingTest {
             ]])
         then:
         response.status == 400
-        response.contentAsString == '''Cannot deserialize value of type `org.veo.reporting.EntityType` from String "chocolate": not one of the values accepted for Enum class: [scenario, incident, unit, person, document, control, process, asset, scope, client]'''
+        response.contentAsString == '''Cannot deserialize value of type `org.veo.reporting.EntityType` from String "chocolate": not one of the values accepted for Enum class: [scenario, incident, scope, person, document, control, process, asset]'''
     }
 
     def "try to create a report with unsupported target type"() {

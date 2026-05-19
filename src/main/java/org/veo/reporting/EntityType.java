@@ -27,8 +27,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum EntityType {
   @JsonProperty("asset")
   ASSET,
-  @JsonProperty("client")
-  CLIENT,
   @JsonProperty("control")
   CONTROL,
   @JsonProperty("document")
@@ -42,7 +40,5 @@ public enum EntityType {
   @JsonProperty("scenario")
   SCENARIO,
   @JsonProperty("scope")
-  SCOPE,
-  @JsonProperty("unit")
-  UNIT
+  SCOPE
 }
