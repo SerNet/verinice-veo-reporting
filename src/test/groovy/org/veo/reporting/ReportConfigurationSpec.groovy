@@ -17,10 +17,12 @@
  ******************************************************************************/
 package org.veo.reporting
 
+import org.springframework.boot.test.context.SpringBootTest
+
 import spock.lang.Specification
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.json.JsonMapper
-
+@SpringBootTest(properties = ["spring.jackson.deserialization.FAIL_ON_UNKNOWN_PROPERTIES=true"])
 class ReportConfigurationSpec extends Specification {
 
     def jsonMapper = JsonMapper.builder().disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES).build()
