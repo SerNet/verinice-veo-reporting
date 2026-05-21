@@ -19,6 +19,7 @@ package org.veo.reporting;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -50,5 +51,5 @@ public record CreateReport(
 
   public record TargetSpecification(
       @NotNull(message = "Entity type not specified.") EntityType type,
-      @NotNull(message = "ID not specified.") String id) {}
+      @NotNull(message = "ID not specified.") UUID id) {}
 }

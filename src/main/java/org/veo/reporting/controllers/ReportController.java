@@ -227,7 +227,7 @@ public class ReportController {
         url,
         placeholderName -> {
           if (TARGET_ID.equals(placeholderName)) {
-            return target.id();
+            return target.id().toString();
           } else {
             throw new IllegalArgumentException(
                 "Unsupported placeholder \"%s\" in url for %s (%s)"

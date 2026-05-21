@@ -144,7 +144,7 @@ public class ReportControllerSpec extends ReportingTest {
             targets: [
                 [
                     type: 'scope',
-                    id: '1'
+                    id: UUID.randomUUID()
                 ]
             ]])
         then:
@@ -193,7 +193,7 @@ public class ReportControllerSpec extends ReportingTest {
             targets: [
                 [
                     type: 'control',
-                    id: '1'
+                    id: UUID.randomUUID()
                 ]
             ]])
         then:
@@ -208,11 +208,11 @@ public class ReportControllerSpec extends ReportingTest {
             targets: [
                 [
                     type: 'scope',
-                    id: '1'
+                    id: UUID.randomUUID()
                 ],
                 [
                     type: 'scope',
-                    id: '2'
+                    id: UUID.randomUUID()
                 ]
             ]
         ])
@@ -228,7 +228,7 @@ public class ReportControllerSpec extends ReportingTest {
             targets: [
                 [
                     type: 'scope',
-                    id: '1'
+                    id: UUID.randomUUID()
                 ]
             ]
         ])
@@ -243,7 +243,7 @@ public class ReportControllerSpec extends ReportingTest {
             targets: [
                 [
                     type: 'scope',
-                    id: '1'
+                    id: UUID.randomUUID()
                 ]
             ]
         ])
@@ -253,6 +253,8 @@ public class ReportControllerSpec extends ReportingTest {
     }
 
     def "create a report with different locales and time zones"() {
+        given:
+        def personId = UUID.randomUUID()
         when:
         def response = POST("/reports/invitation",'abc','en', [
             outputType:'text/plain',
@@ -260,14 +262,14 @@ public class ReportControllerSpec extends ReportingTest {
             targets: [
                 [
                     type: 'person',
-                    id: '1'
+                    id: personId
                 ]
             ]
         ])
         then:
         response.status == 200
 
-        1 * veoClient.fetchData([person:'/persons/1'], 'Bearer: abc') >> [
+        1 * veoClient.fetchData([person:"/persons/$personId"], 'Bearer: abc') >> [
             person : [
                 name: 'Mary'
             ]
@@ -288,7 +290,7 @@ Cheers'''
             targets: [
                 [
                     type: 'person',
-                    id: '1'
+                    id: personId
                 ]
             ],
             timeZone: 'Europe/Berlin'
@@ -296,7 +298,7 @@ Cheers'''
         then:
         response.status == 200
 
-        1 * veoClient.fetchData([person:'/persons/1'], 'Bearer: abc') >> [
+        1 * veoClient.fetchData([person:"/persons/$personId"], 'Bearer: abc') >> [
             person : [
                 name: 'Maria'
             ]
@@ -318,14 +320,14 @@ Tschüß'''
             targets: [
                 [
                     type: 'person',
-                    id: '1'
+                    id: personId
                 ]
             ],
             timeZone: 'Atlantis'
         ])
         then: "UTC is used"
         response.status == 200
-        1 * veoClient.fetchData([person:'/persons/1'], 'Bearer: abc') >> [
+        1 * veoClient.fetchData([person:"/persons/$personId"], 'Bearer: abc') >> [
             person : [
                 name: 'Maria'
             ]
@@ -347,13 +349,13 @@ Tschüß'''
             targets: [
                 [
                     type: 'person',
-                    id: '1'
+                    id: personId
                 ]
             ],
         ])
         then: "UTC is used"
         response.status == 200
-        1 * veoClient.fetchData([person:'/persons/1'], 'Bearer: abc') >> [
+        1 * veoClient.fetchData([person:"/persons/$personId"], 'Bearer: abc') >> [
             person : [
                 name: 'Maria'
             ]
@@ -401,13 +403,15 @@ Tschüß'''
     }
 
     def "create a PDF report"() {
+        given:
+        def scopeId = UUID.randomUUID()
         when:
         def response = POST("/reports/processing-on-behalf", 'abc', 'de',[
             outputType:'application/pdf',
             targets: [
                 [
                     type: 'scope',
-                    id: '0815'
+                    id: scopeId
                 ]
             ]
         ])
@@ -415,12 +419,12 @@ Tschüß'''
         response.status == 200
 
         1 * veoClient.fetchData([
-            scope: '/scopes/0815'
+            scope: "/scopes/$scopeId"
         ], 'Bearer: abc') >> [
             scope:[
                 name: 'My Scope',
-                id: '0815',
-                _self: 'http://example.org/scopes/0815',
+                id: scopeId,
+                _self: "http://example.org/scopes/$scopeId".toString(),
                 type: 'scope',
                 links:[
                     scope_management: [
@@ -618,33 +622,37 @@ gemäß Art. 30 II DS-GVO''')
     }
 
     def "Status 401 from data backend results in status 401"() {
+        given:
+        def scopeId = UUID.randomUUID()
         when:
         def response = POST("/reports/processing-on-behalf", 'abc', 'de', [
             outputType:'application/pdf',
             targets: [
                 [
                     type: 'scope',
-                    id: '0815'
+                    id: scopeId
                 ]
             ]
         ])
         then:
         response.status == 401
-        response.contentAsString == 'Failed to retrieve data from http://localhost/scopes/0815, status code: 401, message: Invalid token'
+        response.contentAsString == "Failed to retrieve data from http://localhost/scopes/$scopeId, status code: 401, message: Invalid token"
 
         1 * veoClient.fetchData(_, 'Bearer: abc') >> {
-            throw new DataFetchingException('http://localhost/scopes/0815', 401, 'Invalid token')
+            throw new DataFetchingException("http://localhost/scopes/$scopeId", 401, 'Invalid token')
         }
     }
 
     def "report errors lead to an unsuccessful response"() {
+        given:
+        def scopeId = UUID.randomUUID()
         when:
         def response = POST("/reports/processing-on-behalf", 'abc', 'de',[
             outputType:'application/pdf',
             targets: [
                 [
                     type: 'scope',
-                    id: '0815'
+                    id: scopeId
                 ]
             ]
         ])
