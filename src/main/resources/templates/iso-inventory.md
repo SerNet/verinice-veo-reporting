@@ -153,7 +153,7 @@ domain/>
 <@row bundle.asset_responsiblePerson responsibleLinks?map(l->l.target.name)?join(", ") true />
 </#if>
 <@row bundle.asset_details_number asset.asset_details_number true />
-<@row bundle.asset_details_operatingStage asset.asset_details_operatingStage true />
+<@row bundle.asset_details_operatingStage asset.asset_details_operatingStage?has_content?then(bundle[asset.asset_details_operatingStage], "") true />
 <#if riskDefinitionId?has_content>
 <#list riskDefinition.categories as cat>
 <#assign impactForCat = (cat.potentialImpacts[asset.domains[domain.id].riskValues[riskDefinitionId].potentialImpactsEffective[cat.id]])! />
