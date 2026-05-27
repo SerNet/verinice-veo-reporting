@@ -101,3 +101,25 @@ ${term}
     </#list>
     <#return result/>
 </#function>
+
+<#function getDescendants composite maxSteps = 1000>
+    <#local result = composite.parts>
+    <#local currentStep=result>
+    <#list 0..maxSteps as iteration>
+        <#if currentStep?size==0><#break></#if>
+        <#if iteration == maxSteps>
+            <#stop "Failed to determine descendants for ${composite.name} in ${maxSteps} steps">
+        </#if>
+        <#local nextStep=[]>
+        <#list currentStep as item>
+            <#list item.parts as part>
+                <#if !result?seq_contains(part)>
+                    <#local result = result + [part]>
+                    <#local nextStep = nextStep + [part]>
+                </#if>
+            </#list>
+        </#list>
+        <#local currentStep=nextStep>
+    </#list>
+    <#return result>
+</#function>
