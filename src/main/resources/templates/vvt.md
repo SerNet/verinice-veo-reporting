@@ -5,6 +5,7 @@
  row = com.row
  table = com.table
  def = com.def
+ getDescendants = com.getDescendants
  >
 
 <#assign scope=target />
@@ -445,7 +446,7 @@ ${bundle.process_opinionDPO_comment}
 
 <#macro tomsection process objective title>
 <#list mitigations as mitigation>
-<#assign toms = dpRisk.getDescendants(mitigation)>
+<#assign toms = getDescendants(mitigation)>
 <#assign tomsinsection = toms?filter(t->t.control_dataProtection_objectives!?seq_contains(objective))!>
 <#if tomsinsection?has_content>
 <tbody>
