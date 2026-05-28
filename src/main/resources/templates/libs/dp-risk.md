@@ -40,18 +40,21 @@
 <table class="table" style="width:100%;font-size:70%;">
 <colgroup>
   <col span="1" style="width: 15%;">
-  <col span="1" style="width: 10%;">
-  <col span="1" style="width: 12%;">
-  <col span="1" style="width: 51%;">
-  <col span="1" style="width: 12%;">
+  <col span="1" style="width: 19%;">
+  <col span="1" style="width: 17%;">
+  <col span="1" style="width: 11%;">
+  <col span="1" style="width: 19%;">
+  <col span="1" style="width: 19%;">
 </colgroup>
 <thead>
 <tr>
+<th colspan="1">${messages.criterion}</th>
 <th colspan="3">${messages.assessment_pre}</th>
 <th>${messages.treatment_header}</th>
 <th colspan="1">${messages.assessment_post}</th>
 </tr>
 <tr>
+<th />
 <th>${messages.eff_impact}</th>
 <th>${messages.eff_prob}</th>
 <th>${messages.gross_risk}</th>
@@ -60,28 +63,27 @@
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>
 <#list riskDefinition.categories as category>
 <#assign riskValuesForCategory = (riskValues[category.id])! />
-${category.id}:
+<tr>
+<td>${category.translations[.lang].name}</td>
+<td>
 <#if riskValuesForCategory?has_content>
 <@rcom.impactdisplay riskDefinition category, riskValuesForCategory.effectiveImpact />
 </#if>
 <br/>
-</#list>
 </td>
-<td><@rcom.probabilitydisplay riskDefinition, riskValues.effectiveProbability/></td>
-<#assign maxInherent = riskDefinition.categories?map(c->(riskValues[c.id].inherentRisk)!-1)?max />
-<#if (maxInherent > -1)>
-<#assign maxInherentData = riskDefinition.getRisk(maxInherent) />
-<@rcom.riskCell maxInherentData.color>${maxInherentData.label}</@rcom.riskCell>
+<#if category?index == 0>
+<td rowspan="${riskDefinition.categories?size}"><@rcom.probabilitydisplay riskDefinition, riskValues.effectiveProbability/></td>
+</#if>
+<#assign inherent = riskValuesForCategory.inherentRisk! />
+<#if inherent?has_content >
+<#assign inherentData = riskDefinition.getRisk(inherent) />
+<@rcom.riskCell inherentData.color>${inherentData.label}</@rcom.riskCell>
 <#else/>
 <td />
 </#if>
 <td>
-<#list riskDefinition.categories as category>
-${category.id}:
 <#assign riskValuesForCategory = (riskValues[category.id])! />
 <#if riskValuesForCategory?has_content>
 ${(riskValuesForCategory.riskTreatments?map(t->rcom.riskReductionLabel(t))?join(', '))!}
@@ -91,15 +93,15 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 </#if>
 </#if>
 <br/>
-</#list>
 </td>
-<#assign maxResidual = riskDefinition.categories?map(c->(riskValues[c.id].residualRisk)!-1)?max />
-<#if (maxResidual > -1)>
-<#assign maxResidualData = riskDefinition.getRisk(maxResidual) />
-<@rcom.riskCell maxResidualData.color>${maxResidualData.label}</@rcom.riskCell>
+<#assign residual = riskValuesForCategory.residualRisk! />
+<#if residual?has_content>
+<#assign residualData = riskDefinition.getRisk(residual) />
+<@rcom.riskCell residualData.color>${residualData.label}<#if riskValuesForCategory.residualRiskExplanation?has_content><br/>${riskValuesForCategory.residualRiskExplanation}</#if></@rcom.riskCell>
 <#else/>
 <td />
 </#if>
+</#list>
 </tr>
 </tbody>
 </table>
