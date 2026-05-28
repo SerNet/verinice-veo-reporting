@@ -135,7 +135,7 @@ Für diese Gefährdung wurde noch keine Risikobewertung vorgenommen.
 </tr>
 </thead>
 <tbody>
-<#list icom.sortModules(risk.mitigation.parts) as part>
+<#list icom.sortModules(com.getDescendants(risk.mitigation)) as part>
 <#assign ri = targetObject.requirementImplementations?filter(it->it.control._self == part._self)?first!>
 <tr>
 <td>${icom.controlTitle(part)}</td>
