@@ -20,11 +20,16 @@ package org.veo.reporting;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 
 import org.slf4j.Logger;
@@ -79,6 +84,8 @@ public class VeoClientImpl implements VeoClient {
         (List<Map<String, Object>>) export.get(VeoReportingConstants.RISKS);
     applyRisks(elements, risks);
 
+    elements = filterData(elements, domainId);
+
     List<Map<String, ?>> domains = (List<Map<String, ?>>) export.get(VeoReportingConstants.DOMAINS);
     var domain =
         domains.stream()
@@ -106,6 +113,195 @@ public class VeoClientImpl implements VeoClient {
     result.put("target", target);
 
     return result;
+  }
+
+  // TODO: remove this when #4830 is done
+  private List<Map<String, Object>> filterData(List<Map<String, Object>> elements, UUID domainId) {
+    String domainIdAsString = domainId.toString();
+
+    List<Map<String, Object>> elementsInDomain = new ArrayList<>(elements.size());
+    Set<String> elementURIsNotInDomain = new HashSet<>();
+
+    for (Map<String, Object> element : elements) {
+      Map<String, Map<String, Object>> domains =
+          (Map<String, Map<String, Object>>) element.get(VeoReportingConstants.DOMAINS);
+      if (domains.containsKey(domainIdAsString)) {
+        if (domains.size() > 1) {
+          element.put(
+              VeoReportingConstants.DOMAINS,
+              Map.of(domainIdAsString, domains.get(domainIdAsString)));
+        }
+        elementsInDomain.add(element);
+      } else {
+        elementURIsNotInDomain.add((String) element.get("_self"));
+      }
+    }
+
+    for (Map<String, Object> element : elementsInDomain) {
+      Stream.of("parts", "members")
+          .forEach(
+              path -> {
+                Optional.ofNullable(element.get(path))
+                    .map(it -> (List<Map<String, Object>>) it)
+                    .ifPresent(
+                        items ->
+                            element.put(
+                                path,
+                                items.stream()
+                                    .filter(
+                                        item ->
+                                            !elementURIsNotInDomain.contains(
+                                                item.get(VeoReportingConstants.TARGET_URI)))
+                                    .toList()));
+              });
+
+      Optional.ofNullable(element.get("customAspects"))
+          .map(it -> (Map<String, Map<String, Object>>) it)
+          .ifPresent(
+              customAspects -> {
+                Iterator<Map.Entry<String, Map<String, Object>>> it =
+                    customAspects.entrySet().iterator();
+                while (it.hasNext()) {
+                  var ca = it.next().getValue();
+
+                  List<Map<String, Object>> domains =
+                      (List<Map<String, Object>>) ca.get(VeoReportingConstants.DOMAINS);
+                  List<Map<String, Object>> newDomains =
+                      domains.stream()
+                          .filter(
+                              d ->
+                                  ((String) d.get(VeoReportingConstants.TARGET_URI))
+                                      .endsWith(domainIdAsString))
+                          .toList();
+                  if (newDomains.isEmpty()) {
+                    it.remove();
+                  }
+
+                  ca.put(VeoReportingConstants.DOMAINS, newDomains);
+                }
+              });
+      Optional.ofNullable(element.get(VeoReportingConstants.RISKS))
+          .map(it -> (List<Map<String, Object>>) it)
+          .ifPresent(
+              risks ->
+                  element.put(
+                      VeoReportingConstants.RISKS,
+                      risks.stream()
+                          .filter(
+                              risk -> {
+                                Map<String, Object> scenario =
+                                    (Map<String, Object>) risk.get("scenario");
+
+                                if (elementURIsNotInDomain.contains(
+                                    scenario.get(VeoReportingConstants.TARGET_URI))) {
+                                  return false;
+                                }
+
+                                Map<String, Object> domains =
+                                    (Map<String, Object>) risk.get(VeoReportingConstants.DOMAINS);
+
+                                if (domains.containsKey(domainIdAsString)) {
+                                  if (domains.size() > 1) {
+                                    risk.put(
+                                        VeoReportingConstants.DOMAINS,
+                                        Map.of(domainIdAsString, domains.get(domainIdAsString)));
+                                  }
+                                  Map<String, Object> mitigation =
+                                      (Map<String, Object>) risk.get("mitigation");
+
+                                  if (mitigation != null
+                                      && elementURIsNotInDomain.contains(
+                                          mitigation.get(VeoReportingConstants.TARGET_URI))) {
+                                    risk.remove("mitigation");
+                                  }
+                                  Map<String, Object> riskOwner =
+                                      (Map<String, Object>) risk.get("riskOwner");
+
+                                  if (riskOwner != null
+                                      && elementURIsNotInDomain.contains(
+                                          riskOwner.get(VeoReportingConstants.TARGET_URI))) {
+                                    risk.remove("riskOwner");
+                                  }
+
+                                  return true;
+                                }
+                                return false;
+                              })
+                          .toList()));
+
+      Optional.ofNullable(element.get("links"))
+          .map(it -> (Map<String, List<Map<String, Object>>>) it)
+          .ifPresent(
+              links -> {
+                Set<String> linkTypes = links.keySet();
+
+                links
+                    .entrySet()
+                    .forEach(
+                        e -> {
+                          List<Map<String, Object>> linksOfType = e.getValue();
+                          List<Map<String, Object>> filteredLinks =
+                              linksOfType.stream()
+                                  .filter(
+                                      link -> {
+                                        List<Map<String, Object>> domains =
+                                            (List<Map<String, Object>>)
+                                                link.get(VeoReportingConstants.DOMAINS);
+                                        List<Map<String, Object>> newDomains =
+                                            domains.stream()
+                                                .filter(
+                                                    it ->
+                                                        ((String)
+                                                                it.get(
+                                                                    VeoReportingConstants
+                                                                        .TARGET_URI))
+                                                            .endsWith(domainIdAsString))
+                                                .toList();
+                                        if (newDomains.isEmpty()) {
+                                          return false;
+                                        }
+                                        Map<String, Object> target =
+                                            (Map<String, Object>) link.get("target");
+
+                                        if (elementURIsNotInDomain.contains(
+                                            target.get(VeoReportingConstants.TARGET_URI))) {
+                                          return false;
+                                        }
+                                        link.put(VeoReportingConstants.DOMAINS, newDomains);
+                                        return true;
+                                      })
+                                  .toList();
+                          if (filteredLinks.size() != linkTypes.size()) {
+                            e.setValue(filteredLinks);
+                          }
+                        });
+              });
+
+      Stream.of("controlImplementations", "requirementImplementations")
+          .forEach(
+              path -> {
+                Optional.ofNullable(element.get(path))
+                    .map(it -> (List<Map<String, Object>>) it)
+                    .ifPresent(
+                        list -> {
+                          List<Map<String, Object>> filteredList =
+                              list.stream()
+                                  .filter(
+                                      item -> {
+                                        Map<String, Object> control =
+                                            (Map<String, Object>) item.get("control");
+                                        return !elementURIsNotInDomain.contains(
+                                            control.get(VeoReportingConstants.TARGET_URI));
+                                      })
+                                  .toList();
+                          if (filteredList.size() != list.size()) {
+                            element.put(path, filteredList);
+                          }
+                        });
+              });
+    }
+
+    return elementsInDomain;
   }
 
   private static List<Map<String, Object>> filterElements(
