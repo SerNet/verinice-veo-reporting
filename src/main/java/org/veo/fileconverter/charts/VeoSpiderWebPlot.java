@@ -1082,9 +1082,6 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
       double w = area.getWidth() - gapHorizontal;
       double h = area.getHeight() - gapVertical;
 
-      double headW = area.getWidth() * this.headPercent;
-      double headH = area.getHeight() * this.headPercent;
-
       // make the chart area a square
       double min = Math.min(w, h) / 2;
       x = (x + x + w) / 2 - min;
@@ -1109,6 +1106,9 @@ public class VeoSpiderWebPlot extends Plot implements Cloneable {
         g2.draw(line);
         drawLabel(g2, radarArea, 0.0, cat, angle, 360.0 / catCount);
       }
+
+      double headW = area.getWidth() * this.headPercent;
+      double headH = area.getHeight() * this.headPercent;
 
       // Now actually plot each of the series polygons..
       for (int series = 0; series < seriesCount; series++) {
