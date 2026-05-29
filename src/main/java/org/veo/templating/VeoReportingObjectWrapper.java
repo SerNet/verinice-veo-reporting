@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.veo.reporting.VeoReportingConstants;
 import org.veo.templating.adapters.VeoReportingEntityAdapter;
 import org.veo.templating.adapters.VeoReportingLinkAdapter;
 import org.veo.templating.adapters.VeoReportingRiskAdapter;
@@ -62,17 +63,17 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
       } else if (m.containsKey("target") && m.containsKey("attributes")) {
         // this is probably a custom link
         return new VeoReportingLinkAdapter((Map<?, ?>) obj, this);
-      } else if (m.containsKey("scenario") && m.containsKey("domains")) {
+      } else if (m.containsKey("scenario") && m.containsKey(VeoReportingConstants.DOMAINS)) {
         // this is probably a risk
         return new VeoReportingRiskAdapter((Map<?, ?>) obj, this);
       } else if (m.containsKey("probability") && m.containsKey("implementationStateDefinition")) {
         // this is probably a risk definition
         return new VeoReportingRiskDefinitionAdapter((Map<?, ?>) obj, this);
-      } else if (m.containsKey("targetUri")) {
+      } else if (m.containsKey(VeoReportingConstants.TARGET_URI)) {
         // this is probably ref
         // do not try to resolve catalog items
         if (!"catalog-item".equals(m.get("type"))) {
-          return wrap(resolve((String) m.get("targetUri")));
+          return wrap(resolve((String) m.get(VeoReportingConstants.TARGET_URI)));
         }
       }
     }
@@ -87,7 +88,9 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
         .filter(
             s ->
                 ((Collection<Map<String, ?>>) s.get("members"))
-                    .stream().map(m -> m.get("targetUri")).anyMatch(memberUri::equals))
+                    .stream()
+                        .map(m -> m.get(VeoReportingConstants.TARGET_URI))
+                        .anyMatch(memberUri::equals))
         .toList();
   }
 

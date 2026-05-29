@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.veo.reporting.VeoReportingConstants;
 import org.veo.templating.VeoReportingObjectWrapper;
 import org.veo.templating.methods.SingleStringArgumentMethod;
 
@@ -143,7 +144,7 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
 
     @Override
     public Object doExec(String arg) throws TemplateModelException {
-      var domains = (Map<String, Map<String, ?>>) getProperty("domains");
+      var domains = (Map<String, Map<String, ?>>) getProperty(VeoReportingConstants.DOMAINS);
 
       LOGGER.debug("domains: {}", domains);
       return domains != null

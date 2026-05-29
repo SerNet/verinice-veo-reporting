@@ -475,7 +475,7 @@ public class Demo {
 
         String ownerId = (String) owner.get("id");
 
-        Map<String, Map> domains = (Map<String, Map>) data.get("domains");
+        Map<String, Map> domains = (Map<String, Map>) data.get(VeoReportingConstants.DOMAINS);
 
         if (domains.size() != 1) {
           throw new IllegalArgumentException("Expected a domain, but got " + domains.size());

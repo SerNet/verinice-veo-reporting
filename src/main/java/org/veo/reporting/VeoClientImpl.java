@@ -75,10 +75,11 @@ public class VeoClientImpl implements VeoClient {
     Map<String, Object> export =
         (Map<String, Object>) fetchData("/units/" + unitId + "/export", authorizationHeader);
     List<Map<String, Object>> elements = (List<Map<String, Object>>) export.get("elements");
-    List<Map<String, Object>> risks = (List<Map<String, Object>>) export.get("risks");
+    List<Map<String, Object>> risks =
+        (List<Map<String, Object>>) export.get(VeoReportingConstants.RISKS);
     applyRisks(elements, risks);
 
-    List<Map<String, ?>> domains = (List<Map<String, ?>>) export.get("domains");
+    List<Map<String, ?>> domains = (List<Map<String, ?>>) export.get(VeoReportingConstants.DOMAINS);
     var domain =
         domains.stream()
             .filter(d -> d.get("id").equals(domainId.toString()))
@@ -118,13 +119,14 @@ public class VeoClientImpl implements VeoClient {
       String type = (String) element.get("type");
       if (RISK_AFFECTED_TYPES.contains(type)) {
         element.put(
-            "risks",
+            VeoReportingConstants.RISKS,
             risks.stream()
                 .filter(
                     r -> {
                       @SuppressWarnings("unchecked")
                       Map<String, Object> ref = (Map<String, Object>) r.get(type);
-                      return ref != null && ref.get("targetUri").equals(element.get("_self"));
+                      return ref != null
+                          && ref.get(VeoReportingConstants.TARGET_URI).equals(element.get("_self"));
                     })
                 .toList());
       }

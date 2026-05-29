@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.veo.reporting.VeoReportingConstants;
 import org.veo.templating.VeoReportingObjectWrapper;
 import org.veo.templating.methods.VeoTemplateMethod;
 
@@ -82,7 +83,7 @@ public class VeoReportingRiskAdapter extends WrappingTemplateModel
 
       String domainId = asString(arguments.get(0));
       String riskDefinitionId = asString(arguments.get(1));
-      Map domains = (Map) getProperty("domains");
+      Map domains = (Map) getProperty(VeoReportingConstants.DOMAINS);
       Map dataForDomain = (Map) domains.get(domainId);
       Map riskDefinitions = (Map) dataForDomain.get("riskDefinitions");
       Map dataForRiskDefinition = (Map) riskDefinitions.get(riskDefinitionId);
