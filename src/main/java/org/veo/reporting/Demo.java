@@ -65,6 +65,7 @@ public class Demo {
     var scopeIdNIS2 = ctx.getEnvironment().getProperty("veo.demoscopeidnis2", UUID.class);
     var isaId = ctx.getEnvironment().getProperty("veo.demoisaid", UUID.class);
     var scopeIdIso = ctx.getEnvironment().getProperty("veo.demoscopeidiso", UUID.class);
+    var documentIdBCM = ctx.getEnvironment().getProperty("veo.demodocumentidbcm", UUID.class);
     var veoClient = ctx.getBean(VeoClient.class);
     var authHeader = "Bearer " + token;
 
@@ -127,6 +128,9 @@ public class Demo {
     if (isaId != null) {
       veoClientWrapper.addReportTargetData(
           EntityType.SCOPE, isaId, "tisax-compact", "tisax-detailed");
+    }
+    if (documentIdBCM != null) {
+      veoClientWrapper.addReportTargetData(EntityType.DOCUMENT, documentIdBCM, "bcm-gfp");
     }
 
     createReports(reportEngine, veoClientWrapper);
@@ -377,6 +381,14 @@ public class Demo {
           reportEngine,
           "iso-risk-analysis",
           "/tmp/iso-risk-analysis.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+
+      createReport(
+          reportEngine,
+          "bcm-gfp",
+          "/tmp/bcm-gfp.pdf",
           veoClientWrapper,
           MediaType.APPLICATION_PDF_VALUE,
           parametersGermany);

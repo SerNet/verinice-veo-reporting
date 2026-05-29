@@ -205,6 +205,7 @@ Cheers'''
             'processing-on-behalf-int',
             'processing-activities-int',
             'risk-analysis-int',
+            'bcm-gfp',
             'dp-impact-assessment-int'
         ]
     }

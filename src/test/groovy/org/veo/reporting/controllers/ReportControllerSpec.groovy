@@ -98,6 +98,7 @@ public class ReportControllerSpec extends ReportingTest {
             'processing-on-behalf-int',
             'processing-activities-int',
             'risk-analysis-int',
+            'bcm-gfp',
             'dp-impact-assessment-int'
         ]
     }
