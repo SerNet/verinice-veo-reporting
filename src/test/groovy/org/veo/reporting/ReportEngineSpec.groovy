@@ -204,7 +204,8 @@ Cheers'''
             'nis2-security-incident-int',
             'processing-on-behalf-int',
             'processing-activities-int',
-            'risk-analysis-int'
+            'risk-analysis-int',
+            'dp-impact-assessment-int'
         ]
     }
 

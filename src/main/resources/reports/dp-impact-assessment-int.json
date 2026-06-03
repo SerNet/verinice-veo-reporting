@@ -1,0 +1,24 @@
+{
+  "name": {
+    "de": "Datenschutz-Folgenabschätzung",
+    "en": "Data protection impact assessment"
+  },
+  "domainName": "GDPR (INT)",
+  "description": {
+    "de": "Eine Auflistung der Informationen zu durchgeführten Datenschutz-Folgenabschätzungen",
+    "en": "A list of information on data protection impact assessments that have been carried out"
+  },
+  "templateFile": "dpia.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "process",
+      "subTypes": [
+        "PRO_DPIA"
+      ]
+    }
+  ]
+}
