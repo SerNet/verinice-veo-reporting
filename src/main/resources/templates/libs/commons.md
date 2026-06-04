@@ -104,6 +104,7 @@ ${term}
 
 <#function getDescendants composite maxSteps = 1000>
     <#local result = composite.parts>
+    <#local resultURIs = result?map(it->it._self)>
     <#local currentStep=result>
     <#list 0..maxSteps as iteration>
         <#if currentStep?size==0><#break></#if>
@@ -113,8 +114,9 @@ ${term}
         <#local nextStep=[]>
         <#list currentStep as item>
             <#list item.parts as part>
-                <#if !result?seq_contains(part)>
+                <#if !resultURIs?seq_contains(part._self)>
                     <#local result = result + [part]>
+                    <#local resultURIs = resultURIs + [part._self]>
                     <#local nextStep = nextStep + [part]>
                 </#if>
             </#list>
