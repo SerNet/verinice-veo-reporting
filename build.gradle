@@ -9,7 +9,7 @@ plugins {
     id 'com.google.cloud.tools.jib' version '3.5.3'
 }
 
-version = '0.68.0'
+version = '0.68.1'
 
 repositories {
     mavenCentral()
@@ -57,6 +57,15 @@ dependencies {
     runtimeOnly 'com.helger.font:ph-fonts-open-sans:6.1.0'
     runtimeOnly 'ch.qos.logback.contrib:logback-json-classic:0.1.5'
     runtimeOnly 'ch.qos.logback.contrib:logback-jackson:0.1.5'
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.apache.tomcat.embed' && details.requested.version == '11.0.21') {
+            details.useVersion '11.0.22'
+            details.because('Security fixes')
+        }
+    }
 }
 
 spotbugs.excludeFilter = rootProject.file('config/spotbugs-exclude.xml')
