@@ -59,6 +59,15 @@ dependencies {
     runtimeOnly 'ch.qos.logback.contrib:logback-jackson:0.1.5'
 }
 
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.apache.tomcat.embed' && details.requested.version == '11.0.21') {
+            details.useVersion '11.0.22'
+            details.because('Security fixes')
+        }
+    }
+}
+
 spotbugs.excludeFilter = rootProject.file('config/spotbugs-exclude.xml')
 spotbugsTest.enabled = false
 // write human readable report on normal builds
