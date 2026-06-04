@@ -266,7 +266,7 @@ ${bundle.incident_security_notificationType}
 
 <#assign measuresTakenLinks=incident.getLinks('incident_securityMeasureTaken')!>
 <#if measuresTakenLinks?has_content>
-### ${bundle.incident_measuresTaken}
+### ${bundle.incident_securityMeasureTaken}
 <#list measuresTakenLinks as measuresTakenLink>
 <#assign measureTaken=measuresTakenLink.target />
  - ${measureTaken.name}
@@ -336,26 +336,6 @@ ${bundle.incident_security_notificationType}
 <@def bundle.incident_nis2CrossBorder_moreThan2Concerned, incident.incident_nis2CrossBorder_moreThan2Concerned />
 
 <@def bundle.incident_nis2CrossBorder_concernedStates, incident.incident_nis2CrossBorder_concernedStates />
-</#if>
-
-<#assign notificationMadeEnisa=incident.incident_nis2CrossBorder_notificationMadeEnisa!>
-
-<@def bundle.incident_nis2CrossBorder_notificationMadeEnisa, notificationMadeEnisa />
-
-<#if notificationMadeEnisa?has_content && notificationMadeEnisa>
-
-<@def bundle.incident_nis2CrossBorder_dateNotificationEnisa, (incident.incident_nis2CrossBorder_dateNotificationEnisa?date.iso)! />
-
-</#if>
-
-<#assign notificationMadeCrossBorder=incident.incident_nis2CrossBorder_notificationMade!>
-
-<@def bundle.incident_nis2CrossBorder_notificationMade, incident.incident_nis2CrossBorder_notificationMade />
-
-<#if notificationMadeCrossBorder?has_content && notificationMadeCrossBorder>
-
-<@def bundle.incident_nis2CrossBorder_dateNotificationStates, (incident.incident_nis2CrossBorder_dateNotificationStates?date.iso)! />
-
 </#if>
 
 </div>
