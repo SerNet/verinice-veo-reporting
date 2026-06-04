@@ -126,12 +126,13 @@ public class VeoClientImpl implements VeoClient {
       Map<String, Map<String, Object>> domains =
           (Map<String, Map<String, Object>>) element.get(VeoReportingConstants.DOMAINS);
       if (domains.containsKey(domainIdAsString)) {
+        Map<String, Object> copy = new HashMap<>(element);
         if (domains.size() > 1) {
-          element.put(
+          copy.put(
               VeoReportingConstants.DOMAINS,
               Map.of(domainIdAsString, domains.get(domainIdAsString)));
         }
-        elementsInDomain.add(element);
+        elementsInDomain.add(copy);
       } else {
         elementURIsNotInDomain.add((String) element.get("_self"));
       }
@@ -175,32 +176,36 @@ public class VeoClientImpl implements VeoClient {
                                 Map<String, Object> domains =
                                     (Map<String, Object>) risk.get(VeoReportingConstants.DOMAINS);
 
-                                if (domains.containsKey(domainIdAsString)) {
-                                  if (domains.size() > 1) {
-                                    risk.put(
-                                        VeoReportingConstants.DOMAINS,
-                                        Map.of(domainIdAsString, domains.get(domainIdAsString)));
-                                  }
-                                  Map<String, Object> mitigation =
-                                      (Map<String, Object>) risk.get("mitigation");
+                                return domains.containsKey(domainIdAsString);
+                              })
+                          .map(HashMap::new)
+                          .map(
+                              risk -> {
+                                Map<String, Object> domains =
+                                    (Map<String, Object>) risk.get(VeoReportingConstants.DOMAINS);
 
-                                  if (mitigation != null
-                                      && elementURIsNotInDomain.contains(
-                                          mitigation.get(VeoReportingConstants.TARGET_URI))) {
-                                    risk.remove("mitigation");
-                                  }
-                                  Map<String, Object> riskOwner =
-                                      (Map<String, Object>) risk.get("riskOwner");
-
-                                  if (riskOwner != null
-                                      && elementURIsNotInDomain.contains(
-                                          riskOwner.get(VeoReportingConstants.TARGET_URI))) {
-                                    risk.remove("riskOwner");
-                                  }
-                                  return true;
-                                } else {
-                                  return false;
+                                if (domains.size() > 1) {
+                                  risk.put(
+                                      VeoReportingConstants.DOMAINS,
+                                      Map.of(domainIdAsString, domains.get(domainIdAsString)));
                                 }
+                                Map<String, Object> mitigation =
+                                    (Map<String, Object>) risk.get("mitigation");
+
+                                if (mitigation != null
+                                    && elementURIsNotInDomain.contains(
+                                        mitigation.get(VeoReportingConstants.TARGET_URI))) {
+                                  risk.remove("mitigation");
+                                }
+                                Map<String, Object> riskOwner =
+                                    (Map<String, Object>) risk.get("riskOwner");
+
+                                if (riskOwner != null
+                                    && elementURIsNotInDomain.contains(
+                                        riskOwner.get(VeoReportingConstants.TARGET_URI))) {
+                                  risk.remove("riskOwner");
+                                }
+                                return risk;
                               })
                           .toList()));
 
