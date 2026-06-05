@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import org.veo.reporting.ReportCreationParameters;
 import org.veo.templating.methods.Base64Encode;
-import org.veo.templating.methods.ColorContrast;
 
 import freemarker.cache.ConditionalTemplateConfigurationFactory;
 import freemarker.cache.FileExtensionMatcher;
@@ -72,7 +71,6 @@ public class TemplateEvaluatorImpl implements TemplateEvaluator {
       LOGGER.info("Caching disabled");
       cfg.setCacheStorage(NullCacheStorage.INSTANCE);
     }
-    cfg.setSharedVariable("colorContrast", ColorContrast.INSTANCE);
     cfg.setSharedVariable("base64", Base64Encode.INSTANCE);
 
     TemplateConfiguration tcMD = new TemplateConfiguration();
