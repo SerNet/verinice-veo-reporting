@@ -94,7 +94,7 @@ Angaben zu gemeinsam Verantwortlichen
 
 <div class="pagebreak"/>
 
-# Team zur Durchführung DSFA 
+# ${bundle.team_implementation}
 
 <#assign ownerLinks=dpia.getLinks('process_PIAProcessOwner')!>
 <#if ownerLinks?has_content>
