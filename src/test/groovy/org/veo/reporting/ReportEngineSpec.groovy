@@ -207,7 +207,8 @@ Cheers'''
             'risk-analysis-int',
             'bcm-gfp',
             'bcm-wap-whp',
-            'dp-impact-assessment-int'
+            'dp-impact-assessment-int',
+            'bcm-emergency-manual'
         ]
     }
 

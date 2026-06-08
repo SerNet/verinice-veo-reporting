@@ -1,0 +1,22 @@
+{
+  "name": {
+    "de": "Notfallhandbuch"
+  },
+  "domainName": "Business continuity management",
+  "description": {
+    "de": "Eine umfassende Übersicht aller Aspekte der Notfall- und Krisenbewältigung zur schnellen Schadensabwehr."
+  },
+  "templateFile": "bcm-emergency-manual.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "document",
+      "subTypes": [
+        "DOC_EmergencyManual"
+      ]
+    }
+  ]
+}

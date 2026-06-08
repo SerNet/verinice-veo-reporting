@@ -67,6 +67,8 @@ public class Demo {
     var scopeIdIso = ctx.getEnvironment().getProperty("veo.demoscopeidiso", UUID.class);
     var documentIdBCM = ctx.getEnvironment().getProperty("veo.demodocumentidbcm", UUID.class);
     var assetIdBCM = ctx.getEnvironment().getProperty("veo.demoassetidbcm", UUID.class);
+    var emergencyManualId =
+        ctx.getEnvironment().getProperty("veo.demoemergencymanualid", UUID.class);
     var veoClient = ctx.getBean(VeoClient.class);
     var authHeader = "Bearer " + token;
 
@@ -135,6 +137,10 @@ public class Demo {
     }
     if (assetIdBCM != null) {
       veoClientWrapper.addReportTargetData(EntityType.ASSET, assetIdBCM, "bcm-wap-whp");
+    }
+    if (emergencyManualId != null) {
+      veoClientWrapper.addReportTargetData(
+          EntityType.DOCUMENT, emergencyManualId, "bcm-emergency-manual");
     }
 
     createReports(reportEngine, veoClientWrapper);
@@ -401,6 +407,14 @@ public class Demo {
           reportEngine,
           "bcm-wap-whp",
           "/tmp/bcm-wap-whp.pdf",
+          veoClientWrapper,
+          MediaType.APPLICATION_PDF_VALUE,
+          parametersGermany);
+
+      createReport(
+          reportEngine,
+          "bcm-emergency-manual",
+          "/tmp/bcm-emergency-manual.pdf",
           veoClientWrapper,
           MediaType.APPLICATION_PDF_VALUE,
           parametersGermany);

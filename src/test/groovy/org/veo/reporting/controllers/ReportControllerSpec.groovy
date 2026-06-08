@@ -100,7 +100,8 @@ public class ReportControllerSpec extends ReportingTest {
             'risk-analysis-int',
             'bcm-gfp',
             'bcm-wap-whp',
-            'dp-impact-assessment-int'
+            'dp-impact-assessment-int',
+            'bcm-emergency-manual'
         ]
     }
 
