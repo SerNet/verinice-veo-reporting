@@ -172,11 +172,65 @@ domain/>
 
 <@heading controlTitle(ri.control) nestingLevel+3/>
 
-<@def bundle.implementation_status bundle[ri.status] true />
-
-<@def bundle.implementationStatement ri.implementationStatement true/>
-
-<@def bundle.responsible, (ri.responsible.name)!, true/>
+<table style="width: 96%; margin-left: 2%;">
+  <colgroup>
+    <col style="width: 40%;"/>
+    <col style="width: 30%;"/>
+    <col style="width: 30%;"/>
+  </colgroup>
+  <tbody>
+    <tr>
+      <td>${bundle.responsible}:</td>
+      <td colspan="2">${(ri.responsible.name)!}</td>
+    </tr>
+    <tr>
+      <td>${bundle.implementation_status}:</td>
+      <td>
+        <#switch ri.status>
+          <#on "YES">
+            ${bundle.ri_implementation_date}:
+          <#on "N_A">
+          <#default>
+            ${bundle.ri_implementation_until}:
+        </#switch>
+        </td>
+        <td>
+          <#switch ri.status>
+            <#on "N_A">
+            <#default>
+              ${bundle.ri_implemented_by}:
+          </#switch>
+        </td>
+    </tr>
+    <tr>
+      <td>${bundle[ri.status]}</td>
+      <td>
+        <#switch ri.status>
+          <#on "YES">
+            ${(ri.implementationDate?date.iso)!" "}
+          <#on "N_A">
+          <#default>
+            ${(ri.implementationUntil?date.iso)!" "}
+        </#switch>
+      </td>
+      <td>
+        <#switch ri.status>
+          <#on "N_A">
+          <#default>
+            ${(ri.implementedBy.name)!" "}
+        </#switch>
+      </td>
+    </tr>
+    <tr>
+      <td>${bundle.implementationStatement}:</td>
+      <td colspan="2">${ri.implementationStatement!}</td>
+    </tr>
+    <tr>
+      <td>${bundle.ri_document}:</td>
+      <td colspan="2">${(ri.document.name)!}</td>
+    </tr>
+  </tbody>
+</table>
 
 </div>
 
