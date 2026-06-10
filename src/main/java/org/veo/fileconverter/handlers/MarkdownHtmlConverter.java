@@ -29,6 +29,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.jsoup.Jsoup;
@@ -84,7 +85,9 @@ public class MarkdownHtmlConverter implements ConversionHandler {
           .add(Tag.valueOf("data").set(Tag.SelfClose).set(Tag.Block))
           .add(Tag.valueOf("object").set(Tag.Block));
       Document doc = Jsoup.parse(md, parser);
-      Element html = doc.getElementsByTag("html").first();
+      Element html =
+          Objects.requireNonNull(
+              doc.getElementsByTag("html").first(), "html element not found in input");
       Locale locale = parameters.locale();
       if (locale.getCountry().isEmpty()) {
         html.attr("lang", locale.getLanguage());

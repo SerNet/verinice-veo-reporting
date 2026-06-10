@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
@@ -87,7 +88,9 @@ public class ReportController {
       ReportEngine reportEngine, VeoClient veoClient, BuildProperties buildProperties) {
     this.reportEngine = reportEngine;
     this.veoClient = veoClient;
-    buildTime = buildProperties.getTime().toEpochMilli();
+    buildTime =
+        Objects.requireNonNull(buildProperties.getTime(), "Build timestamp not present")
+            .toEpochMilli();
   }
 
   /**

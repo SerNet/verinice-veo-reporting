@@ -25,6 +25,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -93,7 +94,8 @@ public class VeoJFreeChartPieDiagramObjectDrawer implements FSObjectDrawer {
     IFontResource resource =
         openSansFontResources.findFirst(
             f -> f.getFontWeight().getWeight() == weight && f.getFontStyle().isRegular());
-    try (InputStream is = resource.getBufferedInputStream()) {
+    try (InputStream is =
+        Objects.requireNonNull(resource, "Failed to resolve font").getBufferedInputStream()) {
       return Font.createFont(Font.TRUETYPE_FONT, is);
     } catch (Exception e1) {
       throw new VeoReportingException("Error initializing chart font", e1);
