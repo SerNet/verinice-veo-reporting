@@ -4,7 +4,7 @@
   },
   "domainName": "Business continuity management",
   "description": {
-    "de": "Geschäftsfortführungsplan für einen zeitkritischen Geschäftsprozess"
+    "de": "Eine Übersicht der geplanten Notfall- (BC-) Lösungen zur Absicherung zeitkritischer Geschäftsprozesse im Ernstfall"
   },
   "templateFile": "bcm-gfp.md",
   "templateType": "text/markdown",
