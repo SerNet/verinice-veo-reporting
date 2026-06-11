@@ -118,20 +118,22 @@ ${bundle.no_assessment_for_scenario}
 <#if risk.mitigation?has_content && risk.mitigation.parts?has_content>
 <table class="table " style="width:100%;font-size:70%;">
 <colgroup>
-  <col span="1" style="width: 40%;">
+  <col span="1" style="width: 35%;">
   <col span="1" style="width: 10%;">
-  <col span="1" style="width: 40%;">
+  <col span="1" style="width: 35%;">
+  <col span="1" style="width: 10%;">
   <col span="1" style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th colspan="4">${bundle.mitigation_controls}</th>
+<th colspan="5">${bundle.mitigation_controls}</th>
 </tr>
 <tr>
 <th>${bundle.mitigation_control_title}</th>
 <th>${bundle.mitigation_control_implementation_status}</th>
 <th>${bundle.mitigation_control_implementation_explanation}</th>
 <th>${bundle.mitigation_control_implementation_date}</th>
+<th>${bundle.mitigation_control_implementation_by}</th>
 </tr>
 </thead>
 <tbody>
@@ -141,7 +143,25 @@ ${bundle.no_assessment_for_scenario}
 <td>${icom.controlTitle(part)}</td>
 <td>${(bundle[ri.status])!}</td>
 <td>${ri.implementationStatement!}</td>
-<td>${(ri.implementationUntil?date.iso)!}</td>
+<td>
+  <#switch ri.status!>
+    <#on "YES">
+      <#if ri.implementationDate?has_content>
+        ${bundle.mitigation_control_implementation_date_on} ${ri.implementationDate?date.iso}
+      </#if>
+    <#on "N_A">
+    <#default>
+      <#if ri.implementationUntil?has_content>
+        ${bundle.mitigation_control_implementation_date_by} ${ri.implementationUntil?date.iso}
+      </#if>
+  </#switch>
+<td>
+  <#switch ri.status!>
+    <#on "N_A">
+    <#default>
+      ${(ri.implementedBy.name)!}
+  </#switch>
+</td>
 </tr>
 </#list>
 </tbody>
