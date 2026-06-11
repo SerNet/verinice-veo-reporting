@@ -77,7 +77,7 @@ ${bundle.scope_dataProtectionOfficer}
 
 </div>
 
-<div class="pagebreak"/>
+<div class="pagebreak"></div>
 
 # ${bundle.processing_activities} {#processing_activities}
 

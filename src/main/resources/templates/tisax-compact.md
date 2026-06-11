@@ -189,7 +189,7 @@ Version 6.0.2
 </#list>
 </object>
 
-<div class="pagebreak" />
+<div class="pagebreak"></div>
 
 <#assign subchapters=unique_items(usedControls?filter(it->it.domains[domain.id].subType != 'CTL_ISAControlDataProtection')?map(c->c.abbreviation?keep_before_last(".")))?sort>
 
@@ -201,7 +201,7 @@ Version 6.0.2
 </#list>
 </object>
 
-<div class="pagebreak" />
+<div class="pagebreak"></div>
 
 <#macro maturitydisplay control>
 <#local targetLevel = 3>
@@ -241,7 +241,7 @@ Version 6.0.2
 
 <#if prototypecontrols?has_content>
 
-<div class="pagebreak" />
+<div class="pagebreak"></div>
 
 
 # Information Security Assessment <br/> Ergebnisse - Prototypenschutz
@@ -263,7 +263,7 @@ Version 6.0.2
 
 <#if prototypecontrols?has_content>
 
-<div class="pagebreak" />
+<div class="pagebreak"></div>
 
 
 # Information Security Assessment <br/> Ergebnisse - Zusätzliche Anforderungen an den Datenschutz

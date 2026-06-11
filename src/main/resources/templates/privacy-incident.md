@@ -104,7 +104,7 @@ dl {
   ]/>
 </#if>
 </#if>
-<div class="pagebreak"/>
+<div class="pagebreak"></div>
 
 # ${bundle.overview_data_breach}
 

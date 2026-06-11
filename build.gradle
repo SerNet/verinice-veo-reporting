@@ -201,4 +201,9 @@ spotless {
         trimTrailingWhitespace()
         endWithNewline()
     }
+    format 'templates', {
+        target 'src/main/resources/**/*.md'
+        replaceRegex('self-closing divs', '<div([^>]*?)\\s*/>','<div$1></div>' )
+        forbidRegex('no self-closing divs', '<div[^>]*/>', "div tags must not be self-closing")
+    }
 }

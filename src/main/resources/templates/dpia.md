@@ -92,7 +92,7 @@ Angaben zu gemeinsam Verantwortlichen
 
 </div>
 
-<div class="pagebreak"/>
+<div class="pagebreak"></div>
 
 # ${bundle.team_implementation}
 

@@ -69,7 +69,7 @@ dl {
 
 
 </#if>
-<div class="pagebreak"/>
+<div class="pagebreak"></div>
 
 # ${bundle.overview_incident}
 
