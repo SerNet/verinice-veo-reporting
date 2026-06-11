@@ -110,20 +110,22 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <#if risk.mitigation?has_content && risk.mitigation.parts?has_content>
 <table class="table " style="width:100%;font-size:70%;">
 <colgroup>
-  <col span="1" style="width: 40%;">
+  <col span="1" style="width: 35%;">
   <col span="1" style="width: 10%;">
-  <col span="1" style="width: 40%;">
+  <col span="1" style="width: 35%;">
+  <col span="1" style="width: 10%;">
   <col span="1" style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th colspan="4">${messages.measures}</th>
+<th colspan="5">${messages.measures}</th>
 </tr>
 <tr>
 <th>${messages.measure_title}</th>
 <th>${messages.impl_status}</th>
 <th>${messages.impl_explanation}</th>
 <th>${messages.impl_date}</th>
+<th>${messages.impl_by}</th>
 </tr>
 </thead>
 <tbody>
@@ -138,7 +140,25 @@ ${riskValuesForCategory.riskTreatmentExplanation}
 <td></td>
 </#if>
 <td>${ri.implementationStatement!}</td>
-<td>${(ri.implementationUntil?date.iso)!}</td>
+<td>
+  <#switch ri.status!>
+    <#on "YES">
+    <#if ri.implementationDate?has_content>
+      ${messages.impl_date_on} ${ri.implementationDate?date.iso}
+    </#if>
+    <#on "N_A">
+    <#default>
+      <#if ri.implementationUntil?has_content>
+        ${messages.impl_date_by} ${ri.implementationUntil?date.iso}
+      </#if>
+  </#switch>
+<td>
+  <#switch ri.status!>
+    <#on "N_A">
+    <#default>
+      ${(ri.implementedBy.name)!}
+  </#switch>
+</td>
 </tr>
 </#list>
 </tbody>
