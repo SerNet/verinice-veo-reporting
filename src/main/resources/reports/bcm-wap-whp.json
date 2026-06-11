@@ -1,0 +1,22 @@
+{
+  "name": {
+    "de": "Wiederanlauf-/Wiederherstellungsplan "
+  },
+  "domainName": "Business continuity management",
+  "description": {
+    "de": "Eine Übersicht aller Informationen zum Wiederanlauf oder zur Wiederherstellung zeitkritischer Ressourcen, um eine geordnete Rückführung von IT und Systemen in den Normalbetrieb sicherzustellen"
+  },
+  "templateFile": "bcm-wap-whp.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "asset",
+      "subTypes": [
+        "AST_Resource"
+      ]
+    }
+  ]
+}
