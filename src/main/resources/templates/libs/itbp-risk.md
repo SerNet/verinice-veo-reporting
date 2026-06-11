@@ -118,20 +118,22 @@ Für diese Gefährdung wurde noch keine Risikobewertung vorgenommen.
 <#if risk.mitigation?has_content && risk.mitigation.parts?has_content>
 <table class="table " style="width:100%;font-size:70%;">
 <colgroup>
-  <col span="1" style="width: 40%;">
+  <col span="1" style="width: 35%;">
   <col span="1" style="width: 10%;">
-  <col span="1" style="width: 40%;">
+  <col span="1" style="width: 35%;">
+  <col span="1" style="width: 10%;">
   <col span="1" style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
-<th colspan="4">Maßnahmen</th>
+<th colspan="5">Maßnahmen</th>
 </tr>
 <tr>
 <th>Maßnahmentitel</th>
 <th>Umsetzungs&shy;status</th>
 <th>Umsetzungserläuterung</th>
 <th>Umset&shy;zungs&shy;datum</th>
+<th>Umsetzung durch</th>
 </tr>
 </thead>
 <tbody>
@@ -141,7 +143,25 @@ Für diese Gefährdung wurde noch keine Risikobewertung vorgenommen.
 <td>${icom.controlTitle(part)}</td>
 <td>${(bundle[ri.status])!}</td>
 <td>${ri.implementationStatement!}</td>
-<td>${(ri.implementationUntil?date.iso)!}</td>
+<td>
+  <#switch ri.status>
+    <#on "YES">
+      <#if ri.implementationDate?has_content>
+        Am ${ri.implementationDate?date.iso}
+      </#if>
+    <#on "N_A">
+    <#default>
+      <#if ri.implementationUntil?has_content>
+        Bis ${ri.implementationUntil?date.iso}
+      </#if>
+    </#switch>
+<td>
+  <#switch ri.status>
+    <#on "N_A">
+    <#default>
+      ${(ri.implementedBy.name)!}
+  </#switch>
+</td>
 </tr>
 </#list>
 </tbody>
