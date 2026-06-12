@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.veo.reporting.VeoReportingConstants;
+import org.veo.templating.adapters.VeoReportingControlImplementationAdapter;
 import org.veo.templating.adapters.VeoReportingEntityAdapter;
 import org.veo.templating.adapters.VeoReportingLinkAdapter;
 import org.veo.templating.adapters.VeoReportingRiskAdapter;
@@ -75,6 +76,9 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
         if (!"catalog-item".equals(m.get("type"))) {
           return wrap(resolve((String) m.get(VeoReportingConstants.TARGET_URI)));
         }
+      } else if (m.containsKey("_requirementImplementations")) {
+        // this is probably a control implementation
+        return new VeoReportingControlImplementationAdapter((Map<?, ?>) obj, this);
       }
     }
     return super.wrap(obj);

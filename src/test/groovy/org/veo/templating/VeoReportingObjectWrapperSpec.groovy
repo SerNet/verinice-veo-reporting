@@ -17,6 +17,7 @@
  */
 package org.veo.templating
 
+import org.veo.templating.adapters.VeoReportingControlImplementationAdapter
 import org.veo.templating.adapters.VeoReportingEntityAdapter
 import org.veo.templating.adapters.VeoReportingLinkAdapter
 import org.veo.templating.adapters.VeoReportingRiskAdapter
@@ -135,5 +136,31 @@ class VeoReportingObjectWrapperSpec extends Specification {
         ]
         expect :
         wrapper.wrap(data).class == DefaultMapAdapter
+    }
+
+    def "ControlImplementation is wrapped"() {
+        given:
+        Map data = [
+            control: [targetUri: '/controls/123'],
+            _requirementImplementations: '/scopes/cd7d0d66-7e39-4253-a0cc-f9a35112812d/control-implementations/6b5923e3-5d41-4911-a575-804df07f4d3a/requirement-implementations',
+            owner: [targetUri: '/scopes/123'],
+            implementationStatus: 'YES',
+            domains: ['abcd':[customAspects: [aspect: [foo: 'bar']]]]
+        ]
+        expect :
+        when:
+        def adapter = wrapper.wrap(data)
+        then:
+        adapter.class == VeoReportingControlImplementationAdapter
+        when:
+        def cas = adapter.customAspects
+        then:
+        cas instanceof DefaultMapAdapter
+        when:
+        Map m = cas.wrappedObject
+        then:
+        m == [aspect:[foo:'bar']]
+        and:
+        adapter.foo.asString == 'bar'
     }
 }
