@@ -146,10 +146,11 @@ testing {
 
 spotless {
     groovyGradle {
-        greclipse()
-        indentWithSpaces(4)
+        greclipse().configProperties '''
+            org.eclipse.jdt.core.formatter.tabulation.char=space
+            groovy.formatter.remove.unnecessary.semicolons=true
+        '''
         replaceRegex('Excessive line breaks', /\n{3,}/, '\n\n')
-        trimTrailingWhitespace()
     }
     java {
         target 'src/**/*.java', 'buildSrc/**/*.java'
@@ -169,10 +170,11 @@ spotless {
         target 'src/**/*.groovy', 'buildSrc/**/*.groovy'
         addStep org.veo.LicenseHeaderStep.create(project.rootDir, 'package |runner \\{')
         addStep org.veo.NoWildcardImportsStep.create()
-        greclipse()
+        greclipse().configProperties '''
+            org.eclipse.jdt.core.formatter.tabulation.char=space
+            groovy.formatter.remove.unnecessary.semicolons=true
+        '''
         importOrder('java', 'javax', 'org', 'com', 'org.veo', '')
-        indentWithSpaces(4)
-        trimTrailingWhitespace()
         replaceRegex('Excessive line breaks', /\n{3,}/, '\n\n')
         replaceRegex('Extra space around equals sign', /(  += )|( =  +)/, ' = ')
         replaceRegex('Not one space between right round and left curly bracket', /\) *\{/, ') {')
