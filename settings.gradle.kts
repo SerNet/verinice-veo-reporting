@@ -18,19 +18,19 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-rootProject.name = 'veo-reporting'
+rootProject.name = "veo-reporting"
 
-boolean isCiServer = System.getenv().containsKey("CI")
+val isCiServer = System.getenv().containsKey("CI")
 
 buildCache {
     local {
-        enabled = !isCiServer
+        isEnabled = !isCiServer
     }
-    System.env.GRADLE_REMOTE_BUILD_CACHE_URL?.with { url->
-        remote(HttpBuildCache) {
-            it.url = url
-            push = isCiServer
-            allowUntrustedServer = isCiServer
+    System.getenv("GRADLE_REMOTE_BUILD_CACHE_URL")?.let { cacheUrl ->
+        remote<HttpBuildCache> {
+            url = java.net.URI.create(cacheUrl)
+            isPush = isCiServer
+            isAllowUntrustedServer = isCiServer
         }
     }
 }

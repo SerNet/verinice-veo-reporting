@@ -1,0 +1,12 @@
+plugins {
+    java
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("org.ini4j:ini4j:0.5.4")
+    implementation("com.diffplug.spotless:spotless-lib-extra:4.7.0")
+}
