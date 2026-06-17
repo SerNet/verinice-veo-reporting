@@ -148,7 +148,7 @@ testing {
         named<JvmTestSuite>("test") {
             useSpock("2.4-groovy-5.0")
             dependencies {
-                implementation("org.spockframework:spock-spring:2.4-M7-groovy-5.0")
+                implementation("org.spockframework:spock-spring:2.4-groovy-5.0")
                 implementation("org.springframework.boot:spring-boot-starter-webmvc-test")
                 runtimeOnly("org.springframework.boot:spring-boot-starter-security-test")
                 runtimeOnly("org.springframework.boot:spring-boot-starter-validation-test")
