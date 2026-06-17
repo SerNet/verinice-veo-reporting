@@ -159,6 +159,12 @@ testing {
     }
 }
 
+tasks.named<JacocoReport>("jacocoTestReport") {
+    reports {
+        xml.required.set(true)
+    }
+}
+
 spotless {
     kotlinGradle {
         target("*.gradle.kts", "buildSrc/*.gradle.kts")

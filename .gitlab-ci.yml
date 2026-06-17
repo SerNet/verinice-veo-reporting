@@ -3,11 +3,18 @@ image: eclipse-temurin:25.0.1_8-jdk@sha256:42fc3fe6804ec612f5ef8a613f8c06d8dd578
 variables:
   ORG_GRADLE_PROJECT_ci: 'true'
 
-# Verification (tests and code analysis) is unnecessary on 'develop' &
-# 'main', because only verified MRs can be merged into those branches.
-.verification:
+# Verification (code analysis) is unnecessary on 'develop' &
+# 'master', because only verified MRs can be merged into those branches.
+# For the test coverage, we do need to run tests on develop though
+.test_coverage:
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "master"
+      when: never
+    - when: on_success
+
+.other_checks:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
       when: never
     - if: $CI_COMMIT_BRANCH == "develop"
       when: never
@@ -64,13 +71,22 @@ build:
 test:
   stage: check
   rules:
-    - !reference [ .verification, rules ]
-  script: ./gradlew -i test
+    - !reference [ .test_coverage, rules ]
+  script:
+    - ./gradlew -i test jacocoTestReport
+    - |
+      TOTAL=$(grep -o '<counter type="INSTRUCTION" [^>]*/>' build/reports/jacoco/test/jacocoTestReport.xml | tail -n 1 | awk -F'[=" ]+' '{for(i=1;i<=NF;i++){if($i=="missed")m=$(i+1); if($i=="covered")c=$(i+1)} printf "%.2f%%\n", (c/(m+c))*100}')
+      echo "Total Project Coverage: $TOTAL%"
+  coverage: '/Total Project Coverage: (\d+\.\d+%)/'
   interruptible: true
   artifacts:
     when: always
     reports:
       junit: build/test-results/test/**/TEST-*.xml
+      coverage_report:
+        coverage_format: jacoco
+        path: 'build/reports/jacoco/test/jacocoTestReport.xml'
+
   cache:
     - key: gradle
       paths:
@@ -83,7 +99,7 @@ test:
 check:
   stage: check
   rules:
-    - !reference [ .verification, rules ]
+    - !reference [ .other_checks, rules ]
   interruptible: true
   script:
     - ./gradlew -i check -x test
