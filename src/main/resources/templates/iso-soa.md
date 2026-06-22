@@ -108,15 +108,6 @@ domain/>
 <#if ci.description?has_content>${ci.description}<br /></#if>${ri.implementationStatement!}
 </td>
 </#if>
-<#-- old:
-<td><#if ci.implementationStatus != 'N_A'><@sq/></#if></td>
-<#if ci.implementationStatus != 'N_A'>
-<@riskCell color=statusMap[ci.implementationStatus].color>${bundle[ci.implementationStatus]}</@riskCell>
-<#else>
-<td />
-</#if>
-<td><#if ci.description?has_content>${ci.description}<br /></#if>${ri.implementationStatement!}</td>
--->
 </tr>
 </#macro>
 
