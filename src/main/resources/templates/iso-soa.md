@@ -92,30 +92,58 @@ domain/>
 <div style="background-color:${color};width:1em;height:1em;"></div>
 </#macro>
 
+<#assign cid = (domain.elementTypeDefinitions.scope.controlImplementationDefinition!) />
+<#assign useCICAs = (cid.customAspects?keys?seq_contains('scope_isoSoA'))!false />
+
 <#macro row ci>
 <#assign ri=scope.requirementImplementations?filter(ri->ri.control._self == control._self)?first />
+<#if useCICAs>
+  <#local applicable = (ci.scope_isoSoA_applicability)!false>
+  <#local selectionCriteria =(ci.scope_isoSoA_selectionCriterion?map(item->cid.translations[.lang][item])?join(', '))! />
+  <#local reason =(ci.scope_isoSoA_reason)! />
+<#else>
+  <#local applicable = ci.implementationStatus != 'N_A'>
+  <#local selectionCriteria = ci.description! />
+  <#if applicable>
+    <#local reason = ci.description! />
+  <#else>
+    <#local reason =ri.implementationStatement! />
+    <#if ci.description?has_content>
+      <#local reason = ci.description +"<br>"?no_esc + reason />
+    </#if>
+  </#if>
+</#if>
 <tr>
 <td>${control.abbreviation!}</td>
 <td>${control.name}</td>
-<#if ci.implementationStatus != 'N_A'>
+<#if applicable>
 <td><@sq/></td>
-<@riskCell color=statusMap[ci.implementationStatus].color>${bundle[ci.implementationStatus]}</@riskCell>
-<td>${ci.description!}</td>
 <#else>
 <td/>
-<td/>
-<td>
-<#if ci.description?has_content>${ci.description}<br /></#if>${ri.implementationStatement!}
-</td>
 </#if>
+<#if useCICAs && ci.implementationStatus != 'UNKNOWN' || applicable>
+<@riskCell color=statusMap[ci.implementationStatus].color>${bundle[ci.implementationStatus]}</@riskCell>
+<#else>
+<td/>
+</#if>
+<#if useCICAs>
+<td>${selectionCriteria!}</td>
+</#if>
+<td>${reason!}</td>
 </tr>
 </#macro>
+
+
+<#assign numCols = 5/>
+<#if useCICAs>
+  <#assign numCols = 6/>
+</#if>
 
 <#macro section title cis>
 <#if cis?has_content>
 <tbody>
 <tr>
-<th colspan="5">${title}</th>
+<th colspan="${numCols}">${title}</th>
 </tr>
 
 <#list cis as ci>
@@ -138,7 +166,12 @@ domain/>
 <th>${bundle.name}</th>
 <th>${bundle.applicable_abbr}</th>
 <th>${bundle.implementation_status}</th>
+<#if useCICAs>
+<th>${cid.translations[.lang].scope_isoSoA_selectionCriterion}</th>
+<th>${cid.translations[.lang].scope_isoSoA_reason}</th>
+<#else>
 <th>${bundle.reason}</th>
+</#if>
 </tr>
 </thead>
 <@section bundle.a5_controls officialCIs?filter(ci->ci.control.abbreviation?starts_with('A-5')) />
