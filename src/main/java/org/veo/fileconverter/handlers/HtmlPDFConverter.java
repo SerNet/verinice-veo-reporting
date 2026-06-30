@@ -50,6 +50,7 @@ import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder.FontStyle;
 import com.openhtmltopdf.pdfboxout.PdfBoxRenderer;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.render.DefaultObjectDrawerFactory;
+import com.openhtmltopdf.svgsupport.BatikSVGDrawer;
 
 import org.veo.fileconverter.ConversionHandler;
 import org.veo.fileconverter.charts.VeoJFreeChartPieDiagramObjectDrawer;
@@ -122,6 +123,7 @@ public class HtmlPDFConverter implements ConversionHandler {
 
       builder.withW3cDocument(dom, "");
       builder.usePdfUaAccessibility(true);
+      builder.useSVGDrawer(new BatikSVGDrawer());
       builder.toStream(output);
       try (PdfBoxRenderer renderer = builder.buildPdfRenderer()) {
         renderer.layout();
