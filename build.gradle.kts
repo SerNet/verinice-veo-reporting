@@ -9,7 +9,7 @@ plugins {
     id("com.google.cloud.tools.jib") version "3.5.3"
 }
 
-version = "0.70.0-SNAPSHOT"
+version = "0.70.0"
 
 repositories {
     mavenCentral()
