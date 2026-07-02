@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -76,7 +77,8 @@ public class Demo {
     var privacyIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentid", UUID.class);
     var securityIncidentId = ctx.getEnvironment().getProperty("veo.demoincidentidnis2", UUID.class);
 
-    var veoClientWrapper = new VeoClientWrapper(veoClient, authHeader, printInputData);
+    var veoClientWrapper =
+        new VeoClientWrapper(veoClient, reportEngine, authHeader, printInputData);
 
     if (scopeId != null) {
       veoClientWrapper.addReportTargetData(
@@ -456,13 +458,18 @@ public class Demo {
     private final Map<String, ElementInfo> reportTargets = new HashMap<>();
 
     private final VeoClient veoClient;
+    private final ReportEngine reportEngine;
     private final String authorizationHeader;
     private final boolean printInputData;
     private final ObjectWriter writer;
 
     public VeoClientWrapper(
-        VeoClient veoClient, String authorizationHeader, boolean printInputData) {
+        VeoClient veoClient,
+        ReportEngine reportEngine,
+        String authorizationHeader,
+        boolean printInputData) {
       this.veoClient = veoClient;
+      this.reportEngine = reportEngine;
       this.authorizationHeader = authorizationHeader;
       this.printInputData = printInputData;
       var objectMapper = new JsonMapper();
@@ -493,9 +500,13 @@ public class Demo {
     }
 
     public void addReportTargetData(EntityType entityType, UUID elementId, String... reportIDs) {
-      ElementInfo elementInfo = getElementInfo(entityType.pluralTerm, elementId);
       for (String reportId : reportIDs) {
-        reportTargets.put(reportId, elementInfo);
+        Optional.ofNullable(
+                getElementInfo(
+                    entityType.pluralTerm,
+                    elementId,
+                    reportEngine.getReport(reportId).get().getDomainName()))
+            .ifPresent(data -> reportTargets.put(reportId, data));
       }
     }
 
@@ -503,7 +514,8 @@ public class Demo {
       return reportTargets.containsKey(reportId);
     }
 
-    private ElementInfo getElementInfo(String elementTypePlural, UUID elementId) {
+    private ElementInfo getElementInfo(
+        String elementTypePlural, UUID elementId, String domainName) {
       try {
         Map<String, Object> data =
             (Map<String, Object>)
@@ -516,12 +528,34 @@ public class Demo {
 
         String ownerId = (String) owner.get("id");
 
-        Map<String, Map> domains = (Map<String, Map>) data.get(VeoReportingConstants.DOMAINS);
+        Map<String, Map> domainAssociations =
+            (Map<String, Map>) data.get(VeoReportingConstants.DOMAINS);
 
-        if (domains.size() != 1) {
-          throw new IllegalArgumentException("Expected a domain, but got " + domains.size());
+        var domains =
+            domainAssociations.keySet().stream()
+                .map(
+                    domainId -> {
+                      try {
+                        return (Map<String, Object>)
+                            veoClient.fetchData(
+                                "/domains/" + domainId,
+                                authorizationHeader,
+                                MediaType.APPLICATION_JSON_VALUE);
+                      } catch (IOException e) {
+                        throw new RuntimeException("Failed to fetch domain " + domainId, e);
+                      }
+                    })
+                .filter(d -> d.get("name").equals(domainName))
+                .toList();
+        if (domains.isEmpty()) {
+          LOGGER.info("Element {} does not belong to {}", data, domainName);
+          return null;
         }
-        String domainId = domains.entrySet().iterator().next().getKey();
+        if (domains.size() != 1) {
+          LOGGER.info("Expected a single domain, but got {}", domains.size());
+          return null;
+        }
+        String domainId = (String) domains.getFirst().get("id");
 
         return new ElementInfo(elementId, UUID.fromString(domainId), UUID.fromString(ownerId));
 
