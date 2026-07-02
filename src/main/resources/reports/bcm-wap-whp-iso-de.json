@@ -1,0 +1,24 @@
+{
+  "name": {
+    "de": "Wiederanlauf-/Wiederherstellungsplan",
+    "en": "Restart/Recovery Plan"
+  },
+  "domainName": "ISO 22301 (DE)",
+  "description": {
+    "de": "Eine Übersicht aller Informationen zum Wiederanlauf oder zur Wiederherstellung zeitkritischer Ressourcen, um eine geordnete Rückführung von IT und Systemen in den Normalbetrieb sicherzustellen",
+    "en": "An overview of all information regarding the restart or recovery of time-critical resources to ensure an orderly return of IT and systems to normal operations"
+  },
+  "templateFile": "bcm-wap-whp.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "asset",
+      "subTypes": [
+        "AST_Resource"
+      ]
+    }
+  ]
+}

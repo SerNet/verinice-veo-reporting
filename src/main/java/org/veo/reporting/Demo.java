@@ -135,14 +135,20 @@ public class Demo {
           EntityType.SCOPE, isaId, "tisax-compact", "tisax-detailed");
     }
     if (documentIdBCM != null) {
-      veoClientWrapper.addReportTargetData(EntityType.DOCUMENT, documentIdBCM, "bcm-gfp");
+      veoClientWrapper.addReportTargetData(
+          EntityType.DOCUMENT, documentIdBCM, "bcm-gfp", "bcm-gfp-iso-de", "bcm-gfp-iso-int");
     }
     if (assetIdBCM != null) {
-      veoClientWrapper.addReportTargetData(EntityType.ASSET, assetIdBCM, "bcm-wap-whp");
+      veoClientWrapper.addReportTargetData(
+          EntityType.ASSET, assetIdBCM, "bcm-wap-whp", "bcm-wap-whp-iso-de", "bcm-wap-whp-iso-int");
     }
     if (emergencyManualId != null) {
       veoClientWrapper.addReportTargetData(
-          EntityType.DOCUMENT, emergencyManualId, "bcm-emergency-manual");
+          EntityType.DOCUMENT,
+          emergencyManualId,
+          "bcm-emergency-manual",
+          "bcm-emergency-manual-iso-de",
+          "bcm-emergency-manual-iso-int");
     }
 
     createReports(reportEngine, veoClientWrapper);

@@ -1,0 +1,24 @@
+{
+  "name": {
+    "de": "Geschäftsfortführungsplan",
+    "en": "Business Continuity Plan"
+  },
+  "domainName": "ISO 22301 (INT)",
+  "description": {
+    "de": "Eine Übersicht der geplanten Notfall- (BC-) Lösungen zur Absicherung zeitkritischer Geschäftsprozesse im Ernstfall",
+    "en": "An overview of the planned business continuity (BC) solutions for safeguarding time-sensitive business processes in the event of an emergency"
+  },
+  "templateFile": "bcm-gfp.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "document",
+      "subTypes": [
+        "DOC_BusinessContinuityPlan"
+      ]
+    }
+  ]
+}

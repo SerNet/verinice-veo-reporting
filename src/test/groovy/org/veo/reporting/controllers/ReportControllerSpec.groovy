@@ -101,7 +101,13 @@ public class ReportControllerSpec extends ReportingTest {
             'bcm-gfp',
             'bcm-wap-whp',
             'dp-impact-assessment-int',
-            'bcm-emergency-manual'
+            'bcm-emergency-manual',
+            'bcm-gfp-iso-de',
+            'bcm-wap-whp-iso-de',
+            'bcm-emergency-manual-iso-de',
+            'bcm-gfp-iso-int',
+            'bcm-wap-whp-iso-int',
+            'bcm-emergency-manual-iso-int'
         ]
     }
 

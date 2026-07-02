@@ -1,0 +1,24 @@
+{
+  "name": {
+    "de": "Notfallhandbuch",
+    "en": "Emergency Manual"
+  },
+  "domainName": "ISO 22301 (INT)",
+  "description": {
+    "de": "Eine umfassende Übersicht aller Aspekte der Notfall- und Krisenbewältigung zur schnellen Schadensabwehr.",
+    "en": "A comprehensive overview of all aspects of emergency and crisis management for rapid damage control."
+  },
+  "templateFile": "bcm-emergency-manual.md",
+  "templateType": "text/markdown",
+  "outputTypes": [
+    "application/pdf"
+  ],
+  "targetTypes": [
+    {
+      "modelType": "document",
+      "subTypes": [
+        "DOC_EmergencyManual"
+      ]
+    }
+  ]
+}
