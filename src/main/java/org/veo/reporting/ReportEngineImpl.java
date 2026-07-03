@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -104,6 +105,18 @@ public final class ReportEngineImpl implements ReportEngine {
     ReportConfiguration config =
         getReport(reportName)
             .orElseThrow(() -> new IllegalArgumentException("Unknown report " + reportName));
+
+    String desiredLanguage = parameters.locale().getLanguage();
+    Set<String> supportedLanguages = config.getName().keySet();
+    if (!supportedLanguages.contains(desiredLanguage)) {
+      throw new IllegalArgumentException(
+          "Language "
+              + desiredLanguage
+              + " not supported by report "
+              + reportName
+              + ", supported languages: "
+              + supportedLanguages);
+    }
 
     Map<String, Object> data = dataProvider.resolve();
 

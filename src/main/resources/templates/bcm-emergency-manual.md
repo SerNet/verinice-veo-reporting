@@ -134,7 +134,7 @@ table.small-table td {
 <tbody>
 <tr>
   <td>${bundle.title}:</td>
-  <td>${document.abbreviation} ${document.name}</td>
+  <td>${document.abbreviation!} ${document.name}</td>
 </tr>
 <tr>
   <td>${bundle.document_docManagement_classification}:</td>
@@ -379,7 +379,7 @@ document.findLinked("document_keyQuestions")
 
 ## 3.2 ${bundle.document_emergencyManual_alertBao}  {#alarmierung-bao}
 
-${document.document_emergencyManual_alertBao}
+${document.document_emergencyManual_alertBao!}
 
 ## 3.3  ${bundle.staff_room} {#stabsraum}
 
