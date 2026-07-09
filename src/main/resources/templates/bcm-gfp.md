@@ -1,4 +1,7 @@
 <#import "/libs/commons.md" as com>
+<#import "/libs/bcm-commons.md" as bcom>
+
+<#assign formatDuration = bcom.formatDuration >
 
 <#assign document = target />
 <#assign process = document.findFirstLinked("document_process")! />
@@ -372,7 +375,7 @@ ${bundle.no_return_criteria_defined}
 <#list processLinks as processLink>
 <tr>
   <td>${processLink.target.abbreviation!} ${processLink.target.name!}</td>
-  <td>${processLink.target.process_bia_mtpd1!}</td>
+  <td>${formatDuration(processLink.target.process_bia_mtpd!)}</td>
   <td>${processLink.target.process_bia_mbco!}</td>
 </tr>
 
@@ -397,7 +400,7 @@ ${bundle.no_return_criteria_defined}
         </tr>
         <tr>
           <td>${bundle.process_emergencyRelevant_requiredMtpd}:</td>
-          <td>${dependencyLink.process_emergencyRelevant_requiredMtpd!}</td>
+          <td>${formatDuration(dependencyLink.process_emergencyRelevant_requiredMtpd!)}</td>
         </tr>
         <tr>
           <td>${bundle.process_emergencyRelevant_description}:</td>
@@ -564,17 +567,24 @@ ${bundle.emergency_measures_for_scenarios}:
 </tr>
 </thead>
 <tbody>
+
 <#if solution.parts?has_content>
 <#list solution.parts as partsSolution>
+
+<#assign resource = (partsSolution.getLinks("control_resource")?first.target)! />
+<#assign rto = (resource.domains[domain.id].decisionResults.rto.value)! />
+
 <tr>
-  <td>${(partsSolution.getLinks("control_resource")[0].target.name)!}</td>
+  <td>${(resource.name)!}</td>
 <td>
+<ul>
 <#list partsSolution.getLinks("control_bcstrategy")![] as strategyLink>
   <li>${strategyLink.target.abbreviation!""} ${strategyLink.target.name!""}<br/></li>
-  
 </#list>
+</ul>
 </td>
-  <td></td>
+
+<td>${formatDuration(rto)}</td>
 <td><@measuresFor partsSolution "control_emergencyMeasureClassification_phase_restart" /></td>
 
 <td><@measuresFor partsSolution "control_emergencyMeasureClassification_phase_emergencyMode" /></td>

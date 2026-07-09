@@ -1,4 +1,7 @@
 <#import "/libs/commons.md" as com>
+<#import "/libs/bcm-commons.md" as bcom>
+
+<#assign formatDuration = bcom.formatDuration >
 
 <#assign resource = target />
 <#assign institution = (resource.scopes?filter(s -> s.hasSubType("SCP_Institution"))?first)! />
@@ -200,11 +203,11 @@ ${bundle.resource_plan_description}
 </tr>
 <tr>
   <td>${bundle.rta_rto}</td>
-  <td>${resource.asset_biaParameterComparison_rta!} / ${resource.asset_resourceBia_rto!}</td>
+  <td>${formatDuration(resource.asset_biaParameterComparison_rta!)} / ${formatDuration(resource.domains[domain.id].decisionResults.rto.value!)}</td>
 </tr>
 <tr>
-  <td>${bundle.rpa_rto}</td>
-  <td>${resource.asset_biaParameterComparison_rpa!} / ${resource.asset_resourceBia_rpo!}</td>
+  <td>${bundle.rpa_rpo}</td>
+  <td>${formatDuration(resource.asset_biaParameterComparison_rpa!)} / ${formatDuration(resource.domains[domain.id].decisionResults.rpo.value!)}</td>
 </tr>
 </tbody>
 </table>
