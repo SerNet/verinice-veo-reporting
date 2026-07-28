@@ -29,7 +29,7 @@ import spock.lang.Specification
 class VeoReportingObjectWrapperSpec extends Specification {
 
     def wrapper = new VeoReportingObjectWrapper(Configuration.VERSION_2_3_33, [
-        '/assets/1':[
+        '/assets/1': [
             id: 1,
             type: 'asset',
             name: 'Asset 1']
@@ -44,7 +44,7 @@ class VeoReportingObjectWrapperSpec extends Specification {
             type: 'asset',
             _self: '/assets/1',
             domains: [
-                'a82148ca-4327-47e2-9f8d-74b3be41b45a':[
+                'a82148ca-4327-47e2-9f8d-74b3be41b45a': [
                     customAspects: []
                 ]
             ],
@@ -108,15 +108,15 @@ class VeoReportingObjectWrapperSpec extends Specification {
                 ]
             ],
             customAspects: [
-                ca:[
-                    attributeDefinitions:[
+                ca: [
+                    attributeDefinitions: [
                         bar: 'string'
                     ]
                 ]
             ],
             links: [:],
             translations: [
-                en:[
+                en: [
                     something_FOO_singular: 'Foo'
                 ]
             ]
@@ -145,7 +145,7 @@ class VeoReportingObjectWrapperSpec extends Specification {
             _requirementImplementations: '/scopes/cd7d0d66-7e39-4253-a0cc-f9a35112812d/control-implementations/6b5923e3-5d41-4911-a575-804df07f4d3a/requirement-implementations',
             owner: [targetUri: '/scopes/123'],
             implementationStatus: 'YES',
-            domains: ['abcd':[customAspects: [aspect: [foo: 'bar']]]]
+            domains: ['abcd': [customAspects: [aspect: [foo: 'bar']]]]
         ]
         expect :
         when:
@@ -159,7 +159,7 @@ class VeoReportingObjectWrapperSpec extends Specification {
         when:
         Map m = cas.wrappedObject
         then:
-        m == [aspect:[foo:'bar']]
+        m == [aspect: [foo: 'bar']]
         and:
         adapter.foo.asString == 'bar'
     }

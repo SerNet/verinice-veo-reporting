@@ -31,7 +31,7 @@ import org.veo.reporting.ReportingTest
 import groovy.json.JsonSlurper
 
 @AutoConfigureMockMvc
-@WebMvcTest(properties=["veo.reporting.cors.origins=https://*.verinice.example, https://frontend.somewhereelse.example"])
+@WebMvcTest(properties =["veo.reporting.cors.origins=https://*.verinice.example, https://frontend.somewhereelse.example"])
 @ContextConfiguration
 public class CORSSpec extends ReportingTest {
 
@@ -91,7 +91,7 @@ public class CORSSpec extends ReportingTest {
 
         with(response) {
             status == 200
-            getHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN) ==  testOrigin
+            getHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN) == testOrigin
             getHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS) == [
                 HttpMethod.GET,
                 HttpMethod.POST,

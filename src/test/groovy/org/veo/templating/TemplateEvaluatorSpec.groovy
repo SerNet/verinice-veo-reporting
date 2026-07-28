@@ -41,7 +41,7 @@ public class TemplateEvaluatorSpec extends Specification {
         def bundleDe = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_de.properties'))
         def bundleEn = new PropertyResourceBundle(TemplateEvaluatorSpec.getResourceAsStream('/templates/invitation_en.properties'))
         when:
-        def text = execute('invitation.txt', [person:[name: "Johannes"], bundle: bundleDe, timeZone: "Mitteleuropäische Normalzeit"], new ReportCreationParameters(Locale.GERMAN, TimeZone.getTimeZone("Europe/Berlin")))
+        def text = execute('invitation.txt', [person: [name: "Johannes"], bundle: bundleDe, timeZone: "Mitteleuropäische Normalzeit"], new ReportCreationParameters(Locale.GERMAN, TimeZone.getTimeZone("Europe/Berlin")))
         then:
         text == '''Hallo Johannes,
 
@@ -49,7 +49,7 @@ Hiermit lade ich Dich zu meinem Geburtstag ein. Mach Dir ein Kreuz im Kalender: 
 
 Tschüß'''
         when:
-        text = execute('invitation.txt',  [person:[name: "John"], bundle: bundleEn, timeZone: "Eastern Standard Time"], new ReportCreationParameters(Locale.ENGLISH, TimeZone.getTimeZone("America/New_York")))
+        text = execute('invitation.txt', [person: [name: "John"], bundle: bundleEn, timeZone: "Eastern Standard Time"], new ReportCreationParameters(Locale.ENGLISH, TimeZone.getTimeZone("America/New_York")))
         then:
         text == '''Hi John,
 
@@ -76,7 +76,7 @@ Cheers'''
                                 attributes: [
                                     foo: 'baz'
                                 ],
-                                target:[
+                                target: [
                                     targetUri : 'http://example.org/4711',
                                     name: 'Foo',
                                     id: '4711',
@@ -103,7 +103,7 @@ Cheers'''
                 abbreviation: '1 of 12',
                 designator: 'AST-234',
                 domains: [
-                    'abc':[
+                    'abc': [
                         customAspects: [:]
                     ]
                 ]
@@ -114,7 +114,7 @@ Cheers'''
                 name: 'Asset 10',
                 abbreviation: '10 of 12',
                 domains: [
-                    'abc':[
+                    'abc': [
                         customAspects: [:]
                     ]
                 ]
@@ -125,7 +125,7 @@ Cheers'''
                 name: 'Asset 12',
                 designator: 'AST-9',
                 domains: [
-                    'abc':[
+                    'abc': [
                         customAspects: [:]
                     ]
                 ]
@@ -147,7 +147,7 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                 type: 'person',
                 _self: 'http://example.org/persons/1',
                 domains: [
-                    '90d900a4-bfb4-44c5-82df-6259eed33d8e':[
+                    '90d900a4-bfb4-44c5-82df-6259eed33d8e': [
                         links: [
                             father : [
                                 [
@@ -183,11 +183,11 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                 _self: 'http://example.org/persons/2',
                 type: 'person',
                 domains: [
-                    'd1ee1ea8-0135-41f9-9b7a-3eda4a0bb546':[
+                    'd1ee1ea8-0135-41f9-9b7a-3eda4a0bb546': [
                         links: [
                             child : [
                                 [
-                                    target:[
+                                    target: [
                                         targetUri : 'http://example.org/persons/1',
                                         name: 'Jack',
                                         id: '1',
@@ -195,7 +195,7 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                                     ]
                                 ],
                                 [
-                                    target:[
+                                    target: [
                                         targetUri : 'http://example.org/persons/3',
                                         name: 'Jane',
                                         id: '3',
@@ -216,11 +216,11 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                 _self: 'http://example.org/persons/3',
                 type: 'person',
                 domains: [
-                    '0fd5b2dd-dc98-4cad-85ea-f556cdb04716':[
+                    '0fd5b2dd-dc98-4cad-85ea-f556cdb04716': [
                         links: [
                             father : [
                                 [
-                                    target:[
+                                    target: [
                                         targetUri : 'http://example.org/persons/2',
                                         name: 'Jack',
                                         id: '2',
@@ -239,7 +239,7 @@ Sort by designator: Asset 10, Asset 12, Asset 1'''
                 _self: 'http://example.org/persons/4',
                 type: 'person',
                 domains: [
-                    '82b57069-903f-4f19-8d45-2f5e49dbe24b':[
+                    '82b57069-903f-4f19-8d45-2f5e49dbe24b': [
                         customAspects: [:]
                     ]
                 ]
@@ -255,7 +255,7 @@ Jack's children are named John and Jane.'''
 
     def "Access a scope's members"() {
         def data = [
-            scopes:[
+            scopes: [
                 [
                     name: 'S1',
                     id: '1',
@@ -291,7 +291,7 @@ Jack's children are named John and Jane.'''
 
     def "Access a scope's members with specific type if other members are missing"() {
         def data = [
-            scopes:[
+            scopes: [
                 [
                     name: 'S1',
                     id: '1',
@@ -394,7 +394,7 @@ Jack's children are named John and Jane.'''
                 id: '1',
                 type: 'person',
                 domains: [
-                    'abc':[
+                    'abc': [
                         subType : 'MySubType',
                         customAspects: [:]
                     ]
@@ -405,7 +405,7 @@ Jack's children are named John and Jane.'''
                 id: '2',
                 type: 'person',
                 domains: [
-                    'abc':[
+                    'abc': [
                         customAspects: [:]
                     ]
                 ]
@@ -415,7 +415,7 @@ Jack's children are named John and Jane.'''
                 id: '3',
                 type: 'person',
                 domains: [
-                    'abc':[
+                    'abc': [
                         subType : 'OtherSubType',
                         customAspects: [:]
                     ]
@@ -426,12 +426,12 @@ Jack's children are named John and Jane.'''
                 id: '3',
                 type: 'person',
                 domains: [
-                    'abc':[
+                    'abc': [
                         subType : 'OtherSubType',
                         customAspects: [:]
 
                     ],
-                    'def':[
+                    'def': [
                         subType : 'MySubType',
                         customAspects: [:]
                     ]
@@ -539,7 +539,7 @@ Jack's children are named John and Jane.'''
             ]
         ]
         when:
-        def text = execute('risk-test.txt', [input:  objectData, scenario: scenario,person: person,control: control, domain: domain], new ReportCreationParameters(Locale.GERMANY, TimeZone.default))
+        def text = execute('risk-test.txt', [input: objectData, scenario: scenario, person: person, control: control, domain: domain], new ReportCreationParameters(Locale.GERMANY, TimeZone.default))
         then:
         text == '''\
                 Scenario: Fire
@@ -603,9 +603,9 @@ Jack's children are named John and Jane.'''
         then:
         text == expectedOutput
         where:
-        locale          | expectedOutput
-        Locale.GERMANY  | '01.01.2020'
-        Locale.US       | 'Jan 1, 2020'
+        locale | expectedOutput
+        Locale.GERMANY | '01.01.2020'
+        Locale.US | 'Jan 1, 2020'
     }
 
     String execute(String templateName, data, ReportCreationParameters parameters = new ReportCreationParameters(Locale.US, TimeZone.default)) {
