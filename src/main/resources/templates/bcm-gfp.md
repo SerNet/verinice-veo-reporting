@@ -231,15 +231,19 @@ table.small-table td {
 <#list document.getLinks("document_process")![] as processLink>
 <#assign process = processLink.target />
 
+<#assign scenarioCounter = 0>
+
 <#list process.getLinks("process_bcSolution")![] as solutionLink>
 <#assign solution = solutionLink.target />
 <#assign scenario = solution.findFirstLinked("control_scenario")! />
 
 <#if scenario?has_content>
-  <@tocitem 2 "szenario_${solutionLink?counter}" "9.${solutionLink?counter} Szenario: ${scenario.name!}" />
-  <@tocitem 3 "ausfallstrategien_${solutionLink?counter}" "9.${solutionLink?counter}.1 Übersicht Ausfallstrategien" />
-  <@tocitem 3 "massnahmen-kompensieren_${solutionLink?counter}" "9.${solutionLink?counter}.2 ${bundle.compensation_measures_for} ${(scenario.name)!}" />
-  <@tocitem 3 "rollen-notbetrieb_${solutionLink?counter}" "9.${solutionLink?counter}.3 Notwendige Rollen/Funktionen und Arbeitsplätze im NOTBETRIEB" />
+  <#assign scenarioCounter = scenarioCounter + 1>
+
+  <@tocitem 2 "szenario_${scenarioCounter}" "9.${scenarioCounter} Szenario: ${scenario.name!}" />
+  <@tocitem 3 "ausfallstrategien_${scenarioCounter}" "9.${scenarioCounter}.1 Übersicht Ausfallstrategien" />
+  <@tocitem 3 "massnahmen-kompensieren_${scenarioCounter}" "9.${scenarioCounter}.2 ${bundle.compensation_measures_for} ${(scenario.name)!}" />
+  <@tocitem 3 "rollen-notbetrieb_${scenarioCounter}" "9.${scenarioCounter}.3 Notwendige Rollen/Funktionen und Arbeitsplätze im NOTBETRIEB" />
 </#if>
 
 </#list>
@@ -328,7 +332,11 @@ ${bundle.person_contactInformation_email}: ${manager.person_contactInformation_e
 <tbody>
 <#list emergTeam.parts as person>
 <tr>
-  <td>${person.abbreviation!} ${person.name!}</td>
+  <td>
+    ${person.abbreviation!} ${person.name!} <br/>
+    ${bundle.person_generalInformation_givenName!}: ${person.person_generalInformation_givenName!} <br/>
+    ${bundle.person_generalInformation_familyName!}: ${person.person_generalInformation_familyName!}
+  </td>
   <td>
      ${bundle.person_contactInformation_office}: ${person.person_contactInformation_office!}<br/>
      ${bundle.person_contactInformation_mobile}: ${person.person_contactInformation_mobile!}
@@ -505,6 +513,7 @@ ${measure.description!}
 
 ${bundle.emergency_measures_for_scenarios}:
 
+<#assign scenarioCounter = 0>
 <#assign processLinks = document.getLinks("document_process")![] />
 
 <#if processLinks?has_content>
@@ -520,11 +529,12 @@ ${bundle.emergency_measures_for_scenarios}:
 <#assign scenarioLinks = solution.getLinks("control_scenario")![] />
 
 <#if scenarioLinks?has_content>
-<#assign scenario = scenarioLinks[0].target />
+  <#assign scenarioCounter = scenarioCounter + 1>
+  <#assign scenario = scenarioLinks[0].target />
 
-## 9.${solutionLink?counter} ${bundle.failure_scenario}: ${scenario.name!} {#szenario_${solutionLink?counter}}
+## 9.${scenarioCounter} ${bundle.failure_scenario}: ${scenario.name!} {#szenario_${solutionLink?counter}}
 
-### 9.${solutionLink?counter}.1 ${bundle.overview_failure_strategies} {#ausfallstrategien_${solutionLink?counter}}
+### 9.${scenarioCounter}.1 ${bundle.overview_failure_strategies} {#ausfallstrategien_${solutionLink?counter}}
 
 <table class="table fullwidth">
 <thead>
@@ -553,7 +563,7 @@ ${bundle.emergency_measures_for_scenarios}:
 </tbody>
 </table>
 
-### 9.${solutionLink?counter}.2 ${bundle.compensation_measures_for} "${scenario.name!}" {#massnahmen-kompensieren_${solutionLink?counter}}
+### 9.${scenarioCounter}.2 ${bundle.compensation_measures_for} "${scenario.name!}" {#massnahmen-kompensieren_${solutionLink?counter}}
 
 <table class="table fullwidth small-table">
 <thead>
@@ -577,11 +587,9 @@ ${bundle.emergency_measures_for_scenarios}:
 <tr>
   <td>${(resource.name)!}</td>
 <td>
-<ul>
 <#list partsSolution.getLinks("control_bcstrategy")![] as strategyLink>
-  <li>${strategyLink.target.abbreviation!""} ${strategyLink.target.name!""}<br/></li>
+  ${strategyLink.target.abbreviation!""} ${strategyLink.target.name!""}<br/>
 </#list>
-</ul>
 </td>
 
 <td>${formatDuration(rto)}</td>
@@ -600,7 +608,7 @@ ${bundle.emergency_measures_for_scenarios}:
 </tbody>
 </table>
 
-### 9.${solutionLink?counter}.3 ${bundle.emergency_operation_roles} ${scenario.name!} {#rollen-notbetrieb_${solutionLink?counter}}
+### 9.${scenarioCounter}.3 ${bundle.emergency_operation_roles} ${scenario.name!} {#rollen-notbetrieb_${solutionLink?counter}}
 
 <table class="table fullwidth">
 <thead>
@@ -711,6 +719,8 @@ ${bundle.emergency_measures_for_scenarios}:
     <span class="checkbox"></span>
 </td>
 </tr>
+<#assign providerPersons = (contact.members![])?filter(m -> m.hasSubType("PER_Person")) />
+<#if providerPersons?has_content>
 <tr>
   <td colspan="4">
 <table class="table fullwidth">
@@ -724,10 +734,6 @@ ${bundle.emergency_measures_for_scenarios}:
 </thead>
 <tbody>
 
-<#if contact.members?has_content>
-<#assign providerPersons = contact.members?filter(m -> m.hasSubType("PER_Person")) />
-
-<#if providerPersons?has_content>
 <#list providerPersons as person>
 <tr>
   <td>${person.name!}<br/>
@@ -744,16 +750,14 @@ ${bundle.emergency_measures_for_scenarios}:
   </td>
 </tr>
 </#list>
-</#if>
-</#if>
-</#list>
 </tbody>
 </table>
  </td>
 </tr>
+</#if>
 </tbody>
 </table>
-
+</#list>
 <#else>
 <tr>
   <td colspan="4">${bundle.no_external_contacts_linked}</td>
