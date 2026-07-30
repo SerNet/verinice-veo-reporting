@@ -871,10 +871,10 @@ ${docLink.control_whpOrganizationalRequirementDoc_desc!}<br/>
 
 <@technicalRequirements
   "control_whpTechRequirement"
-  "control_whpOrganizationalRequirementDoc_desc"
+  "control_whpTechRequirement_desc"
   "${bundle.no_technical_recovery_prerequisites_defined}" />
 
-# 5 ${bundle.prerequisites_recovery} {#wiederherstellung}
+# 5 ${bundle.resource_recovery} {#wiederherstellung}
 
 <#assign recoveryActivities = [] />
 
@@ -989,14 +989,11 @@ ${bundle.reference_documents_description}:
 
 <tr>
   <td>
-    ${doc.abbreviation!}
-    ${doc.name!}
+    ${doc.abbreviation!} ${doc.name!}
   </td>
   <td>
-    ${bundle.link}:
-    ${doc.document_generalInformation_document!}<br/>
-    ${bundle.document_storageArchiving_location}:
-    ${doc.document_storageArchiving_location!}
+    ${bundle.link}: ${doc.document_generalInformation_document!}<br/>
+    ${bundle.document_storageArchiving_location}: ${doc.document_storageArchiving_location!}
   </td>
 </tr>
 
