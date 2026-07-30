@@ -3,6 +3,11 @@ image: eclipse-temurin:25.0.1_8-jdk@sha256:42fc3fe6804ec612f5ef8a613f8c06d8dd578
 variables:
   ORG_GRADLE_PROJECT_ci: 'true'
 
+include:
+  - project: "veo/verinice-veo"
+    file: "/.gitlab/ci_templates/common_jobs.yaml"
+    ref: develop
+
 # Verification (code analysis) is unnecessary on 'develop' &
 # 'master', because only verified MRs can be merged into those branches.
 # For the test coverage, we do need to run tests on develop though
@@ -22,6 +27,7 @@ variables:
 
 stages:
   - build
+  - copy
   - check
   - docker_image
   - deployment
@@ -67,6 +73,12 @@ build:
       paths:
         - build
       policy: push
+
+copy-image:
+  extends: .registry-copy-image
+  variables:
+    IMAGE_REPO: 'veo-reporting'
+    IMAGE_TAG: '$CI_COMMIT_TAG'
 
 test:
   stage: check
