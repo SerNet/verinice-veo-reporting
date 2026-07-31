@@ -149,10 +149,6 @@ table.small-table td {
   <td>${(document.findFirstLinked("document_docAuthor").name)!}</td>
 </tr>
 <tr>
-  <td>${bundle.document_storageArchiving_location}:</td>
-  <td>${document.document_storageArchiving_location!}</td>
-</tr>
-<tr>
   <td>${bundle.created_on}</td>
   <td>${.now?date}</td>
 </tr>
@@ -295,13 +291,17 @@ ${bundle.additional_scenario_specific_immediate_measures}
       ${measure.description!}
     </#if>
   </td>
-
   <td>
     <#list measure.findLinked("control_responsible")![] as responsible>
-      <#if responsible.hasSubType("PER_Person")>
-        ${responsible.person_generalInformation_givenName!} ${responsible.person_generalInformation_familyName!}<br/>
+      <#if responsible.hasSubType("PER_Person") && responsible.person_generalInformation_givenName?has_content && responsible.person_generalInformation_familyName?has_content>
+        ${responsible.name!} <br/>
+        ${responsible.person_generalInformation_givenName!} ${responsible.person_generalInformation_familyName!}
       <#else>
-        ${responsible.abbreviation!""} ${responsible.name!}<br/>
+        <#assign responsiblePersons = (responsible.parts![])?filter(part -> part.hasSubType("PER_Person")) />
+        <#list responsiblePersons as person>
+          ${person.name!} <br/>
+          ${person.person_generalInformation_givenName!} ${person.person_generalInformation_familyName!}
+        </#list>
       </#if>
     </#list>
   </td>
@@ -593,31 +593,61 @@ ${document.document_emergencyManual_reviewUpdate!}
 <thead>
 <tr>
   <th>${bundle.document_role}</th>
-  <th>${bundle.person_generalInformation_givenName}, ${bundle.person_generalInformation_familyName}</th>
   <th>${bundle.contact}</th>
 </tr>
 </thead>
 <tbody>
 
 <#list internalContacts as internalContact>
+
+<#assign subPersons = (internalContact.parts![])?filter(part -> part.hasSubType("PER_Person")) />
+
 <tr>
-  <td>${internalContact.abbreviation!} ${internalContact.name!}<br/> 
-      ${internalContact.description!}</td>
   <td>
-    ${bundle.person_generalInformation_givenName} 
-    ${internalContact.person_generalInformation_givenName!}<br/> 
-    ${bundle.person_generalInformation_familyName} 
-    ${internalContact.person_generalInformation_familyName!}
-  </td>
+    ${internalContact.abbreviation!} ${internalContact.name!} <br/> 
+    ${internalContact.description!}<br/> 
+  <#if internalContact.person_generalInformation_givenName?has_content && internalContact.person_generalInformation_familyName?has_content>
+    ${bundle.person_generalInformation_givenName}: ${internalContact.person_generalInformation_givenName!}<br/>
+    ${bundle.person_generalInformation_familyName}: ${internalContact.person_generalInformation_familyName!}
+  </#if>
   <td>
-    ${bundle.person_contactInformation_office} 
-    ${internalContact.person_contactInformation_office!}<br/> 
-    ${bundle.person_contactInformation_mobile} 
-    ${internalContact.person_contactInformation_mobile!}<br/> 
-    ${bundle.person_contactInformation_email} 
-    ${internalContact.person_contactInformation_email!}
+    ${bundle.person_contactInformation_office}: ${internalContact.person_contactInformation_office!}<br/> 
+    ${bundle.person_contactInformation_mobile}: ${internalContact.person_contactInformation_mobile!}<br/> 
+    ${bundle.person_contactInformation_email}: ${internalContact.person_contactInformation_email!}
   </td>
 </tr>
+<#if subPersons?has_content>
+<tr>
+  <td colspan="2">
+    <table class="table fullwidth">
+      <thead>
+        <tr>
+          <th>
+            ${bundle.person_generalInformation_givenName} ${bundle.person_generalInformation_familyName}
+          </th>
+          <th>${bundle.contact}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <#list subPersons as person>
+        <tr>
+          <td>
+            ${person.name!} <br/>
+            ${person.person_generalInformation_givenName!} ${person.person_generalInformation_familyName!}
+          </td>
+          <td>
+            ${bundle.person_contactInformation_office}: ${person.person_contactInformation_office!}<br/>
+            ${bundle.person_contactInformation_mobile}: ${person.person_contactInformation_mobile!}<br/>
+            ${bundle.person_contactInformation_email}: ${person.person_contactInformation_email!}
+          </td>
+        </tr>
+        </#list>
+      </tbody>
+    </table>
+  </td>
+</tr>
+</#if>
+
 </#list>
 
 </tbody>
@@ -655,9 +685,9 @@ ${document.document_emergencyManual_reviewUpdate!}
   </td>
 </tr>
 
-<#assign linkedPersons = (provider.members![])?filter(m -> m.hasSubType("PER_Person")) />
+<#assign subPersons = (provider.members![])?filter(m -> m.hasSubType("PER_Person")) />
 
-<#if linkedPersons?has_content>
+<#if subPersons?has_content>
 <tr>
   <td colspan="4">
 <table class="table fullwidth">
@@ -669,7 +699,7 @@ ${document.document_emergencyManual_reviewUpdate!}
 </tr>
 </thead>
 <tbody>
-<#list linkedPersons as person>
+<#list subPersons as person>
 <tr>
   <td>
     ${person.name!}<br/>
