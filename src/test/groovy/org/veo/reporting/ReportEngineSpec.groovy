@@ -39,14 +39,14 @@ class ReportEngineSpec extends Specification {
             familyName: 'Threepwood',
             age: 42,
             height: '''5'8"''',
-            favorites: [drink: 'Rum']]
+            favorites: [drink:'Rum']]
         ReportConfiguration reportConfiguration = Stub {
             getTemplateFile() >> 'profile.md'
             getTemplateType() >> 'text/markdown'
         }
         when:
         def str = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport(reportConfiguration, data, 'text/markdown', it, new ReportCreationParameters(Locale.US, TimeZone.default))
+            reportEngine.generateReport(reportConfiguration, data, 'text/markdown', it, new ReportCreationParameters(Locale.US, TimeZone.default) )
             it.toString()
         }
         then:
@@ -80,7 +80,7 @@ Favorite drink
             familyName: 'Threepwood',
             age: 42,
             height: '''5'8"''',
-            favorites: [drink: 'Rum']]
+            favorites: [drink:'Rum']]
         when:
         def str = renderHTML('profile.md','text/markdown', data)
         then:
@@ -122,7 +122,7 @@ Favorite drink
             familyName: 'Threepwood',
             age: 42,
             height: '''5'8"''',
-            favorites: [drink: 'Rum']]
+            favorites: [drink:'Rum']]
         when:
         PDDocument doc = renderPDF('profile.md','text/markdown', data)
         then:
@@ -144,9 +144,7 @@ Favorite drink
     def "Render report with different locales and time zones"() {
         when:
         String text = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.GERMANY, TimeZone.getTimeZone("Europe/Berlin")), it,{m->
-                [person: [name: 'Max']]
-            }, [:])
+            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.GERMANY, TimeZone.getTimeZone("Europe/Berlin")), it,{m->[person:[name: 'Max']]}, [:])
             it.toString()
         }
         then:
@@ -158,9 +156,7 @@ Tschüß'''
         when:
 
         text = new ByteArrayOutputStream().withCloseable {
-            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.US, TimeZone.getTimeZone("America/New_York")), it,{m->
-                [person: [name: 'Jack']]
-            }, [:])
+            reportEngine.generateReport('invitation', 'text/plain', new ReportCreationParameters(Locale.US, TimeZone.getTimeZone("America/New_York")), it,{m->[person:[name: 'Jack']]}, [:])
             it.toString()
         }
         then:
@@ -229,9 +225,9 @@ Cheers'''
         then:
         text.contains(output)
         where:
-        input | output
-        'Hello\nWorld' | 'Hello \nWorld'
-        'foo*bar*' | 'foo*bar*'
+        input                                | output
+        'Hello\nWorld'                       | 'Hello \nWorld'
+        'foo*bar*'                           | 'foo*bar*'
         '![img](file:///localPath/test.pdf)' | '![img](file:///localPath/test.pdf)'
     }
 
@@ -241,9 +237,9 @@ Cheers'''
         then:
         text.contains(output)
         where:
-        input | output
-        'Hello\nWorld' | '<p>Hello\n   <br>\n   World</p>'
-        'foo*bar*' | '<p>foo*bar*</p>'
+        input                                | output
+        'Hello\nWorld'                       | '<p>Hello\n   <br>\n   World</p>'
+        'foo*bar*'                           | '<p>foo*bar*</p>'
         '![img](file:///localPath/test.pdf)' | '<p>![img](file:///localPath/test.pdf)</p>'
     }
 

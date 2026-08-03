@@ -188,7 +188,7 @@ spotless {
         target("src/**/*.groovy", "buildSrc/**/*.groovy")
         addStep(org.veo.LicenseHeaderStep.create(project.rootDir, "package |runner \\{"))
         addStep(org.veo.NoWildcardImportsStep.create())
-        greclipse().configProperties(
+        greclipse("4.36").configProperties(
             """
             org.eclipse.jdt.core.formatter.tabulation.char=space
             groovy.formatter.remove.unnecessary.semicolons=true
