@@ -203,11 +203,11 @@ ${bundle.resource_plan_description}
 </tr>
 <tr>
   <td>${bundle.rta_rto}</td>
-  <td>${formatDuration(resource.asset_biaParameterComparison_rta!)} / ${formatDuration(resource.domains[domain.id].decisionResults.rto.value!)}</td>
+  <td>${formatDuration(resource.asset_biaParameterComparison_rta!)} / ${formatDuration((resource.domains[domain.id].decisionResults.rto.value)!)}</td>
 </tr>
 <tr>
   <td>${bundle.rpa_rpo}</td>
-  <td>${formatDuration(resource.asset_biaParameterComparison_rpa!)} / ${formatDuration(resource.domains[domain.id].decisionResults.rpo.value!)}</td>
+  <td>${formatDuration(resource.asset_biaParameterComparison_rpa!)} / ${formatDuration((resource.domains[domain.id].decisionResults.rpo.value)!)}</td>
 </tr>
 </tbody>
 </table>
