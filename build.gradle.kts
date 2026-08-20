@@ -52,7 +52,7 @@ dependencies {
     implementation("org.jsoup:jsoup:1.23.1")
     implementation("com.helger.font:ph-fonts-api:6.1.0")
 
-    compileOnly("com.github.spotbugs:spotbugs-annotations:4.10.3")
+    compileOnly("com.github.spotbugs:spotbugs-annotations:4.10.4")
     "spotbugsPlugins"("com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0")
 
     runtimeOnly("org.springframework.boot:spring-boot-starter-actuator")
