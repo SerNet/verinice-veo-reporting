@@ -47,11 +47,36 @@ ${bundle.email} ${email}
 </#if>
 </#macro>
 
-<h1><@multiline bundle.title /></h1>
+<h1>${bundle.title} - ${scope.name}</h1>
 
-## ${bundle.address}
+## ${bundle.nis2_contact}
 
 <@address scope "scope_nis2Contact_name", scope.scope_nis2Contact_address1!, scope.scope_nis2Contact_postcode!, scope.scope_nis2Contact_city!, scope.scope_nis2Contact_country!, scope.scope_nis2Contact_phone!, scope.scope_nis2Contact_email! />
+
+
+<#assign contactPersons = scope.findLinked('scope_nis2ContactPerson') />
+
+<#if contactPersons?has_content>
+## ${bundle.scope_nis2ContactPerson}
+
+<#list contactPersons as contactPerson>
+
+${bundle.person_generalInformation_familyName}, ${bundle.person_generalInformation_givenName}
+: ${contactPerson.person_generalInformation_familyName!}, ${contactPerson.person_generalInformation_givenName!}
+
+<#assign email=contactPerson.person_contactInformation_email! />
+<#assign mobile=contactPerson.person_contactInformation_mobile! />
+<#assign office=contactPerson.person_contactInformation_office! />
+
+<#if email?has_content || mobile?has_content || office?has_content>
+${bundle.contact_info}
+<#if email?has_content>: ${email}</#if>
+<#if mobile?has_content>: ${mobile}</#if>
+<#if office?has_content>: ${office}</#if>
+</#if>
+
+</#list>
+</#if>
 
 ## ${bundle.sector_info}
 
@@ -66,6 +91,15 @@ ${bundle.email} ${email}
 <@def bundle.scope_specificInformation_identifiedAs, (bundle[scope.scope_specificInformation_identifiedAs])!, true />
 
 <@def bundle.scope_specificInformation_operatorCriticalSystem scope.scope_specificInformation_operatorCriticalSystem />
+
+<#if scope.scope_specificInformation_operatorCriticalSystem!false && domain.name=='NIS2'>
+<#-- only show this for the German domain -->
+
+<@def bundle.scope_criticalSystem_institutionId scope.scope_criticalSystem_institutionId />
+
+<@def bundle.scope_criticalSystem_criticalComponents scope.scope_criticalSystem_criticalComponents />
+
+</#if>
 
 <@def bundle.scope_specificInformation_ipRanges scope.scope_specificInformation_ipRanges />
 
