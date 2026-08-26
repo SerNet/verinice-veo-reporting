@@ -134,10 +134,12 @@ public class ReportControllerSpec extends ReportingTest {
         then:
         config == [
             name:[
-                de: 'Verzeichnis der Verarbeitungstätigkeiten'
+                de: 'Verzeichnis der Verarbeitungstätigkeiten',
+                en: 'Records of processing activities'
             ],
             description:[
-                de: 'Eine detaillierte Übersicht über die in einem Scope durchgeführten Verarbeitungstätigkeiten'
+                de: 'Eine detaillierte Übersicht über die in einem Scope durchgeführten Verarbeitungstätigkeiten',
+                en: "A detailed overview of the processing activities carried out within a scope"
             ],
             outputTypes:['application/pdf'],
             multipleTargetsSupported:false,

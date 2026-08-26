@@ -1,10 +1,12 @@
 {
   "name": {
-    "de": "Datenschutz-Risikoanalyse"
+    "de": "Datenschutz-Risikoanalyse",
+    "en": "Data protection risk assessment"
   },
   "domainName": "DS-GVO",
   "description": {
-    "de": "Die bestehenden Risiken für die Verarbeitungstätigkeiten in einer verantwortlichen Stelle"
+    "de": "Die bestehenden Risiken für die Verarbeitungstätigkeiten in einer verantwortlichen Stelle",
+    "en": "The existing risks for processing activities for controller, Art. 7 Nr.4 GDPR"
   },
   "templateFile": "dpra.md",
   "templateType": "text/markdown",
