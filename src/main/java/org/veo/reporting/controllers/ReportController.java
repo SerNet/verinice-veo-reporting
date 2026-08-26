@@ -170,7 +170,8 @@ public class ReportController {
     LOGGER.info("Request parameters = {}", parameters);
 
     String desiredLanguage = parameters.locale().getLanguage();
-    Set<String> supportedLanguages = configuration.get().getName().keySet();
+    List<String> supportedLanguages =
+        configuration.get().getName().keySet().stream().sorted().toList();
     if (!supportedLanguages.contains(desiredLanguage)) {
       throw new InvalidReportParametersException(
           "Language "
