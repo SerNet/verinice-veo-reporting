@@ -261,24 +261,6 @@ public class ReportControllerSpec extends ReportingTest {
         response.status == 401
     }
 
-    def "try to create a report with an unsupported locale"() {
-        when:
-        def response = POST("/reports/processing-activities", 'abc', 'en', [
-            outputType:'application/pdf',
-            targets: [
-                [
-                    type: 'scope',
-                    id: UUID.randomUUID()
-                ]
-            ],
-            unit: UUID.randomUUID(),
-            domain: UUID.randomUUID()
-        ])
-        then:
-        response.status == 400
-        response.contentAsString == '''Language en not supported by report processing-activities, supported languages: [de]'''
-    }
-
     def "create a report with different locales and time zones"() {
         given:
         def unitId = UUID.randomUUID()
@@ -416,12 +398,15 @@ Tschüß'''
             targets: [
                 [
                     type: 'person',
-                    id: '1'
+                    id: UUID.randomUUID().toString()
                 ]
-            ]
+            ],
+            unit: UUID.randomUUID(),
+            domain: UUID.randomUUID()
         ])
         then:
         response.status == 400
+        response.errorMessage == '''Output type animal/elephant not supported by report invitation, supported output types: [text/plain]'''
     }
 
     def "try to create a report with unsupported locale"() {
@@ -431,12 +416,15 @@ Tschüß'''
             targets: [
                 [
                     type: 'person',
-                    id: '1'
+                    id: UUID.randomUUID()
                 ]
-            ]
+            ],
+            unit: UUID.randomUUID(),
+            domain: UUID.randomUUID()
         ])
         then:
         response.status == 400
+        response.contentAsString == '''Language pt not supported by report invitation, supported languages: [de, en]'''
     }
 
     def "create a PDF report"() {
