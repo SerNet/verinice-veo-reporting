@@ -63,6 +63,7 @@ public class VeoJFreeChartSpiderWebDiagramObjectDrawer implements FSObjectDrawer
     OPEN_SANS_BOLD = loadFont(openSansFontResources, 700);
   }
 
+  @SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull")
   private static Map<Shape, String> buildShapeLinkMap(
       ChartRenderingInfo renderingInfo, int dotsPerPixel) {
     Map<Shape, String> linkShapes = null;

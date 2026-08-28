@@ -87,7 +87,7 @@ tasks.named<com.github.spotbugs.snom.SpotBugsTask>("spotbugsMain") {
 }
 
 pmd {
-    toolVersion = "7.26.0"
+    toolVersion = "7.27.0"
     ruleSetConfig = rootProject.resources.text.fromFile("config/pmd-ruleset.xml")
     ruleSets = emptyList()
     rulesMinimumPriority.set(3)
