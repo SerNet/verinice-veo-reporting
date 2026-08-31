@@ -49,6 +49,10 @@ ${bundle.email} ${email}
 
 <h1>${bundle.title} - ${scope.name}</h1>
 
+## ${bundle.nis2_org_name}
+
+<@address scope "name", scope.scope_address_address1!, scope.scope_address_postcode!, scope.scope_address_city!, scope.scope_address_country!, scope.scope_address_phone!, scope.scope_address_email! />
+
 ## ${bundle.nis2_contact}
 
 <@address scope "scope_nis2Contact_name", scope.scope_nis2Contact_address1!, scope.scope_nis2Contact_postcode!, scope.scope_nis2Contact_city!, scope.scope_nis2Contact_country!, scope.scope_nis2Contact_phone!, scope.scope_nis2Contact_email! />
