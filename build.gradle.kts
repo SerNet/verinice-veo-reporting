@@ -29,7 +29,7 @@ dependencies {
 
     implementation("tools.jackson.module:jackson-module-blackbird")
     implementation("jakarta.validation:jakarta.validation-api")
-    implementation("org.freemarker:freemarker:2.3.34")
+    implementation("org.freemarker:freemarker:2.3.35")
     implementation("com.vladsch.flexmark:flexmark:0.64.8")
     implementation("com.vladsch.flexmark:flexmark-ext-attributes:0.64.8")
     implementation("com.vladsch.flexmark:flexmark-ext-definition:0.64.8")
