@@ -167,17 +167,13 @@ ${bundle.incident_security_notificationType}
 
 <@def bundle.incident_description_discoveryDateTimeOfIncident, (incident.incident_description_discoveryDateTimeOfIncident?datetime.iso)! />
 
-<#if domain.name == "NIS2">
 <@def bundle.incident_description_lastUpdateDateTimeOfIncident, (incident.incident_description_lastUpdateDateTimeOfIncident?datetime.iso)! />
-</#if>
 
 <@def bundle.incident_description_stillContinues incident.incident_description_stillContinues />
 
 <@def bundle.incident_description_durationOfIncident, incident.incident_description_durationOfIncident />
 
-<#if domain.name == "NIS2">
 <@def bundle.incident_description_recurringIncident incident.incident_description_recurringIncident />
-</#if>
 </div>
 <div class="section">
 
@@ -272,9 +268,7 @@ ${bundle.incident_security_notificationType}
 
 <@def bundle.incident_nis2potentialEffect_significantIncident, incident.incident_nis2potentialEffect_significantIncident />
 
-<#if domain.name == "NIS2">
 <@def bundle.incident_nis2potentialEffect_reason, incident.incident_nis2potentialEffect_reason />
-</#if>
 
 <@def bundle.incident_nis2potentialEffect_severityRating, (bundle[incident.incident_nis2potentialEffect_severityRating])! />
 
@@ -350,7 +344,6 @@ ${bundle.incident_security_notificationType}
 <#if notificationMade>
 
 
-<#if domain.name == "NIS2">
 <@def bundle.incident_competentAuthority_earlyWarning incident.incident_competentAuthority_earlyWarning />
 
 <@def bundle.incident_competentAuthority_timeDateNotification, (incident.incident_competentAuthority_timeDateNotification?datetime.iso)! />
@@ -364,7 +357,6 @@ ${bundle.incident_security_notificationType}
 <@def bundle.incident_competentAuthority_delayReasonEarlyWarning incident.incident_competentAuthority_delayReasonEarlyWarning />
 </#if> <#--  not within 24 h -->
 </#if> <#--  withinHoursEarly?has_content -->
-</#if> <#-- NIS2 -->
 </#if> <#--  notificationMade -->
 
 <@def bundle.incident_competentAuthority_notification incident.incident_competentAuthority_notification />
@@ -382,7 +374,6 @@ ${bundle.incident_security_notificationType}
 </#if> <#--  not within 72 h -->
 </#if> <#--  withinHours?has_content -->
 
-<#if domain.name == "NIS2">
 
 <@def bundle.incident_competentAuthority_interimNotification, incident.incident_competentAuthority_interimNotification />
 
@@ -403,7 +394,6 @@ ${bundle.incident_security_notificationType}
 <@def bundle.incident_competentAuthority_delayReasonFinalNotification incident.incident_competentAuthority_delayReasonFinalNotification />
 </#if> <#--  not within 1 month -->
 </#if> <#--  withinMonth?has_content -->
-</#if> <#-- NIS2 -->
 <#else> <#-- notificationMade?has_content -->
 <@missing_property />
 </#if> <#--  notificationMade?has_content -->
@@ -434,13 +424,11 @@ ${bundle.incident_security_notificationType}
 
 <@def bundle.incident_nis2CrossBorder_concernedStates, incident.incident_nis2CrossBorder_concernedStates />
 
-<#if domain.name == "NIS2">
 <@def bundle.incident_nis2CrossBorder_furtherSpread, incident.incident_nis2CrossBorder_furtherSpread />
 
 <@def bundle.incident_nis2CrossBorder_furtherCountries, incident.incident_nis2CrossBorder_furtherCountries />
 
 <@def bundle.incident_nis2CrossBorder_concernedSectors, incident.incident_nis2CrossBorder_concernedSectors />
-</#if>
 </#if>
 
 </div>
