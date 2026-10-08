@@ -1,5 +1,6 @@
 <#import "/libs/commons.md" as com>
 <#import "/libs/itbp-commons.md" as icom>
+<#import "/libs/implementation-status-messages.ftl" as statusMessages>
 
 <#assign table = com.table
          def = com.def
@@ -203,7 +204,7 @@ domain/>
         </td>
     </tr>
     <tr>
-      <td>${bundle[ri.status]}</td>
+      <td>${statusMessages[ri.status]!ri.status}</td>
       <td>
         <#switch ri.status>
           <#on "YES">

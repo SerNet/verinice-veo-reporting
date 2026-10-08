@@ -18,8 +18,4 @@ impl_date = "Umsetzungs\x00addatum"
 impl_date_on = "Am"
 impl_date_by = "Bis"
 impl_by = "Umsetzung durch"
-STATUS_YES = "Umgesetzt"
-STATUS_NO = "Nicht umgesetzt"
-STATUS_PARTIAL = "Teilweise umgesetzt"
-STATUS_N_A = "N/A"
 />

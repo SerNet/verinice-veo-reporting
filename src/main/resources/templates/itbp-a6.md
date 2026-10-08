@@ -1,5 +1,6 @@
 <#import "/libs/commons.md" as com>
 <#import "/libs/itbp-commons.md" as icom>
+<#import "/libs/implementation-status-messages.ftl" as statusMessages>
 
 <#assign table = com.table
          def = com.def
@@ -238,7 +239,7 @@ ${value}
     </thead>
     <tbody>
         <tr>
-            <td>${bundle[ri.status]}</td>
+            <td>${statusMessages[ri.status]!ri.status}</td>
             <td>${(ri.responsible.name)!}</td>
             <td>${(ri.implementationUntil?date.iso)!}</td>
         </tr>

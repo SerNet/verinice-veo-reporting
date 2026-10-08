@@ -1,6 +1,7 @@
 <#import "/libs/commons.md" as com>
 <#import "/libs/itbp-commons.md" as icom>
 <#import "/libs/risk-commons.md" as rcom>
+<#import "implementation-status-messages.ftl" as statusMessages>
 
 <#macro riskdisplay headinglevel targetObject risk domain riskDefinition={}>
 
@@ -141,7 +142,7 @@ ${bundle.no_assessment_for_scenario}
 <#assign ri = targetObject.requirementImplementations?filter(it->it.control._self == part._self)?first!>
 <tr>
 <td>${icom.controlTitle(part)}</td>
-<td>${(bundle[ri.status])!}</td>
+<td>${statusMessages[ri.status]!ri.status}</td>
 <td>${ri.implementationStatement!}</td>
 <td>
   <#switch ri.status!>

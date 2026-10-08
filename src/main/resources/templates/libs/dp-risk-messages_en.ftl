@@ -18,8 +18,4 @@ impl_date = "Date of implementation"
 impl_date_on = "On"
 impl_date_by = "By"
 impl_by = "Implementation by"
-STATUS_YES = "Implemented"
-STATUS_NO = "Not implemented"
-STATUS_PARTIAL = "Partially implemented"
-STATUS_N_A = "N/A"
 />
