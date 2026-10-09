@@ -39,7 +39,7 @@ class HtmlPDFConverterSpec extends Specification {
             builder.html {
                 head {
                     bookmarks {
-                        bookmark(name:'Foo', href: '#first' )
+                        bookmark(name: 'Foo', href: '#first')
                     }
                 }
                 body {

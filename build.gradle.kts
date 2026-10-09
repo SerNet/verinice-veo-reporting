@@ -189,7 +189,7 @@ spotless {
         target("src/**/*.groovy", "buildSrc/**/*.groovy")
         addStep(org.veo.LicenseHeaderStep.create(project.rootDir, "package |runner \\{"))
         addStep(org.veo.NoWildcardImportsStep.create())
-        greclipse("4.36").configProperties(
+        greclipse().configProperties(
             """
             org.eclipse.jdt.core.formatter.tabulation.char=space
             groovy.formatter.remove.unnecessary.semicolons=true
@@ -197,8 +197,7 @@ spotless {
         )
         importOrder("java", "javax", "org", "com", "org.veo", "")
         replaceRegex("Excessive line breaks", "\n{3,}", "\n\n")
-        replaceRegex("Extra space around equals sign", "(  += )|( =  +)", " = ")
-        replaceRegex("Not one space between right round and left curly bracket", "\\) *\\{", ") {")
+        replaceRegex("No space between right round and left curly bracket", "\\)\\{", ") {")
         toggleOffOn()
     }
     format("git") {

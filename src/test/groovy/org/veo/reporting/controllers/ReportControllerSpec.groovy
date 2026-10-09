@@ -133,17 +133,17 @@ public class ReportControllerSpec extends ReportingTest {
         def config = new JsonSlurper().parseText(response.getContentAsString(StandardCharsets.UTF_8)).'processing-activities'
         then:
         config == [
-            name:[
+            name: [
                 de: 'Verzeichnis der Verarbeitungstätigkeiten',
                 en: 'Records of processing activities'
             ],
-            description:[
+            description: [
                 de: 'Eine detaillierte Übersicht über die in einem Scope durchgeführten Verarbeitungstätigkeiten',
                 en: "A detailed overview of the processing activities carried out within a scope"
             ],
-            outputTypes:['application/pdf'],
-            multipleTargetsSupported:false,
-            targetTypes:  [
+            outputTypes: ['application/pdf'],
+            multipleTargetsSupported: false,
+            targetTypes: [
                 [modelType: 'scope', subTypes: ['SCP_ResponsibleBody']]
             ]
         ]
@@ -152,7 +152,7 @@ public class ReportControllerSpec extends ReportingTest {
     def "try to create an unknown report"() {
         when:
         def response = POST("/reports/invalid", 'abc', [
-            outputType:'text/plain',
+            outputType: 'text/plain',
             targets: [
                 [
                     type: 'scope',
@@ -168,7 +168,7 @@ public class ReportControllerSpec extends ReportingTest {
     def "try to create a report with missing targets parameter"() {
         when:
         def response = POST("/reports/processing-activities", 'abc', [
-            outputType:'application/pdf',
+            outputType: 'application/pdf',
             unit: UUID.randomUUID(),
             domain: UUID.randomUUID()
         ])
@@ -180,7 +180,7 @@ public class ReportControllerSpec extends ReportingTest {
     def "try to create a report with empty targets parameter"() {
         when:
         def response = POST("/reports/processing-activities",'abc', [
-            outputType:'application/pdf',
+            outputType: 'application/pdf',
             targets: [],
             unit: UUID.randomUUID(),
             domain: UUID.randomUUID()])
@@ -192,7 +192,7 @@ public class ReportControllerSpec extends ReportingTest {
     def "try to create a report with invalid target type"() {
         when:
         def response = POST("/reports/processing-activities",'abc',[
-            outputType:'application/pdf',
+            outputType: 'application/pdf',
             targets: [
                 [
                     type: 'chocolate',
@@ -209,7 +209,7 @@ public class ReportControllerSpec extends ReportingTest {
     def "try to create a report with unsupported target type"() {
         when:
         def response = POST("/reports/processing-activities", 'abc',[
-            outputType:'application/pdf',
+            outputType: 'application/pdf',
             targets: [
                 [
                     type: 'control',
@@ -227,7 +227,7 @@ public class ReportControllerSpec extends ReportingTest {
     def "try to create a report with multiple targets"() {
         when:
         def response = POST("/reports/processing-activities",'abc', [
-            outputType:'application/pdf',
+            outputType: 'application/pdf',
             targets: [
                 [
                     type: 'scope',
@@ -249,7 +249,7 @@ public class ReportControllerSpec extends ReportingTest {
     def "try to create a report with missing authentication header"() {
         when:
         def response = POST("/reports/processing-activities", [
-            outputType:'application/pdf',
+            outputType: 'application/pdf',
             targets: [
                 [
                     type: 'scope',
@@ -270,7 +270,7 @@ public class ReportControllerSpec extends ReportingTest {
         def personId = UUID.randomUUID()
         when:
         def response = POST("/reports/invitation",'abc','en', [
-            outputType:'text/plain',
+            outputType: 'text/plain',
             timeZone: 'America/New_York',
             targets: [
                 [
@@ -291,7 +291,7 @@ public class ReportControllerSpec extends ReportingTest {
         ]
         1 * veoClient.fetchTranslations(Locale.ENGLISH, domainId, 'Bearer: abc') >> [
             lang: [
-                en:[:]
+                en: [:]
             ]
         ]
         response.contentAsString == '''Hi Mary,
@@ -301,7 +301,7 @@ I'd like to invite you to my birthday party. Save the date: Apr 1, 2024, 9:00:00
 Cheers'''
         when:
         response = POST("/reports/invitation",'abc','de', [
-            outputType:'text/plain',
+            outputType: 'text/plain',
             targets: [
                 [
                     type: 'person',
@@ -322,7 +322,7 @@ Cheers'''
         ]
         1 * veoClient.fetchTranslations(Locale.GERMAN, domainId, 'Bearer: abc') >> [
             lang: [
-                de:[:]
+                de: [:]
             ]
         ]
         response.contentAsString == '''Hallo Maria,
@@ -333,7 +333,7 @@ Tschüß'''
 
         when: "using an unknown time zone"
         response = POST("/reports/invitation",'abc','de', [
-            outputType:'text/plain',
+            outputType: 'text/plain',
             targets: [
                 [
                     type: 'person',
@@ -351,9 +351,9 @@ Tschüß'''
                 name: 'Maria'
             ]
         ]
-        1 * veoClient.fetchTranslations(Locale.GERMAN,domainId,'Bearer: abc') >> [
+        1 * veoClient.fetchTranslations(Locale.GERMAN, domainId,'Bearer: abc') >> [
             lang: [
-                de:[:]
+                de: [:]
             ]
         ]
         response.contentAsString == '''Hallo Maria,
@@ -364,7 +364,7 @@ Tschüß'''
 
         when: "omitting the time zone"
         response = POST("/reports/invitation",'abc','de', [
-            outputType:'text/plain',
+            outputType: 'text/plain',
             targets: [
                 [
                     type: 'person',
@@ -383,7 +383,7 @@ Tschüß'''
         ]
         1 * veoClient.fetchTranslations(Locale.GERMAN, domainId, 'Bearer: abc') >> [
             lang: [
-                de:[:]
+                de: [:]
             ]
         ]
         response.contentAsString == '''Hallo Maria,
@@ -396,7 +396,7 @@ Tschüß'''
     def "try to create a report with unsupported output type"() {
         when:
         def response = POST("/reports/invitation",'abc', [
-            outputType:'animal/elephant',
+            outputType: 'animal/elephant',
             targets: [
                 [
                     type: 'person',
@@ -414,7 +414,7 @@ Tschüß'''
     def "try to create a report with unsupported locale"() {
         when:
         def response = POST("/reports/invitation",'abc', 'pt', [
-            outputType:'text/plain',
+            outputType: 'text/plain',
             targets: [
                 [
                     type: 'person',
@@ -436,7 +436,7 @@ Tschüß'''
         def scopeId = UUID.randomUUID()
         when:
         def response = POST("/reports/processing-on-behalf", 'abc', 'de',[
-            outputType:'application/pdf',
+            outputType: 'application/pdf',
             targets: [
                 [
                     type: 'scope',
@@ -450,14 +450,14 @@ Tschüß'''
         response.status == 200
 
         1 * veoClient.fetchData(unitId, domainId, scopeId, 'Bearer: abc') >> [
-            target:[
+            target: [
                 name: 'My Scope',
                 id: scopeId,
                 _self: "http://example.org/scopes/$scopeId".toString(),
                 type: 'scope',
                 domains: [
-                    'fd672b7d-7e22-4c71-992c-76b59c0d4ee8':[
-                        links:[
+                    'fd672b7d-7e22-4c71-992c-76b59c0d4ee8': [
+                        links: [
                             scope_management: [
                                 [
                                     target: [
@@ -505,14 +505,14 @@ Tschüß'''
                     _self: 'http://example.org/processes/1',
                     type: 'process',
                     domains: [
-                        'fd672b7d-7e22-4c71-992c-76b59c0d4ee8':[
+                        'fd672b7d-7e22-4c71-992c-76b59c0d4ee8': [
                             subType: 'PRO_DataProcessing',
                             customAspects: [
                                 process_processing: [
                                     process_processing_asProcessor : false
                                 ]
                             ],
-                            links:[
+                            links: [
                                 process_controller : [
                                     [
                                         target: [
@@ -530,14 +530,14 @@ Tschüß'''
                     ]
                 ]
             ],
-            persons:  [
+            persons: [
                 [
                     id: '1',
-                    type:'person',
+                    type: 'person',
                     name: 'John Doe',
                     _self: 'http://example.org/persons/1',
                     domains: [
-                        'f2cbaa64-74ed-44f5-88bd-2375f6f28849':[
+                        'f2cbaa64-74ed-44f5-88bd-2375f6f28849': [
                             customAspects: [
                                 person_generalInformation: [
                                     person_generalInformation_familyName : 'Doe',
@@ -549,11 +549,11 @@ Tschüß'''
                 ],
                 [
                     id: '2',
-                    type:'person',
+                    type: 'person',
                     name: 'Jane Doe',
                     _self: 'http://example.org/persons/2',
                     domains: [
-                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5':[
+                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5': [
                             customAspects: [
                                 person_generalInformation: [
                                     person_generalInformation_familyName : 'Doe',
@@ -564,11 +564,11 @@ Tschüß'''
                 ],
                 [
                     id: '3',
-                    type:'person',
+                    type: 'person',
                     name: 'Jack Doe',
                     _self: 'http://example.org/persons/3',
                     domains: [
-                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5':[
+                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5': [
                             customAspects: [
                                 person_generalInformation: [
                                     person_generalInformation_familyName : 'Doe',
@@ -580,11 +580,11 @@ Tschüß'''
                 ],
                 [
                     id: '4',
-                    type:'person',
+                    type: 'person',
                     name: 'June Doe',
                     _self: 'http://example.org/persons/4',
                     domains: [
-                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5':[
+                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5': [
                             customAspects: [
                                 person_generalInformation: [
                                     person_generalInformation_familyName : 'Doe',
@@ -595,15 +595,15 @@ Tschüß'''
                     ]
                 ]
             ],
-            scopes:[
+            scopes: [
                 [
                     name: 'Their Scope',
                     id: '1',
                     type: 'scope',
                     _self: 'http://example.org/scopes/1',
                     domains: [
-                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5':[
-                            links:[
+                        '17af1305-2df1-4ae5-a2cd-fb1585ce25e5': [
+                            links: [
                                 scope_management: [
                                     [
                                         target: [
@@ -671,7 +671,7 @@ gemäß Art. 30 II DS-GVO''')
         def scopeId = UUID.randomUUID()
         when:
         def response = POST("/reports/processing-on-behalf", 'abc', 'de', [
-            outputType:'application/pdf',
+            outputType: 'application/pdf',
             targets: [
                 [
                     type: 'scope',
@@ -685,7 +685,7 @@ gemäß Art. 30 II DS-GVO''')
         response.status == 401
         response.contentAsString == "Failed to retrieve data from http://localhost/scopes/$scopeId, status code: 401, message: Invalid token"
 
-        1 * veoClient.fetchData(unitId,domainId,scopeId,'Bearer: abc') >> {
+        1 * veoClient.fetchData(unitId, domainId, scopeId,'Bearer: abc') >> {
             throw new DataFetchingException("http://localhost/scopes/$scopeId", 401, 'Invalid token')
         }
     }
@@ -697,7 +697,7 @@ gemäß Art. 30 II DS-GVO''')
         def scopeId = UUID.randomUUID()
         when:
         def response = POST("/reports/processing-on-behalf", 'abc', 'de',[
-            outputType:'application/pdf',
+            outputType: 'application/pdf',
             targets: [
                 [
                     type: 'scope',
@@ -726,7 +726,7 @@ gemäß Art. 30 II DS-GVO''')
         mvc.perform(MockMvcRequestBuilders.get(url)).andReturn().response
     }
 
-    MockHttpServletResponse POST(url, token = null,language=null, body) {
+    MockHttpServletResponse POST(url, token = null, language =null, body) {
         MvcResult result = MockMvcRequestBuilders.post(url).contentType(MediaType.APPLICATION_JSON).content(JsonOutput.toJson(body)).with {
             if (token) {
                 header(HttpHeaders.AUTHORIZATION, "Bearer: $token")

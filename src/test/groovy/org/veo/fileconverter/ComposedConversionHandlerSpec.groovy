@@ -53,7 +53,7 @@ class ComposedConversionHandlerSpec extends Specification {
 
         @Override
         public void convert(InputStream input, OutputStream output, ReportConfiguration reportConfiguration, ReportCreationParameters parameters) throws IOException {
-            input.withReader('UTF-8') {  r->
+            input.withReader('UTF-8') { r->
                 output.withWriter('UTF-8') { w->
                     w << r.text.reverse()
                 }
