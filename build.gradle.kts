@@ -5,7 +5,7 @@ plugins {
     id("com.github.spotbugs") version "6.5.12"
     id("com.gorylenko.gradle-git-properties") version "4.0.1"
     id("pmd")
-    id("com.diffplug.spotless") version "8.10.3"
+    id("com.diffplug.spotless") version "8.10.4"
     id("com.google.cloud.tools.jib") version "3.5.4"
 }
 
