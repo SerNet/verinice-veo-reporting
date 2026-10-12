@@ -8,7 +8,8 @@
   'YES': {"color":"#12AE0F"},
   'NO': {"color":"#AE0D11"},
   'PARTIAL': {"color":"#EDE92F"},
-  'N_A': {"color":"#49A2ED"}
+  'N_A': {"color":"#49A2ED"},
+  'UNKNOWN': {"color":"#FFFFFF"}
 } />
 
 <#function getImplementationStatus ri>
