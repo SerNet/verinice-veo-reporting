@@ -67,6 +67,14 @@ configurations.all {
             useVersion("11.0.22")
             because("Security fixes")
         }
+        if (requested.group == "tools.jackson.core" && requested.version == "3.1.5") {
+            useVersion("3.1.7")
+            because("CVE-2026-89407,CVE-2026-89425,CVE-2026-91776,CVE-2026-91777")
+        }
+        if (requested.group == "com.fasterxml.jackson.core" && requested.version == "2.22.1") {
+            useVersion("2.22.3")
+            because("CVE-2026-89407,CVE-2026-89425,CVE-2026-91776,CVE-2026-91777")
+        }
     }
 }
 
