@@ -40,11 +40,11 @@ dependencies {
     implementation("io.github.openhtmltopdf:openhtmltopdf-objects:1.1.100")
     implementation("io.github.openhtmltopdf:openhtmltopdf-svg-support:1.1.100")
 
-    implementation("org.apache.xmlgraphics:batik-transcoder:1.19") {
+    implementation("org.apache.xmlgraphics:batik-transcoder:1.20") {
         // work around https://issues.apache.org/jira/browse/BATIK-1289
         exclude(group = "xml-apis", module = "xml-apis")
     }
-    implementation("org.apache.xmlgraphics:batik-codec:1.19") {
+    implementation("org.apache.xmlgraphics:batik-codec:1.20") {
         // work around https://issues.apache.org/jira/browse/BATIK-1289
         exclude(group = "xml-apis", module = "xml-apis")
     }
