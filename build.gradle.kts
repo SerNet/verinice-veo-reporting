@@ -34,11 +34,11 @@ dependencies {
     implementation("com.vladsch.flexmark:flexmark-ext-attributes:0.64.8")
     implementation("com.vladsch.flexmark:flexmark-ext-definition:0.64.8")
     implementation("com.vladsch.flexmark:flexmark-ext-tables:0.64.8")
-    implementation("io.github.openhtmltopdf:openhtmltopdf-core:1.1.100")
-    implementation("io.github.openhtmltopdf:openhtmltopdf-pdfbox:1.1.100")
-    implementation("io.github.openhtmltopdf:openhtmltopdf-slf4j:1.1.100")
-    implementation("io.github.openhtmltopdf:openhtmltopdf-objects:1.1.100")
-    implementation("io.github.openhtmltopdf:openhtmltopdf-svg-support:1.1.100")
+    implementation("io.github.openhtmltopdf:openhtmltopdf-core:1.1.103")
+    implementation("io.github.openhtmltopdf:openhtmltopdf-pdfbox:1.1.103")
+    implementation("io.github.openhtmltopdf:openhtmltopdf-slf4j:1.1.103")
+    implementation("io.github.openhtmltopdf:openhtmltopdf-objects:1.1.103")
+    implementation("io.github.openhtmltopdf:openhtmltopdf-svg-support:1.1.103")
 
     implementation("org.apache.xmlgraphics:batik-transcoder:1.20") {
         // work around https://issues.apache.org/jira/browse/BATIK-1289
