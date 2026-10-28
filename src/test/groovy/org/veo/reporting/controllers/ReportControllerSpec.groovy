@@ -660,8 +660,8 @@ Tschüß'''
         when:
         def text = new PDFTextStripper().getText(doc)
         then:
-        text.startsWith('''Auftragsverarbeitungen
-gemäß Art. 30 II DS-GVO''')
+        text.startsWith('''Auftragsverarbeitungen gemäß
+Art. 30 II DS-GVO''')
     }
 
     def "Status 401 from data backend results in status 401"() {
