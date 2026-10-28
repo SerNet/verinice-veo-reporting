@@ -23,6 +23,11 @@ java {
 
 dependencies {
     implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
+
+    // security overrides
+    implementation(platform("com.fasterxml.jackson:jackson-bom:2.22.3"))
+    implementation(platform("tools.jackson:jackson-bom:3.2.3"))
+
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -59,23 +64,6 @@ dependencies {
     runtimeOnly("com.helger.font:ph-fonts-open-sans:6.1.0")
     runtimeOnly("ch.qos.logback.contrib:logback-json-classic:0.1.5")
     runtimeOnly("ch.qos.logback.contrib:logback-jackson:0.1.5")
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency {
-        if (requested.group == "org.apache.tomcat.embed" && requested.version == "11.0.21") {
-            useVersion("11.0.22")
-            because("Security fixes")
-        }
-        if (requested.group == "tools.jackson.core" && requested.version == "3.1.5") {
-            useVersion("3.1.7")
-            because("CVE-2026-89407,CVE-2026-89425,CVE-2026-91776,CVE-2026-91777")
-        }
-        if (requested.group == "com.fasterxml.jackson.core" && requested.version == "2.22.1") {
-            useVersion("2.22.3")
-            because("CVE-2026-89407,CVE-2026-89425,CVE-2026-91776,CVE-2026-91777")
-        }
-    }
 }
 
 spotbugs {
