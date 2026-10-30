@@ -32,6 +32,7 @@
 		<exclude name="UseExplicitTypes" />
 		<exclude name="AtLeastOneConstructor" />
 		<exclude name="CommentDefaultAccessModifier" />
+		<exclude name="LocalVariableDeclarationShouldBeAtStartOfBlock" />
 	</rule>
 
 	<!-- <rule ref="category/java/design.xml"> -->
