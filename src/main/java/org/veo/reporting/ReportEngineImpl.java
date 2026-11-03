@@ -158,17 +158,16 @@ public final class ReportEngineImpl implements ReportEngine {
           PipedOutputStream pipedOutputStream = new PipedOutputStream(pipedInputStream)) {
         // start async conversion of the template output
         Future<Void> future =
-            asyncTaskExecutor.submit(
-                () -> {
-                  converter.convert(
-                      pipedInputStream,
-                      reportConfiguration.getTemplateType(),
-                      os,
-                      outputType,
-                      reportConfiguration,
-                      parameters);
-                  return null;
-                });
+            asyncTaskExecutor.submit(() -> {
+              converter.convert(
+                  pipedInputStream,
+                  reportConfiguration.getTemplateType(),
+                  os,
+                  outputType,
+                  reportConfiguration,
+                  parameters);
+              return null;
+            });
         try {
           templateEvaluator.executeTemplate(
               reportConfiguration.getTemplateFile(), data, pipedOutputStream, parameters);

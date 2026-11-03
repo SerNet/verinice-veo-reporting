@@ -539,18 +539,17 @@ public class Demo {
 
         var domains =
             domainAssociations.keySet().stream()
-                .map(
-                    domainId -> {
-                      try {
-                        return (Map<String, Object>)
-                            veoClient.fetchData(
-                                "/domains/" + domainId,
-                                authorizationHeader,
-                                MediaType.APPLICATION_JSON_VALUE);
-                      } catch (IOException e) {
-                        throw new RuntimeException("Failed to fetch domain " + domainId, e);
-                      }
-                    })
+                .map(domainId -> {
+                  try {
+                    return (Map<String, Object>)
+                        veoClient.fetchData(
+                            "/domains/" + domainId,
+                            authorizationHeader,
+                            MediaType.APPLICATION_JSON_VALUE);
+                  } catch (IOException e) {
+                    throw new RuntimeException("Failed to fetch domain " + domainId, e);
+                  }
+                })
                 .filter(d -> d.get("name").equals(domainName))
                 .toList();
         if (domains.isEmpty()) {

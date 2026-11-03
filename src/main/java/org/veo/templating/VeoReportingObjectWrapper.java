@@ -89,12 +89,11 @@ public class VeoReportingObjectWrapper extends DefaultObjectWrapper {
     return entitiesByUri.values().stream()
         .map(Map.class::cast)
         .filter(s -> "scope".equals(s.get("type")))
-        .filter(
-            s ->
-                ((Collection<Map<String, ?>>) s.get("members"))
-                    .stream()
-                        .map(m -> m.get(VeoReportingConstants.TARGET_URI))
-                        .anyMatch(memberUri::equals))
+        .filter(s ->
+            ((Collection<Map<String, ?>>) s.get("members"))
+                .stream()
+                    .map(m -> m.get(VeoReportingConstants.TARGET_URI))
+                    .anyMatch(memberUri::equals))
         .toList();
   }
 

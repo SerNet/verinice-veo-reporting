@@ -106,10 +106,9 @@ public class VeoClientImpl implements VeoClient {
         elements.stream()
             .filter(it -> it.get("id").equals(targetId.toString()))
             .findFirst()
-            .orElseThrow(
-                () ->
-                    new IllegalArgumentException(
-                        "Target with id " + targetId + " not found in unit " + unitId));
+            .orElseThrow(() ->
+                new IllegalArgumentException(
+                    "Target with id " + targetId + " not found in unit " + unitId));
     result.put("target", target);
 
     return result;
@@ -140,97 +139,85 @@ public class VeoClientImpl implements VeoClient {
 
     for (Map<String, Object> element : elementsInDomain) {
       Stream.of("parts", "members")
-          .forEach(
-              path -> {
-                Optional.ofNullable(element.get(path))
-                    .map(it -> (List<Map<String, Object>>) it)
-                    .ifPresent(
-                        items ->
-                            element.put(
-                                path,
-                                items.stream()
-                                    .filter(
-                                        item ->
-                                            !elementURIsNotInDomain.contains(
-                                                item.get(VeoReportingConstants.TARGET_URI)))
-                                    .toList()));
-              });
+          .forEach(path -> {
+            Optional.ofNullable(element.get(path))
+                .map(it -> (List<Map<String, Object>>) it)
+                .ifPresent(items ->
+                    element.put(
+                        path,
+                        items.stream()
+                            .filter(item ->
+                                !elementURIsNotInDomain.contains(
+                                    item.get(VeoReportingConstants.TARGET_URI)))
+                            .toList()));
+          });
 
       Optional.ofNullable(element.get(VeoReportingConstants.RISKS))
           .map(it -> (List<Map<String, Object>>) it)
-          .ifPresent(
-              risks ->
-                  element.put(
-                      VeoReportingConstants.RISKS,
-                      risks.stream()
-                          .filter(
-                              risk -> {
-                                Map<String, Object> scenario =
-                                    (Map<String, Object>) risk.get("scenario");
+          .ifPresent(risks ->
+              element.put(
+                  VeoReportingConstants.RISKS,
+                  risks.stream()
+                      .filter(risk -> {
+                        Map<String, Object> scenario = (Map<String, Object>) risk.get("scenario");
 
-                                if (elementURIsNotInDomain.contains(
-                                    scenario.get(VeoReportingConstants.TARGET_URI))) {
-                                  return false;
-                                }
+                        if (elementURIsNotInDomain.contains(
+                            scenario.get(VeoReportingConstants.TARGET_URI))) {
+                          return false;
+                        }
 
-                                Map<String, Object> domains =
-                                    (Map<String, Object>) risk.get(VeoReportingConstants.DOMAINS);
+                        Map<String, Object> domains =
+                            (Map<String, Object>) risk.get(VeoReportingConstants.DOMAINS);
 
-                                return domains.containsKey(domainIdAsString);
-                              })
-                          .map(HashMap::new)
-                          .map(
-                              risk -> {
-                                Map<String, Object> domains =
-                                    (Map<String, Object>) risk.get(VeoReportingConstants.DOMAINS);
+                        return domains.containsKey(domainIdAsString);
+                      })
+                      .map(HashMap::new)
+                      .map(risk -> {
+                        Map<String, Object> domains =
+                            (Map<String, Object>) risk.get(VeoReportingConstants.DOMAINS);
 
-                                if (domains.size() > 1) {
-                                  risk.put(
-                                      VeoReportingConstants.DOMAINS,
-                                      Map.of(domainIdAsString, domains.get(domainIdAsString)));
-                                }
-                                Map<String, Object> mitigation =
-                                    (Map<String, Object>) risk.get("mitigation");
+                        if (domains.size() > 1) {
+                          risk.put(
+                              VeoReportingConstants.DOMAINS,
+                              Map.of(domainIdAsString, domains.get(domainIdAsString)));
+                        }
+                        Map<String, Object> mitigation =
+                            (Map<String, Object>) risk.get("mitigation");
 
-                                if (mitigation != null
-                                    && elementURIsNotInDomain.contains(
-                                        mitigation.get(VeoReportingConstants.TARGET_URI))) {
-                                  risk.remove("mitigation");
-                                }
-                                Map<String, Object> riskOwner =
-                                    (Map<String, Object>) risk.get("riskOwner");
+                        if (mitigation != null
+                            && elementURIsNotInDomain.contains(
+                                mitigation.get(VeoReportingConstants.TARGET_URI))) {
+                          risk.remove("mitigation");
+                        }
+                        Map<String, Object> riskOwner = (Map<String, Object>) risk.get("riskOwner");
 
-                                if (riskOwner != null
-                                    && elementURIsNotInDomain.contains(
-                                        riskOwner.get(VeoReportingConstants.TARGET_URI))) {
-                                  risk.remove("riskOwner");
-                                }
-                                return risk;
-                              })
-                          .toList()));
+                        if (riskOwner != null
+                            && elementURIsNotInDomain.contains(
+                                riskOwner.get(VeoReportingConstants.TARGET_URI))) {
+                          risk.remove("riskOwner");
+                        }
+                        return risk;
+                      })
+                      .toList()));
 
       Stream.of("controlImplementations", "requirementImplementations")
-          .forEach(
-              path -> {
-                Optional.ofNullable(element.get(path))
-                    .map(it -> (List<Map<String, Object>>) it)
-                    .ifPresent(
-                        list -> {
-                          List<Map<String, Object>> filteredList =
-                              list.stream()
-                                  .filter(
-                                      item -> {
-                                        Map<String, Object> control =
-                                            (Map<String, Object>) item.get("control");
-                                        return !elementURIsNotInDomain.contains(
-                                            control.get(VeoReportingConstants.TARGET_URI));
-                                      })
-                                  .toList();
-                          if (filteredList.size() != list.size()) {
-                            element.put(path, filteredList);
-                          }
-                        });
-              });
+          .forEach(path -> {
+            Optional.ofNullable(element.get(path))
+                .map(it -> (List<Map<String, Object>>) it)
+                .ifPresent(list -> {
+                  List<Map<String, Object>> filteredList =
+                      list.stream()
+                          .filter(item -> {
+                            Map<String, Object> control = (Map<String, Object>) item.get("control");
+                            return !elementURIsNotInDomain.contains(
+                                control.get(VeoReportingConstants.TARGET_URI));
+                          })
+                          .toList();
+                  if (filteredList.size() != list.size()) {
+                    element.put(path, filteredList);
+                  }
+                });
+          });
     }
 
     return elementsInDomain;
@@ -249,13 +236,12 @@ public class VeoClientImpl implements VeoClient {
         element.put(
             VeoReportingConstants.RISKS,
             risks.stream()
-                .filter(
-                    r -> {
-                      @SuppressWarnings("unchecked")
-                      Map<String, Object> ref = (Map<String, Object>) r.get(type);
-                      return ref != null
-                          && ref.get(VeoReportingConstants.TARGET_URI).equals(element.get("_self"));
-                    })
+                .filter(r -> {
+                  @SuppressWarnings("unchecked")
+                  Map<String, Object> ref = (Map<String, Object>) r.get(type);
+                  return ref != null
+                      && ref.get(VeoReportingConstants.TARGET_URI).equals(element.get("_self"));
+                })
                 .toList());
       }
     }

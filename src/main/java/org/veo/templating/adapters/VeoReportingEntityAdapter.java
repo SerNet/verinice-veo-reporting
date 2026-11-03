@@ -240,10 +240,9 @@ public class VeoReportingEntityAdapter extends WrappingTemplateModel
     public Object doExec(String arg) throws TemplateModelException {
       var members = (List) getProperty("members");
       return members.stream()
-          .filter(
-              member -> {
-                return arg.equals(((Map) member).get("type"));
-              })
+          .filter(member -> {
+            return arg.equals(((Map) member).get("type"));
+          })
           .collect(Collectors.toList());
     }
   }

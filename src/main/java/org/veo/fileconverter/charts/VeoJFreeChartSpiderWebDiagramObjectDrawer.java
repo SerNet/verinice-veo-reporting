@@ -133,12 +133,11 @@ public class VeoJFreeChartSpiderWebDiagramObjectDrawer implements FSObjectDrawer
     }
 
     plot.setBackgroundPaint(null);
-    plot.setURLGenerator(
-        (dataset1, series, category) -> {
-          String column = (String) dataset1.getColumnKey(category);
-          String row = (String) dataset1.getRowKey(series);
-          return urls.get(row + ":" + column);
-        });
+    plot.setURLGenerator((dataset1, series, category) -> {
+      String column = (String) dataset1.getColumnKey(category);
+      String row = (String) dataset1.getRowKey(series);
+      return urls.get(row + ":" + column);
+    });
     JFreeChart chart = new JFreeChart(e.getAttribute("title"), plot);
     chart.setBackgroundPaint(null);
     plot.setWebFilled(1, true);

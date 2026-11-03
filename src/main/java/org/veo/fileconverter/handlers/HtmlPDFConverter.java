@@ -109,22 +109,21 @@ public class HtmlPDFConverter implements ConversionHandler {
 
   protected static void addFonts(PdfRendererBuilder builder) {
     FontResourceManager.getAllResourcesOfFontType("Open Sans")
-        .forEach(
-            font -> {
-              builder.useFont(
-                  font::getBufferedInputStream,
-                  font.getFontName(),
-                  font.getFontWeight().getWeight(),
-                  convertFontStyle(font.getFontStyle()),
-                  true);
-              builder.useFont(
-                  font::getBufferedInputStream,
-                  font.getFontName(),
-                  font.getFontWeight().getWeight(),
-                  convertFontStyle(font.getFontStyle()),
-                  true,
-                  EnumSet.of(FSFontUseCase.FALLBACK_PRE));
-            });
+        .forEach(font -> {
+          builder.useFont(
+              font::getBufferedInputStream,
+              font.getFontName(),
+              font.getFontWeight().getWeight(),
+              convertFontStyle(font.getFontStyle()),
+              true);
+          builder.useFont(
+              font::getBufferedInputStream,
+              font.getFontName(),
+              font.getFontWeight().getWeight(),
+              convertFontStyle(font.getFontStyle()),
+              true,
+              EnumSet.of(FSFontUseCase.FALLBACK_PRE));
+        });
   }
 
   private static FontStyle convertFontStyle(IFontStyle fontStyle) {

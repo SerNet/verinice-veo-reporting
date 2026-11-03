@@ -81,20 +81,18 @@ public class ComposedConversionHandler implements ConversionHandler {
       // start async conversion of the first
       // handler's output with the second handler
       Future<Void> future =
-          asyncTaskExecutor.submit(
-              () -> {
-                LOGGER.debug(
-                    "Starting conversion from {} to {}",
-                    secondHandler.getInputType(),
-                    secondHandler.getOutputType());
-                secondHandler.convert(
-                    intermediateInputStream, output, reportConfiguration, parameters);
-                LOGGER.debug(
-                    "Finished conversion from {} to {}",
-                    secondHandler.getInputType(),
-                    secondHandler.getOutputType());
-                return null;
-              });
+          asyncTaskExecutor.submit(() -> {
+            LOGGER.debug(
+                "Starting conversion from {} to {}",
+                secondHandler.getInputType(),
+                secondHandler.getOutputType());
+            secondHandler.convert(intermediateInputStream, output, reportConfiguration, parameters);
+            LOGGER.debug(
+                "Finished conversion from {} to {}",
+                secondHandler.getInputType(),
+                secondHandler.getOutputType());
+            return null;
+          });
       try {
         LOGGER.debug(
             "Starting conversion from {} to {}",

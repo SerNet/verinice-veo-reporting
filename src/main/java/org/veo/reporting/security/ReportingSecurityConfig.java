@@ -82,18 +82,16 @@ public class ReportingSecurityConfig {
     corsConfig.addAllowedHeader(HttpHeaders.CONTENT_TYPE);
 
     Arrays.stream(allowedHeaders)
-        .forEach(
-            s -> {
-              LOGGER.debug("Added CORS allowed header: {}", s);
-              corsConfig.addAllowedHeader(s);
-            });
+        .forEach(s -> {
+          LOGGER.debug("Added CORS allowed header: {}", s);
+          corsConfig.addAllowedHeader(s);
+        });
 
     Arrays.stream(origins)
-        .forEach(
-            s -> {
-              LOGGER.debug("Added CORS origin pattern: {}", s);
-              corsConfig.addAllowedOriginPattern(s);
-            });
+        .forEach(s -> {
+          LOGGER.debug("Added CORS origin pattern: {}", s);
+          corsConfig.addAllowedOriginPattern(s);
+        });
     corsConfig.setMaxAge(Duration.ofMinutes(30));
     source.registerCorsConfiguration("/**", corsConfig);
     return source;
