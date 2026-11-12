@@ -660,7 +660,7 @@ Tschüß'''
         when:
         def text = new PDFTextStripper().getText(doc)
         then:
-        text.startsWith('''Auftragsverarbeitungen gemäß
+        text.startsWith('''Auftragsverarbeitungen gemäß 
 Art. 30 II DS-GVO''')
     }
 
