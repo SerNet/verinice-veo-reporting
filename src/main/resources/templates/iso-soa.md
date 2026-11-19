@@ -1,5 +1,6 @@
 <#import "/libs/commons.md" as com>
 <#import "/libs/risk-commons.md" as rcom>
+<#import "/libs/implementation-status-messages.ftl" as statusMessages>
 
 <#assign table = com.table
   multiline = com.multiline
@@ -122,7 +123,7 @@ domain/>
 <td/>
 </#if>
 <#if useCICAs && ci.implementationStatus != 'UNKNOWN' || applicable>
-<@riskCell color=statusMap[ci.implementationStatus].color>${bundle[ci.implementationStatus]}</@riskCell>
+<@riskCell color=statusMap[ci.implementationStatus].color>${statusMessages[ci.implementationStatus]}</@riskCell>
 <#else>
 <td/>
 </#if>
