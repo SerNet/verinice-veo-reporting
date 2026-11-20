@@ -115,7 +115,7 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
 
 jib {
     from {
-        image = "gcr.io/distroless/java25-debian13:nonroot@sha256:573ef04c0f84aaf4b34e0cb6eeef91c25a83290334586c4c44ef41ecae13a25e"
+        image = "gcr.io/distroless/java25-debian13:nonroot@sha256:02ba64d87d0371be011404245a1ad4aeaa94d8264732a795b64dcd5bf036b116"
     }
     container {
         labels.set(
