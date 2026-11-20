@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "4.1.2"
+    id("org.springframework.boot") version "4.2.0"
     id("groovy")
     id("jacoco")
     id("com.github.spotbugs") version "6.5.13"
