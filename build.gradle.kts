@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "4.1.2"
+    id("org.springframework.boot") version "4.1.3"
     id("groovy")
     id("jacoco")
     id("com.github.spotbugs") version "6.5.13"
@@ -9,7 +9,7 @@ plugins {
     id("com.google.cloud.tools.jib") version "3.5.4"
 }
 
-version = "0.76.2"
+version = "0.76.3"
 
 repositories {
     mavenCentral()
@@ -115,7 +115,8 @@ tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
 
 jib {
     from {
-        image = "gcr.io/distroless/java25-debian13:nonroot@sha256:9a868974dd82da359adf8c659d9f9a8d5249b138a733def74adbf00f64975db3"
+        image =
+            "gcr.io/distroless/java25-debian13:nonroot@sha256:9a868974dd82da359adf8c659d9f9a8d5249b138a733def74adbf00f64975db3"
     }
     container {
         labels.set(
